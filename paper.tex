@@ -52,12 +52,19 @@
                         %% http://ctan.org/pkg/booktabs
 \usepackage{subcaption} %% For complex figures with subfigures/subcaptions
                         %% http://ctan.org/pkg/subcaption
-
+\usepackage{stmaryrd}
+                        
+\newtheorem{theorem}{Theorem}[section]
+\newcommand{\figref}[1]{Fig.~\ref{#1}}
+\newcommand{\stxrule}[3]{#1 & ::= & #3 & \text{#2}\\}
+\newcommand{\funrule}[3]{#1 & = & #2 & #3\\}
+\newcommand{\comprule}[4]{#1 & \fatsemi^l & #2 & = & #3 & #4 \\}
+\newcommand{\plus}[0]{+}
 
 \begin{document}
 
 %% Title information
-\title{Blame and Coercion: Together Again for the First Time}
+\title{Blame and Coercion: Together Again for the Second Time}
 
 %% Author information
 %% Contents and number of authors suppressed with 'anonymous'.
@@ -72,18 +79,15 @@
 %% Author with single affiliation.
 \author{Kuang-Chen Lu}
 
-\orcid{nnnn-nnnn-nnnn-nnnn}             %% \orcid is optional
 \affiliation{
-  \position{Position1}
-  \department{Department1}              %% \department is recommended
-  \institution{Institution1}            %% \institution is required
-  \streetaddress{Street1 Address1}
-  \city{City1}
-  \state{State1}
-  \postcode{Post-Code1}
-  \country{Country1}                    %% \country is recommended
+  \department{School of Informatics, Computing, and Engineering}              
+  %% \department is recommended
+  \institution{Indiana University}
+  %% \institution is required
+  \country{United States}
+  %% \country is recommended
 }
-\email{first1.last1@inst1.edu}          %% \email is recommended
+\email{kl13@iu.edu}          %% \email is recommended
 
 
 \author{Jeremy Siek}
@@ -117,7 +121,13 @@
 %% Note: \begin{abstract}...\end{abstract} environment must come
 %% before \maketitle command
 \begin{abstract}
-Text of abstract \ldots.
+	Gradual Typing is great. Implementing gradually typed with blame tracking 
+	and space efficiency is tricky. There exist two technique to do this: 
+	coercion and threesome. Coercion is easy to understand, and easy enough to 
+	implement, but difficult to reason about formally. Threesome is hard to 
+	understand, easy to implement, and easy to reason about formally. We 
+	propose hyper-coercion, which is easy to understand, as easy to implement 
+	as coercion, and easy to reason about.
 \end{abstract}
 
 
@@ -158,6 +168,284 @@ Text of abstract \ldots.
 
 \section{Introduction}
 
+\citet{siek2006gradual} introduces gradual typing.
+
+\citet{wadler2009well} introduces blame calculus, an intermediate language for 
+gradually typed languages. Blame calculus includes blame labels, which tells 
+the position of the cast that fails at run time (blame tracking).
+
+Implementing gradually typed languages on top of blame calculus suffices sever 
+space leak. Translation to blame calculus might wrap a tail call with a 
+cast. Thus, at runtime, mutually tail-recursive functions can accumulate casts 
+at tail position.
+
+In 2007, \citet{herman2010space} proposes a solution to this problem by 
+translating Blame Calculus to a variant of \citet{henglein1994dynamic}'s 
+Coercions Calculus. The key idea is to represent casts with coercions. 
+Coercions can be composed and normalized. Their solution, however, doesn't 
+include blame tracking. 
+
+After that, many efforts have been made to combine blame tracking and 
+space efficiency. 
+
+\citet{siek2009exploring} incorporate blame tracking into Coercion Calculus by 
+decorating coercions with labels. They also propose that there are four blame 
+strategies for their Coercion Calculi:
+$ \{Lazy, Eager\} \times \{D, UD\} $. 
+Lazy strategies blame fewer programs than eager ones,
+but also detect less potential type errors.
+$ D $ and $ UD $ assign blame labels differently.
+They prove that $ Lazy UD $ simulates the Blame Calculus in 
+\cite{wadler2009well}. But the counterparts of other strategies in Blame 
+Calculus is unknown.
+
+\citet{siek2010threesomes} proposes another approach to combine blame 
+tracking and space efficiency. Their solution is based on Threesome Calculus, 
+an novel alternative to Coercion Calculus. The key idea is to represent casts 
+with threesomes. Threesomes, like coercions, can be composed. There is no 
+separate normalization for threesome because every threesome is normalized. 
+They prove that their Threesome Calculus bisimulate 
+\citeauthor{siek2009exploring}'s Coercion Calculus and
+\citeauthor{wadler2009well}'s Blame Calculus.
+
+\citet{siek2012interpretations} introduces a $ lazy D $  Blame Calculus. The 
+relation between this new Blame Calculus with the $ lazy D $ 
+Coercion Calculi, however, is not proved.
+
+Following \citet{siek2010threesomes}, \citet{garcia2013calculating} 
+implement all other blame strategies with Threesome Calculus. 
+He claims that 
+coercion with labels is easy to understand but hard to implement, 
+and that 
+threesome with labels, however, is easy to implement but hard to understand.
+His claim is later affirmed by the group of people who develop threesome 
+\citet{siek2015blame}. 
+The connection 
+between his Threesome Calculi and \citeauthor{siek2009exploring}'s Coercion 
+Calculi are established by the fact that the former are derived from the latter.
+The connection between these calculi and Blame Calculus, however, 
+is still unclear.
+
+\citet{siek2015blame} revisit the coercion-based approach. They simplify the 
+Coercion Calculi by only working with coercions in canonical forms.
+Fortunately, coercions are canonical when initially constructed, and 
+their empowered compose function produces canonical coercions as well. Again 
+(\citet{siek2010threesomes}), they delegate all strategies other than 
+$ Lazy UD $.
+
+Last year, \citet{kuhlenschmidt2018efficient} present Grift, a space-efficient 
+and blame-tracking compiler for a gradually typed language of the same name. 
+This implementation is based on the $ Lazy D $ Coercion Calculus.
+Their result suggests that implementing coercion is practical.
+
+Recently, \citet{new2019gradual} show that $ Eager $ strategies are 
+incompatible with $\eta$-equivalence of functions, which suggest that these 
+strategies are not very ideal. Their research kills questions about $ Eager $ 
+strategies, but some questions about $ Lazy $ strategies remain open:
+
+\begin{itemize}
+	\item Is the $ Lazy D $ coercion an ideal cast representation?
+	\item Does the $ Lazy D $ Calculi bi-simulate each other?
+\end{itemize}
+
+The $ Lazy D $ coercion is claimed easy to understand 
+(\cite{garcia2013calculating}, \cite{siek2015blame}) and is shown 
+easy enough to implement in a compiler (\cite{kuhlenschmidt2018efficient}).
+It is still undesirable, however, in a 
+few aspects. Firstly, its compose function is not structurally recursive. Many 
+developers of Grift report that it is tricky to convince their 
+proof assistants that composition terminates. Secondly, canonical coercion
+obscures the nature of a ``normalized cast'' because its definition lies on 
+top of coercion. 
+
+Perhaps unsurprisingly, threesome has a straightforward recursive 
+implementation. And its definition is self-standing. Together with the research 
+by \citet{garcia2013calculating}, they suggest that there can be a cast 
+representation whose definition is self-standing, and whose composition is 
+structurally recursive. Super-coercion introduced in 
+\citet{garcia2013calculating} could 
+be a promising candidate. However, its definition is a bit complicated. It uses 
+10 constructors to deal with an elementary type system with only base types and 
+function types. And four constructors are directly related to 
+function types. Thus, super-coercion might not scale very well to more 
+sophisticated type systems.
+
+We present yet another cast representation, hyper-coercion. Its 
+composition is structurally recursive. And its definition is self-standing. 
+Besides, there is a clear connection between it and the canonical coercion, 
+so we are optimistic that implementing hyper-coercion should be as easy (or 
+as hard) as coercion.
+
+Our hyper-coercion considers sum types and product types, which are not 
+accounted in all proofs above. Adding each of them requires us to add only one 
+new constructor to a component of hyper-coercion. This suggests that 
+hyper-coercion might scale better than super-coercion.
+
+We prove formally that $ Lazy D $ (resp. $ Lazy UD $) hyper-coercion calculi 
+bi-simulate the $ Lazy D $ (resp. $ Lazy UD $) Blame Calculi. This is possibly 
+the first bi-simulation proof for the $ Lazy D $ Blame Calculus.
+
+\section{Blame Calculus}
+
+syntax, consistency, shallow consistency ...
+
+\subsection{$Lazy D$ Blame Calculus}
+
+subtyping, reduction ...
+
+\subsection{$Lazy UD$ Blame Calculus}
+
+subtyping, reduction ...
+
+\section{Coercion Calculus}
+
+\subsection{$Lazy D$ Coercion Calculus}
+
+\subsection{$Lazy UD$ Coercion Calculus}
+
+\section{Hyper-coercion}
+
+\begin{figure}
+	\[ 
+	\begin{array}{lclr}
+	\stxrule{c}{hyper-coercions}{
+		id* \mid{}
+		( h , ( b , t ) )
+	}
+	\stxrule{h}{heads}{
+		\epsilon \mid{}
+		?^l
+	}
+	\stxrule{b}{bodies}{
+		U \mid{}
+		c_1 \rightarrow c_2 \mid{}
+		c_1 \times c_2 \mid{}
+		c_1 \plus c_2
+	}
+	\stxrule{t}{tails}{
+		\epsilon \mid{}
+		! \mid{}
+		\bot^l
+	}
+	\end{array}
+	\]
+	
+	\fbox{$ c \fatsemi^l c = c $}
+	\[ 
+	\begin{array}{rclclr}
+	\comprule{id*}{id*}{
+		id*
+	}{}
+	\comprule{id*}{( ?^{l'} , ( b , t ) )}{
+		( ?^{l'} , ( b , t ) )
+	}{}
+	\comprule{id*}{( ! , ( b , t ) )}{
+		(?^{l} , ( b , t))
+	}{}
+	\comprule{(h , (b ,\bot^{l'}))}{c}{
+		(h , (b ,\bot^{l'}))
+	}{}
+	\comprule{(h , (b_1 , t_1))}{id*}{
+		(h , (b_1 , !))
+	}{t_1 \neq \bot^{l'}}
+	\comprule{(h , (b_1 , t_1))}{(\epsilon , (b_2 , t_2))}{
+		(h , b_1 \fatsemi^{l} (b_2 , t_2))
+	}{t_1 \neq \bot^{l'}}
+	\comprule{(h , (b_1 , t_1))}{(?^{l'} , (b_2 , t_2))}{
+		(h , b_1 \fatsemi^{l'} (b_2 , t_2))
+	}{t_1 \neq \bot^{l'}}
+	\end{array}
+	\]
+	
+	\fbox{$ b \fatsemi^l (b,t) = (b,t) $}
+	\[ 
+	\begin{array}{rclclr}
+	\comprule{U}{(U,t)}{
+		(U,t)
+	}{}
+	\comprule{c_1 \rightarrow c_2}{(c_3 \rightarrow c_4,t)}{
+		(c_3 \fatsemi^{l} c_1 \rightarrow c_2 \fatsemi^l c_4, t)
+	}{}
+	\comprule{c_1 \times c_2}{(c_3 \times c_4,t)}{
+		(c_3 \fatsemi^{l} c_1 \times c_2 \fatsemi^l c_4, t)
+	}{}
+	\comprule{c_1 \plus c_2}{(c_3 \plus c_4,t)}{
+		(c_3 \fatsemi^{l} c_1 \plus c_2 \fatsemi^l c_4, t)
+	}{}
+	\comprule{b_1}{(b_2,t_2)}{
+		(b_1,\bot^l)
+	}{}
+	\end{array}
+	\]
+	
+	\fbox{$ seq(c,c) = c $}
+	\[
+	\begin{array}{rclr}
+	\funrule{seq(c_1,c_2)}{
+		c_1 \fatsemi^l c_2
+	}{}
+	\end{array}
+	\]
+	
+	\fbox{$ id( T ) = c $}
+	\[
+	\begin{array}{rclr}
+	\funrule{id(*)}{
+		id*
+	}{}
+	\funrule{id(P)}{
+		(\epsilon,(id(P),\epsilon))
+	}{}
+	\end{array}
+	\]
+	
+	\fbox{$ id( P ) = b $}
+	\[
+	\begin{array}{rclr}
+	\funrule{id(U)}{U}{}
+	\funrule{id(T_1 \rightarrow T_2)}{
+		id(T_1) \rightarrow id(T_2)
+	}{}
+	\funrule{id(T_1 \times T_2)}{
+		id(T_1) \times id(T_2)
+	}{}
+	\funrule{id(T_1 \plus T_2)}{
+		id(T_1) \plus id(T_2)
+	}{}
+	\end{array}
+	\]
+	
+	\fbox{$ cast(T,l,T) = c$}
+	\[
+	\begin{array}{rclr}
+	\funrule{cast(T_1,l,T_2)}{
+		id(T_1) \fatsemi^l id(T_2)
+	}{}
+	\end{array}
+	\]
+	
+
+	\caption{Hyper-coercion}
+	\label{fig:HC-syntax}
+\end{figure}
+
+The syntax of Hyper-coercion is shown in \figref{fig:HC-syntax}.
+
+\subsection{$Lazy D$ Hyper-coercion}
+
+\subsection{$Lazy UD$ Hyper-coercion}
+
+\subsection{Hyper-coercion is Correct}
+
+\begin{theorem}[Hyper-coercion bi-simulates cast]	
+	$ e \Downarrow_B o $ if and only if $ e \Downarrow_H o $
+\end{theorem}
+
+\subsection{Hyper-coercion is Space-efficient}
+
+\section{Related Work}
+
+\section{Conclusion}
 
 %% Acknowledgments
 \begin{acks}                            %% acks environment is optional

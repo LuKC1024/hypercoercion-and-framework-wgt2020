@@ -1,0 +1,164 @@
+%%% -*-BibTeX-*-
+%%% Do NOT edit. File created by BibTeX with style
+%%% ACM-Reference-Format-Journals [18-Jan-2012].
+
+\begin{thebibliography}{11}
+
+%%% ====================================================================
+%%% NOTE TO THE USER: you can override these defaults by providing
+%%% customized versions of any of these macros before the \bibliography
+%%% command.  Each of them MUST provide its own final punctuation,
+%%% except for \shownote{}, \showDOI{}, and \showURL{}.  The latter two
+%%% do not use final punctuation, in order to avoid confusing it with
+%%% the Web address.
+%%%
+%%% To suppress output of a particular field, define its macro to expand
+%%% to an empty string, or better, \unskip, like this:
+%%%
+%%% \newcommand{\showDOI}[1]{\unskip}   % LaTeX syntax
+%%%
+%%% \def \showDOI #1{\unskip}           % plain TeX syntax
+%%%
+%%% ====================================================================
+
+\ifx \showCODEN    \undefined \def \showCODEN     #1{\unskip}     \fi
+\ifx \showDOI      \undefined \def \showDOI       #1{#1}\fi
+\ifx \showISBNx    \undefined \def \showISBNx     #1{\unskip}     \fi
+\ifx \showISBNxiii \undefined \def \showISBNxiii  #1{\unskip}     \fi
+\ifx \showISSN     \undefined \def \showISSN      #1{\unskip}     \fi
+\ifx \showLCCN     \undefined \def \showLCCN      #1{\unskip}     \fi
+\ifx \shownote     \undefined \def \shownote      #1{#1}          \fi
+\ifx \showarticletitle \undefined \def \showarticletitle #1{#1}   \fi
+\ifx \showURL      \undefined \def \showURL       {\relax}        \fi
+% The following commands are used for tagged output and should be
+% invisible to TeX
+\providecommand\bibfield[2]{#2}
+\providecommand\bibinfo[2]{#2}
+\providecommand\natexlab[1]{#1}
+\providecommand\showeprint[2][]{arXiv:#2}
+
+\bibitem[\protect\citeauthoryear{Garcia}{Garcia}{2013}]%
+        {garcia2013calculating}
+\bibfield{author}{\bibinfo{person}{Ronald Garcia}.}
+  \bibinfo{year}{2013}\natexlab{}.
+\newblock \showarticletitle{Calculating threesomes, with blame}. In
+  \bibinfo{booktitle}{\emph{ACM SIGPLAN Notices}}, Vol.~\bibinfo{volume}{48}.
+  ACM, \bibinfo{pages}{417--428}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Henglein}{Henglein}{1994}]%
+        {henglein1994dynamic}
+\bibfield{author}{\bibinfo{person}{Fritz Henglein}.}
+  \bibinfo{year}{1994}\natexlab{}.
+\newblock \showarticletitle{Dynamic typing: Syntax and proof theory}.
+\newblock \bibinfo{journal}{\emph{Science of Computer Programming}}
+  \bibinfo{volume}{22}, \bibinfo{number}{3} (\bibinfo{year}{1994}),
+  \bibinfo{pages}{197--230}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Herman, Tomb, and Flanagan}{Herman
+  et~al\mbox{.}}{2010}]%
+        {herman2010space}
+\bibfield{author}{\bibinfo{person}{David Herman}, \bibinfo{person}{Aaron Tomb},
+  {and} \bibinfo{person}{Cormac Flanagan}.} \bibinfo{year}{2010}\natexlab{}.
+\newblock \showarticletitle{Space-efficient gradual typing}.
+\newblock \bibinfo{journal}{\emph{Higher-Order and Symbolic Computation}}
+  \bibinfo{volume}{23}, \bibinfo{number}{2} (\bibinfo{year}{2010}),
+  \bibinfo{pages}{167}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Kuhlenschmidt, Almahallawi, and
+  Siek}{Kuhlenschmidt et~al\mbox{.}}{2018}]%
+        {kuhlenschmidt2018efficient}
+\bibfield{author}{\bibinfo{person}{Andre Kuhlenschmidt},
+  \bibinfo{person}{Deyaaeldeen Almahallawi}, {and} \bibinfo{person}{Jeremy~G
+  Siek}.} \bibinfo{year}{2018}\natexlab{}.
+\newblock \showarticletitle{An efficient compiler for the gradually typed
+  lambda calculus}. In \bibinfo{booktitle}{\emph{Scheme and Functional
+  Programming Workshop}}, Vol.~\bibinfo{volume}{18}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{New, Licata, and Ahmed}{New
+  et~al\mbox{.}}{2019}]%
+        {new2019gradual}
+\bibfield{author}{\bibinfo{person}{Max~S New}, \bibinfo{person}{Daniel~R
+  Licata}, {and} \bibinfo{person}{Amal Ahmed}.}
+  \bibinfo{year}{2019}\natexlab{}.
+\newblock \showarticletitle{Gradual type theory}.
+\newblock \bibinfo{journal}{\emph{Proceedings of the ACM on Programming
+  Languages}} \bibinfo{volume}{3}, \bibinfo{number}{POPL}
+  (\bibinfo{year}{2019}), \bibinfo{pages}{15}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Siek, Garcia, and Taha}{Siek
+  et~al\mbox{.}}{2009}]%
+        {siek2009exploring}
+\bibfield{author}{\bibinfo{person}{Jeremy Siek}, \bibinfo{person}{Ronald
+  Garcia}, {and} \bibinfo{person}{Walid Taha}.}
+  \bibinfo{year}{2009}\natexlab{}.
+\newblock \showarticletitle{Exploring the design space of higher-order casts}.
+  In \bibinfo{booktitle}{\emph{European Symposium on Programming}}. Springer,
+  \bibinfo{pages}{17--31}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Siek, Thiemann, and Wadler}{Siek
+  et~al\mbox{.}}{2015}]%
+        {siek2015blame}
+\bibfield{author}{\bibinfo{person}{Jeremy Siek}, \bibinfo{person}{Peter
+  Thiemann}, {and} \bibinfo{person}{Philip Wadler}.}
+  \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{Blame and coercion: together again for the first
+  time}. In \bibinfo{booktitle}{\emph{ACM SIGPLAN Notices}},
+  Vol.~\bibinfo{volume}{50}. ACM, \bibinfo{pages}{425--435}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Siek and Garcia}{Siek and Garcia}{2012}]%
+        {siek2012interpretations}
+\bibfield{author}{\bibinfo{person}{Jeremy~G Siek} {and} \bibinfo{person}{Ronald
+  Garcia}.} \bibinfo{year}{2012}\natexlab{}.
+\newblock \showarticletitle{Interpretations of the gradually-typed lambda
+  calculus}. In \bibinfo{booktitle}{\emph{Proceedings of the 2012 Annual
+  Workshop on Scheme and Functional Programming}}. ACM,
+  \bibinfo{pages}{68--80}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Siek and Taha}{Siek and Taha}{2006}]%
+        {siek2006gradual}
+\bibfield{author}{\bibinfo{person}{Jeremy~G Siek} {and} \bibinfo{person}{Walid
+  Taha}.} \bibinfo{year}{2006}\natexlab{}.
+\newblock \showarticletitle{Gradual typing for functional languages}. In
+  \bibinfo{booktitle}{\emph{Scheme and Functional Programming Workshop}},
+  Vol.~\bibinfo{volume}{6}. \bibinfo{pages}{81--92}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Siek and Wadler}{Siek and Wadler}{2010}]%
+        {siek2010threesomes}
+\bibfield{author}{\bibinfo{person}{Jeremy~G Siek} {and} \bibinfo{person}{Philip
+  Wadler}.} \bibinfo{year}{2010}\natexlab{}.
+\newblock \showarticletitle{Threesomes, with and without blame}. In
+  \bibinfo{booktitle}{\emph{ACM Sigplan Notices}}, Vol.~\bibinfo{volume}{45}.
+  ACM, \bibinfo{pages}{365--376}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Wadler and Findler}{Wadler and
+  Findler}{2009}]%
+        {wadler2009well}
+\bibfield{author}{\bibinfo{person}{Philip Wadler} {and}
+  \bibinfo{person}{Robert~Bruce Findler}.} \bibinfo{year}{2009}\natexlab{}.
+\newblock \showarticletitle{Well-typed programs can{\rq}t be blamed}. In
+  \bibinfo{booktitle}{\emph{European Symposium on Programming}}. Springer,
+  \bibinfo{pages}{1--16}.
+\newblock
+
+
+\end{thebibliography}
