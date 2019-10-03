@@ -37,6 +37,17 @@
 \providecommand\natexlab[1]{#1}
 \providecommand\showeprint[2][]{arXiv:#2}
 
+\bibitem[\protect\citeauthoryear{Felleisen and Friedman}{Felleisen and
+  Friedman}{1986}]%
+        {felleisen1986control}
+\bibfield{author}{\bibinfo{person}{Matthias Felleisen} {and}
+  \bibinfo{person}{Daniel~P Friedman}.} \bibinfo{year}{1986}\natexlab{}.
+\newblock \bibinfo{booktitle}{\emph{Control Operators, the SECD-machine, and
+  the [1]-calculus}}.
+\newblock \bibinfo{publisher}{Indiana University, Computer Science Department}.
+\newblock
+
+
 \bibitem[\protect\citeauthoryear{Garcia}{Garcia}{2013}]%
         {garcia2013calculating}
 \bibfield{author}{\bibinfo{person}{Ronald Garcia}.}
@@ -127,16 +138,6 @@
   calculus}. In \bibinfo{booktitle}{\emph{Proceedings of the 2012 Annual
   Workshop on Scheme and Functional Programming}}. ACM,
   \bibinfo{pages}{68--80}.
-\newblock
-
-
-\bibitem[\protect\citeauthoryear{Siek and Taha}{Siek and Taha}{2006}]%
-        {siek2006gradual}
-\bibfield{author}{\bibinfo{person}{Jeremy~G Siek} {and} \bibinfo{person}{Walid
-  Taha}.} \bibinfo{year}{2006}\natexlab{}.
-\newblock \showarticletitle{Gradual typing for functional languages}. In
-  \bibinfo{booktitle}{\emph{Scheme and Functional Programming Workshop}},
-  Vol.~\bibinfo{volume}{6}. \bibinfo{pages}{81--92}.
 \newblock
 
 

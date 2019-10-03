@@ -10,6 +10,7 @@ Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
 Reallocated global_strs (elt_size=20001) to 20 items from 10.
 Reallocated glb_str_end (elt_size=4) to 20 items from 10.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
+Warning--empty address in felleisen1986control
 Warning--can't use both volume and number fields in garcia2013calculating
 Warning--empty publisher in garcia2013calculating
 Warning--empty address in garcia2013calculating
@@ -23,8 +24,6 @@ Warning--empty publisher in siek2015blame
 Warning--empty address in siek2015blame
 Warning--empty publisher in siek2012interpretations
 Warning--empty address in siek2012interpretations
-Warning--empty publisher in siek2006gradual
-Warning--empty address in siek2006gradual
 Warning--can't use both volume and number fields in siek2010threesomes
 Warning--empty publisher in siek2010threesomes
 Warning--empty address in siek2010threesomes
@@ -32,43 +31,43 @@ Warning--empty publisher in wadler2009well
 Warning--empty address in wadler2009well
 You've used 11 entries,
             5733 wiz_defined-function locations,
-            1362 strings with 15969 characters,
-and the built_in function-call counts, 13317 in all, are:
-= -- 1594
+            1362 strings with 16045 characters,
+and the built_in function-call counts, 12945 in all, are:
+= -- 1545
 > -- 397
 < -- 0
 + -- 129
 - -- 140
-* -- 876
-:= -- 1282
-add.period$ -- 54
+* -- 861
+:= -- 1268
+add.period$ -- 55
 call.type$ -- 11
 change.case$ -- 69
 chr.to.int$ -- 11
-cite$ -- 31
-duplicate$ -- 1280
-empty$ -- 891
+cite$ -- 30
+duplicate$ -- 1233
+empty$ -- 859
 format.name$ -- 176
-if$ -- 3226
+if$ -- 3118
 int.to.chr$ -- 2
 int.to.str$ -- 1
-missing$ -- 52
-newline$ -- 120
+missing$ -- 49
+newline$ -- 121
 num.names$ -- 88
-pop$ -- 509
+pop$ -- 487
 preamble$ -- 1
 purify$ -- 168
 quote$ -- 0
-skip$ -- 456
+skip$ -- 438
 stack$ -- 0
-substring$ -- 993
-swap$ -- 130
+substring$ -- 952
+swap$ -- 125
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 288
-warning$ -- 20
-while$ -- 94
+type$ -- 273
+warning$ -- 19
+while$ -- 91
 width$ -- 0
 write$ -- 228
-(There were 20 warnings)
+(There were 19 warnings)

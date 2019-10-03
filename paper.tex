@@ -323,7 +323,7 @@ concludes.
 %	\stxrule{k}{constants}{sole}
 	\stxrule{e}{terms}{
 		x \mid{}
-		k \mid{}
+		\mathtt{tt} \mid{}
 		\lambda^{S\rightarrow{}T}x.t \mid{}
 		e_1 \; e_2 \mid{}
 		\langle T \Leftarrow^l S \rangle t \mid{}
@@ -340,7 +340,7 @@ concludes.
 		\mathtt{case}\; e_1 \; e_2 \; e_3
 	}
 	\stxrule{o}{observations}{
-		k \mid{}
+		\mathtt{tt} \mid{}
 		\mathtt{fun}\mid{}
 		\mathtt{cons}\mid{}
 		\mathtt{inl}\mid{}
@@ -450,11 +450,16 @@ top-most type constructor.
 Shallow-consistency is also reflexive, symmetric, and not transitive.
 
 Let $ e $ ranges over terms. Unlike $ \mathtt{STLC+} $, we annotate the 
-co-domain of lambda abstractions explicitly and add casts and blames.
+co-domain of lambda abstractions explicitly. Besides, we add casts and blames.
+
+Let $ o $ ranges over observations.
+
+Now let's move to the dynamic semantics. 
 
 \subsection{$Lazy D$ Blame Calculus}
 
-subtyping, reduction ...
+We describe the dynamic semantics of Blame Calculus with the CEK machine 
+(\citet{felleisen1986control}).
 
 \subsection{$Lazy UD$ Blame Calculus}
 
