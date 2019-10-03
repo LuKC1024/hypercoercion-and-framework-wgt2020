@@ -14,6 +14,7 @@ Warning--empty address in felleisen1986control
 Warning--can't use both volume and number fields in garcia2013calculating
 Warning--empty publisher in garcia2013calculating
 Warning--empty address in garcia2013calculating
+Warning--empty year in Gradual-TypingType-based-casts
 Warning--empty publisher in kuhlenschmidt2018efficient
 Warning--empty address in kuhlenschmidt2018efficient
 Warning--page numbers missing in both pages and numpages fields in kuhlenschmidt2018efficient
@@ -29,45 +30,45 @@ Warning--empty publisher in siek2010threesomes
 Warning--empty address in siek2010threesomes
 Warning--empty publisher in wadler2009well
 Warning--empty address in wadler2009well
-You've used 11 entries,
+You've used 12 entries,
             5733 wiz_defined-function locations,
-            1362 strings with 16045 characters,
-and the built_in function-call counts, 12945 in all, are:
-= -- 1545
-> -- 397
+            1367 strings with 16217 characters,
+and the built_in function-call counts, 13661 in all, are:
+= -- 1612
+> -- 417
 < -- 0
-+ -- 129
-- -- 140
-* -- 861
-:= -- 1268
-add.period$ -- 55
-call.type$ -- 11
-change.case$ -- 69
-chr.to.int$ -- 11
-cite$ -- 30
-duplicate$ -- 1233
-empty$ -- 859
-format.name$ -- 176
-if$ -- 3118
++ -- 134
+- -- 148
+* -- 907
+:= -- 1355
+add.period$ -- 60
+call.type$ -- 12
+change.case$ -- 74
+chr.to.int$ -- 12
+cite$ -- 32
+duplicate$ -- 1297
+empty$ -- 909
+format.name$ -- 184
+if$ -- 3278
 int.to.chr$ -- 2
 int.to.str$ -- 1
 missing$ -- 49
-newline$ -- 121
-num.names$ -- 88
-pop$ -- 487
+newline$ -- 133
+num.names$ -- 96
+pop$ -- 529
 preamble$ -- 1
-purify$ -- 168
+purify$ -- 176
 quote$ -- 0
-skip$ -- 438
+skip$ -- 458
 stack$ -- 0
-substring$ -- 952
-swap$ -- 125
+substring$ -- 984
+swap$ -- 130
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 273
-warning$ -- 19
-while$ -- 91
+type$ -- 303
+warning$ -- 20
+while$ -- 99
 width$ -- 0
-write$ -- 228
-(There were 19 warnings)
+write$ -- 249
+(There were 20 warnings)

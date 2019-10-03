@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.5.4)  3 OCT 2019 16:37
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.5.4)  3 OCT 2019 16:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1659,6 +1659,10 @@ LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/sc' will be
 Excluding 'acks' comment. (./paper.bbl
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
 (Font)              scaled to size 8.0pt on input line 46.
+LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
+(Font)              scaled to size 8.0pt on input line 71.
+LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
+(Font)              scaled to size 6.2pt on input line 71.
 ) [5.5]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 644.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 644.
@@ -1674,11 +1678,11 @@ LaTeX Font Warning: Size substitutions with differences
 
  ) 
 Here is how much of TeX's memory you used:
- 28165 strings out of 494805
- 489801 string characters out of 6178001
- 581352 words of memory out of 5000000
- 30514 multiletter control sequences out of 15000+600000
- 146406 words of font info for 251 fonts, out of 8000000 for 9000
+ 28207 strings out of 494805
+ 490810 string characters out of 6178001
+ 582403 words of memory out of 5000000
+ 30546 multiletter control sequences out of 15000+600000
+ 147401 words of font info for 257 fonts, out of 8000000 for 9000
  242 hyphenation exceptions out of 8191
  62i,17n,94p,909b,624s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_7grukw.enc}{/us
@@ -1701,10 +1705,10 @@ texlive/texmf-dist/fonts/type1/public/stmaryrd/stmary10.pfb></usr/share/texlive
 /fonts/type1/public/newtx/txsys.pfb></usr/share/texlive/texmf-dist/fonts/type1/
 public/newtx/zxlr.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/newtx/z
 xlri.pfb>
-Output written on paper.pdf (5 pages, 436346 bytes).
+Output written on paper.pdf (5 pages, 436757 bytes).
 PDF statistics:
- 262 PDF objects out of 1000 (max. 8388607)
- 220 compressed objects within 3 object streams
- 38 named destinations out of 1000 (max. 500000)
- 51865 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 267 PDF objects out of 1000 (max. 8388607)
+ 225 compressed objects within 3 object streams
+ 39 named destinations out of 1000 (max. 500000)
+ 55449 words of extra memory for PDF output out of 61914 (max. 10000000)
 

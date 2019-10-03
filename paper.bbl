@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{11}
+\begin{thebibliography}{12}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -56,6 +56,19 @@
   \bibinfo{booktitle}{\emph{ACM SIGPLAN Notices}}, Vol.~\bibinfo{volume}{48}.
   ACM, \bibinfo{pages}{417--428}.
 \newblock
+
+
+\bibitem[\protect\citeauthoryear{Gradual-Typing}{Gradual-Typing}{[n. d.]}]%
+        {Gradual-TypingType-based-casts}
+\bibfield{author}{\bibinfo{person}{Gradual-Typing}.} \bibinfo{year}{[n.
+  d.]}\natexlab{}.
+\newblock \bibinfo{title}{Type-based-casts and coercions are not equivalent}.
+\newblock   (\bibinfo{year}{[n. d.]}).
+\newblock
+\urldef\tempurl%
+\url{https://github.com/Gradual-Typing/Grift/issues/81}
+\showURL{%
+\tempurl}
 
 
 \bibitem[\protect\citeauthoryear{Henglein}{Henglein}{1994}]%
