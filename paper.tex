@@ -54,13 +54,22 @@
                         %% http://ctan.org/pkg/subcaption
 \usepackage{stmaryrd}
 \usepackage{todonotes}
+\usepackage{amsthm}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage{semantic}
+\usepackage{hyperref}
                         
 \newtheorem{theorem}{Theorem}[section]
 \newcommand{\figref}[1]{Fig.~\ref{#1}}
 \newcommand{\stxrule}[3]{#1 & ::= & #3 & \text{#2}\\}
+\newcommand{\stxrulecont}[1]{& | & #1 & \\}
 \newcommand{\funrule}[3]{#1 & = & #2 & #3\\}
 \newcommand{\comprule}[4]{#1 & \fatsemi^l & #2 & = & #3 & #4 \\}
 \newcommand{\plus}[0]{+}
+\newcommand{\judgetype}[3]{#1 \vdash #2 : #3}
 
 \begin{document}
 
@@ -206,12 +215,11 @@ an novel alternative to Coercion Calculus. The key idea is to represent casts
 with threesomes. Threesomes, like coercions, can be composed. There is no 
 separate normalization for threesome because every threesome is normalized. 
 They prove that their Threesome Calculus bisimulate 
-\citeauthor{siek2009exploring}'s Coercion Calculus and
-\citeauthor{wadler2009well}'s Blame Calculus.
+\citet{siek2009exploring}'s Coercion Calculus and
+\citet{wadler2009well}'s Blame Calculus.
 
-\citet{siek2012interpretations} introduces a $ lazy D $  Blame Calculus. The 
-relation between this new Blame Calculus with the $ lazy D $ 
-Coercion Calculi, however, is not proved.
+\citet{siek2012interpretations} introduces a $ lazy D $  Blame Calculus. They 
+conjecture that this calculus bi-simulate the $ lazy D $ Coercion Calculi.
 
 Following \citet{siek2010threesomes}, \citet{garcia2013calculating} 
 implement all other blame strategies with Threesome Calculus. 
@@ -222,7 +230,7 @@ threesome with labels, however, is easy to implement but hard to understand.
 His claim is later affirmed by the group of people who develop threesome 
 \citet{siek2015blame}. 
 The connection 
-between his Threesome Calculi and \citeauthor{siek2009exploring}'s Coercion 
+between his Threesome Calculi and \citet{siek2009exploring}'s Coercion 
 Calculi are established by the fact that the former are derived from the latter.
 The connection between these calculi and Blame Calculus, however, 
 is still unclear.
@@ -237,7 +245,11 @@ $ Lazy UD $.
 Last year, \citet{kuhlenschmidt2018efficient} present Grift, a space-efficient 
 and blame-tracking compiler for a gradually typed language of the same name. 
 This implementation is based on the $ Lazy D $ Coercion Calculus.
-Their result suggests that implementing coercion is practical.
+Their result suggests that implementing coercion is practical. And this is the 
+first time product types is considered. Their treatment to products in 
+coercions, however, is shown incorrect. **
+
+\todo[inline]{kc: ** I want to cite the GitHub issue page here.}
 
 Recently, \citet{new2019gradual} show that $ Eager $ strategies are 
 incompatible with $\eta$-equivalence of functions, which suggest that these 
@@ -246,7 +258,7 @@ strategies, but some questions about $ Lazy $ strategies remain open:
 
 \begin{itemize}
 	\item Is the $ Lazy D $ coercion an ideal cast representation?
-	\item Does the $ Lazy D $ Calculi bi-simulate each other?
+	\item Does the $ Lazy D $ Coercion Calculus bi-simulate the Blame Calculus?
 \end{itemize}
 
 The $ Lazy D $ coercion is claimed easy to understand 
@@ -293,7 +305,152 @@ concludes.
 
 \section{Blame Calculus} \label{sec:blame-calculus}
 
-syntax, consistency, shallow consistency ...
+\begin{figure}
+	\[
+	\begin{array}{lclr}
+	\stxrule{S,T}{types}{
+		\star \mid{}
+		P
+	}
+	\stxrule{P,Q}{pre-types}{
+		\iota \mid{}
+		T_1 \rightarrow T_2 \mid{}
+		T_1 \times T_2 \mid{}
+		T_1 \plus T_2 \mid{}
+	}
+%	\stxrule{x,y,z}{variables}{\dots}
+%	\stxrule{l}{labels}{\dots}
+%	\stxrule{k}{constants}{sole}
+	\stxrule{e}{terms}{
+		x \mid{}
+		k \mid{}
+		\lambda^{S\rightarrow{}T}x.t \mid{}
+		e_1 \; e_2 \mid{}
+		\langle T \Leftarrow^l S \rangle t \mid{}
+		\mathtt{blame} \; l
+	}
+	\stxrulecont{
+		\mathtt{cons}\; e_1 \; e_2 \mid{}
+		\mathtt{car}\; e \mid{}
+		\mathtt{cdr}\; t
+	}
+	\stxrulecont{
+		\mathtt{inl} \; e \mid{}
+		\mathtt{inr} \; e \mid{}
+		\mathtt{case}\; e_1 \; e_2 \; e_3
+	}
+	\stxrule{o}{observations}{
+		k \mid{}
+		\mathtt{fun}\mid{}
+		\mathtt{cons}\mid{}
+		\mathtt{inl}\mid{}
+		\mathtt{inr}\mid{}
+		\mathtt{blame}\; l
+	}
+	\end{array}
+	\]
+	
+	\fbox{$ S \sim T $}
+	\begin{gather*}
+	\inference{}{
+		\star \sim \star
+	} \quad
+	\inference{}{
+		\star \sim P
+	} \quad
+	\inference{}{
+		P \sim \star
+	} \\
+	\inference{}{
+		\iota \sim \iota
+	} \quad
+	\inference{
+		S_1 \sim S_2 &
+		T_1 \sim T_2
+	}{
+		S_1 \rightarrow T_1 \sim S_2 \rightarrow T_2
+	} \quad
+	\inference{
+		S_1 \sim S_2 &
+		T_1 \sim T_2
+	}{
+		S_1 \times T_1 \sim S_2 \times T_2
+	} \quad
+	\inference{
+		S_1 \sim S_2 &
+		T_1 \sim T_2
+	}{
+		S_1 \plus T_1 \sim S_2 \plus T_2
+	}
+	\end{gather*}
+	
+	\fbox{$ S \smile T $}
+	\begin{gather*}
+	\inference{}{
+		\star \smile \star
+	} \quad
+	\inference{}{
+		\star \smile P
+	} \quad
+	\inference{}{
+		P \smile \star
+	} \\
+	\inference{}{
+		\iota \smile \iota
+	} \quad
+	\inference{}{
+		S_1 \rightarrow T_1 \smile S_2 \rightarrow T_2
+	}
+	\inference{}{
+	S_1 \times T_1 \smile S_2 \times T_2
+	}
+	\inference{}{
+	S_1 \plus T_1 \smile S_2 \plus T_2
+	}
+	\end{gather*}
+	
+	\fbox{$ \Gamma \vdash e \vdash T $}
+	\begin{gather*}
+		\inference{
+			S \sim T & \Gamma \vdash e : S 
+		}{
+			\judgetype{\Gamma}{\langle T \Leftarrow^l S \rangle t}{T}
+		} \quad
+		\inference{
+		}{
+			\judgetype{\Gamma}{\mathtt{blame} l}{T}
+		}
+	\end{gather*}
+	
+	\caption{Blame Calculus and its static semantics}
+	\label{fig:blame-static}
+\end{figure}
+
+\figref{fig:blame-static} defines the form of blame calculus and its static 
+semantics. It is little changed from previous definitions. 
+The dynamic semantics of Blame Calculi depend on blame strategies, so we defer 
+them to sub-sections.
+
+Blame Calculus is based on Simply Typed Lambda Calculus with sum types and 
+product types ($ \mathtt{STLC+} $). 
+Let $ S,T $ range over types. A type is either the dynamic type $ \star $
+(a.k.a. $ \mathtt{Dyn} $, $ \mathbb{?} $, or $ \mathtt{Unknown} $), 
+or a pre-type. 
+Let $ P,Q $ range over pre-types. Every pre-type is a type with a 
+traditional type constructor at the top.
+
+$ S \sim T $ reads $ S $ and $ T $ are consistent. Two types are consistent if 
+one of them is $ \star $, or they have the same top-most type constructor and 
+the corresponding sub-parts are consistent. Consistency is reflexive and 
+symmetric, but not transitive.
+
+$ S \smile T $ reads $ S $ and $ T $ are shallowly-consistent. Two types are 
+shallowly-consistent if one of them is $ \star $, or they have the same 
+top-most type constructor. 
+Shallow-consistency is also reflexive, symmetric, and not transitive.
+
+Let $ e $ ranges over terms. Unlike $ \mathtt{STLC+} $, we annotate the 
+co-domain of lambda abstractions explicitly and add casts and blames.
 
 \subsection{$Lazy D$ Blame Calculus}
 
@@ -444,7 +601,7 @@ The syntax of $ Lazy D $ Hyper-coercion is shown in \figref{fig:HC-D}.
 \subsection{Hyper-coercion is Correct}
 
 \begin{theorem}[Hyper-coercion bi-simulates cast]	
-	$ e \Downarrow_B o $ if and only if $ e \Downarrow_H o $
+	$ t \Downarrow_B o $ if and only if $ t \Downarrow_H o $
 \end{theorem}
 
 \subsection{Hyper-coercion is Space-efficient}
