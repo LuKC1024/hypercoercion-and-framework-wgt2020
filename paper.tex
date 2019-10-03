@@ -62,7 +62,9 @@
 \usepackage{semantic}
 \usepackage{hyperref}
                         
-\newtheorem{theorem}{Theorem}[section]
+\newtheorem{theorem}{Theorem}[]
+\newtheorem{proposition}{Proposition}[]
+\newtheorem{corollary}{Corollary}[]
 \newcommand{\figref}[1]{Fig.~\ref{#1}}
 \newcommand{\stxrule}[3]{#1 & ::= & #3 & \text{#2}\\}
 \newcommand{\stxrulecont}[1]{& | & #1 & \\}
@@ -599,15 +601,56 @@ subtyping, reduction ...
 
 The syntax of $ Lazy D $ Hyper-coercion is shown in \figref{fig:HC-D}.
 
-\subsection{$Lazy UD$ Hyper-coercion}
-
-\subsection{Hyper-coercion is Correct}
-
-\begin{theorem}[Hyper-coercion bi-simulates cast]	
-	$ t \Downarrow_B o $ if and only if $ t \Downarrow_H o $
+\begin{theorem}[$ Lazy D $ Hyper-coercion is a proper cast representation]
+	\  \\
+\begin{enumerate}
+	\item If $ v : T $, then $ id(T) \; v = \mathtt{succ} \; v $
+	\item If $ v : T_1 $,
+	$ c_1 $ is a hyper-coercion from $ T_1 $ to $ T_2 $, and 
+	$ c_2 $ is from $ T_2 $ to $ T_3 $,\\
+	then $ seq(c_1,c_2) \; v = (c_1 \; v) >>= c_2 $
+	\item If $ v : T_1 $ and $ \neg T_1 \smile T_2 $,
+	then $ cast(T_1, l, T_2) \; v = \mathtt{fail} \; l $
+	\item If $ v : \star $, 
+	then $ cast(\star,l,\star) \; v = \mathtt{succ} \; v $
+	\item If $ v : P $,
+	then $ cast(\star,l,Q) \; (inj \; P \; v) = cast(P,l,Q) \; v $
+	\item If $ v : P $,
+	then $ cast(P,l,\star) \; v = \mathtt{succ} \; (inj \; P \; v) $
+	\item If $ v : \iota $,
+	then $ cast(\iota,l,\iota) \; v = \mathtt{succ} \; v $
+	\item $ cast(S_1 \rightarrow T_1,l,S_2 \rightarrow T_2) \; (fun \; c_1 \; 
+	E \; b \; c_2) $ \\
+	$ = \mathtt{succ} \; fun \; seq(cast(S_2,l,S_1),c_1) \; E \; b 
+	\; seq(c_2,cast(T_1,l,T_2)) $ 
+	\item $ cast(S_1 \times T_1,l,S_2 \times T_2) \; (cons \; v_1 \; c_1 \; 
+	v_2 \; c_2) $ \\
+	$ = \mathtt{succ} \; (cons \; v_1 \; seq(c_1,cast(S_1,l,S_2)) \; v_2 \; 
+	seq(c_2,cast(T_1,l,T_2))) $ 
+	\item $ cast(S_1 \plus T_1,l,S_2 \plus T_2) \; (inl \; v \; c) = 
+	\mathtt{succ} \; (inl \; v \; seq(c,cast(S_1,l,T_1)) ) $ 
+	\item $ cast(S_1 \plus T_1,l,S_2 \plus T_2) \; (inr \; v \; c) = 
+	\mathtt{succ} \; (inr \; v \; seq(c,cast(S_2,l,T_2)) ) $ 
+\end{enumerate}
 \end{theorem}
 
-\subsection{Hyper-coercion is Space-efficient}
+\begin{proposition}[Every proper cast represenation is correct]
+	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $
+	\[
+	e \Downarrow_{B}^{D} o \; \text{if and only if} \; 
+	e \Downarrow_{C}^{D} o
+ 	\]
+\end{proposition}
+
+\begin{corollary}[$ Lazy D $ hyper-coercion is correct]
+	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $
+	\[
+	e \Downarrow^{D}_{B} o \; \text{if and only if} \; 
+	e \Downarrow^{D}_{H} o
+	\]
+\end{corollary}
+
+\subsection{$Lazy UD$ Hyper-coercion}
 
 \section{Conclusion} \label{sec:conclude}
 
