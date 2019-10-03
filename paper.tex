@@ -53,6 +53,7 @@
 \usepackage{subcaption} %% For complex figures with subfigures/subcaptions
                         %% http://ctan.org/pkg/subcaption
 \usepackage{stmaryrd}
+\usepackage{todonotes}
                         
 \newtheorem{theorem}{Theorem}[section]
 \newcommand{\figref}[1]{Fig.~\ref{#1}}
@@ -168,7 +169,7 @@
 
 \section{Introduction}
 
-\citet{siek2006gradual} introduces gradual typing.
+\todo[inline]{KC: I want to add more citations here}
 
 \citet{wadler2009well} introduces blame calculus, an intermediate language for 
 gradually typed languages. Blame calculus includes blame labels, which tells 
@@ -285,7 +286,12 @@ We prove formally that $ Lazy D $ (resp. $ Lazy UD $) hyper-coercion calculi
 bi-simulate the $ Lazy D $ (resp. $ Lazy UD $) Blame Calculi. This is possibly 
 the first bi-simulation proof for the $ Lazy D $ Blame Calculus.
 
-\section{Blame Calculus}
+The structure of this paper is as follows. Section \ref{sec:blame-calculus} 
+reviews the state-of-art of $Lazy$ Coercion Calculi. In section 
+\ref{sec:hyper-coercion} we present Hyper-coercion. Section \ref{sec:conclude} 
+concludes.
+
+\section{Blame Calculus} \label{sec:blame-calculus}
 
 syntax, consistency, shallow consistency ...
 
@@ -303,7 +309,7 @@ subtyping, reduction ...
 
 \subsection{$Lazy UD$ Coercion Calculus}
 
-\section{Hyper-coercion}
+\section{Hyper-coercion} \label{sec:hyper-coercion}
 
 \begin{figure}
 	\[ 
@@ -425,13 +431,13 @@ subtyping, reduction ...
 	\]
 	
 
-	\caption{Hyper-coercion}
-	\label{fig:HC-syntax}
+	\caption{$Lazy D$ Hyper-coercion}
+	\label{fig:HC-D}
 \end{figure}
 
-The syntax of Hyper-coercion is shown in \figref{fig:HC-syntax}.
-
 \subsection{$Lazy D$ Hyper-coercion}
+
+The syntax of $ Lazy D $ Hyper-coercion is shown in \figref{fig:HC-D}.
 
 \subsection{$Lazy UD$ Hyper-coercion}
 
@@ -443,9 +449,7 @@ The syntax of Hyper-coercion is shown in \figref{fig:HC-syntax}.
 
 \subsection{Hyper-coercion is Space-efficient}
 
-\section{Related Work}
-
-\section{Conclusion}
+\section{Conclusion} \label{sec:conclude}
 
 %% Acknowledgments
 \begin{acks}                            %% acks environment is optional
