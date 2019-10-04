@@ -194,9 +194,10 @@ its location in the source code.
 
 Implementing gradually typed languages naively on top of blame calculus 
 suffices sever space leak.
-Translation to Blame Calculus can wrap some expressions with a cast, including 
-those at tail position. Thus, at runtime, mutually tail-recursive functions in 
-source language can accumulate casts at tail position.
+For example, translation to Blame Calculus can wrap some expressions with a 
+cast, including those at tail position. Thus, at runtime, mutually 
+tail-recursive functions in source language can accumulate casts at tail 
+position. There are more examples in \citet{herman2010space}.
 
 In 2007, \citet{herman2010space} proposes a solution to this problem by 
 translating Blame Calculus to a variant of \citet{henglein1994dynamic}'s 
@@ -277,19 +278,18 @@ Many developers of Grift report that it is tricky to convince their
 proof assistants that composition terminates. 
 Secondly, it is desirable to understand the nature of ``normalized cast'', but 
 the coercion-based approach capture this concept indirectly because normalized 
-coercion is defined taking a subset of coercion.
+coercion is defined ny taking a subset of coercion.
 
-Perhaps unsurprisingly, threesome has a straightforward recursive 
-implementation. And its definition is self-standing. Together with 
-\citet{garcia2013calculating}'s work, they suggest that there can be a cast 
-representation whose definition is self-standing, and whose composition is 
-structurally recursive. Super-coercion introduced in 
-\citet{garcia2013calculating} could 
-be a promising candidate. However, its definition is a bit complicated. It uses 
-10 constructors to deal with an elementary type system with only base types and 
-function types. And four constructors are directly related to 
-function types. Thus, super-coercion might not scale very well to more 
-sophisticated type systems.
+Perhaps unsurprisingly, threesome has a structurally recursive compose. And its 
+definition is self-standing. Together with \citet{garcia2013calculating}'s 
+work, they suggest that there can be a cast representation whose definition is 
+self-standing, and whose composition is structurally recursive. 
+Super-coercion introduced in \citet{garcia2013calculating} could be a promising 
+candidate. However, its definition is a bit complicated. It uses 10 
+constructors to deal with an elementary type system with only base types and 
+function types. And four constructors are directly related to function types. 
+Thus, super-coercion might not scale very well to more sophisticated type 
+systems.
 
 Now we present one such cast representation: hyper-coercion. As we will show in 
 Section \ref{sec:hyper-coercion}, there is a clear connection between it and 
@@ -428,7 +428,7 @@ Section \ref{sec:conclude} concludes.
 		} \quad
 		\inference{
 		}{
-			\judgetype{\Gamma}{\mathtt{blame} l}{T}
+			\judgetype{\Gamma}{\mathtt{blame} \; l}{T}
 		}
 	\end{gather*}
 	
@@ -478,7 +478,10 @@ Now let's move to the dynamic semantics.
 \subsection{$Lazy D$ Blame Calculus}
 
 We describe the dynamic semantics of \lazyD{} Blame Calculus with the CEK 
-machine (\citet{felleisen1986control}).
+machine (\citet{felleisen1986control}). We choose CEK machine because to 
+achieve space efficiency, we need to change continuations. 
+Thus, abstract machines that include continuation in states is quite convenient 
+for us. And CEK is one of the simplest machine of this kind.
 
 \subsection{$Lazy UD$ Blame Calculus}
 
@@ -503,7 +506,7 @@ subtyping, reduction ...
 		\epsilon \mid{}
 		?^l
 	}
-	\stxrule{b}{bodies}{
+	\stxrule{m}{middles}{
 		U \mid{}
 		c_1 \rightarrow c_2 \mid{}
 		c_1 \times c_2 \mid{}
@@ -554,14 +557,14 @@ subtyping, reduction ...
 		(c_3 \fatsemi^{l} c_1 \rightarrow c_2 \fatsemi^l c_4, t)
 	}{}
 	\comprule{c_1 \times c_2}{(c_3 \times c_4,t)}{
-		(c_3 \fatsemi^{l} c_1 \times c_2 \fatsemi^l c_4, t)
+		(c_1 \fatsemi^{l} c_3 \times c_2 \fatsemi^l c_4, t)
 	}{}
 	\comprule{c_1 \plus c_2}{(c_3 \plus c_4,t)}{
-		(c_3 \fatsemi^{l} c_1 \plus c_2 \fatsemi^l c_4, t)
+		(c_1 \fatsemi^{l} c_3 \plus c_2 \fatsemi^l c_4, t)
 	}{}
-	\comprule{b_1}{(b_2,t_2)}{
+	\comprule{b_1}{(b_2,t)}{
 		(b_1,\bot^l)
-	}{}
+	}{b_1 }
 	\end{array}
 	\]
 	
