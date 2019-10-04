@@ -69,12 +69,14 @@
 \newcommand{\stxrule}[3]{#1 & ::= & #3 & \text{#2}\\}
 \newcommand{\stxrulecont}[1]{& | & #1 & \\}
 \newcommand{\funrule}[3]{#1 & = & #2 & #3\\}
-\newcommand{\comprule}[4]{#1 & \fatsemi^l & #2 & = & #3 & #4 \\}
+\newcommand{\comprule}[4]{#1 & \fatsemi^\ell & #2 & = & #3 & #4 \\}
 \newcommand{\plus}[0]{+}
 \newcommand{\judgetype}[3]{#1 \vdash #2 : #3}
 \newcommand{\lazyUD}{$\mathtt{Lazy UD}$}
 \newcommand{\lazyD}{$\mathtt{Lazy D}$}
 \newcommand{\eager}{$\mathtt{Eager}$}
+\newcommand{\hyperCoercionI}[0]{id\star}
+\newcommand{\hyperCoercionC}[3]{#1 \overset{#2}{\curvearrowright} #3}
 
 \begin{document}
 
@@ -311,7 +313,7 @@ Calculi.
 In section \ref{sec:hyper-coercion} we present Hyper-coercion.
 Section \ref{sec:conclude} concludes.
 
-\section{Blame Calculus} \label{sec:blame-calculus}
+\section{Background: Blame Calculus} \label{sec:blame-calculus}
 
 \begin{figure}
 	\[
@@ -461,9 +463,10 @@ type errors (blames). In the setting of gradual typing, however, runtime
 type-checking is usually gradual as well. 
 $ S \smile T $ reads ``$ S $ and $ T $ are shallowly-consistent''. Two types 
 are shallowly consistent if one of them is $ \star $, or they have the same 
-top-most type constructor. Shallow-inconsistency is the root of all blames -- 
-casting a value to a shallowly inconsistent type leads to a blame immediately. 
-Shallow-consistency is also reflexive, symmetric, and not transitive.
+top-most type constructor. Shallow-inconsistency is the root of all blames in 
+all lazy strategies -- casting a value to a shallowly inconsistent type leads 
+to a blame immediately. Shallow-consistency is also reflexive, symmetric, and 
+not transitive.
 
 Let $ e $ ranges over terms, including all terms from $ \mathtt{STLC+} $, 
 casts, and blames. Unlike $ \mathtt{STLC+} $, we annotate the 
@@ -477,17 +480,18 @@ Now let's move to the dynamic semantics.
 
 \subsection{$Lazy D$ Blame Calculus}
 
-We describe the dynamic semantics of \lazyD{} Blame Calculus with the CEK 
-machine (\citet{felleisen1986control}). We choose CEK machine because to 
-achieve space efficiency, we need to change continuations. 
-Thus, abstract machines that include continuation in states is quite convenient 
-for us. And CEK is one of the simplest machine of this kind.
+All existing proofs describe the semantics of \lazyD{} Blame Calculus in the 
+style of reduction semantics. 
+We instead do it with the CEK machine (\citet{felleisen1986control}). 
+We choose CEK machine because to achieve space efficiency, we need to change 
+continuations. Thus, abstract machines that include continuation in states is 
+quite convenient for us. And CEK is one of the simplest machine of this kind.
 
 \subsection{$Lazy UD$ Blame Calculus}
 
 subtyping, reduction ...
 
-\section{Coercion Calculus}
+\section{Background: Coercion Calculus}
 
 \subsection{$Lazy D$ Coercion Calculus}
 
@@ -499,8 +503,8 @@ subtyping, reduction ...
 	\[ 
 	\begin{array}{lclr}
 	\stxrule{c}{hyper-coercions}{
-		id* \mid{}
-		( h , ( b , t ) )
+		\hyperCoercionI \mid{}
+		\hyperCoercionC{h}{m}{t}
 	}
 	\stxrule{h}{heads}{
 		\epsilon \mid{}
@@ -517,54 +521,104 @@ subtyping, reduction ...
 		! \mid{}
 		\bot^l
 	}
+	\stxrule{\ell}{$ \mathtt{Maybe} \; l $}{
+		\epsilon \mid{}
+		l
+	}
 	\end{array}
 	\]
 	
-	\fbox{$ c \fatsemi^l c = c $}
+	\fbox{$ c \fatsemi^\ell c = c $}
 	\[ 
 	\begin{array}{rclclr}
-	\comprule{id*}{id*}{
-		id*
+
+	\comprule{
+		\hyperCoercionI
+	}{
+		\hyperCoercionI
+	}{
+		\hyperCoercionI
 	}{}
-	\comprule{id*}{( ?^{l'} , ( b , t ) )}{
-		( ?^{l'} , ( b , t ) )
+
+	\comprule{
+		\hyperCoercionI
+	}{
+		\hyperCoercionC{?^{l'}}{b}{t}
+	}{
+		\hyperCoercionC{?^{l'}}{b}{t}
 	}{}
-	\comprule{id*}{( ! , ( b , t ) )}{
-		(?^{l} , ( b , t))
+
+	\comprule{
+		\hyperCoercionI
+	}{
+		\hyperCoercionC{!}{b}{t}
+	}{
+		\hyperCoercionC{?^{l}}{b}{t}
+	}{\ell = l}
+
+	\comprule{
+		\hyperCoercionC{h}{b}{\bot^{l'}}
+	}{
+		c
+	}{
+		\hyperCoercionC{h}{b}{\bot^{l'}}
 	}{}
-	\comprule{(h , (b ,\bot^{l'}))}{c}{
-		(h , (b ,\bot^{l'}))
-	}{}
-	\comprule{(h , (b_1 , t_1))}{id*}{
-		(h , (b_1 , !))
-	}{t_1 \neq \bot^{l'}}
-	\comprule{(h , (b_1 , t_1))}{(\epsilon , (b_2 , t_2))}{
-		(h , b_1 \fatsemi^{l} (b_2 , t_2))
-	}{t_1 \neq \bot^{l'}}
-	\comprule{(h , (b_1 , t_1))}{(?^{l'} , (b_2 , t_2))}{
-		(h , b_1 \fatsemi^{l'} (b_2 , t_2))
-	}{t_1 \neq \bot^{l'}}
+
+	\comprule{
+		\hyperCoercionC{h}{b_1}{t_1}
+	}{
+		\hyperCoercionI
+	}{
+		\hyperCoercionC{h}{b_1}{!}
+	}{
+		t_1 \neq \bot^{\centerdot}
+	}
+
+	\comprule{
+		\hyperCoercionC{h}{b_1}{t_1}
+	}{
+		\hyperCoercionC{\epsilon}{b_2}{t_2}
+	}{
+		\hyperCoercionC{h}{b'}{t'}
+	}{
+		t_1 \neq \bot^{\centerdot} \; \text{and} \;
+		b_1 \fatsemi^{\ell} (b_2, t) = (b', t')
+	}
+
+	\comprule{
+		\hyperCoercionC{h}{b_1}{t_1}
+	}{
+		\hyperCoercionC{?^{l'}}{b_2}{t_2}
+	}{
+		\hyperCoercionC{h}{b'}{t'}
+	}{
+		t_1 \neq \bot^{\centerdot} \; \text{and} \;
+		b_1 \fatsemi^{l'} (b_2, t) = (b', t')
+	}
 	\end{array}
 	\]
 	
-	\fbox{$ b \fatsemi^l (b,t) = (b,t) $}
+	\fbox{$ m \fatsemi^\ell (m,t) = (m,t) $}
 	\[ 
 	\begin{array}{rclclr}
 	\comprule{U}{(U,t)}{
 		(U,t)
 	}{}
 	\comprule{c_1 \rightarrow c_2}{(c_3 \rightarrow c_4,t)}{
-		(c_3 \fatsemi^{l} c_1 \rightarrow c_2 \fatsemi^l c_4, t)
+		(c_3 \fatsemi^{l} c_1 \rightarrow c_2 \fatsemi^\ell c_4, t)
 	}{}
 	\comprule{c_1 \times c_2}{(c_3 \times c_4,t)}{
-		(c_1 \fatsemi^{l} c_3 \times c_2 \fatsemi^l c_4, t)
+		(c_1 \fatsemi^{l} c_3 \times c_2 \fatsemi^\ell c_4, t)
 	}{}
 	\comprule{c_1 \plus c_2}{(c_3 \plus c_4,t)}{
-		(c_1 \fatsemi^{l} c_3 \plus c_2 \fatsemi^l c_4, t)
+		(c_1 \fatsemi^{l} c_3 \plus c_2 \fatsemi^\ell c_4, t)
 	}{}
 	\comprule{b_1}{(b_2,t)}{
 		(b_1,\bot^l)
-	}{b_1 }
+	}{
+		\ell = l \; \text{and} \;
+		\neg b_1 \smile b_2 
+	}
 	\end{array}
 	\]
 	
@@ -572,24 +626,12 @@ subtyping, reduction ...
 	\[
 	\begin{array}{rclr}
 	\funrule{seq(c_1,c_2)}{
-		c_1 \fatsemi^l c_2
-	}{}
+		c_1 \fatsemi^\epsilon c_2
+	}{cod(c_1) = dom(c_2)}
 	\end{array}
 	\]
 	
-	\fbox{$ id( T ) = c $}
-	\[
-	\begin{array}{rclr}
-	\funrule{id(*)}{
-		id*
-	}{}
-	\funrule{id(P)}{
-		(\epsilon,(id(P),\epsilon))
-	}{}
-	\end{array}
-	\]
-	
-	\fbox{$ id( P ) = b $}
+	\fbox{$ id( P ) = m $}
 	\[
 	\begin{array}{rclr}
 	\funrule{id(U)}{U}{}
@@ -601,6 +643,18 @@ subtyping, reduction ...
 	}{}
 	\funrule{id(T_1 \plus T_2)}{
 		id(T_1) \plus id(T_2)
+	}{}
+	\end{array}
+	\]
+	
+	\fbox{$ id( T ) = c $}
+	\[
+	\begin{array}{rclr}
+	\funrule{id(\star)}{
+		\hyperCoercionI
+	}{}
+	\funrule{id(P)}{
+		\hyperCoercionC{\epsilon}{id(P)}{\epsilon}
 	}{}
 	\end{array}
 	\]
