@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{12}
+\begin{thebibliography}{14}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -45,6 +45,16 @@
 \newblock \bibinfo{booktitle}{\emph{Control Operators, the SECD-machine, and
   the [1]-calculus}}.
 \newblock \bibinfo{publisher}{Indiana University, Computer Science Department}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Flanagan}{Flanagan}{2006}]%
+        {flanagan2006hybrid}
+\bibfield{author}{\bibinfo{person}{Cormac Flanagan}.}
+  \bibinfo{year}{2006}\natexlab{}.
+\newblock \showarticletitle{Hybrid type checking}. In
+  \bibinfo{booktitle}{\emph{ACM Sigplan Notices}}, Vol.~\bibinfo{volume}{41}.
+  ACM, \bibinfo{pages}{245--256}.
 \newblock
 
 
@@ -151,6 +161,16 @@
   calculus}. In \bibinfo{booktitle}{\emph{Proceedings of the 2012 Annual
   Workshop on Scheme and Functional Programming}}. ACM,
   \bibinfo{pages}{68--80}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Siek and Taha}{Siek and Taha}{2006}]%
+        {siek2006gradual}
+\bibfield{author}{\bibinfo{person}{Jeremy~G Siek} {and} \bibinfo{person}{Walid
+  Taha}.} \bibinfo{year}{2006}\natexlab{}.
+\newblock \showarticletitle{Gradual typing for functional languages}. In
+  \bibinfo{booktitle}{\emph{Scheme and Functional Programming Workshop}},
+  Vol.~\bibinfo{volume}{6}. \bibinfo{pages}{81--92}.
 \newblock
 
 

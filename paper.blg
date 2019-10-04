@@ -11,6 +11,9 @@ Reallocated global_strs (elt_size=20001) to 20 items from 10.
 Reallocated glb_str_end (elt_size=4) to 20 items from 10.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Warning--empty address in felleisen1986control
+Warning--can't use both volume and number fields in flanagan2006hybrid
+Warning--empty publisher in flanagan2006hybrid
+Warning--empty address in flanagan2006hybrid
 Warning--can't use both volume and number fields in garcia2013calculating
 Warning--empty publisher in garcia2013calculating
 Warning--empty address in garcia2013calculating
@@ -25,50 +28,52 @@ Warning--empty publisher in siek2015blame
 Warning--empty address in siek2015blame
 Warning--empty publisher in siek2012interpretations
 Warning--empty address in siek2012interpretations
+Warning--empty publisher in siek2006gradual
+Warning--empty address in siek2006gradual
 Warning--can't use both volume and number fields in siek2010threesomes
 Warning--empty publisher in siek2010threesomes
 Warning--empty address in siek2010threesomes
 Warning--empty publisher in wadler2009well
 Warning--empty address in wadler2009well
-You've used 12 entries,
+You've used 14 entries,
             5733 wiz_defined-function locations,
-            1367 strings with 16217 characters,
-and the built_in function-call counts, 13661 in all, are:
-= -- 1612
-> -- 417
+            1377 strings with 16375 characters,
+and the built_in function-call counts, 16074 in all, are:
+= -- 1877
+> -- 475
 < -- 0
-+ -- 134
-- -- 148
-* -- 907
-:= -- 1355
-add.period$ -- 60
-call.type$ -- 12
-change.case$ -- 74
-chr.to.int$ -- 12
-cite$ -- 32
-duplicate$ -- 1297
-empty$ -- 909
-format.name$ -- 184
-if$ -- 3278
++ -- 152
+- -- 172
+* -- 1053
+:= -- 1585
+add.period$ -- 70
+call.type$ -- 14
+change.case$ -- 85
+chr.to.int$ -- 14
+cite$ -- 39
+duplicate$ -- 1550
+empty$ -- 1084
+format.name$ -- 212
+if$ -- 3850
 int.to.chr$ -- 2
 int.to.str$ -- 1
-missing$ -- 49
-newline$ -- 133
-num.names$ -- 96
-pop$ -- 529
+missing$ -- 59
+newline$ -- 147
+num.names$ -- 112
+pop$ -- 628
 preamble$ -- 1
-purify$ -- 176
+purify$ -- 205
 quote$ -- 0
-skip$ -- 458
+skip$ -- 552
 stack$ -- 0
-substring$ -- 984
-swap$ -- 130
+substring$ -- 1185
+swap$ -- 157
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 303
-warning$ -- 20
-while$ -- 99
+type$ -- 363
+warning$ -- 25
+while$ -- 121
 width$ -- 0
-write$ -- 249
-(There were 20 warnings)
+write$ -- 284
+(There were 25 warnings)
