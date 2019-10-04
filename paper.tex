@@ -324,7 +324,7 @@ Section \ref{sec:conclude} concludes.
 		\iota \mid{}
 		T_1 \rightarrow T_2 \mid{}
 		T_1 \times T_2 \mid{}
-		T_1 \plus T_2 \mid{}
+		T_1 \plus T_2
 	}
 %	\stxrule{x,y,z}{variables}{\dots}
 %	\stxrule{l}{labels}{\dots}
@@ -333,9 +333,7 @@ Section \ref{sec:conclude} concludes.
 		x \mid{}
 		\mathtt{tt} \mid{}
 		\lambda^{S\rightarrow{}T}x.t \mid{}
-		e_1 \; e_2 \mid{}
-		\langle T \Leftarrow^l S \rangle t \mid{}
-		\mathtt{blame} \; l
+		e_1 \; e_2
 	}
 	\stxrulecont{
 		\mathtt{cons}\; e_1 \; e_2 \mid{}
@@ -346,6 +344,10 @@ Section \ref{sec:conclude} concludes.
 		\mathtt{inl} \; e \mid{}
 		\mathtt{inr} \; e \mid{}
 		\mathtt{case}\; e_1 \; e_2 \; e_3
+	}
+	\stxrulecont{
+		\langle T \Leftarrow^l S \rangle t \mid{}
+		\mathtt{blame} \; l
 	}
 	\stxrule{o}{observations}{
 		\mathtt{tt} \mid{}
@@ -434,7 +436,7 @@ Section \ref{sec:conclude} concludes.
 	\label{fig:blame-static}
 \end{figure}
 
-\figref{fig:blame-static} defines the form of blame calculus and its static 
+\figref{fig:blame-static} defines the syntax of blame calculus and its static 
 semantics. It is little changed from previous definitions. 
 The dynamic semantics of Blame Calculi depend on blame strategies, so we defer 
 them to sub-sections.
@@ -444,8 +446,9 @@ product types ($ \mathtt{STLC+} $).
 Let $ S,T $ range over types. A type is either the dynamic type $ \star $
 (a.k.a. $ \mathtt{Dyn} $, $ \mathbb{?} $, or $ \mathtt{Unknown} $), 
 or a pre-type. 
-Let $ P,Q $ range over pre-types. Every pre-type is a type with a 
-traditional type constructor at the top.
+Let $ P,Q $ range over pre-types. Every pre-type is a type with a type 
+constructor at the top. For simplicity, we only have one base type $ \iota $, 
+the unit type. Other pre-types are functions, products, and sums.
 
 $ S \sim T $ reads ``$ S $ and $ T $ are consistent''.
 Two types are consistent if one of them is $ \star $, or they have the same 
@@ -454,26 +457,28 @@ The intuition of $ S \sim T $ is that $ S $ and $ T $ have no conflict type
 information. Consistency is reflexive and symmetric, but not transitive.
 
 One might be tempted to conclude that inconsistency is the root of all runtime 
-type errors. In the setting of gradual typing, however, runtime type-checking 
-is usually gradual as well. 
+type errors (blames). In the setting of gradual typing, however, runtime 
+type-checking is usually gradual as well. 
 $ S \smile T $ reads ``$ S $ and $ T $ are shallowly-consistent''. Two types 
 are shallowly consistent if one of them is $ \star $, or they have the same 
-top-most type constructor. Shallow-inconsistency is the root of all runtime 
-type error -- Casting a value to a shallowly inconsistent type would 
-lead to an runtime type error immediately. Shallow-consistency is also 
-reflexive, symmetric, and not transitive.
+top-most type constructor. Shallow-inconsistency is the root of all blames -- 
+casting a value to a shallowly inconsistent type leads to a blame immediately. 
+Shallow-consistency is also reflexive, symmetric, and not transitive.
 
-Let $ e $ ranges over terms. Unlike $ \mathtt{STLC+} $, we annotate the 
-co-domain of lambda abstractions explicitly. Besides, we add casts and blames.
+Let $ e $ ranges over terms, including all terms from $ \mathtt{STLC+} $, 
+casts, and blames. Unlike $ \mathtt{STLC+} $, we annotate the 
+co-domain of lambda abstractions explicitly. 
+The end of the figure shows the extra typing rules.
 
-Let $ o $ ranges over observations.
+Let $ o $ ranges over observations. They are what would be observed if a 
+program terminates. Observations include all constructors and blames.
 
 Now let's move to the dynamic semantics. 
 
 \subsection{$Lazy D$ Blame Calculus}
 
-We describe the dynamic semantics of Blame Calculus with the CEK machine 
-(\citet{felleisen1986control}).
+We describe the dynamic semantics of \lazyD{} Blame Calculus with the CEK 
+machine (\citet{felleisen1986control}).
 
 \subsection{$Lazy UD$ Blame Calculus}
 
