@@ -68,12 +68,12 @@
 \newblock
 
 
-\bibitem[\protect\citeauthoryear{Gradual-Typing}{Gradual-Typing}{[n. d.]}]%
+\bibitem[\protect\citeauthoryear{Gradual-Typing}{Gradual-Typing}{[n.d.]}]%
         {Gradual-TypingType-based-casts}
-\bibfield{author}{\bibinfo{person}{Gradual-Typing}.} \bibinfo{year}{[n.
-  d.]}\natexlab{}.
+\bibfield{author}{\bibinfo{person}{Gradual-Typing}.}
+  \bibinfo{year}{[n.d.]}\natexlab{}.
 \newblock \bibinfo{title}{Type-based-casts and coercions are not equivalent}.
-\newblock   (\bibinfo{year}{[n. d.]}).
+\newblock
 \newblock
 \urldef\tempurl%
 \url{https://github.com/Gradual-Typing/Grift/issues/81}

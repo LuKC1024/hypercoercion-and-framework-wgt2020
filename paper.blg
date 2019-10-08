@@ -1,0 +1,79 @@
+This is BibTeX, Version 0.99d (TeX Live 2019)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: paper.aux
+The style file: ACM-Reference-Format.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Database file #1: bibfile.bib
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
+Reallocated global_strs (elt_size=20001) to 20 items from 10.
+Reallocated glb_str_end (elt_size=4) to 20 items from 10.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Warning--empty address in felleisen1986control
+Warning--can't use both volume and number fields in flanagan2006hybrid
+Warning--empty publisher in flanagan2006hybrid
+Warning--empty address in flanagan2006hybrid
+Warning--can't use both volume and number fields in garcia2013calculating
+Warning--empty publisher in garcia2013calculating
+Warning--empty address in garcia2013calculating
+Warning--empty year in Gradual-TypingType-based-casts
+Warning--empty publisher in kuhlenschmidt2018efficient
+Warning--empty address in kuhlenschmidt2018efficient
+Warning--page numbers missing in both pages and numpages fields in kuhlenschmidt2018efficient
+Warning--empty publisher in siek2009exploring
+Warning--empty address in siek2009exploring
+Warning--can't use both volume and number fields in siek2015blame
+Warning--empty publisher in siek2015blame
+Warning--empty address in siek2015blame
+Warning--empty publisher in siek2012interpretations
+Warning--empty address in siek2012interpretations
+Warning--empty publisher in siek2006gradual
+Warning--empty address in siek2006gradual
+Warning--can't use both volume and number fields in siek2010threesomes
+Warning--empty publisher in siek2010threesomes
+Warning--empty address in siek2010threesomes
+Warning--empty publisher in wadler2009well
+Warning--empty address in wadler2009well
+You've used 14 entries,
+            5719 wiz_defined-function locations,
+            1375 strings with 16323 characters,
+and the built_in function-call counts, 15977 in all, are:
+= -- 1876
+> -- 475
+< -- 0
++ -- 152
+- -- 172
+* -- 1046
+:= -- 1584
+add.period$ -- 70
+call.type$ -- 14
+change.case$ -- 85
+chr.to.int$ -- 14
+cite$ -- 39
+duplicate$ -- 1533
+empty$ -- 1067
+format.name$ -- 212
+if$ -- 3815
+int.to.chr$ -- 2
+int.to.str$ -- 1
+missing$ -- 59
+newline$ -- 147
+num.names$ -- 112
+pop$ -- 611
+preamble$ -- 1
+purify$ -- 205
+quote$ -- 0
+skip$ -- 551
+stack$ -- 0
+substring$ -- 1185
+swap$ -- 157
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 363
+warning$ -- 25
+while$ -- 121
+width$ -- 0
+write$ -- 283
+(There were 25 warnings)
