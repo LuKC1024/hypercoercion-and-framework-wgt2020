@@ -68,7 +68,8 @@
 \newcommand{\figref}[1]{Fig.~\ref{#1}}
 \newcommand{\stxrule}[3]{#1 & ::= & #3 & \text{#2}\\}
 \newcommand{\stxrulecont}[1]{& | & #1 & \\}
-\newcommand{\funrule}[3]{#1 & = & #2 & #3\\}
+\newcommand{\funrule}[3]{#1 &=& #2 & #3\\}
+\newcommand{\redrule}[3]{#1 & \longrightarrow_B & #2 & #3\\}
 \newcommand{\comprule}[4]{#1 & \fatsemi^\ell & #2 & = & #3 & #4 \\}
 \newcommand{\plus}[0]{+}
 \newcommand{\judgetype}[3]{#1 \vdash #2 : #3}
@@ -77,6 +78,43 @@
 \newcommand{\eager}{$\mathtt{Eager}$}
 \newcommand{\hyperCoercionI}[0]{id\star}
 \newcommand{\hyperCoercionC}[3]{#1 \overset{#2}{\curvearrowright} #3}
+\newcommand{\sOOinspect}[3]{\mathtt{Eval} \; #1 \; #2 \; #3}
+\newcommand{\sOOreturn}[2]{\mathtt{Apply} \; #2 \; #1}
+\newcommand{\sOOhalt}[1]{\mathtt{Halt} \; #1}
+\newcommand{\TOOdyn}[0]{\star}
+\newcommand{\TOOpre}[1]{#1}
+\newcommand{\POOunit}[0]{\iota}
+\newcommand{\POOfun}[2]{#1 \shortrightarrow #2}
+\newcommand{\POOprod}[2]{#1 \times #2}
+\newcommand{\POOsum}[2]{#1 \plus #2}
+\newcommand{\eOOvar}[1]{#1}
+\newcommand{\eOOsole}[0]{\mathtt{tt}}
+\newcommand{\eOOlam}[4]{\lambda^{#1\rightarrow{}#2}#3.#4}
+\newcommand{\eOOapp}[2]{#1 \; #2}
+\newcommand{\eOOcons}[2]{\mathtt{cons} \; #1 \; #2}
+\newcommand{\eOOcar}[1]{\mathtt{car} \; #1}
+\newcommand{\eOOcdr}[1]{\mathtt{cdr} \; #1}
+\newcommand{\eOOinl}[1]{\mathtt{inl} \; #1}
+\newcommand{\eOOinr}[1]{\mathtt{inr} \; #1}
+\newcommand{\eOOcase}[3]{\mathtt{case} \; #1 \; #2 \; #3}
+\newcommand{\eOOcast}[4]{#1 \langle \cOOcast{#2}{#3}{#4} \rangle}
+\newcommand{\eOOblame}[1]{\mathtt{blame} \; #1}
+\newcommand{\oOOinj}{\mathtt{dyn}}
+\newcommand{\oOOsole}{\mathtt{tt}}
+\newcommand{\oOOfun}{\mathtt{fun}}
+\newcommand{\oOOcons}{\mathtt{cons}}
+\newcommand{\oOOinl}{\mathtt{inl}}
+\newcommand{\oOOinr}{\mathtt{inr}}
+\newcommand{\oOOblame}[1]{\mathtt{blame} \; #1}
+\newcommand{\cOOcast}[3]{#1 \overset{#2}{\Rightarrow} #3}
+\newcommand{\vOOcast}[2]{#1\langle#2\rangle}
+\newcommand{\vOOfun}[3]{\mathtt{fun} \; #1 \; #2 \; #3}
+\newcommand{\vOOtt}[0]{\mathtt{tt}}
+\newcommand{\vOOcons}[2]{\mathtt{cons}\;#1\;#2}
+\newcommand{\vOOinl}[1]{\mathtt{inl}\;#1}
+\newcommand{\vOOinr}[1]{\mathtt{inr}\;#1}
+\newcommand{\rOOsucc}[1]{\mathtt{succ}\;#1}
+\newcommand{\rOOfail}[1]{\mathtt{fail}\;#1}
 
 \begin{document}
 
@@ -191,7 +229,7 @@ notably gradual types \cite{siek2006gradual} and hybrid types
 Later \citet{wadler2009well} introduces Blame Calculus, an intermediate 
 language for gradual types and hybrid types. 
 Blame Calculus throws a blame label when a runtime type-check fails.
-Blame labels can include useful information on the failed cast, for example, 
+These labels can include useful information on the failed cast, for example, 
 its location in the source code.
 
 Implementing gradually typed languages naively on top of blame calculus 
@@ -206,10 +244,10 @@ translating Blame Calculus to a variant of \citet{henglein1994dynamic}'s
 Coercion Calculus. Their key idea is to represent casts with coercions, 
 which can be composed and normalized. Every coercion looks like a list of 
 trees. For normalized coercion, the length of the list is bounded by a small 
-constant. And the depths of trees do not growth in composition and 
+constant. And the depths of trees do not grow in composition and 
 normalization. These two facts implies that by representing casts with 
-coercions, we can restore the space-efficiency of tail-recursive programs. This 
-Coercion Calculus, however, doesn't include blame tracking. 
+coercions, we can restore the space-efficiency. This 
+Coercion Calculus, however, does not support blame tracking. 
 
 After that, many efforts have been made to combine blame tracking and 
 space efficiency. 
@@ -223,8 +261,8 @@ but also blame more programs.
 $ D $ and $ UD $ assign blame labels differently.
 Blame strategy is essentially the semantics of casts.
 They prove that the \lazyUD{} Coercion Calculus simulates the Blame Calculus 
-in \cite{wadler2009well}. But we don't know whether the simulation also works 
-the other way, and what are the Blame counterparts of other Coercion Calculi.
+in \cite{wadler2009well}. But it is unknown whether the simulation also works 
+the other way, and what the Blame counterparts of other Coercion Calculi are.
 
 \citet{siek2010threesomes} proposes another approach to combine blame 
 tracking and space efficiency. Their solution is based on Threesome Calculus. 
@@ -232,10 +270,16 @@ Their key idea is to represent casts with threesomes, a novel cast
 representation. Threesomes, like coercions, can be composed. There is no 
 separate normalization because every threesome is in normal form. 
 They prove that their Threesome Calculus bi-simulates
-the \lazyUD{} Coercion Calculus and the Blame Calculus.
+the \lazyUD{} Coercion Calculus and the Blame Calculus, and that threesomes are 
+space-efficient.
 
-\citet{siek2012interpretations} introduces a \lazyD{} Blame Calculus. They 
-conjecture that it bi-simulates the \lazyD{} Coercion Calculus.
+\citet{siek2012interpretations} present a \lazyD{} Blame Calculus and revised 
+lazy Coercion Calculi. They simplify the Coercion Calculi by only working with 
+normal coercions (i.e. coercions in normal form). 
+Fortunately, coercions are trivially normal when initially constructed, and 
+their empowered compose function is conjectured to produces normal coercions as 
+well. Also, they conjecture that their Coercion Calculi bi-simulate the 
+corresponding Blame Calculi.
 
 Following \citet{siek2010threesomes}, \citet{garcia2013calculating} 
 implement all other blame strategies with Threesome Calculus. 
@@ -248,22 +292,20 @@ His claim is later affirmed by the group of people who develop threesome
 The connection 
 between his Threesome Calculi and \citet{siek2009exploring}'s Coercion 
 Calculi are established by the fact that the former are derived from the latter.
-The connection between eager calculi and Blame Calculus, however, 
-is still unclear.
 
-\citet{siek2015blame} revisit the coercion-based approach. They simplify the 
-\lazyUD{} Coercion Calculus by only working with normalized coercions.
-Fortunately, coercions are trivially normalized when initially constructed, and 
-their empowered compose function produces normalized coercions as well. Again 
-\cite{siek2010threesomes}, they delegate all other blame strategies.
+\citet{siek2015blame} revisit the coercion-based approach. They revise the 
+\lazyUD{} Coercion Calculus by \citet{siek2012interpretations}, prove its 
+space-efficiency and that it bi-simulate the \lazyUD{} Blame Calculus.
 
 Last year, \citet{kuhlenschmidt2018efficient} present Grift, a space-efficient 
 and blame-tracking compiler for a gradually typed language of the same name. 
-This implementation is based on the \lazyD{} Coercion Calculus.
-Their result suggests that implementing coercion is practical. They implement 
-tuples, which is the first time gradual product types is considered. Their 
-treatment on tuples, however, is shown incorrect 
-\cite{Gradual-TypingType-based-casts}.
+This implementation is based on the \lazyD{} Coercion Calculus by 
+\citet{siek2012interpretations}.
+Their result suggests that implementing coercion is practical. 
+%They implement 
+%tuples, which is the first time gradual product types is considered. Their 
+%treatment on tuples, however, is shown incorrect 
+%\cite{Gradual-TypingType-based-casts}.
 
 Recently, \citet{new2019gradual} show that \eager{} strategies are 
 incompatible with $\eta$-equivalence of functions, which suggest that these 
@@ -273,14 +315,16 @@ So far, it seems that the coercion-based approach is the best way to combine
 space-efficiency and blame-tracking: coercion is claimed easy to 
 understand \cite{garcia2013calculating}\cite{siek2015blame} and is shown 
 easy enough to implement in a compiler \cite{kuhlenschmidt2018efficient}.
-Coercion is not satisfactory, however, in at least two aspects.
+Coercion is not satisfactory, however, in at least three aspects.
 Firstly, its compose function is not structurally recursive, which makes 
 it difficult to study coercion formally.
-Many developers of Grift report that it is tricky to convince their 
-proof assistants that composition terminates. 
+For instance, many developers of Grift report that it is tricky to convince 
+their proof assistants that composition terminates. 
 Secondly, it is desirable to understand the nature of ``normalized cast'', but 
 the coercion-based approach capture this concept indirectly because normalized 
-coercion is defined ny taking a subset of coercion.
+coercion is defined by taking a subset of coercion.
+Last by not least, the memory representation of normal coercions is not very 
+compact.
 
 Perhaps unsurprisingly, threesome has a structurally recursive compose. And its 
 definition is self-standing. Together with \citet{garcia2013calculating}'s 
@@ -299,12 +343,12 @@ the normalized coercion, so we are optimistic that understanding and
 implementing hyper-coercion should be as easy (or as hard).
 
 Our hyper-coercion considers sum types and product types, which are not 
-accounted in all proofs above. Adding each of them requires us to add only one 
+considered in all proofs above. Adding each of them requires us to add only one 
 new constructor to a component of hyper-coercion. This suggests that 
 hyper-coercion might scale better than super-coercion.
 
 We prove formally that the \lazyD{} (resp. \lazyUD{}) hyper-coercion calculus 
-bi-simulate the \lazyD{} (resp. \lazyUD{}) Blame Calculus. This is possibly 
+bi-simulates the \lazyD{} (resp. \lazyUD{}) Blame Calculus. This is possibly 
 the first bi-simulation proof for the \lazyD{} Blame Calculus.
 
 The structure of this paper is as follows. 
@@ -316,53 +360,53 @@ Section \ref{sec:conclude} concludes.
 \section{Background: Blame Calculus} \label{sec:blame-calculus}
 
 \begin{figure}
+	Syntax
 	\[
-	\begin{array}{lclr}
-	\stxrule{S,T}{types}{
+	\begin{array}{rclr}
+	\stxrule{T}{types}{
 		\star \mid{}
 		P
 	}
-	\stxrule{P,Q}{pre-types}{
-		\iota \mid{}
-		T_1 \rightarrow T_2 \mid{}
-		T_1 \times T_2 \mid{}
-		T_1 \plus T_2
+	\stxrule{P}{pre-types}{
+		\POOunit \mid
+		\POOfun{T_1}{T_2} \mid
+		\POOprod{T_1}{T_2} \mid
+		\POOsum{T_1}{T_2}
 	}
-%	\stxrule{x,y,z}{variables}{\dots}
-%	\stxrule{l}{labels}{\dots}
-%	\stxrule{k}{constants}{sole}
 	\stxrule{e}{terms}{
-		x \mid{}
-		\mathtt{tt} \mid{}
-		\lambda^{S\rightarrow{}T}x.t \mid{}
-		e_1 \; e_2
+		\eOOvar{x} \mid{}
+		\eOOsole{} \mid{}
+		\eOOlam{T_1}{T_2}{x}{e} \mid
+		\eOOapp{e_1}{e_2}
 	}
 	\stxrulecont{
-		\mathtt{cons}\; e_1 \; e_2 \mid{}
-		\mathtt{car}\; e \mid{}
-		\mathtt{cdr}\; t
+		\eOOcons{e_1}{e_2} \mid
+		\eOOcar{e} \mid
+		\eOOcdr{e}
 	}
 	\stxrulecont{
-		\mathtt{inl} \; e \mid{}
-		\mathtt{inr} \; e \mid{}
-		\mathtt{case}\; e_1 \; e_2 \; e_3
+		\eOOinl{e} \mid
+		\eOOinr{e} \mid
+		\eOOcase{e_1}{e_2}{e_3}
 	}
 	\stxrulecont{
-		\langle T \Leftarrow^l S \rangle t \mid{}
-		\mathtt{blame} \; l
+		\eOOcast{e}{T_1}{l}{T_2} \mid
+		\eOOblame{l}
 	}
 	\stxrule{o}{observations}{
-		\mathtt{tt} \mid{}
-		\mathtt{fun}\mid{}
-		\mathtt{cons}\mid{}
-		\mathtt{inl}\mid{}
-		\mathtt{inr}\mid{}
-		\mathtt{blame}\; l
+		\oOOinj \mid
+		\oOOsole \mid
+		\oOOfun \mid
+		\oOOcons \mid
+		\oOOinl \mid
+		\oOOinr \mid
+		\oOOblame{l}
 	}
 	\end{array}
 	\]
 	
-	\fbox{$ S \sim T $}
+	Consistency
+	\fbox{$ T_1 \sim T_2 $}
 	\begin{gather*}
 	\inference{}{
 		\star \sim \star
@@ -396,7 +440,8 @@ Section \ref{sec:conclude} concludes.
 	}
 	\end{gather*}
 	
-	\fbox{$ S \smile T $}
+	Shallow-consistency
+	\fbox{$ T_1 \smile T_2 $}
 	\begin{gather*}
 	\inference{}{
 		\star \smile \star
@@ -411,26 +456,27 @@ Section \ref{sec:conclude} concludes.
 		\iota \smile \iota
 	} \quad
 	\inference{}{
-		S_1 \rightarrow T_1 \smile S_2 \rightarrow T_2
-	}
+		T_{11} \rightarrow T_{12} \smile T_{21} \rightarrow T_{22}
+	} \quad
 	\inference{}{
-	S_1 \times T_1 \smile S_2 \times T_2
-	}
+		T_{11} \times T_{12} \smile T_{21} \times T_{22}
+	} \quad
 	\inference{}{
-	S_1 \plus T_1 \smile S_2 \plus T_2
+	T_{11} \plus T_1 \smile S_2 \plus T_2
 	}
 	\end{gather*}
 	
+	Term typing
 	\fbox{$ \Gamma \vdash e \vdash T $}
 	\begin{gather*}
 		\inference{
 			S \sim T & \Gamma \vdash e : S 
 		}{
-			\judgetype{\Gamma}{\langle T \Leftarrow^l S \rangle t}{T}
+			\judgetype{\Gamma}{\eOOcast{e}{T_1}{l}{T_2}}{T_2}
 		} \quad
 		\inference{
 		}{
-			\judgetype{\Gamma}{\mathtt{blame} \; l}{T}
+			\judgetype{\Gamma}{\eOOblame{l}}{T}
 		}
 	\end{gather*}
 	
@@ -452,15 +498,15 @@ Let $ P,Q $ range over pre-types. Every pre-type is a type with a type
 constructor at the top. For simplicity, we only have one base type $ \iota $, 
 the unit type. Other pre-types are functions, products, and sums.
 
-$ S \sim T $ reads ``$ S $ and $ T $ are consistent''.
-Two types are consistent if one of them is $ \star $, or they have the same 
-top-most type constructor and the corresponding sub-parts are consistent. 
-The intuition of $ S \sim T $ is that $ S $ and $ T $ have no conflict type 
-information. Consistency is reflexive and symmetric, but not transitive.
+%$ S \sim T $ reads ``$ S $ and $ T $ are consistent''.
+%Two types are consistent if one of them is $ \star $, or they have the same 
+%top-most type constructor and the corresponding sub-parts are consistent. 
+%The intuition of $ S \sim T $ is that $ S $ and $ T $ have no conflict type 
+%information. Consistency is reflexive and symmetric, but not transitive.
 
-One might be tempted to conclude that inconsistency is the root of all runtime 
-type errors (blames). In the setting of gradual typing, however, runtime 
-type-checking is usually gradual as well. 
+%One might be tempted to conclude that inconsistency is the root of all runtime 
+%type errors (blames). In the setting of gradual typing, however, runtime 
+%type-checking is usually gradual as well. 
 $ S \smile T $ reads ``$ S $ and $ T $ are shallowly-consistent''. Two types 
 are shallowly consistent if one of them is $ \star $, or they have the same 
 top-most type constructor. Shallow-inconsistency is the root of all blames in 
@@ -480,12 +526,258 @@ Now let's move to the dynamic semantics.
 
 \subsection{$Lazy D$ Blame Calculus}
 
-All existing proofs describe the semantics of \lazyD{} Blame Calculus in the 
-style of reduction semantics. 
-We instead do it with the CEK machine (\citet{felleisen1986control}). 
+\begin{figure}
+	Syntax
+	\[
+	\begin{array}{rclr}
+	
+	\stxrule{v}{values}{
+		\vOOfun{\rho}{x}{b} \mid
+		\vOOtt{} \mid
+		\vOOcons{v_1}{v_2} \mid
+		\vOOinl{v} \mid
+		\vOOinr{v} \mid		
+		\vOOcast{v}{c}
+	}
+	\stxrule{c}{casts}{
+		\cOOcast{T_1}{l}{T_2}
+	}
+	\stxrule{r}{cast results}{
+		\rOOsucc{v} \mid
+		\rOOfail{l}
+	}
+	\stxrule{s}{states}{
+		\sOOinspect{e}{\rho}{\kappa} \mid{}
+		\sOOreturn{v}{\kappa} \mid{}
+		\sOOhalt{o}
+	}
+		
+	\stxrule{\kappa}{continuations}{
+		\mathtt{mt} \mid{}
+		\mathtt{cons_1} \; e \; \rho \; \kappa \mid{}
+		\mathtt{cons_2} \; v \; \kappa \mid{}
+		\mathtt{inl} \; \kappa \mid{}
+		\mathtt{inr} \; \kappa
+	}
+	\stxrulecont{
+		\mathtt{app_1} \; e \; \rho \; \kappa \mid{}
+		\mathtt{app_2} \; v \; \kappa \mid{}
+		\mathtt{car} \; \kappa \mid{}
+		\mathtt{cdr} \; \kappa \mid
+		\mathtt{case_1} \; e_1 \; e_2 \; \rho \; \kappa
+	}
+	\stxrulecont{	
+		\mathtt{case_2} \; v   \; e   \; \rho \; \kappa \mid{}
+		\mathtt{case_3} \; v_1 \; v_2 \; \rho \; \kappa \mid
+		\langle c \rangle \kappa
+	}
+	\end{array}
+	\]
+	
+	Value typing \fbox{$ v : T $}
+	\begin{gather*}
+	\dots \quad
+	\inference{
+		v : P &
+		c : P \Longrightarrow T &
+		P \smile T
+	}{
+		\vOOcast{v}{\cOOcast{P}{l}{T}} : T
+	}
+	\end{gather*}
+	
+	Continuation typing \fbox{$ \kappa : T_1 \Longrightarrow T_2 $}
+	\begin{gather*}
+	\dots \quad
+	\inference{
+		c : T_1 \Longrightarrow T_2 &
+		\kappa : T_2 \Longrightarrow T_3
+	}{
+		\langle c \rangle \kappa : T_1 \Longrightarrow T_3
+	}
+	\end{gather*}
+	
+	Reduction \fbox{$ s_1 \longrightarrow_B s_2 $}
+	\[
+	\begin{array}{rclr}
+	
+	& \vdots \\
+	\redrule{
+		\sOOinspect{\eOOcast{e}{T_1}{l}{T_2}}{\rho}{\kappa}
+	}{
+		\sOOinspect{e}{\rho}{\langle\cOOcast{T_1}{l}{T_2}\rangle\kappa}
+	}{}
+	\redrule{
+		\sOOreturn{v_1}{(\mathtt{app_2} \; \vOOcast{v_2}{
+				\cOOcast{\POOfun{T_{11}}{T_{12}}}{l}{\POOfun{T_{21}}{T_{22}}}
+			} \; \kappa)}
+	}{
+		\sOOreturn{v_1}{
+		\langle\cOOcast{T_{21}}{l}{T_{11}}\rangle
+		(\mathtt{app_2} \; v_2 \; 
+		\langle\cOOcast{T_{12}}{l}{T_{22}}\rangle \kappa)}
+	}{}
+	
+%	\redrule{
+%		\sOOreturn{v}{(
+%			\mathtt{app_2} \;
+%			(\vOOfun{\rho}{x}{e}) \;
+%			\kappa
+%		)}
+%	}{\sOOinspect{e}{\rho{}[x := v]}{\kappa}}{}
+
+	\redrule{
+		\sOOreturn{
+			\vOOcast{v}{\cOOcast{\POOprod{T_{11}}{T_{12}}}{l}{
+					\POOprod{T_{21}}{T_{22}}}}
+			}{(\mathtt{car} \; \kappa)}
+	}{
+		\sOOreturn{v}{(
+			\mathtt{car} \;
+			\langle \cOOcast{T_{11}}{l}{T_{21}} \rangle \kappa
+			)}
+	}{}
+
+	\redrule{
+		\sOOreturn{
+			\vOOcast{v}{\cOOcast{\POOprod{T_{11}}{T_{12}}}{l}{
+					\POOprod{T_{21}}{T_{22}}}}
+		}{(\mathtt{cdr} \; \kappa)}
+	}{
+		\sOOreturn{v}{(
+			\mathtt{cdr} \;
+			\langle \cOOcast{T_{12}}{l}{T_{22}} \rangle \kappa
+			)}
+	}{}
+
+	\redrule{
+		\sOOreturn{v_3}{(
+			\mathtt{case_3} \;
+			v_1 \; v_2 \;
+			\kappa
+		)}
+	}{case(v_1,
+	\mathtt{app_2} \; v_2 \; \kappa,
+	\mathtt{app_2} \; v_3 \; \kappa
+	)}{}
+
+	\redrule{
+		\sOOreturn{v}{(
+			\mathtt{cast} \; c \; \kappa
+		)}
+	}{
+		\sOOreturn{u}{\kappa}
+		\\ &
+	}{
+		\text{where} \; applyCast(c,v) = \rOOsucc{u}
+	}
+
+	\redrule{
+		\sOOreturn{v}{(
+			\mathtt{cast} \; c \; \kappa
+			)}
+	}{
+		\sOOhalt{(\oOOblame{l})}
+		\\ &
+	}{
+		\text{where} \; applyCast(c,v) = \rOOfail{l}
+	}
+	\end{array}
+	\]	
+	
+	Case
+	\[
+	\begin{array}{rclr}
+	\funrule{case(\vOOinl{v},\kappa_1,\kappa_2)}{
+		\sOOreturn{v}{\kappa_1}
+	}{}
+	\funrule{case(\vOOinr{v},\kappa_1,\kappa_2)}{
+		\sOOreturn{v}{\kappa_2}
+	}{}
+	\funrule{case(\vOOcast{v}{\cOOcast{\POOsum{T_{11}}{T_{12}}}{l}{\POOsum{T_{21}}{T_{22}}}},\kappa_1,\kappa_2)}{
+		case(v,
+		\langle \cOOcast{T_{11}}{l}{T_{21}} \rangle \kappa_1,
+		\langle \cOOcast{T_{12}}{l}{T_{22}} \rangle \kappa_2)
+	}{}
+	\end{array}
+	\]
+	
+	Apply cast
+	\[
+	\begin{array}{rclr}
+	\funrule{
+		applyCast(\cOOcast{\star}{l}{\star},v)
+	}{
+		\rOOsucc{v}
+	}{}
+	\funrule{
+		applyCast(\cOOcast{\star}{l}{P_2},\vOOcast{v}{\cOOcast{P_1}{l'}{\star}})
+	}{
+		applyCast(\cOOcast{P_1}{l}{P_2},v)
+	}{}
+	\funrule{
+		applyCast(\cOOcast{P}{l}{\star},v)
+	}{
+		\rOOsucc{\vOOcast{v}{\cOOcast{P}{l}{\star}}}
+	}{}
+	\funrule{
+		applyCast(\cOOcast{P_1}{l}{P_2},v)
+	}{
+		\rOOsucc{\vOOcast{v}{\cOOcast{P_1}{l}{P_2}}}
+	}{P_1 \smile P_2}
+	\funrule{
+		applyCast(\cOOcast{P_1}{l}{P_2},v)
+	}{
+		\rOOfail{l}
+	}{\neg P_1 \smile P_2}
+	
+	\end{array}
+	\]
+	
+	\caption{Dynamic semantics of the \lazyD{} Blame Calculus}
+	\label{ld-blame-cek}
+\end{figure}
+
+Fig.~\ref{ld-blame-cek} defines the dynamic semantcis of the \lazyD{} Blame 
+Calculus in the style of CEK machines (\citet{felleisen1986control}). 
 We choose CEK machine because to achieve space efficiency, we need to change 
 continuations. Thus, abstract machines that include continuation in states is 
 quite convenient for us. And CEK is one of the simplest machine of this kind.
+
+Let $ c $ ranges over casts. A cast is a triple of a type, a label, and a type.
+
+Let $ v $ ranges over values. A value is either a function, the 
+element of unit, a pair, a left injection, a right injection, or a casted value.
+The cast around a casted value is not arbitrary, as shown by value typing: the 
+source type must be a pre-type, and the source and the target must be 
+shallow-consistent.
+
+Let $ r $ ranges over cast results. A cast result is either a success, which 
+brings a value, or a failure, which brings a blame label.
+
+Let $ s $ ranges over machine states. A state is either looking at an 
+expression to decide what to do next, returning a value to a continuation, or 
+halting with an observation.
+
+Let $ \kappa $ ranges over continuations. $ \mathtt{mt} $ is the top 
+continuation. The following continuations correspond to expressions. For 
+example, $ (\mathtt{cons_1} \; e \; \rho \; \kappa) $ is the continuation where 
+we are waiting for the value of the first argument to a $ \mathtt{cons} $. And 
+the last continuation, $ \langle c \rangle \kappa $ is to cast the value before 
+returning to $ \kappa $.
+
+In the reduction rules, to evaluate a cast expression, the machine move the 
+cast to the continuation and evaluate the inner expression. To apply a casted 
+function, the machine firstly cast $ v_1 $, the operand, then apply the casted 
+operand to $ v_2 $, the un-casted function, and finally cast the result of the 
+function application. To take out the first (resp. second) part of a casted 
+pair, the machine firstly take out the first (resp. second) part of $ v $, the 
+un-casted pair, and cast the result. To case-split a sum, the machine looks 
+deep inside the value to find out whether it is a left injection or a right 
+one. Along the way, the machine accumulate the pending casts onto the 
+continuations. To cast a value, the machine try to apply the cast to the value. 
+If the cast succeeds, the machine returns the result to the next continuation. 
+If the cast fails, the machine halts with the blame label.
 
 \subsection{$Lazy UD$ Blame Calculus}
 
@@ -605,13 +897,13 @@ subtyping, reduction ...
 		(U,t)
 	}{}
 	\comprule{c_1 \rightarrow c_2}{(c_3 \rightarrow c_4,t)}{
-		(c_3 \fatsemi^{l} c_1 \rightarrow c_2 \fatsemi^\ell c_4, t)
+		(c_3 \fatsemi^{\ell} c_1 \rightarrow c_2 \fatsemi^\ell c_4, t)
 	}{}
 	\comprule{c_1 \times c_2}{(c_3 \times c_4,t)}{
-		(c_1 \fatsemi^{l} c_3 \times c_2 \fatsemi^\ell c_4, t)
+		(c_1 \fatsemi^{\ell} c_3 \times c_2 \fatsemi^\ell c_4, t)
 	}{}
 	\comprule{c_1 \plus c_2}{(c_3 \plus c_4,t)}{
-		(c_1 \fatsemi^{l} c_3 \plus c_2 \fatsemi^\ell c_4, t)
+		(c_1 \fatsemi^{\ell} c_3 \plus c_2 \fatsemi^\ell c_4, t)
 	}{}
 	\comprule{b_1}{(b_2,t)}{
 		(b_1,\bot^l)
@@ -634,15 +926,15 @@ subtyping, reduction ...
 	\fbox{$ id( P ) = m $}
 	\[
 	\begin{array}{rclr}
-	\funrule{id(U)}{U}{}
-	\funrule{id(T_1 \rightarrow T_2)}{
-		id(T_1) \rightarrow id(T_2)
+	\funrule{id(\POOunit)}{\POOunit}{}
+	\funrule{id(\POOfun{T_1}{T_2})}{
+		\POOfun{id(T_1)}{id(T_2)}
 	}{}
-	\funrule{id(T_1 \times T_2)}{
-		id(T_1) \times id(T_2)
+	\funrule{id(\POOprod{T_1}{T_2})}{
+		\POOprod{id(T_1)}{id(T_2)}
 	}{}
-	\funrule{id(T_1 \plus T_2)}{
-		id(T_1) \plus id(T_2)
+	\funrule{id(\POOsum{T_1}{T_2})}{
+		\POOsum{id(T_1)}{id(T_2)}
 	}{}
 	\end{array}
 	\]
