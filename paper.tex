@@ -257,11 +257,11 @@ In 2007, \citet{herman2010space} proposes a solution to this problem by
 translating Blame Calculus to a variant of \citet{henglein1994dynamic}'s 
 Coercion Calculus. Their key idea is to represent casts with coercions, 
 which can be composed and normalized. Every coercion looks like a list of 
-trees. For normalized coercion, the length of the list is bounded by a small 
+trees. For normal coercion, the length of the list is bounded by a small 
 constant. And the depths of trees do not grow in composition and 
-normalization. These two facts implies that by representing casts with 
-coercions, we can restore the space-efficiency. This 
-Coercion Calculus, however, does not support blame tracking. 
+normalization. These two facts implies that coercion is a space-efficient cast 
+representation. This Coercion Calculus, however, does not support blame 
+tracking. 
 
 After that, many efforts have been made to combine blame tracking and 
 space efficiency. 
@@ -273,77 +273,77 @@ $ \{Lazy, Eager\} \times \{D, UD\} $.
 Eager strategies detect more potential type errors, 
 but also blame more programs.
 $ D $ and $ UD $ assign blame labels differently.
-Blame strategy is essentially the semantics of casts.
-They prove that the \lazyUD{} Coercion Calculus simulates the Blame Calculus 
-in \cite{wadler2009well}. But it is unknown whether the simulation also works 
-the other way, and what the Blame counterparts of other Coercion Calculi are.
+They prove partially that the \lazyUD{} Coercion Calculus is correct by showing 
+that it simulates the Blame Calculus in \cite{wadler2009well}. It is unknown, 
+however, whether the simulation also works the other direction.
 
 \citet{siek2010threesomes} proposes another approach to combine blame 
 tracking and space efficiency. Their solution is based on Threesome Calculus. 
 Their key idea is to represent casts with threesomes, a novel cast 
-representation. Threesomes, like coercions, can be composed. There is no 
-separate normalization because every threesome is in normal form. 
-They prove that their Threesome Calculus bi-simulates
-the \lazyUD{} Coercion Calculus and the Blame Calculus, and that threesomes are 
-space-efficient.
+representation.
+%Threesomes can also be composed. Unlike coercions, there is no 
+%separate normalization because every threesome is in normal form. 
+They prove that their Threesome Calculus is correct by showing it bi-simulates
+the \lazyUD{} Coercion Calculus in \citet{siek2009exploring} and the Blame 
+Calculus in \citet{wadler2009well}.
+They also prove that threesome is space-efficient as well.
 
-\citet{siek2012interpretations} present a \lazyD{} Blame Calculus and revised 
-lazy Coercion Calculi. They simplify the Coercion Calculi by only working with 
-normal coercions (i.e. coercions in normal form). 
-Fortunately, coercions are trivially normal when initially constructed, and 
-their empowered compose function is conjectured to produces normal coercions as 
-well. Also, they conjecture that their Coercion Calculi bi-simulate the 
-corresponding Blame Calculi.
+\citet{siek2012interpretations} present the first \lazyD{} Blame Calculus and 
+revised lazy Coercion Calculi.
+They simplify the Coercion Calculi by only 
+working with normal coercions (i.e. coercions in normal form). 
+%Fortunately, coercions are trivially normal when initially constructed, and 
+%their empowered compose function is conjectured to produces normal coercions 
+%as well. 
+They conjecture that their Coercion Calculi bi-simulate the corresponding Blame 
+Calculi.
 
-Following \citet{siek2010threesomes}, \citet{garcia2013calculating} 
-implement all other blame strategies with Threesome Calculus. 
-He claims that 
-coercion with labels is easy to understand but hard to implement, 
-and that 
-threesome with labels, however, is easy to implement but hard to understand.
+Following \citet{siek2010threesomes}, \citet{garcia2013calculating} discovers
+Threesome Calculi for other blame strategies. After studying the relation 
+between coercion and threesome,
+he claims that normal coercion with labels is easy to understand but hard to 
+implement and hard to reason about, and that 
+threesome with labels, however, is easy to implement and easy to reason about 
+but hard to understand. 
 His claim is later affirmed by the group of people who develop threesome 
 (\citet{siek2015blame}).
-The connection 
-between his Threesome Calculi and \citet{siek2009exploring}'s Coercion 
-Calculi are established by the fact that the former are derived from the latter.
+His threesome calculi are equivalent to the Coercion Calculi in 
+\citet{siek2009exploring} because the former ones are derived from the latter 
+ones.
 
 \citet{siek2015blame} revisit the coercion-based approach. They revise the 
-\lazyUD{} Coercion Calculus by \citet{siek2012interpretations}, prove its 
-space-efficiency and that it bi-simulate the \lazyUD{} Blame Calculus.
+\lazyUD{} Coercion Calculus in \citet{siek2012interpretations}.
+They prove that their calculus agrees with the \lazyUD{} Blame Calculus.
 
-Last year, \citet{kuhlenschmidt2018efficient} present Grift, a space-efficient 
-and blame-tracking compiler for a gradually typed language of the same name. 
-This implementation is based on the \lazyD{} Coercion Calculus by 
+Last year, \citet{kuhlenschmidt2018efficient} present Grift, a compiler for a 
+gradually typed language of the same name. 
+This implementation is based on the \lazyD{} Coercion Calculus in 
 \citet{siek2012interpretations}.
-Their result suggests that implementing coercion is practical. 
-%They implement 
-%tuples, which is the first time gradual product types is considered. Their 
-%treatment on tuples, however, is shown incorrect 
-%\cite{Gradual-TypingType-based-casts}.
+Their result suggests that normal coercion is easy enough to implement in a 
+compiler. 
 
 Recently, \citet{new2019gradual} show that \eager{} strategies are 
 incompatible with $\eta$-equivalence of functions, which suggest that these 
 strategies are not very ideal. 
 
 So far, it seems that the coercion-based approach is the best way to combine 
-space-efficiency and blame-tracking: coercion is claimed easy to 
+space-efficiency and blame-tracking: normal coercion is claimed easy to 
 understand \cite{garcia2013calculating}\cite{siek2015blame} and is shown 
 easy enough to implement in a compiler \cite{kuhlenschmidt2018efficient}.
-Coercion is not satisfactory, however, in at least three aspects.
-Firstly, its compose function is not structurally recursive, which makes 
-it difficult to study coercion formally.
-For instance, many developers of Grift report that it is tricky to convince 
-their proof assistants that composition terminates. 
-Secondly, it is desirable to understand the nature of ``normalized cast'', but 
-the coercion-based approach capture this concept indirectly because normalized 
-coercion is defined by taking a subset of coercion.
-Last by not least, the memory representation of normal coercions is not very 
-compact.
+Normal coercion is still not satisfactory, however, in at least three aspects.
+Firstly, as we mentioned above, it is hard to reason about. The major 
+difficulty is from its non-structurally recursive composition.
+For instance, many developers of Grift report convincing
+their proof assistants that the composition terminates is tricky. 
+Secondly, the definition of normal coercion lies unnecessarily on top 
+of coercion: all coercions are normal when they are initially constructed, and 
+\citet{siek2012interpretations} have shown that there exist functions that 
+compose and produce normal coercions.
 
-Perhaps unsurprisingly, threesome has a structurally recursive compose. And its 
-definition is self-standing. Together with \citet{garcia2013calculating}'s 
-work, they suggest that there can be a cast representation whose definition is 
-self-standing, and whose composition is structurally recursive. 
+Perhaps unsurprisingly, threesome has a structurally recursive compose and a 
+self-standing definition. Together with \citet{garcia2013calculating}'s 
+work, they suggest that there might be a cast representation whose definition 
+is self-standing, and whose composition is structurally recursive. 
 Super-coercion introduced in \citet{garcia2013calculating} could be a promising 
 candidate. However, its definition is a bit complicated. It uses 10 
 constructors to deal with an elementary type system with only base types and 
@@ -351,10 +351,15 @@ function types. And four constructors are directly related to function types.
 Thus, super-coercion might not scale very well to more sophisticated type 
 systems.
 
-Now we present one such cast representation: hyper-coercion. As we will show in 
-Section \ref{sec:hyper-coercion}, there is a clear connection between it and 
-the normalized coercion, so we are optimistic that understanding and 
-implementing hyper-coercion should be as easy (or as hard).
+We present hyper-coercion, a cast representation whose composition is 
+structurally recursive, and whose definition is self-standing. What's more, it 
+should be at 
+least as easy to implement and understand as normal coercions, because there is 
+a clear connection between them, as we will show in Section 
+\ref{sec:hyper-coercion}.
+
+By comparing hyper-coercion with normal coercion, we notice another problem of 
+the latter in memory representation. \dots 
 
 Our hyper-coercion considers sum types and product types, which are not 
 considered in all proofs above. Adding each of them requires us to add only one 
@@ -362,11 +367,13 @@ new constructor to a component of hyper-coercion. This suggests that
 hyper-coercion might scale better than super-coercion.
 
 We prove formally that the \lazyD{} (resp. \lazyUD{}) hyper-coercion calculus 
-bi-simulates the \lazyD{} (resp. \lazyUD{}) Blame Calculus. This is possibly 
-the first bi-simulation proof for the \lazyD{} Blame Calculus.
+bi-simulates the \lazyD{} (resp. \lazyUD{}) Blame Calculus. This is 
+the first bi-simulation proof for the \lazyD{} Blame Calculus as far as we know.
 
 The structure of this paper is as follows. 
 Section \ref{sec:blame-calculus} reviews the state-of-art of $Lazy$ Blame 
+Calculi. 
+Section \ref{sec:coercion-calculus} reviews the state-of-art of $Lazy$ Coercion 
 Calculi. 
 In section \ref{sec:hyper-coercion} we present Hyper-coercion.
 Section \ref{sec:conclude} concludes.
@@ -509,8 +516,9 @@ Let $ S,T $ range over types. A type is either the dynamic type $ \star $
 (a.k.a. $ \mathtt{Dyn} $, $ \mathbb{?} $, or $ \mathtt{Unknown} $), 
 or a pre-type. 
 Let $ P,Q $ range over pre-types. Every pre-type is a type with a type 
-constructor at the top. For simplicity, we only have one base type $ \iota $, 
-the unit type. Other pre-types are functions, products, and sums.
+constructor at the top. For simplicity, we only have one base type, $ \POOunit 
+$. 
+Other pre-types are functions, products, and sums.
 
 %$ S \sim T $ reads ``$ S $ and $ T $ are consistent''.
 %Two types are consistent if one of them is $ \star $, or they have the same 
@@ -525,7 +533,7 @@ $ S \smile T $ reads ``$ S $ and $ T $ are shallowly-consistent''. Two types
 are shallowly consistent if one of them is $ \star $, or they have the same 
 top-most type constructor. Shallow-inconsistency is the root of all blames in 
 all lazy strategies -- casting a value to a shallowly inconsistent type leads 
-to a blame immediately. Shallow-consistency is reflexive, symmetric, but 
+to a blame. Shallow-consistency is reflexive, symmetric, but 
 not transitive.
 
 Let $ e $ ranges over terms, including all terms from $ \mathtt{STLC+} $ and, 
@@ -538,7 +546,7 @@ program terminates. Observations include all constructors and blames.
 
 Now let's move to the dynamic semantics. 
 
-\subsection{$Lazy D$ Blame Calculus}
+\subsection{\lazyD{} Blame Calculus}
 
 \begin{figure}
 	Syntax
@@ -807,7 +815,9 @@ Transitive closure of reduction and evaluation are standard.
 
 \dots
 
-\section{Background: Coercion Calculus}
+\section{Background: Coercion Calculus} \label{sec:coercion-calculus}
+
+\todo[inline]{Which version of normal coercion should this section review?}
 
 \subsection{$Lazy D$ Coercion Calculus}
 
