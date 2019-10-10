@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.5.4)  10 OCT 2019 17:21
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.5.4)  10 OCT 2019 17:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1606,11 +1606,6 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 541.
 
-
-Overfull \hbox (29.26787pt too wide) detected at line 700
-[]
- []
-
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/n' will be
 (Font)              scaled to size 9.0pt on input line 763.
 LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
@@ -1659,15 +1654,13 @@ LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
 (Font)              scaled to size 10.0pt on input line 1096.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/sc' will be
 (Font)              scaled to size 10.0pt on input line 1096.
-LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/it' will be
-(Font)              scaled to size 10.0pt on input line 1105.
-LaTeX Font Info:    Try loading font information for T1+zi4 on input line 1247.
+LaTeX Font Info:    Try loading font information for T1+zi4 on input line 1246.
 
  (/usr/share/texlive/texmf-dist/tex/latex/inconsolata/t1zi4.fd
 File: t1zi4.fd 2018/01/14 T1/zi4 (Inconsolata)
 )
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
-(Font)              scaled to size 10.0pt on input line 1247.
+(Font)              scaled to size 10.0pt on input line 1246.
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `zi4' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
@@ -1681,24 +1674,24 @@ Package microtype Info: Character `textemdash ' is missing
 
 [6.6]
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
-(Font)              scaled to size 10.0pt on input line 1271.
+(Font)              scaled to size 10.0pt on input line 1270.
  [7.7] [8.8]
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 7.3pt on input line 1325.
+(Font)              scaled to size 7.3pt on input line 1324.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 5.5pt on input line 1325.
+(Font)              scaled to size 5.5pt on input line 1324.
 
-Overfull \hbox (14.04388pt too wide) detected at line 1387
+Overfull \hbox (14.04388pt too wide) detected at line 1386
 []
  []
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1401.
+(hyperref)                removing `math shift' on input line 1400.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1401.
+(hyperref)                removing `math shift' on input line 1400.
 
 Excluding 'acks' comment. (./paper.bbl
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
@@ -1709,11 +1702,11 @@ LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
 LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
 (Font)              scaled to size 6.2pt on input line 81.
 ) [10.10]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1433.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1433.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1432.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1432.
  (./paper.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1433.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1433.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1432.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1432.
 
 Package rerunfilecheck Info: File `paper.out' has not changed.
 (rerunfilecheck)             Checksum: EBD2AE90CCF4D0F77A144DA8473A9A1A;2230.
@@ -1724,42 +1717,41 @@ LaTeX Font Warning: Size substitutions with differences
 
  ) 
 Here is how much of TeX's memory you used:
- 28457 strings out of 494805
- 495229 string characters out of 6178001
+ 28442 strings out of 494805
+ 494844 string characters out of 6178001
  594428 words of memory out of 5000000
- 30694 multiletter control sequences out of 15000+600000
- 192122 words of font info for 342 fonts, out of 8000000 for 9000
+ 30692 multiletter control sequences out of 15000+600000
+ 185697 words of font info for 335 fonts, out of 8000000 for 9000
  242 hyphenation exceptions out of 8191
- 62i,18n,94p,909b,571s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 62i,18n,94p,909b,573s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/newtx/libertinealt.enc}{/usr/s
 hare/texlive/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-4.enc}{/usr/share/tex
-live/texmf-dist/fonts/enc/dvips/libertine/lbtn_25tcsq.enc}{/usr/share/texlive/t
-exmf-dist/fonts/enc/dvips/libertine/lbtn_7grukw.enc}{/usr/share/texlive/texmf-d
-ist/fonts/enc/dvips/libertine/lbtn_ncsllp.enc}{/usr/share/texlive/texmf-dist/fo
-nts/enc/dvips/libertine/lbtn_oexx6f.enc}{/usr/share/texlive/texmf-dist/fonts/en
-c/dvips/inconsolata/i4-ot1-4.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips
-/base/8r.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_76gp
+live/texmf-dist/fonts/enc/dvips/libertine/lbtn_7grukw.enc}{/usr/share/texlive/t
+exmf-dist/fonts/enc/dvips/libertine/lbtn_ncsllp.enc}{/usr/share/texlive/texmf-d
+ist/fonts/enc/dvips/libertine/lbtn_oexx6f.enc}{/usr/share/texlive/texmf-dist/fo
+nts/enc/dvips/inconsolata/i4-ot1-4.enc}{/usr/share/texlive/texmf-dist/fonts/enc
+/dvips/base/8r.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbt
+n_25tcsq.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_76gp
 a5.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/inconsolata/Inconsolat
 a-zi4r.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/libertine/LinBioli
 numT.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/libertine/LinBiolinu
-mTB.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/libertine/LinBiolinum
-TI.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/libertine/LinLibertine
-T.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/libertine/LinLibertineT
-I.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/newtx/fxlri-7letters.pf
-b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam7.pfb>
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb><
-/usr/share/texlive/texmf-dist/fonts/type1/public/newtx/ntxsyralt.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/public/txfonts/rtxmi.pfb></usr/share/texlive/t
-exmf-dist/fonts/type1/public/newtx/rtxmi7.pfb></usr/share/texlive/texmf-dist/fo
-nts/type1/public/txfonts/rtxr.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
-blic/stmaryrd/stmary10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/tx
-fonts/txsyc.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/newtx/txsys.p
-fb></usr/share/texlive/texmf-dist/fonts/type1/public/newtx/zxlr.pfb></usr/share
-/texlive/texmf-dist/fonts/type1/public/newtx/zxlri.pfb>
-Output written on paper.pdf (10 pages, 514284 bytes).
+mTB.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/libertine/LinLibertin
+eT.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/libertine/LinLibertine
+TI.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/newtx/fxlri-7letters.p
+fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam7.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+</usr/share/texlive/texmf-dist/fonts/type1/public/newtx/ntxsyralt.pfb></usr/sha
+re/texlive/texmf-dist/fonts/type1/public/txfonts/rtxmi.pfb></usr/share/texlive/
+texmf-dist/fonts/type1/public/newtx/rtxmi7.pfb></usr/share/texlive/texmf-dist/f
+onts/type1/public/txfonts/rtxr.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
+ublic/stmaryrd/stmary10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/t
+xfonts/txsyc.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/newtx/txsys.
+pfb></usr/share/texlive/texmf-dist/fonts/type1/public/newtx/zxlr.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/newtx/zxlri.pfb>
+Output written on paper.pdf (10 pages, 481577 bytes).
 PDF statistics:
- 347 PDF objects out of 1000 (max. 8388607)
- 288 compressed objects within 3 object streams
- 65 named destinations out of 1000 (max. 500000)
- 65673 words of extra memory for PDF output out of 74296 (max. 10000000)
+ 341 PDF objects out of 1000 (max. 8388607)
+ 284 compressed objects within 3 object streams
+ 64 named destinations out of 1000 (max. 500000)
+ 61577 words of extra memory for PDF output out of 61914 (max. 10000000)
 

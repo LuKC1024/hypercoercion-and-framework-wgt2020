@@ -82,7 +82,7 @@
 \newcommand{\hyperCoercionI}[0]{\mathtt{id\star}}
 \newcommand{\hyperCoercionC}[3]{#1 \overset{#2}{\curvearrowright} #3}
 \newcommand{\sOOinspect}[3]{\mathtt{Eval} \; #1 \; #2 \; #3}
-\newcommand{\sOOreturn}[2]{\mathtt{Apply} \; #2 \; #1}
+\newcommand{\sOOreturn}[2]{\mathtt{Cont} \; #2 \; #1}
 \newcommand{\sOOhalt}[1]{\mathtt{Halt} \; #1}
 \newcommand{\TOOdyn}[0]{\star}
 \newcommand{\TOOpre}[1]{#1}
@@ -125,7 +125,7 @@
 \newcommand{\hcvOOcons}[4]{\mathtt{cons}\;#1\;#2\;#3\;#4}
 \newcommand{\hcvOOinl}[2]{\mathtt{inl}\;#1\;#2}
 \newcommand{\hcvOOinr}[2]{\mathtt{inr}\;#1\;#2}
-\newcommand{\hckOOmt}[0]{\mathtt{mt}}
+\newcommand{\hckOOmt}[0]{\mathtt{stop}}
 \newcommand{\hckOOconsI}[3]{\mathtt{cons_1}\;#1\;#2\;#3}
 \newcommand{\hckOOappII}[2]{\mathtt{app_2}\;#1\;#2}
 \newcommand{\sidecond}[1]{\text{if}\;#1}
@@ -567,7 +567,7 @@ Now let's move to the dynamic semantics.
 	}
 		
 	\stxrule{\kappa}{continuations}{
-		\mathtt{mt} \mid{}
+		\mathtt{stop} \mid{}
 		\mathtt{cons_1} \; e \; \rho \; \kappa \mid{}
 		\mathtt{cons_2} \; v \; \kappa \mid{}
 		\mathtt{inl} \; \kappa \mid{}
@@ -623,13 +623,13 @@ Now let's move to the dynamic semantics.
 	}{}
 	\redrule{
 		\sOOreturn{v_1}{(\mathtt{app_2} \; \vOOcast{v_2}{
-				\cOOcast{\POOfun{T_{11}}{T_{12}}}{l}{\POOfun{T_{21}}{T_{22}}}
+				\cOOcast{\POOfun{T_1}{T_2}}{l}{\POOfun{T_3}{T_4}}
 			} \; \kappa)}
 	}{
 		\sOOreturn{v_1}{
-		\langle\cOOcast{T_{21}}{l}{T_{11}}\rangle
+		\langle\cOOcast{T_3}{l}{T_1}\rangle
 		(\mathtt{app_2} \; v_2 \; 
-		\langle\cOOcast{T_{12}}{l}{T_{22}}\rangle \kappa)}
+		\langle\cOOcast{T_2}{l}{T_4}\rangle \kappa)}
 	}{}
 	
 %	\redrule{
@@ -642,25 +642,25 @@ Now let's move to the dynamic semantics.
 
 	\redrule{
 		\sOOreturn{
-			\vOOcast{v}{\cOOcast{\POOprod{T_{11}}{T_{12}}}{l}{
-					\POOprod{T_{21}}{T_{22}}}}
+			\vOOcast{v}{\cOOcast{\POOprod{T_1}{T_2}}{l}{
+					\POOprod{T_3}{T_4}}}
 			}{(\mathtt{car} \; \kappa)}
 	}{
 		\sOOreturn{v}{(
 			\mathtt{car} \;
-			\langle \cOOcast{T_{11}}{l}{T_{21}} \rangle \kappa
+			\langle \cOOcast{T_1}{l}{T_3} \rangle \kappa
 			)}
 	}{}
 
 	\redrule{
 		\sOOreturn{
-			\vOOcast{v}{\cOOcast{\POOprod{T_{11}}{T_{12}}}{l}{
-					\POOprod{T_{21}}{T_{22}}}}
+			\vOOcast{v}{\cOOcast{\POOprod{T_1}{T_2}}{l}{
+					\POOprod{T_3}{T_4}}}
 		}{(\mathtt{cdr} \; \kappa)}
 	}{
 		\sOOreturn{v}{(
 			\mathtt{cdr} \;
-			\langle \cOOcast{T_{12}}{l}{T_{22}} \rangle \kappa
+			\langle \cOOcast{T_2}{l}{T_4} \rangle \kappa
 			)}
 	}{}
 
@@ -683,7 +683,7 @@ Now let's move to the dynamic semantics.
 		\sOOreturn{u}{\kappa}
 		\\ &
 	}{
-		\text{where} \; applyCast(c,v) = \rOOsucc{u}
+		\sidecond{applyCast(c,v) = \rOOsucc{u}}
 	}
 
 	\redrule{
@@ -694,7 +694,7 @@ Now let's move to the dynamic semantics.
 		\sOOhalt{(\oOOblame{l})}
 		\\ &
 	}{
-		\text{where} \; applyCast(c,v) = \rOOfail{l}
+		\sidecond{applyCast(c,v) = \rOOfail{l}}
 	}
 	\end{array}
 	\]	
@@ -1101,7 +1101,6 @@ target type.
 	\end{enumerate}
 \end{theorem}
 
-\subsubsection{an abstract machine that composes casts} 
 To show that hyper-coercion is a correct cast representation, we introduce an 
 hyper-coercion-based machine for the \lazyD\ blame calculus, and show that it 
 bi-simulates the previous machine. 
@@ -1135,7 +1134,7 @@ bi-simulates the previous machine.
 		(c,k)
 	}
 	\stxrule{k}{pre-continuations}{
-		\mathtt{mt} \mid{}
+		\hckOOmt \mid{}
 		\mathtt{cons_1} \; e \; \rho \; \kappa \mid{}
 		\mathtt{cons_2} \; v \; \kappa \mid{}
 		\mathtt{inl} \; \kappa \mid{}
@@ -1158,8 +1157,8 @@ bi-simulates the previous machine.
 	Build continuation \fbox{$ cont(k) = \kappa $}
 	\[
 	\begin{array}{rclc}
-	\funrule{cont(k)}{(id(T_1),k)}{\\&&\text{where} \; k : T_1 \Longrightarrow 
-	T_2}
+	\funrule{cont(k)}{(id(T_1),k)}{
+		\sidecond{k : T_1 \Longrightarrow T_2}}
 	\end{array}
 	\]
 	
