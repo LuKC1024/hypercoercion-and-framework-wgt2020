@@ -925,7 +925,7 @@ composition of hyper-coercions.
 \subsection{\lazyD{} Hyper-coercion}
 
 \begin{figure}
-	\fbox{$ c \fatsemi^\ell c = c $}
+	Composition of hyper-coercions \fbox{$ c \fatsemi^\ell c = c $}
 	\[ 
 	\begin{array}{rclclr}
 	
@@ -999,7 +999,7 @@ composition of hyper-coercions.
 	\end{array}
 	\]
 	
-	\fbox{$ m \fatsemi^\ell (m,t) = (m,t) $}
+	Composition of middles \fbox{$ m \fatsemi^\ell (m,t) = (m,t) $}
 	\[ 
 	\begin{array}{rclclr}
 	\comprule{\POOunit}{(\POOunit,t)}{
@@ -1245,8 +1245,8 @@ When evaluating a compound expression, the machine firstly construct the new
 pre-continuation, then turn it to a continuation by adding an identity 
 hyper-coercion at the top. For instance, when evaluating a \texttt{cons} 
 expression, the machine firstly construct $ \hckOOconsI{e_2}{\rho}{\kappa} $, 
-the new pre-continuation, then call $ cont $ which adds an identity cast to 
-construct a continuation. 
+the new pre-continuation, then call $ cont $, which adds an identity cast to 
+form a continuation. 
 When a function call happens, the machine firstly cast the operand. If the 
 casting succeeds, the machine then evaluate the body in the extended 
 environment and the extended continuation. If the casting fails, the machine 
