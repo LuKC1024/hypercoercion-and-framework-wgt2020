@@ -619,7 +619,7 @@ Now let's move to the dynamic semantics.
 %	}
 %	\end{gather*}
 	
-	Reduction \fbox{$ s_1 \longrightarrow_{D,B} s_2 $}
+	Reduction \fbox{$ s \longrightarrow_{D,B} s $}
 	\[
 	\begin{array}{rclr}
 	
@@ -707,7 +707,7 @@ Now let's move to the dynamic semantics.
 	\end{array}
 	\]	
 	
-	Case
+	\fbox{$case(v, \kappa, \kappa) = s$}
 	\[
 	\begin{array}{rclr}
 	\funrule{case(\vOOinl{v},\kappa_1,\kappa_2)}{
@@ -724,7 +724,7 @@ Now let's move to the dynamic semantics.
 	\end{array}
 	\]
 	
-	Apply cast
+	\fbox{$applyCast(c,v) = r$}
 	\[
 	\begin{array}{rclr}
 	\funrule{
@@ -768,7 +768,7 @@ Now let's move to the dynamic semantics.
 	}
 	\]
 	
-	\caption{Dynamic semantics of the \lazyD{} Blame Calculus}
+	\caption{CEK abstract machine for the \lazyD{} Blame Calculus}
 	\label{machine-cekc}
 \end{figure}
 
@@ -811,9 +811,11 @@ If the cast fails, the machine halts with the blame label.
 
 Transitive closure of reduction and evaluation are standard.
 
-\subsection{$Lazy UD$ Blame Calculus}
+\subsection{$Lazy UD$ Blame Calculus [Jeremy]}
 
-\dots
+
+UNDER CONSTRUCTION
+
 
 \section{Background: Coercion Calculus} \label{sec:coercion-calculus}
 
@@ -1103,13 +1105,17 @@ $ id(T) $ constructs an identity coercion of $ T $.
 $ cast(T_1,l,T_2) $ constructs a coercion from a source type, a label, and a 
 target type. 
 
-\begin{theorem}[$ id $ constructs neutrals] For all $ c : T_1 \Longrightarrow 
-	T_2 $
-	\begin{enumerate}
-		\item $ seq(id(T_1),c) = c $
-		\item $ seq(c,id(T_2)) = c $
-	\end{enumerate}
-\end{theorem}
+\begin{proposition}[Hyper-coercions form a Monoid]
+  For all $c : T_1 \Longrightarrow T_2$,
+  $c_1 : T_1 \Longrightarrow T_2$,
+  $c_2 : T_2 \Longrightarrow T_3$, and
+  $c_3 : T_3 \Longrightarrow T_4$,
+  \begin{enumerate}
+  \item $seq(id(T_1),c) = c$,
+  \item $seq(c,id(T_2)) = c$, and
+  \item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
+  \end{enumerate}
+\end{proposition}
 
 To show that hyper-coercion is a correct cast representation, we introduce an 
 hyper-coercion-based machine for the \lazyD\ blame calculus, and show that it 
@@ -1179,7 +1185,7 @@ bi-simulates the previous machine.
 	\end{array}
 	\]
 	
-	Reduction \fbox{$ s_1 \longrightarrow_{D,P(C)} s_2 $}
+	Reduction \fbox{$ s \longrightarrow_{D,P(C)} s $}
 	\[
 	\begin{array}{rclr}
 	& \vdots \\
@@ -1407,7 +1413,11 @@ $ applyMiddle(\ell,m,v) $ and $ applyTail(t,v) $ are straightforward.
 	\label{hc-applyCast}
 \end{figure}
 
-\subsection{$Lazy UD$ Hyper-coercion}
+\subsection{$Lazy UD$ Hyper-coercion [Jeremy]}
+
+UNDER CONSTRUCTION
+
+
 
 \section{Conclusion} \label{sec:conclude}
 
