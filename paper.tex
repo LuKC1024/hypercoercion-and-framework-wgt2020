@@ -825,6 +825,12 @@ UNDER CONSTRUCTION
 
 \subsection{$Lazy UD$ Coercion Calculus}
 
+
+\section{Space-efficient CEK Abstract Machine}
+
+[move the definition of the generic machine here -Jeremy]
+
+
 \section{Hyper-coercion} \label{sec:hyper-coercion}
 
 \begin{figure}
@@ -1290,6 +1296,12 @@ idea of ``abstract cast'' by the following definition.
 	\end{description}
 \end{definition}
 
+
+
+\subsection{Correctness of \lazyD{} Hyper-coercions}
+
+
+
 One of our major contributions is for all cast presentation, if it is proper, 
 then it is correct.
 
@@ -1334,27 +1346,27 @@ then it is correct.
 \end{definition}
 
 \begin{proposition}[proper cast represenations are correct]
-	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is a proper cast 
-	representation
-	\[
-	e \Downarrow_{D,B} o \; \text{if and only if} \; 
-	e \Downarrow_{D,P(C)} o
-	\]
+  If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is a proper cast 
+  representation
+  \[
+  e \Downarrow_{D,B} o \; \text{if and only if} \; 
+  e \Downarrow_{D,P(C)} o
+  \]
 \end{proposition}
 
 Perhaps unsurprisingly, hyper-coercion is correct.
 
-\begin{theorem}[\lazyD{} Hyper-coercion is a proper cast representation]
+\begin{lemma}[\lazyD{} Hyper-coercion is a proper cast representation]
 	See appendix.
-\end{theorem}
+\end{lemma}
 
-\begin{corollary}[\lazyD{} hyper-coercion is correct]
+\begin{theorem}[\lazyD{} hyper-coercion is correct]
 	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ 
 	\[
 	e \Downarrow_{D,B} o \; \text{if and only if} \; 
 	e \Downarrow_{D,P(H)} o
 	\]
-\end{corollary}
+\end{theorem}
 
 \figref{hc-applyCast} defines $ applyCast $. Applying the identity cast for the 
 dynamic type succeeds immediately. When applying a compound cast, we firstly 
