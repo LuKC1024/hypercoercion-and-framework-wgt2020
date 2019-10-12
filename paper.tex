@@ -811,7 +811,7 @@ If the cast fails, the machine halts with the blame label.
 
 Transitive closure of reduction and evaluation are standard.
 
-\subsection{$Lazy UD$ Blame Calculus [Jeremy]}
+\subsection{\lazyUD{} Blame Calculus [Jeremy]}
 
 
 UNDER CONSTRUCTION
@@ -821,9 +821,9 @@ UNDER CONSTRUCTION
 
 \todo[inline]{Which version of normal coercion should this section review?}
 
-\subsection{$Lazy D$ Coercion Calculus}
+\subsection{\lazyD{} Coercion Calculus}
 
-\subsection{$Lazy UD$ Coercion Calculus}
+\subsection{\lazyUD{} Coercion Calculus}
 
 
 \section{Space-efficient CEK Abstract Machine}
@@ -958,60 +958,60 @@ composition of hyper-coercions.
 	\comprule{
 		\hyperCoercionI
 	}{
-		\hyperCoercionC{?^{l'}}{b}{t}
+		\hyperCoercionC{?^{l'}}{m}{t}
 	}{
-		\hyperCoercionC{?^{l'}}{b}{t}
+		\hyperCoercionC{?^{l'}}{m}{t}
 	}{}
 	
 	\comprule{
 		\hyperCoercionI
 	}{
-		\hyperCoercionC{\epsilon}{b}{t}
+		\hyperCoercionC{\epsilon}{m}{t}
 	}{
-		\hyperCoercionC{?^{l}}{b}{t}
+		\hyperCoercionC{?^{l}}{m}{t}
 	}{\sidecond{\ell = l}}
 	
 	\comprule{
-		\hyperCoercionC{h}{b}{\bot^{l'}}
+		\hyperCoercionC{h}{m}{\bot^{l'}}
 	}{
 		c
 	}{
-		\hyperCoercionC{h}{b}{\bot^{l'}}
+		\hyperCoercionC{h}{m}{\bot^{l'}}
 	}{}
 	
 	\comprule{
-		\hyperCoercionC{h}{b_1}{t_1}
+		\hyperCoercionC{h}{m}{t}
 	}{
 		\hyperCoercionI
 	}{
-		\hyperCoercionC{h}{b_1}{!}
+		\hyperCoercionC{h}{m}{!}
 	}{
-		\sidecond{\forall l. t_1 \neq \bot^{l}}
+		\sidecond{\forall l. t \neq \bot^{l}}
 	}
 	
 	\comprule{
-		\hyperCoercionC{h}{b_1}{t_1}
+		\hyperCoercionC{h}{m_1}{t_1}
 	}{
-		\hyperCoercionC{\epsilon}{b_2}{t_2}
+		\hyperCoercionC{\epsilon}{m_2}{t_2}
 	}{
-		\hyperCoercionC{h}{b'}{t'}
+		\hyperCoercionC{h}{m'}{t'}
 	}{
 		\sidecond{
 			t_1 \neq \bot^{\centerdot} \; \text{and} \;
-			b_1 \fatsemi^{\ell} (b_2, t) = (b', t')
+			m_1 \fatsemi^{\ell} (m_2, t_2) = (m', t')
 		}
 	}
 	
 	\comprule{
-		\hyperCoercionC{h}{b_1}{t_1}
+		\hyperCoercionC{h}{m_1}{t_1}
 	}{
-		\hyperCoercionC{?^{l'}}{b_2}{t_2}
+		\hyperCoercionC{?^{l'}}{m_2}{t_2}
 	}{
-		\hyperCoercionC{h}{b'}{t'}
+		\hyperCoercionC{h}{m'}{t'}
 	}{
 		\sidecond{
 		t_1 \neq \bot^{\centerdot} \; \text{and} \;
-		b_1 \fatsemi^{l'} (b_2, t) = (b', t')
+		m_1 \fatsemi^{l'} (m_2, t_2) = (m', t')
 		}
 	}
 	\end{array}
@@ -1088,7 +1088,7 @@ composition of hyper-coercions.
 	}{}
 	\end{array}
 	\]
-	\caption{$Lazy D$ Hyper-coercion}
+	\caption{\lazyD{} Hyper-coercion}
 	\label{fig:HC-D}
 \end{figure}
 
@@ -1425,7 +1425,7 @@ $ applyMiddle(\ell,m,v) $ and $ applyTail(t,v) $ are straightforward.
 	\label{hc-applyCast}
 \end{figure}
 
-\subsection{$Lazy UD$ Hyper-coercion [Jeremy]}
+\subsection{\lazyUD{} Hyper-coercion [Jeremy]}
 
 UNDER CONSTRUCTION
 
