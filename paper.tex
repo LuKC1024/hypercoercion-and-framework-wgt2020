@@ -1,8 +1,10 @@
-%% For double-blind review submission, w/o CCS and ACM Reference (max submission space)
+%% For double-blind review submission, w/o CCS and ACM Reference (max 
+%%submission space)
 \documentclass[acmsmall,review,anonymous]{acmart}\settopmatter{printfolios=true,printccs=false,printacmref=false}
 %% For double-blind review submission, w/ CCS and ACM Reference
 %\documentclass[acmsmall,review,anonymous]{acmart}\settopmatter{printfolios=true}
-%% For single-blind review submission, w/o CCS and ACM Reference (max submission space)
+%% For single-blind review submission, w/o CCS and ACM Reference (max 
+%%submission space)
 %\documentclass[acmsmall,review]{acmart}\settopmatter{printfolios=true,printccs=false,printacmref=false}
 %% For single-blind review submission, w/ CCS and ACM Reference
 %\documentclass[acmsmall,review]{acmart}\settopmatter{printfolios=true}
@@ -73,6 +75,7 @@
 \newcommand{\stxrulecont}[1]{& | & #1 & \\}
 \newcommand{\funrule}[3]{#1 &=& #2 & #3\\}
 \newcommand{\redrule}[3]{#1 & \longrightarrow_B & #2 & #3\\}
+\newcommand{\redruleS}[3]{#1 & \longrightarrow_{S(C)} & #2 & #3\\}
 \newcommand{\comprule}[4]{#1 & \fatsemi^\ell & #2 & = & #3 & #4 \\}
 \newcommand{\plus}[0]{+}
 \newcommand{\judgetype}[3]{#1 \vdash #2 : #3}
@@ -206,12 +209,14 @@
 <ccs2012>
 <concept>
 <concept_id>10011007.10011006.10011008</concept_id>
-<concept_desc>Software and its engineering~General programming languages</concept_desc>
+<concept_desc>Software and its engineering~General programming 
+languages</concept_desc>
 <concept_significance>500</concept_significance>
 </concept>
 <concept>
 <concept_id>10003456.10003457.10003521.10003525</concept_id>
-<concept_desc>Social and professional topics~History of programming languages</concept_desc>
+<concept_desc>Social and professional topics~History of programming 
+languages</concept_desc>
 <concept_significance>300</concept_significance>
 </concept>
 </ccs2012>
@@ -250,8 +255,8 @@ Implementing gradually typed languages naively on top of blame calculus
 suffices sever space leak.
 For example, translation to Blame Calculus can wrap some expressions with a 
 cast, including those at tail position. Thus, at runtime, mutually 
-tail-recursive functions in source language can accumulate casts at tail 
-position. There are more examples in \citet{herman2010space}.
+tail-recursive functions in source language can accumulate unbounded space. 
+There are more examples in \citet{herman2010space}.
 
 In 2007, \citet{herman2010space} proposes a solution to this problem by 
 translating Blame Calculus to a variant of \citet{henglein1994dynamic}'s 
@@ -266,7 +271,10 @@ tracking.
 After that, many efforts have been made to combine blame tracking and 
 space efficiency. 
 
-\citet{siek2009exploring} incorporate blame tracking into Coercion Calculus by 
+%\subsection{coercion-based approach and blame strategies}
+
+\citet{siek2009exploring} incorporate blame tracking into 
+\citet{herman2010space}'s Coercion Calculus by 
 decorating coercions with labels. They also propose that there are four blame 
 strategies for their Coercion Calculi:
 $ \{Lazy, Eager\} \times \{D, UD\} $. 
@@ -275,7 +283,7 @@ but also blame more programs.
 $ D $ and $ UD $ assign blame labels differently.
 They prove partially that the \lazyUD{} Coercion Calculus is correct by showing 
 that it simulates the Blame Calculus in \cite{wadler2009well}. It is unknown, 
-however, whether the simulation also works the other direction.
+however, whether the simulation also works in the other direction.
 
 \citet{siek2010threesomes} proposes another approach to combine blame 
 tracking and space efficiency. Their solution is based on Threesome Calculus. 
@@ -283,10 +291,10 @@ Their key idea is to represent casts with threesomes, a novel cast
 representation.
 %Threesomes can also be composed. Unlike coercions, there is no 
 %separate normalization because every threesome is in normal form. 
-They prove that their Threesome Calculus is correct by showing it bi-simulates
-the \lazyUD{} Coercion Calculus in \citet{siek2009exploring} and the Blame 
-Calculus in \citet{wadler2009well}.
-They also prove that threesome is space-efficient as well.
+They show that their threesome calculus bi-simulates the \lazyUD{} Coercion 
+Calculus in \citet{siek2009exploring} and the Blame Calculus in 
+\citet{wadler2009well}. They also prove that threesome is space-efficient as 
+well.
 
 \citet{siek2012interpretations} present the first \lazyD{} Blame Calculus and 
 revised lazy Coercion Calculi.
@@ -305,15 +313,15 @@ he claims that normal coercion with labels is easy to understand but hard to
 implement and hard to reason about, and that 
 threesome with labels, however, is easy to implement and easy to reason about 
 but hard to understand. 
-His claim is later affirmed by the group of people who develop threesome 
+His claim is partially affirmed by the group of people who develop threesome 
 (\citet{siek2015blame}).
 His threesome calculi are equivalent to the Coercion Calculi in 
 \citet{siek2009exploring} because the former ones are derived from the latter 
 ones.
 
 \citet{siek2015blame} revisit the coercion-based approach. They revise the 
-\lazyUD{} Coercion Calculus in \citet{siek2012interpretations}.
-They prove that their calculus agrees with the \lazyUD{} Blame Calculus.
+\lazyUD{} Coercion Calculus in \citet{siek2012interpretations} and prove that 
+their revised coercion calculus bi-simulates the \lazyUD{} Blame Calculus.
 
 Last year, \citet{kuhlenschmidt2018efficient} present Grift, a compiler for a 
 gradually typed language of the same name. 
@@ -331,10 +339,10 @@ space-efficiency and blame-tracking: normal coercion is claimed easy to
 understand \cite{garcia2013calculating}\cite{siek2015blame} and is shown 
 easy enough to implement in a compiler \cite{kuhlenschmidt2018efficient}.
 Normal coercion is still not satisfactory, however, in at least three aspects.
-Firstly, as we mentioned above, it is hard to reason about. The major 
-difficulty is from its non-structurally recursive composition.
-For instance, many developers of Grift report convincing
-their proof assistants that the composition terminates is tricky. 
+Firstly, as we mentioned above, it is hard to reason about normal coercion. The 
+major difficulty is from its non-structurally recursive composition.
+For instance, many developers of Grift report it is tricky to convince
+their proof assistants that the composition terminates. 
 Secondly, the definition of normal coercion lies unnecessarily on top 
 of coercion: all coercions are normal when they are initially constructed, and 
 \citet{siek2012interpretations} have shown that there exist functions that 
@@ -357,9 +365,6 @@ should be at
 least as easy to implement and understand as normal coercions, because there is 
 a clear connection between them, as we will show in Section 
 \ref{sec:hyper-coercion}.
-
-By comparing hyper-coercion with normal coercion, we notice another problem of 
-the latter in memory representation. \dots 
 
 Our hyper-coercion considers sum types and product types, which are not 
 considered in all proofs above. Adding each of them requires us to add only one 
@@ -830,6 +835,241 @@ UNDER CONSTRUCTION
 
 [move the definition of the generic machine here -Jeremy]
 
+All definitions and results in this section are new.
+
+We present a space-efficient CEK machine for blame calculi. This machine is
+parameterized over cast representation. 
+
+\begin{definition}[Cast Representation]
+	A cast representation has four interface functions:
+	\begin{description}
+		\item[$ id(T) $] constructs an identity cast
+		\item[$ seq(c_1,c_2) $] composes two casts
+		\item[$ cast(T_1,l,T_2) $] constructs a cast from $ T_1 $ to $ T_2 $
+		\item[$ applyCast(c,v) $] applies a cast onto a value
+	\end{description}
+\end{definition}
+
+\begin{figure}
+	Syntax
+	\[
+	\begin{array}{rclr}
+	
+	\stxrule{v}{values}{
+		\hcvOOtt \mid
+		\hcvOOfun{c_1}{\rho}{x}{b}{c_2} \mid
+		\hcvOOcons{v_1}{c_1}{v_2}{c_2}
+	}
+	\stxrulecont{
+		\hcvOOinl{v}{c} \mid
+		\hcvOOinr{v}{c} \mid
+		\hcvOOinj{P}{v}
+	}
+	\stxrule{r}{cast results}{
+		\rOOsucc{v} \mid
+		\rOOfail{l}
+	}
+	\stxrule{s}{states}{
+		\sOOinspect{e}{\rho}{\kappa} \mid{}
+		\sOOreturn{v}{\kappa} \mid{}
+		\sOOhalt{o}
+	}
+	\stxrule{\kappa}{continuation}{
+		(c,k)
+	}
+	\stxrule{k}{pre-continuations}{
+		\hckOOmt \mid{}
+		\mathtt{cons_1} \; e \; \rho \; \kappa \mid{}
+		\mathtt{cons_2} \; v \; \kappa \mid{}
+		\mathtt{inl} \; \kappa \mid{}
+		\mathtt{inr} \; \kappa
+	}
+	\stxrulecont{
+		\mathtt{app_1} \; e \; \rho \; \kappa \mid{}
+		\mathtt{app_2} \; v \; \kappa \mid{}
+		\mathtt{car} \; \kappa \mid{}
+		\mathtt{cdr} \; \kappa
+	}
+	\stxrulecont{
+		\mathtt{case_1} \; e_1 \; e_2 \; \rho \; \kappa \mid
+		\mathtt{case_2} \; v   \; e   \; \rho \; \kappa \mid{}
+		\mathtt{case_3} \; v_1 \; v_2 \; \rho \; \kappa
+	}
+	\end{array}
+	\]
+	
+	Build continuation \fbox{$ cont(k) = \kappa $}
+	\[
+	\begin{array}{rclc}
+	\funrule{cont(k)}{(id(T_1),k)}{
+		\sidecond{k : T_1 \Longrightarrow T_2}}
+	\end{array}
+	\]
+	
+	Extend continuation \fbox{$ ext(c,\kappa) = \kappa $}
+	\[
+	\begin{array}{rclc}
+	\funrule{ext(c_1,(c_2,k))}{(seq(c_1,c_2),k)}{}
+	\end{array}
+	\]
+	
+	Reduction \fbox{$ s \longrightarrow_{S(C)} s $}
+	\[
+	\begin{array}{rclr}
+	& \vdots \\
+	\redruleS{
+		\sOOinspect{(\eOOlam{T_1}{T_2}{x}{e})}{\rho}{\kappa}
+	}{
+		\sOOreturn{(\hcvOOfun{id(T_1)}{\rho}{x}{e}{id(T_2)})}{\kappa}
+	}{}
+	\redruleS{
+		\sOOinspect{\eOOcast{e}{T_1}{l}{T_2}}{\rho}{\kappa}
+	}{
+		\sOOinspect{e}{\rho}{ext(cast(T_1,l,T_2),\kappa)}
+	}{}
+	\redruleS{
+		\sOOinspect{(\eOOcons{e_1}{e_2})}{\rho}{\kappa}
+	}{
+		\sOOinspect{e_1}{\rho}{cont(\hckOOconsI{e_2}{\rho}{\kappa})}
+	}{}
+	\redruleS{
+		\sOOreturn{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{(c,\hckOOappII{v}{\kappa})}
+	}{
+		\sOOinspect{e}{\rho[x:=v']}{ext(c_2,\kappa)}
+	}{
+		\\ & &
+		\sidecond{applyCast(c_1,v) = \rOOsucc{v'}}
+	}
+	\redruleS{
+		\sOOreturn{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{(c,\hckOOappII{v}{\kappa})}
+	}{
+		\sOOhalt{(\oOOblame{l})}
+	}{
+		\\ & &
+		\sidecond{applyCast(c_1,v) = \rOOfail{l}}
+	}
+	\end{array}
+	\]
+	
+%	Transitive closure of reduction \fbox{$ s \longrightarrow_{S(C)}^{*} s $}
+%	\[\dots\]
+	
+	Evaluation \fbox{$ e \Downarrow_{S(C)} o $}
+	\[
+	\inference{
+		\sOOinspect{e}{\emptyset}{cont(\hckOOmt)} \longrightarrow_{S(C)}^{*} 
+		\sOOhalt{o}
+	}{
+		e \Downarrow_{S(C)} o
+	}
+	\]
+	
+	\caption{A space-efficient CKE machine for Blame Calculus.}
+	\label{machine-cekcc}
+\end{figure}
+
+\figref{machine-cekcc} defines the machine. 
+Let $ v $ ranges over value. We push casts into values. For instance, function 
+values now include two more components: a cast for argument and a cast for the 
+output. The last kind of values is injection to $ \TOOdyn $. 
+Cast results ($ r $) and machine states ($ s $) are as before. 
+Let $ \kappa $ ranges over continuations and let $ k $ ranges over 
+pre-continuations. 
+A continuation is now a pair whose first part is a cast, and whose second part 
+is a pre-continuation. 
+Pre-continuation are like the continuations before.
+
+We list a fraction of reduction rules due to space limitation.
+When values are constructed, their hyper-coercion parts are filled with outputs 
+of $ id $. For instance, when a function value is constructed, its first part 
+and last part are initialized to $ id(T_1) $ and $ id(T_2) $ respectively.
+When evaluating a cast expression, the current continuation is extended with a 
+hyper-coercion constructed by $ cast $. $ ext $ composes the new hyper-coercion 
+with the hyper-coercion on the top of the continuation.
+When evaluating a compound expression, the machine firstly construct the new 
+pre-continuation, then turn it to a continuation by adding an identity 
+hyper-coercion at the top. For instance, when evaluating a \texttt{cons} 
+expression, the machine firstly construct $ \hckOOconsI{e_2}{\rho}{\kappa} $, 
+the new pre-continuation, then call $ cont $, which adds an identity cast to 
+form a continuation. 
+When a function call happens, the machine firstly cast the operand. If the 
+casting succeeds, the machine then evaluate the body in the extended 
+environment and the extended continuation. If the casting fails, the machine 
+then halts with the blame label.
+
+Transitive closure of reduction and evaluation are standard.
+
+\subsection{\lazyD\ Cast Representations}
+
+We show that all \textit{proper} cast representations are 
+equivalent.
+
+\begin{definition}[Proper Cast Representation]
+	A cast representation is proper if
+	\begin{enumerate}
+		\item If $ v : T $, then $ applyCast(id(T), v) = \mathtt{succ} \; v $
+		\item If $ v : T_1 $,
+		$ c_1 $ is from $ T_1 $ to $ T_2 $, and 
+		$ c_2 $ is from $ T_2 $ to $ T_3 $,\\
+		then $ applyCast(seq(c_1,c_2),v) = applyCast(c_1,v) >>= \lambda 
+		v.applyCast(c_2,v) $
+		\item If $ v : T_1 $ and $ \neg T_1 \smile T_2 $,
+		then $ applyCast(cast(T_1, l, T_2),v) = \rOOfail{l} $
+		\item If $ v : \star $, 
+		then $ applyCast(cast(\TOOdyn,l,\TOOdyn),v) = \rOOsucc{v} $
+		\item If $ v : P $,
+		then $ applyCast(cast(\star,l,Q),\hcvOOinj{P}{v}) 
+		= applyCast(cast(P,l,Q),v) $
+		\item If $ v : P $,
+		then $ applyCast(cast(P,l,\star),v) = \rOOsucc{(\hcvOOinj{P}{v})} $
+		\item If $ v : \iota $,
+		then $ applyCast(cast(\POOunit,l,\POOunit),v) = \rOOsucc{v} $
+		\item $ 
+		applyCast(cast(\POOfun{T_1}{T_2},l,\POOfun{T_3}{T_4}) ,
+		\hcvOOfun{c_1}{\rho}{x}{b}{c_2}) \\
+		= 
+		\rOOsucc{(\hcvOOfun{seq(cast(T_3,l,T_1),c_1)}{\rho}{x}{b}{seq(c_2,cast(T_2,l,T_4))})}$
+		
+		\item $ applyCast(cast(\POOprod{T_1}{T_2},l,T_3 \times 
+		T_4),\hcvOOcons{v_1}{c_1}{v_2}{c_2}) $ \\
+		$ = 
+		\rOOsucc{(\hcvOOcons{v_1}{seq(c_1,cast(T_1,l,T_3))}{v_2}{seq(c_2,cast(T_2,l,T_4))})}
+		$ 
+		\item $ 
+		applyCast(cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}),\hcvOOinl{v}{c})
+		= \rOOsucc{(\hcvOOinl{v}{seq(c,cast(T_1,l,T_2))})} $
+		\item $ 
+		applyCast(cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}),\hcvOOinr{v}{c})
+		= \rOOsucc{(\hcvOOinr{v}{seq(c,cast(T_3,l,T_4))})} $
+	\end{enumerate}
+\end{definition}
+
+With the properties of proper cast representation, it is straightforward to 
+proof that all machines instantiated with a proper cast representation are 
+strongly bi-simulated.
+
+\begin{theorem}[Strong Bi-simulation of Proper Cast Representations]
+	If $ C_1 $ and $ C_2 $ are proper cast representations,
+	$ s_1 $ and $ s_2 $ are states of $ S(C_1) $,
+	$ s_3 $ is an state of $ S(C_2) $,
+	$ s_1 \longrightarrow_{S(C_1)} s_2 $,
+	and $ s_1 \approx s_3 $, \\
+	then there exists an $ s_4 $ such that $ s_3 \approx s_4 $ and
+	$ s_3 \longrightarrow_{S(C_2)} s_4 $
+\end{theorem}
+
+As a corollary, machines instantiated with proper cast representations are 
+equivalent when used as interpreters.
+
+\begin{theorem}[proper cast represenations are equivalent]
+	If $ \judgetype{\emptyset}{e}{T} $, $ o : T $, and that $ C_1 $ and $ C_2 $ 
+	are 
+	proper cast representations
+	\[
+	e \Downarrow_{S(C_1)} o \; \text{if and only if} \; 
+	e \Downarrow_{S(C_2)} o
+	\]
+\end{theorem}
 
 \section{Hyper-coercion} \label{sec:hyper-coercion}
 
@@ -1126,155 +1366,6 @@ target type.
 To show that hyper-coercion is a correct cast representation, we introduce an 
 hyper-coercion-based machine for the \lazyD\ blame calculus, and show that it 
 bi-simulates the previous machine. 
-\figref{machine-cekcc} defines the new machine.
-
-\begin{figure}
-	Syntax
-	\[
-	\begin{array}{rclr}
-	
-	\stxrule{v}{values}{
-		\hcvOOtt \mid
-		\hcvOOfun{c_1}{\rho}{x}{b}{c_2} \mid
-		\hcvOOcons{v_1}{c_1}{v_2}{c_2}
-	}
-	\stxrulecont{
-		\hcvOOinl{v}{c} \mid
-		\hcvOOinr{v}{c} \mid
-		\hcvOOinj{P}{v}
-	}
-	\stxrule{r}{cast results}{
-		\rOOsucc{v} \mid
-		\rOOfail{l}
-	}
-	\stxrule{s}{states}{
-		\sOOinspect{e}{\rho}{\kappa} \mid{}
-		\sOOreturn{v}{\kappa} \mid{}
-		\sOOhalt{o}
-	}
-	\stxrule{\kappa}{continuation}{
-		(c,k)
-	}
-	\stxrule{k}{pre-continuations}{
-		\hckOOmt \mid{}
-		\mathtt{cons_1} \; e \; \rho \; \kappa \mid{}
-		\mathtt{cons_2} \; v \; \kappa \mid{}
-		\mathtt{inl} \; \kappa \mid{}
-		\mathtt{inr} \; \kappa
-	}
-	\stxrulecont{
-		\mathtt{app_1} \; e \; \rho \; \kappa \mid{}
-		\mathtt{app_2} \; v \; \kappa \mid{}
-		\mathtt{car} \; \kappa \mid{}
-		\mathtt{cdr} \; \kappa
-	}
-	\stxrulecont{
-		\mathtt{case_1} \; e_1 \; e_2 \; \rho \; \kappa \mid
-		\mathtt{case_2} \; v   \; e   \; \rho \; \kappa \mid{}
-		\mathtt{case_3} \; v_1 \; v_2 \; \rho \; \kappa
-	}
-	\end{array}
-	\]
-	
-	Build continuation \fbox{$ cont(k) = \kappa $}
-	\[
-	\begin{array}{rclc}
-	\funrule{cont(k)}{(id(T_1),k)}{
-		\sidecond{k : T_1 \Longrightarrow T_2}}
-	\end{array}
-	\]
-	
-	Extend continuation \fbox{$ ext(c,\kappa) = \kappa $}
-	\[
-	\begin{array}{rclc}
-	\funrule{ext(c_1,(c_2,k))}{(seq(c_1,c_2),k)}{}
-	\end{array}
-	\]
-	
-	Reduction \fbox{$ s \longrightarrow_{D,P(C)} s $}
-	\[
-	\begin{array}{rclr}
-	& \vdots \\
-	\redrule{
-		\sOOinspect{(\eOOlam{T_1}{T_2}{x}{e})}{\rho}{\kappa}
-	}{
-		\sOOreturn{(\hcvOOfun{id(T_1)}{\rho}{x}{e}{id(T_2)})}{\kappa}
-	}{}
-	\redrule{
-		\sOOinspect{\eOOcast{e}{T_1}{l}{T_2}}{\rho}{\kappa}
-	}{
-		\sOOinspect{e}{\rho}{ext(cast(T_1,l,T_2),\kappa)}
-	}{}
-	\redrule{
-		\sOOinspect{(\eOOcons{e_1}{e_2})}{\rho}{\kappa}
-	}{
-		\sOOinspect{e_1}{\rho}{cont(\hckOOconsI{e_2}{\rho}{\kappa})}
-	}{}
-	\redrule{
-		\sOOreturn{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{(c,\hckOOappII{v}{\kappa})}
-	}{
-		\sOOinspect{e}{\rho[x:=v']}{ext(c_2,\kappa)}
-	}{
-		\\ & &
-		\sidecond{applyCast(c_1,v) = \rOOsucc{v'}}
-	}
-	\redrule{
-		\sOOreturn{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{(c,\hckOOappII{v}{\kappa})}
-	}{
-		\sOOhalt{(\oOOblame{l})}
-	}{
-		\\ & &
-		\sidecond{applyCast(c_1,v) = \rOOfail{l}}
-	}
-	\end{array}
-	\]
-	
-	Transitive closure of reduction \fbox{$ s \longrightarrow_{D,P(C)}^{*} s $}
-	\[\dots\]
-	
-	Evaluation \fbox{$ e \Downarrow_{D,P(C)} o $}
-	\[
-	\inference{
-		\sOOinspect{e}{\emptyset}{cont(\hckOOmt)} \longrightarrow_{P(C)}^{*} 
-		\sOOhalt{o}
-	}{
-		e \Downarrow_{D,P(C)} o
-	}
-	\]
-	
-	\caption{An abstract machine that composes casts.}
-	\label{machine-cekcc}
-\end{figure}
-
-Let $ v $ ranges over value. We push casts into values. For instance, function 
-values now include two more components: a cast for argument and a cast for the 
-output. The last kind of values is injection to $ \TOOdyn $. 
-Cast results ($ r $) and machine states ($ s $) are as before. 
-Let $ \kappa $ ranges over continuations and let $ k $ ranges over 
-pre-continuations. 
-A continuation is now a pair whose first part is a cast, and whose second part 
-is a pre-continuation. 
-Pre-continuation are like the continuations before.
-
-We list a fraction of reduction rules due to space limitation.
-When values are constructed, their hyper-coercion parts are filled with outputs 
-of $ id $. For instance, when a function value is constructed, its first part 
-and last part are initialized to $ id(T_1) $ and $ id(T_2) $ respectively.
-When evaluating a cast expression, the current continuation is extended with a 
-hyper-coercion constructed by $ cast $. $ ext $ composes the new hyper-coercion 
-with the hyper-coercion on the top of the continuation.
-When evaluating a compound expression, the machine firstly construct the new 
-pre-continuation, then turn it to a continuation by adding an identity 
-hyper-coercion at the top. For instance, when evaluating a \texttt{cons} 
-expression, the machine firstly construct $ \hckOOconsI{e_2}{\rho}{\kappa} $, 
-the new pre-continuation, then call $ cont $, which adds an identity cast to 
-form a continuation. 
-When a function call happens, the machine firstly cast the operand. If the 
-casting succeeds, the machine then evaluate the body in the extended 
-environment and the extended continuation. If the casting fails, the machine 
-then halts with the blame label.
-
-Transitive closure of reduction and evaluation are standard.
 
 The machine depends on four functions that consumes and/or construct 
 hyper-coercions: $ id(T) $, $ seq(c,c) $, $ cast(T,l,T) $, and $ applyCast(T,v) 
@@ -1286,64 +1377,12 @@ of hyper-coercion, they can implement the normal coercion version of the four
 functions mentioned aboved and get another abstract machine. We capture the 
 idea of ``abstract cast'' by the following definition.
 
-\begin{definition}[Cast Representation]
-	A cast representation has four interface functions:
-	\begin{description}
-		\item[$ id(T) $] constructs an identity cast
-		\item[$ seq(c_1,c_2) $] composes two casts
-		\item[$ cast(T_1,l,T_2) $] constructs a cast from $ T_1 $ to $ T_2 $
-		\item[$ applyCast(c,v) $] applies a cast onto a value
-	\end{description}
-\end{definition}
-
-
-
 \subsection{Correctness of \lazyD{} Hyper-coercions}
 
 
 
 One of our major contributions is for all cast presentation, if it is proper, 
 then it is correct.
-
-\begin{definition}[Proper Cast Representation]
-	A cast representation is proper if
-	\begin{enumerate}
-		\item If $ v : T $, then $ applyCast(id(T), v) = \mathtt{succ} \; v $
-		\item If $ v : T_1 $,
-		$ c_1 $ is from $ T_1 $ to $ T_2 $, and 
-		$ c_2 $ is from $ T_2 $ to $ T_3 $,\\
-		then $ applyCast(seq(c_1,c_2),v) = applyCast(c_1,v) >>= \lambda 
-		v.applyCast(c_2,v) $
-		\item If $ v : T_1 $ and $ \neg T_1 \smile T_2 $,
-		then $ applyCast(cast(T_1, l, T_2),v) = \rOOfail{l} $
-		\item If $ v : \star $, 
-		then $ applyCast(cast(\TOOdyn,l,\TOOdyn),v) = \rOOsucc{v} $
-		\item If $ v : P $,
-		then $ applyCast(cast(\star,l,Q),\hcvOOinj{P}{v}) 
-		= applyCast(cast(P,l,Q),v) $
-		\item If $ v : P $,
-		then $ applyCast(cast(P,l,\star),v) = \rOOsucc{(\hcvOOinj{P}{v})} $
-		\item If $ v : \iota $,
-		then $ applyCast(cast(\POOunit,l,\POOunit),v) = \rOOsucc{v} $
-		\item $ 
-		applyCast(cast(\POOfun{T_1}{T_2},l,\POOfun{T_3}{T_4}) ,
-		\hcvOOfun{c_1}{\rho}{x}{b}{c_2}) \\
-		= 
-		\rOOsucc{(\hcvOOfun{seq(cast(T_3,l,T_1),c_1)}{\rho}{x}{b}{seq(c_2,cast(T_2,l,T_4))})}$
-		
-		\item $ applyCast(cast(\POOprod{T_1}{T_2},l,T_3 \times 
-		T_4),\hcvOOcons{v_1}{c_1}{v_2}{c_2}) $ \\
-		$ = 
-		\rOOsucc{(\hcvOOcons{v_1}{seq(c_1,cast(T_1,l,T_3))}{v_2}{seq(c_2,cast(T_2,l,T_4))})}
-		 $ 
-		\item $ 
-		applyCast(cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}),\hcvOOinl{v}{c})
-		= \rOOsucc{(\hcvOOinl{v}{seq(c,cast(T_1,l,T_2))})} $
-		\item $ 
-		applyCast(cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}),\hcvOOinr{v}{c})
-		= \rOOsucc{(\hcvOOinr{v}{seq(c,cast(T_3,l,T_4))})} $
-	\end{enumerate}
-\end{definition}
 
 \begin{proposition}[proper cast represenations are correct]
   If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is a proper cast 
