@@ -1,6 +1,7 @@
 *.agdai
 *.bib~*
 References/**
+Design/**
 *.aux
 *.bbl
 *.blg
