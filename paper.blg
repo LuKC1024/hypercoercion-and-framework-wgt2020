@@ -1,14 +1,10 @@
-This is BibTeX, Version 0.99d (TeX Live 2019)
-Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+This is BibTeX, Version 0.99d (TeX Live 2015)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: paper.aux
 The style file: ACM-Reference-Format.bst
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
 Database file #1: bibfile.bib
-Reallocated singl_function (elt_size=4) to 100 items from 50.
-Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
-Reallocated global_strs (elt_size=20001) to 20 items from 10.
-Reallocated glb_str_end (elt_size=4) to 20 items from 10.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Warning--empty address in felleisen1986control
 Warning--can't use both volume and number fields in flanagan2006hybrid
@@ -35,38 +31,38 @@ Warning--empty address in siek2010threesomes
 Warning--empty publisher in wadler2009well
 Warning--empty address in wadler2009well
 You've used 13 entries,
-            5719 wiz_defined-function locations,
-            1370 strings with 16151 characters,
-and the built_in function-call counts, 15298 in all, are:
-= -- 1810
+            5706 wiz_defined-function locations,
+            1383 strings with 16929 characters,
+and the built_in function-call counts, 14081 in all, are:
+= -- 1674
 > -- 455
 < -- 0
-+ -- 147
++ -- 134
 - -- 164
-* -- 1007
-:= -- 1498
+* -- 914
+:= -- 1427
 add.period$ -- 65
 call.type$ -- 13
 change.case$ -- 80
 chr.to.int$ -- 13
 cite$ -- 37
-duplicate$ -- 1474
-empty$ -- 1022
+duplicate$ -- 1252
+empty$ -- 904
 format.name$ -- 204
-if$ -- 3666
-int.to.chr$ -- 2
-int.to.str$ -- 1
+if$ -- 3424
+int.to.chr$ -- 1
+int.to.str$ -- 0
 missing$ -- 59
 newline$ -- 135
 num.names$ -- 104
-pop$ -- 574
+pop$ -- 586
 preamble$ -- 1
-purify$ -- 197
+purify$ -- 145
 quote$ -- 0
-skip$ -- 532
+skip$ -- 470
 stack$ -- 0
-substring$ -- 1153
-swap$ -- 152
+substring$ -- 971
+swap$ -- 116
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
