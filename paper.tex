@@ -74,7 +74,6 @@
 \newcommand{\stxrule}[3]{#1 & ::= & #3 & \text{#2}\\}
 \newcommand{\stxrulecont}[1]{& | & #1 & \\}
 \newcommand{\funrule}[3]{#1 &=& #2 & #3\\}
-\newcommand{\redrule}[3]{#1 & \longrightarrow_B & #2 & #3\\}
 \newcommand{\redruleS}[3]{#1 & \longrightarrow_{S(C)} & #2 & #3\\}
 \newcommand{\comprule}[4]{#1 & \fatsemi^\ell & #2 & = & #3 & #4 \\}
 \newcommand{\plus}[0]{+}
@@ -82,8 +81,6 @@
 \newcommand{\lazyUD}{$\mathtt{Lazy UD}$}
 \newcommand{\lazyD}{$\mathtt{Lazy D}$}
 \newcommand{\eager}{$\mathtt{Eager}$}
-\newcommand{\hyperCoercionI}[0]{\mathtt{id\star}}
-\newcommand{\hyperCoercionC}[3]{#1 \overset{#2}{\curvearrowright} #3}
 \newcommand{\sOOinspect}[3]{\mathtt{Eval} \; #1 \; #2 \; #3}
 \newcommand{\sOOreturn}[2]{\mathtt{Cont} \; #2 \; #1}
 \newcommand{\sOOhalt}[1]{\mathtt{Halt} \; #1}
@@ -132,6 +129,23 @@
 \newcommand{\hckOOconsI}[3]{\mathtt{cons_1}\;#1\;#2\;#3}
 \newcommand{\hckOOappII}[2]{\mathtt{app_2}\;#1\;#2}
 \newcommand{\sidecond}[1]{\text{if}\;#1}
+% Lazy D blame calculus
+\newcommand{\judgeDBreduce}[2]{#1 \longrightarrow_{\mathcal{D}} #2}
+\newcommand{\judgeDBreduceTrans}[2]{#1 \longrightarrow_{\mathcal{D}}^{*} #2}
+\newcommand{\judgeDBeval}[2]{#1 \Downarrow_{\mathcal{D}} #2}
+\newcommand{\redrule}[3]{#1 & \longrightarrow_\mathcal{D} & #2 & #3\\}
+% Normal Coercion
+\newcommand{\ncProj}[2]{#1?^{#2}}
+\newcommand{\ncInj}[1]{#1!}
+\newcommand{\ncId}[0]{\iota}
+\newcommand{\ncSeq}[2]{#1;#2}
+\newcommand{\ncFail}[1]{\bot^{#1}}
+\newcommand{\ncFun}[2]{\POOfun{#1}{#2}}
+\newcommand{\ncProd}[2]{\POOprod{#1}{#2}}
+\newcommand{\ncSum}[2]{\POOsum{#1}{#2}}
+% Hyper-coercion
+\newcommand{\hyperCoercionI}[0]{\mathtt{id\star}}
+\newcommand{\hyperCoercionC}[3]{#1 \overset{#2}{\curvearrowright} #3}
 
 \begin{document}
 
@@ -238,7 +252,6 @@ languages</concept_desc>
 %% commands, abstract environment, Computing Classification System
 %% environment and commands, and keywords command.
 \maketitle
-
 
 \section{Introduction}
 
@@ -624,7 +637,7 @@ Now let's move to the dynamic semantics.
 %	}
 %	\end{gather*}
 	
-	Reduction \fbox{$ s \longrightarrow_{D,B} s $}
+	Reduction \fbox{$ \judgeDBreduce{s}{s} $}
 	\[
 	\begin{array}{rclr}
 	
@@ -761,15 +774,15 @@ Now let's move to the dynamic semantics.
 	\end{array}
 	\]
 	
-	Transitive closure of reduction \fbox{$ s \longrightarrow_{D,B}^{*} s $}\\
+%	Transitive closure of reduction \fbox{$ s \longrightarrow_{D,B}^{*} s $}\\
 	
-	Evaluation \fbox{$ e \Downarrow_{D,B} o $}
+	Evaluation \fbox{$\judgeDBeval{e}{o}$}
 	\[
 	\inference{
 		\sOOinspect{e}{\emptyset}{cont(\hckOOmt)} \longrightarrow_{B}^{*} 
 		\sOOhalt{o}
 	}{
-		e \Downarrow_{D,B} o
+		\judgeDBeval{e}{o}
 	}
 	\]
 	
@@ -777,11 +790,12 @@ Now let's move to the dynamic semantics.
 	\label{machine-cekc}
 \end{figure}
 
-Fig.~\ref{machine-cekc} defines the dynamic semantcis of the \lazyD{} Blame 
+Fig.~\ref{machine-cekc} defines the dynamic semantics of the \lazyD{} Blame 
 Calculus in the style of CEK machines (\citet{felleisen1986control}). 
-We choose CEK machine because to achieve space efficiency, we need to change 
-continuations. Thus, abstract machines that include continuation in states is 
-quite convenient for us. And CEK is one of the simplest machine of this kind.
+We conjecture that this CEK machines agree with the \lazyD{} blame calculus in 
+\citet{siek2012interpretations}.
+We will show in \hyperref{sec:hyper-coercion} that this abstract machine is 
+equivalent to an abstract machine that represents casts with hyper-coercions.
 
 Let $ c $ ranges over casts. A cast is a triple of a type, a label, and a type.
 Let $ v $ ranges over values. A value is either a function, the 
@@ -814,7 +828,9 @@ continuations. To cast a value, the machine try to apply the cast to the value.
 If the cast succeeds, the machine returns the result to the next continuation. 
 If the cast fails, the machine halts with the blame label.
 
-Transitive closure of reduction and evaluation are standard.
+Transitive closure of reduction ($ \judgeDBreduceTrans{s}{s} $) and evaluation 
+are 
+standard.
 
 \subsection{\lazyUD{} Blame Calculus [Jeremy]}
 
@@ -822,13 +838,502 @@ Transitive closure of reduction and evaluation are standard.
 UNDER CONSTRUCTION
 
 
-\section{Background: Coercion Calculus} \label{sec:coercion-calculus}
+\section{Background: Normal Coercion} \label{sec:coercion-calculus}
 
-\todo[inline]{Which version of normal coercion should this section review?}
+In this section we review the normal coercion (NC) in 
+\citet{siek2012interpretations}. We ignore sum types and product types in this 
+section, because they were not presented in the paper. We assume a basic 
+familiarity with coercion, and direct readers who do not know it to 
+\citet{siek2012interpretations}.
 
-\subsection{\lazyD{} Coercion Calculus}
+As the name suggests, 
+hyper-coercion is largely inspired by coercion, especially its subst NC. We 
+will highlight the similarity of normal coercion and hyper-coercion, and hope 
+this would convince you that hyper-coercion should be as difficult to implement 
+as NC.
 
-\subsection{\lazyUD{} Coercion Calculus}
+\begin{figure}
+	\[
+	\begin{array}{rclr}
+	\stxrule{I}{injectable types (\lazyD)}{
+		\POOfun{T}{T}}
+	\stxrule{I}{injectable types (\lazyUD)}{
+		\POOfun{\TOOdyn}{\TOOdyn}
+	}
+	\stxrule{c}{coercions}{
+		\ncInj{I} \mid
+		\ncProj{I}{l} \mid
+		\ncId \mid
+		\ncFail{l} \mid
+		\ncSeq{c}{c} \mid
+		\ncFun{c}{c}
+	}
+	\stxrule{\bar{c}}{wrapper coercions}{	
+		\ncInj{I} \mid
+		\ncFun{\hat{c}}{\hat{c}} \mid
+		\ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}}
+	}
+%	\stxrulecont{
+%		\ncProd{\hat{c}}{\hat{c}} \mid
+%		\ncSeq{\ncProd{\hat{c}}{\hat{c}}}{\ncInj{I}} \mid
+%		\ncSum{\hat{c}}{\hat{c}} \mid
+%		\ncSeq{\ncSum{\hat{c}}{\hat{c}}}{\ncInj{I}} \mid	
+%	}
+	\stxrule{\hat{c}}{normal coercions}{
+		\bar{c} \mid
+		\ncId \mid
+		\ncFail{l} \mid
+		\ncProj{I}{l} \mid
+		\ncSeq{\ncProj{I}{l}}{\ncFail{l}} \mid
+		\ncSeq{\ncProj{I}{l}}{\ncInj{I}}
+	}
+	\stxrulecont{
+		\ncSeq{\ncProj{I}{l}}{\ncFun{\hat{c}}{\hat{c}}} \mid
+		\ncSeq{\ncProj{I}{l}}{\ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}}}
+	}
+	\end{array}
+	\]
+	\caption{Syntax of Normal Coercion (NC)}
+	\label{fig:normal-coercion}
+\end{figure}
+
+\figref{fig:normal-coercion} defines the normal coercion. 
+Let $ I $ ranges over injectable types. An injectable type is a type that can 
+be cast directly to (injection) and from (projection) $ \TOOdyn $. The 
+definition of injectable type depends on blame strategy. With \lazyD, all 
+pre-types are injectable. With \lazyUD, only $ \POOfun{\TOOdyn}{\TOOdyn} $ 
+is injectable. 
+Let $ c $ ranges over coercions, a coercion is either injection, projection, 
+identity, failure, sequencing, or function coercion.
+Let $ \bar{c} $ ranges over wrapper coercions, which represent casts in $ 
+\vOOcast{v}{c} $.
+Let $ \hat{c} $ ranges over normal coercions. If we inline $ \bar{c} $ and 
+re-arrange cases a little bit, the definition becomes:
+\[
+\begin{array}{rclr}
+\stxrule{\hat{c}}{normal coercions}{
+	\ncFun{\hat{c}}{\hat{c}} \mid
+	\ncSeq{\ncProj{I}{l}}{\ncFun{\hat{c}}{\hat{c}}} \mid
+	\ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}} \mid
+	\ncSeq{\ncProj{I}{l}}{\ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}}} \mid
+	\ncSeq{\ncProj{I}{l}}{\ncFail{l}}
+}
+\stxrulecont{
+	\ncId \mid
+	\ncProj{I}{l} \mid
+	\ncInj{I} \mid
+	\ncSeq{\ncProj{I}{l}}{\ncInj{I}} \mid
+	\ncFail{l} \mid
+}
+\end{array}
+\]
+
+Three observations on the definition leads to hyper-coercion: 
+\begin{enumerate}
+	\item The length of normal coercion is at most three.
+	\item Projections are always at the beginning when presented.
+	\item Injections and failures are always at the end when presented.
+\end{enumerate}
+
+
+\section{Hyper-coercion} \label{sec:hyper-coercion}
+
+\begin{figure}
+	\[ 
+	\begin{array}{lclr}
+	\stxrule{c}{hyper-coercions}{
+		\hyperCoercionI \mid{}
+		\hyperCoercionC{h}{m}{t}
+	}
+	\stxrule{h}{heads}{
+		\epsilon \mid{}
+		?^l
+	}
+	\stxrule{m}{middles}{
+		\POOunit \mid
+		\POOfun{c_1}{c_2} \mid
+		\POOprod{c_1}{c_2} \mid
+		\POOsum{c_1}{c_2}
+	}
+	\stxrule{t}{tails}{
+		\epsilon \mid{}
+		! \mid{}
+		\bot^l
+	}
+	\stxrule{\ell}{$ \mathtt{Maybe} \; l $}{
+		\epsilon \mid{}
+		l
+	}
+	\end{array}
+	\]
+	
+	Shallow-consistency between middles
+	\fbox{$ m \smile m $}
+	
+	%	Coercion typing \fbox{$ c : T \Longrightarrow T $}
+	%	\begin{gather*}
+	%	\inference{}{\typingHC{\hyperCoercionI}{\TOOdyn}{\TOOdyn}}
+	%	\quad
+	%	\inference{
+	%		\typingHC{h}{T_1}{P_1} &
+	%		\typingHC{m}{P_1}{P_2} &
+	%		\typingHC{t}{P_2}{T_2}
+	%	}{
+	%		\typingHC{\hyperCoercionC{h}{m}{t}}{T_1}{T_2}
+	%	}
+	%	\end{gather*}
+	%	
+	%	Head typing \fbox{$ \typingHC{h}{T}{P} $}
+	%	\begin{gather*}
+	%	\inference{}{\typingHC{\epsilon}{P}{P}}
+	%	\quad
+	%	\inference{}{\typingHC{?^l}{\TOOdyn}{P}}
+	%	\end{gather*}
+	%	
+	%	Middle typing \fbox{$ \typingHC{m}{P}{P} $}
+	%	\begin{gather*}
+	%	\inference{}{\typingHC{\POOunit}{\POOunit}{\POOunit}}
+	%	\\
+	%	\inference{
+	%		\typingHC{c_1}{T_3}{T_1} &
+	%		\typingHC{c_2}{T_2}{T_4}
+	%	}{
+	%		\typingHC{\POOfun{c_1}{c_2}}{\POOfun{T_1}{T_2}}{\POOfun{T_3}{T_4}}
+	%	}
+	%	\\
+	%	\inference{
+	%		\typingHC{c_1}{T_1}{T_3} &
+	%		\typingHC{c_2}{T_2}{T_4}
+	%	}{
+	%		
+	%\typingHC{\POOprod{c_1}{c_2}}{\POOprod{T_1}{T_2}}{\POOprod{T_3}{T_4}}
+	%	}
+	%	\\
+	%	\inference{
+	%		\typingHC{c_1}{T_1}{T_3} &
+	%		\typingHC{c_2}{T_2}{T_4}
+	%	}{
+	%		\typingHC{\POOsum{c_1}{c_2}}{\POOsum{T_1}{T_2}}{\POOsum{T_3}{T_4}}
+	%	}
+	%	\end{gather*}
+	%	
+	%	Tail typing \fbox{$ \typingHC{t}{P}{T} $}
+	%	\begin{gather*}
+	%	\inference{}{\typingHC{\epsilon}{P}{P}} \quad
+	%	\inference{}{\typingHC{!}{P}{\TOOdyn}} \quad
+	%	\inference{}{\typingHC{\bot^l}{P}{T}} \quad
+	%	\end{gather*}
+	
+	\caption{Syntax of hyper-coercion}
+	\label{fig:hyper-coercion}
+\end{figure}
+
+All definitions and results in this section are new.
+\figref{fig:hyper-coercion} defines the syntax of hyper-coercions.
+Terms, types, pre-types, blame labels, and observations are as before.
+
+Let $ c $ ranges over hyper-coercions. We re-use the meta-variable $ c $ to 
+stress that hyper-coercion is a cast representation. A hyper-coercion is either 
+an identity cast between the dynamic types, or a complex including a head, a 
+middle, and a tail. 
+Let $ h $ ranges over heads. A head is either a no-op, or a projection 
+decorated with a label, to which blame is allocated if the projection fails. 
+Let $ m $ ranges over middles. There is a one-to-one 
+correspondence between middles and type constructors. 
+We generalize shallow-consistency to include middles in the natural way.
+Let $ t $ ranges over tails. A tail is either a no-op, an injection, or a 
+failure. 
+Let $ \ell $ ranges over no-op and labels. It is useful when we introduce 
+composition of hyper-coercions.
+
+\subsection{\lazyD{} Hyper-coercion}
+
+\begin{figure}
+	Composition of hyper-coercions \fbox{$ c \fatsemi^\ell c = c $}
+	\[ 
+	\begin{array}{rclclr}
+	
+	\comprule{
+		\hyperCoercionI
+	}{
+		\hyperCoercionI
+	}{
+		\hyperCoercionI
+	}{}
+	
+	\comprule{
+		\hyperCoercionI
+	}{
+		\hyperCoercionC{?^{l'}}{m}{t}
+	}{
+		\hyperCoercionC{?^{l'}}{m}{t}
+	}{}
+	
+	\comprule{
+		\hyperCoercionI
+	}{
+		\hyperCoercionC{\epsilon}{m}{t}
+	}{
+		\hyperCoercionC{?^{l}}{m}{t}
+	}{\sidecond{\ell = l}}
+	
+	\comprule{
+		\hyperCoercionC{h}{m}{\bot^{l'}}
+	}{
+		c
+	}{
+		\hyperCoercionC{h}{m}{\bot^{l'}}
+	}{}
+	
+	\comprule{
+		\hyperCoercionC{h}{m}{t}
+	}{
+		\hyperCoercionI
+	}{
+		\hyperCoercionC{h}{m}{!}
+	}{
+		\sidecond{\forall l. t \neq \bot^{l}}
+	}
+	
+	\comprule{
+		\hyperCoercionC{h}{m_1}{t_1}
+	}{
+		\hyperCoercionC{\epsilon}{m_2}{t_2}
+	}{
+		\hyperCoercionC{h}{m'}{t'}
+	}{
+		\sidecond{
+			t_1 \neq \bot^{\centerdot} \; \text{and} \;
+			m_1 \fatsemi^{\ell} (m_2, t_2) = (m', t')
+		}
+	}
+	
+	\comprule{
+		\hyperCoercionC{h}{m_1}{t_1}
+	}{
+		\hyperCoercionC{?^{l'}}{m_2}{t_2}
+	}{
+		\hyperCoercionC{h}{m'}{t'}
+	}{
+		\sidecond{
+			t_1 \neq \bot^{\centerdot} \; \text{and} \;
+			m_1 \fatsemi^{l'} (m_2, t_2) = (m', t')
+		}
+	}
+	\end{array}
+	\]
+	
+	Composition of middles \fbox{$ m \fatsemi^\ell (m,t) = (m,t) $}
+	\[ 
+	\begin{array}{rclclr}
+	\comprule{\POOunit}{(\POOunit,t)}{
+		(\POOunit,t)
+	}{}
+	\comprule{\POOfun{c_1}{c_2}}{(\POOfun{c_3}{c_4},t)}{
+		(\POOfun{c_3 \fatsemi^{\ell} c_1}{c_2 \fatsemi^\ell c_4},t)
+	}{}
+	\comprule{\POOprod{c_1}{c_2}}{(\POOprod{c_3}{c_4},t)}{
+		(\POOprod{c_1 \fatsemi^\ell c_3}{c_2 \fatsemi^\ell c_4},t)
+	}{}
+	\comprule{\POOsum{c_1}{c_2}}{(\POOsum{c_3}{c_4},t)}{
+		(\POOsum{c_1 \fatsemi^\ell c_3}{c_2 \fatsemi^\ell c_4},t)
+	}{}
+	\comprule{m_1}{(m_2,t)}{
+		(m_1,\bot^l)
+	}{
+		\sidecond{
+			\ell = l \; \text{and} \;
+			\neg m_1 \smile m_2 
+		}
+	}
+	\end{array}
+	\]
+	
+	\fbox{$ seq(c,c) = c $}
+	\[
+	\begin{array}{rclr}
+	\funrule{seq(c_1,c_2)}{
+		c_1 \fatsemi^\epsilon c_2
+	}{}
+	\end{array}
+	\]
+	
+	\fbox{$ id( P ) = m $}
+	\[
+	\begin{array}{rclr}
+	\funrule{id(\POOunit)}{\POOunit}{}
+	\funrule{id(\POOfun{T_1}{T_2})}{
+		\POOfun{id(T_1)}{id(T_2)}
+	}{}
+	\funrule{id(\POOprod{T_1}{T_2})}{
+		\POOprod{id(T_1)}{id(T_2)}
+	}{}
+	\funrule{id(\POOsum{T_1}{T_2})}{
+		\POOsum{id(T_1)}{id(T_2)}
+	}{}s
+	\end{array}
+	\]
+	
+	\fbox{$ id( T ) = c $}
+	\[
+	\begin{array}{rclr}
+	\funrule{id(\star)}{
+		\hyperCoercionI
+	}{}
+	\funrule{id(P)}{
+		\hyperCoercionC{\epsilon}{id(P)}{\epsilon}
+	}{}
+	\end{array}
+	\]
+	
+	\fbox{$ cast(T,l,T) = c$}
+	\[
+	\begin{array}{rclr}
+	\funrule{cast(T_1,l,T_2)}{
+		id(T_1) \fatsemi^l id(T_2)
+	}{}
+	\end{array}
+	\]
+	\caption{\lazyD{} Hyper-coercion}
+	\label{fig:HC-D}
+\end{figure}
+
+Functions that construct \lazyD{} hyper-coercions are shown in 
+\figref{fig:HC-D}. 
+
+$ c_1 \fatsemi^\ell c_2 = c' $ composes two hyper-coercions. The target of $ 
+c_1 $ and the source of $ c_2 $ might be different, in which case $ \ell $ must 
+be a label.
+
+$ m_1 \fatsemi^\ell (m_2,t) = (m',t') $ composes a middle with a 
+pair of a middle and a tail. Similarly, the target of $ m_1 $ and the source of 
+$ m_2 $ might be different, in which case $ \ell $ must be a label.
+
+$ seq(c_1,c_2) $ composes two coercions where the target type of $ c_1 $ is 
+equal to the source type of $ T_2 $.
+
+$ id(T) $ constructs an identity coercion of $ T $. 
+
+$ cast(T_1,l,T_2) $ constructs a coercion from a source type, a label, and a 
+target type. 
+
+\begin{proposition}[Hyper-coercions form a Monoid]
+	For all $c : T_1 \Longrightarrow T_2$,
+	$c_1 : T_1 \Longrightarrow T_2$,
+	$c_2 : T_2 \Longrightarrow T_3$, and
+	$c_3 : T_3 \Longrightarrow T_4$,
+	\begin{enumerate}
+		\item $seq(id(T_1),c) = c$,
+		\item $seq(c,id(T_2)) = c$, and
+		\item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
+	\end{enumerate}
+\end{proposition}
+
+To show that hyper-coercion is a correct cast representation, we introduce an 
+hyper-coercion-based machine for the \lazyD\ blame calculus, and show that it 
+bi-simulates the previous machine. 
+
+The machine depends on four functions that consumes and/or construct 
+hyper-coercions: $ id(T) $, $ seq(c,c) $, $ cast(T,l,T) $, and $ applyCast(T,v) 
+$. The first three are described above. We will show $ applyCast $ shortly.
+
+Some reader might have noticed that the machine is representation-independent 
+w.r.t cast. That being said, if some people want to use normal coercion instead 
+of hyper-coercion, they can implement the normal coercion version of the four 
+functions mentioned aboved and get another abstract machine. We capture the 
+idea of ``abstract cast'' by the following definition.
+
+\subsection{Correctness of \lazyD{} Hyper-coercions}
+
+
+
+One of our major contributions is for all cast presentation, if it is proper, 
+then it is correct.
+
+\begin{proposition}[proper cast represenations are correct]
+	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is a proper cast 
+	representation
+	\[
+	e \Downarrow_{D,B} o \; \text{if and only if} \; 
+	e \Downarrow_{D,P(C)} o
+	\]
+\end{proposition}
+
+Perhaps unsurprisingly, hyper-coercion is correct.
+
+\begin{lemma}[\lazyD{} Hyper-coercion is a proper cast representation]
+	See appendix.
+\end{lemma}
+
+\begin{theorem}[\lazyD{} hyper-coercion is correct]
+	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ 
+	\[
+	e \Downarrow_{D,B} o \; \text{if and only if} \; 
+	e \Downarrow_{D,P(H)} o
+	\]
+\end{theorem}
+
+\figref{hc-applyCast} defines $ applyCast $. Applying the identity cast for the 
+dynamic type succeeds immediately. When applying a compound cast, we firstly 
+apply the middle, then apply the tail. We denote by $ r \; >>= \; f $ to mean 
+that if $ r $ is $ \rOOsucc{v} $, the result is $ f(v) $, otherwise the result 
+is the failure.
+$ applyMiddle(\ell,m,v) $ and $ applyTail(t,v) $ are straightforward.
+
+\begin{figure}
+	\fbox{$ applyCast(c,v) = r $}
+	\[
+	\begin{array}{rclr}
+	\funrule{applyCast(\hyperCoercionI,\;v)}{\rOOsucc{v}}{}
+	\funrule{applyCast(\hyperCoercionC{?^l}{m}{t},\;\hcvOOinj{P}{v})}{
+		applyMiddle(l,m,v) \; >>= \; \lambda v. applyTail(t,v)
+	}{}
+	\funrule{applyCast(\hyperCoercionC{\epsilon}{m}{t},\;v)}{
+		applyMiddle(\epsilon,m,v) \; >>= \; \lambda v. applyTail(t,v)
+	}{}
+	\end{array}
+	\]
+	
+	\fbox{$ applyMiddle(\ell,m,v) = v $}
+	\[
+	\begin{array}{rclr}
+	\funrule{applyMiddle(\ell,\POOunit,\hcvOOtt)}{\hcvOOtt}{}
+	\funrule{applyMiddle(\ell,\POOfun{c_3}{c_4},\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{
+		\hcvOOfun{(c_3 \fatsemi^\ell c_1)}{\rho}{x}{e}{(c_2 \fatsemi^\ell c_4)}
+	}{}
+	\funrule{applyMiddle(\ell,\POOprod{c_3}{c_4},\hcvOOcons{v_1}{c_1}{v_2}{c_2})}{
+		\hcvOOcons{v_1}{(c_1 \fatsemi^\ell c_3)}{v_2}{(c_2 \fatsemi^\ell c_4)}
+	}{}
+	\funrule{applyMiddle(\ell,\POOsum{c_3}{c_4},\hcvOOinl{v}{c_1})}{
+		\hcvOOinl{v}{(c_1 \fatsemi^\ell c_3)}
+	}{}
+	\funrule{applyMiddle(\ell,\POOsum{c_3}{c_4},\hcvOOinr{v}{c_2})}{
+		\hcvOOinr{v}{(c_2 \fatsemi^\ell c_4)}
+	}{}
+	\funrule{applyMiddle(\ell,m,v)}{
+		\rOOfail{l}
+	}{
+		\sidecond{\ell = l \; \text{and} \; \neg m \smile v}
+	}
+	\end{array}
+	\]
+	
+	\fbox{$ applyTail(t,v) = r $}
+	\[
+	\begin{array}{rclr}
+	\funrule{applyTail(\bot^l,v)}{\rOOfail{l}}{}
+	\funrule{applyTail(\epsilon,v)}{\rOOsucc{v}}{}
+	\funrule{applyTail(!,v)}{\rOOsucc{(\hcvOOinj{P}{v})}}{v : P}
+	\end{array}
+	\]
+	\caption{Applying hyper-coercions to values}
+	\label{hc-applyCast}
+\end{figure}
+
+\subsection{\lazyUD{} Hyper-coercion [Jeremy]}
+
+UNDER CONSTRUCTION
+
 
 
 \section{Space-efficient CEK Abstract Machine}
@@ -1070,404 +1575,6 @@ equivalent when used as interpreters.
 	e \Downarrow_{S(C_2)} o
 	\]
 \end{theorem}
-
-\section{Hyper-coercion} \label{sec:hyper-coercion}
-
-\begin{figure}
-	\[ 
-	\begin{array}{lclr}
-	\stxrule{c}{hyper-coercions}{
-		\hyperCoercionI \mid{}
-		\hyperCoercionC{h}{m}{t}
-	}
-	\stxrule{h}{heads}{
-		\epsilon \mid{}
-		?^l
-	}
-	\stxrule{m}{middles}{
-		\POOunit \mid
-		\POOfun{c_1}{c_2} \mid
-		\POOprod{c_1}{c_2} \mid
-		\POOsum{c_1}{c_2}
-	}
-	\stxrule{t}{tails}{
-		\epsilon \mid{}
-		! \mid{}
-		\bot^l
-	}
-	\stxrule{\ell}{$ \mathtt{Maybe} \; l $}{
-		\epsilon \mid{}
-		l
-	}
-	\end{array}
-	\]
-	
-	Shallow-consistency between middles
-	\fbox{$ m \smile m $}
-	
-%	Coercion typing \fbox{$ c : T \Longrightarrow T $}
-%	\begin{gather*}
-%	\inference{}{\typingHC{\hyperCoercionI}{\TOOdyn}{\TOOdyn}}
-%	\quad
-%	\inference{
-%		\typingHC{h}{T_1}{P_1} &
-%		\typingHC{m}{P_1}{P_2} &
-%		\typingHC{t}{P_2}{T_2}
-%	}{
-%		\typingHC{\hyperCoercionC{h}{m}{t}}{T_1}{T_2}
-%	}
-%	\end{gather*}
-%	
-%	Head typing \fbox{$ \typingHC{h}{T}{P} $}
-%	\begin{gather*}
-%	\inference{}{\typingHC{\epsilon}{P}{P}}
-%	\quad
-%	\inference{}{\typingHC{?^l}{\TOOdyn}{P}}
-%	\end{gather*}
-%	
-%	Middle typing \fbox{$ \typingHC{m}{P}{P} $}
-%	\begin{gather*}
-%	\inference{}{\typingHC{\POOunit}{\POOunit}{\POOunit}}
-%	\\
-%	\inference{
-%		\typingHC{c_1}{T_3}{T_1} &
-%		\typingHC{c_2}{T_2}{T_4}
-%	}{
-%		\typingHC{\POOfun{c_1}{c_2}}{\POOfun{T_1}{T_2}}{\POOfun{T_3}{T_4}}
-%	}
-%	\\
-%	\inference{
-%		\typingHC{c_1}{T_1}{T_3} &
-%		\typingHC{c_2}{T_2}{T_4}
-%	}{
-%		\typingHC{\POOprod{c_1}{c_2}}{\POOprod{T_1}{T_2}}{\POOprod{T_3}{T_4}}
-%	}
-%	\\
-%	\inference{
-%		\typingHC{c_1}{T_1}{T_3} &
-%		\typingHC{c_2}{T_2}{T_4}
-%	}{
-%		\typingHC{\POOsum{c_1}{c_2}}{\POOsum{T_1}{T_2}}{\POOsum{T_3}{T_4}}
-%	}
-%	\end{gather*}
-%	
-%	Tail typing \fbox{$ \typingHC{t}{P}{T} $}
-%	\begin{gather*}
-%	\inference{}{\typingHC{\epsilon}{P}{P}} \quad
-%	\inference{}{\typingHC{!}{P}{\TOOdyn}} \quad
-%	\inference{}{\typingHC{\bot^l}{P}{T}} \quad
-%	\end{gather*}
-	
-	\caption{Syntax of hyper-coercion}
-	\label{fig:hyper-coercion}
-\end{figure}
-
-All definitions and results in this section are new.
-\figref{fig:hyper-coercion} defines the syntax of hyper-coercions.
-Terms, types, pre-types, blame labels, and observations are as before.
-
-Let $ c $ ranges over hyper-coercions. We re-use the meta-variable $ c $ to 
-stress that hyper-coercion is a cast representation. A hyper-coercion is either 
-an identity cast between the dynamic types, or a complex including a head, a 
-middle, and a tail. 
-Let $ h $ ranges over heads. A head is either a no-op, or a projection 
-decorated with a label, to which blame is allocated if the projection fails. 
-Let $ m $ ranges over middles. There is a one-to-one 
-correspondence between middles and type constructors. 
-We generalize shallow-consistency to include middles in the natural way.
-Let $ t $ ranges over tails. A tail is either a no-op, an injection, or a 
-failure. 
-Let $ \ell $ ranges over no-op and labels. It is useful when we introduce 
-composition of hyper-coercions.
-
-\subsection{\lazyD{} Hyper-coercion}
-
-\begin{figure}
-	Composition of hyper-coercions \fbox{$ c \fatsemi^\ell c = c $}
-	\[ 
-	\begin{array}{rclclr}
-	
-	\comprule{
-		\hyperCoercionI
-	}{
-		\hyperCoercionI
-	}{
-		\hyperCoercionI
-	}{}
-	
-	\comprule{
-		\hyperCoercionI
-	}{
-		\hyperCoercionC{?^{l'}}{m}{t}
-	}{
-		\hyperCoercionC{?^{l'}}{m}{t}
-	}{}
-	
-	\comprule{
-		\hyperCoercionI
-	}{
-		\hyperCoercionC{\epsilon}{m}{t}
-	}{
-		\hyperCoercionC{?^{l}}{m}{t}
-	}{\sidecond{\ell = l}}
-	
-	\comprule{
-		\hyperCoercionC{h}{m}{\bot^{l'}}
-	}{
-		c
-	}{
-		\hyperCoercionC{h}{m}{\bot^{l'}}
-	}{}
-	
-	\comprule{
-		\hyperCoercionC{h}{m}{t}
-	}{
-		\hyperCoercionI
-	}{
-		\hyperCoercionC{h}{m}{!}
-	}{
-		\sidecond{\forall l. t \neq \bot^{l}}
-	}
-	
-	\comprule{
-		\hyperCoercionC{h}{m_1}{t_1}
-	}{
-		\hyperCoercionC{\epsilon}{m_2}{t_2}
-	}{
-		\hyperCoercionC{h}{m'}{t'}
-	}{
-		\sidecond{
-			t_1 \neq \bot^{\centerdot} \; \text{and} \;
-			m_1 \fatsemi^{\ell} (m_2, t_2) = (m', t')
-		}
-	}
-	
-	\comprule{
-		\hyperCoercionC{h}{m_1}{t_1}
-	}{
-		\hyperCoercionC{?^{l'}}{m_2}{t_2}
-	}{
-		\hyperCoercionC{h}{m'}{t'}
-	}{
-		\sidecond{
-		t_1 \neq \bot^{\centerdot} \; \text{and} \;
-		m_1 \fatsemi^{l'} (m_2, t_2) = (m', t')
-		}
-	}
-	\end{array}
-	\]
-	
-	Composition of middles \fbox{$ m \fatsemi^\ell (m,t) = (m,t) $}
-	\[ 
-	\begin{array}{rclclr}
-	\comprule{\POOunit}{(\POOunit,t)}{
-		(\POOunit,t)
-	}{}
-	\comprule{\POOfun{c_1}{c_2}}{(\POOfun{c_3}{c_4},t)}{
-		(\POOfun{c_3 \fatsemi^{\ell} c_1}{c_2 \fatsemi^\ell c_4},t)
-	}{}
-	\comprule{\POOprod{c_1}{c_2}}{(\POOprod{c_3}{c_4},t)}{
-		(\POOprod{c_1 \fatsemi^\ell c_3}{c_2 \fatsemi^\ell c_4},t)
-	}{}
-	\comprule{\POOsum{c_1}{c_2}}{(\POOsum{c_3}{c_4},t)}{
-		(\POOsum{c_1 \fatsemi^\ell c_3}{c_2 \fatsemi^\ell c_4},t)
-	}{}
-	\comprule{m_1}{(m_2,t)}{
-		(m_1,\bot^l)
-	}{
-		\sidecond{
-		\ell = l \; \text{and} \;
-		\neg m_1 \smile m_2 
-		}
-	}
-	\end{array}
-	\]
-	
-	\fbox{$ seq(c,c) = c $}
-	\[
-	\begin{array}{rclr}
-	\funrule{seq(c_1,c_2)}{
-		c_1 \fatsemi^\epsilon c_2
-	}{}
-	\end{array}
-	\]
-	
-	\fbox{$ id( P ) = m $}
-	\[
-	\begin{array}{rclr}
-	\funrule{id(\POOunit)}{\POOunit}{}
-	\funrule{id(\POOfun{T_1}{T_2})}{
-		\POOfun{id(T_1)}{id(T_2)}
-	}{}
-	\funrule{id(\POOprod{T_1}{T_2})}{
-		\POOprod{id(T_1)}{id(T_2)}
-	}{}
-	\funrule{id(\POOsum{T_1}{T_2})}{
-		\POOsum{id(T_1)}{id(T_2)}
-	}{}s
-	\end{array}
-	\]
-	
-	\fbox{$ id( T ) = c $}
-	\[
-	\begin{array}{rclr}
-	\funrule{id(\star)}{
-		\hyperCoercionI
-	}{}
-	\funrule{id(P)}{
-		\hyperCoercionC{\epsilon}{id(P)}{\epsilon}
-	}{}
-	\end{array}
-	\]
-	
-	\fbox{$ cast(T,l,T) = c$}
-	\[
-	\begin{array}{rclr}
-	\funrule{cast(T_1,l,T_2)}{
-		id(T_1) \fatsemi^l id(T_2)
-	}{}
-	\end{array}
-	\]
-	\caption{\lazyD{} Hyper-coercion}
-	\label{fig:HC-D}
-\end{figure}
-
-Functions that construct \lazyD{} hyper-coercions are shown in 
-\figref{fig:HC-D}. 
-
-$ c_1 \fatsemi^\ell c_2 = c' $ composes two hyper-coercions. The target of $ 
-c_1 $ and the source of $ c_2 $ might be different, in which case $ \ell $ must 
-be a label.
-
-$ m_1 \fatsemi^\ell (m_2,t) = (m',t') $ composes a middle with a 
-pair of a middle and a tail. Similarly, the target of $ m_1 $ and the source of 
-$ m_2 $ might be different, in which case $ \ell $ must be a label.
-
-$ seq(c_1,c_2) $ composes two coercions where the target type of $ c_1 $ is 
-equal to the source type of $ T_2 $.
-
-$ id(T) $ constructs an identity coercion of $ T $. 
-
-$ cast(T_1,l,T_2) $ constructs a coercion from a source type, a label, and a 
-target type. 
-
-\begin{proposition}[Hyper-coercions form a Monoid]
-  For all $c : T_1 \Longrightarrow T_2$,
-  $c_1 : T_1 \Longrightarrow T_2$,
-  $c_2 : T_2 \Longrightarrow T_3$, and
-  $c_3 : T_3 \Longrightarrow T_4$,
-  \begin{enumerate}
-  \item $seq(id(T_1),c) = c$,
-  \item $seq(c,id(T_2)) = c$, and
-  \item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
-  \end{enumerate}
-\end{proposition}
-
-To show that hyper-coercion is a correct cast representation, we introduce an 
-hyper-coercion-based machine for the \lazyD\ blame calculus, and show that it 
-bi-simulates the previous machine. 
-
-The machine depends on four functions that consumes and/or construct 
-hyper-coercions: $ id(T) $, $ seq(c,c) $, $ cast(T,l,T) $, and $ applyCast(T,v) 
-$. The first three are described above. We will show $ applyCast $ shortly.
-
-Some reader might have noticed that the machine is representation-independent 
-w.r.t cast. That being said, if some people want to use normal coercion instead 
-of hyper-coercion, they can implement the normal coercion version of the four 
-functions mentioned aboved and get another abstract machine. We capture the 
-idea of ``abstract cast'' by the following definition.
-
-\subsection{Correctness of \lazyD{} Hyper-coercions}
-
-
-
-One of our major contributions is for all cast presentation, if it is proper, 
-then it is correct.
-
-\begin{proposition}[proper cast represenations are correct]
-  If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is a proper cast 
-  representation
-  \[
-  e \Downarrow_{D,B} o \; \text{if and only if} \; 
-  e \Downarrow_{D,P(C)} o
-  \]
-\end{proposition}
-
-Perhaps unsurprisingly, hyper-coercion is correct.
-
-\begin{lemma}[\lazyD{} Hyper-coercion is a proper cast representation]
-	See appendix.
-\end{lemma}
-
-\begin{theorem}[\lazyD{} hyper-coercion is correct]
-	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ 
-	\[
-	e \Downarrow_{D,B} o \; \text{if and only if} \; 
-	e \Downarrow_{D,P(H)} o
-	\]
-\end{theorem}
-
-\figref{hc-applyCast} defines $ applyCast $. Applying the identity cast for the 
-dynamic type succeeds immediately. When applying a compound cast, we firstly 
-apply the middle, then apply the tail. We denote by $ r \; >>= \; f $ to mean 
-that if $ r $ is $ \rOOsucc{v} $, the result is $ f(v) $, otherwise the result 
-is the failure.
-$ applyMiddle(\ell,m,v) $ and $ applyTail(t,v) $ are straightforward.
-
-\begin{figure}
-	\fbox{$ applyCast(c,v) = r $}
-	\[
-	\begin{array}{rclr}
-	\funrule{applyCast(\hyperCoercionI,\;v)}{\rOOsucc{v}}{}
-	\funrule{applyCast(\hyperCoercionC{?^l}{m}{t},\;\hcvOOinj{P}{v})}{
-		applyMiddle(l,m,v) \; >>= \; \lambda v. applyTail(t,v)
-	}{}
-	\funrule{applyCast(\hyperCoercionC{\epsilon}{m}{t},\;v)}{
-		applyMiddle(\epsilon,m,v) \; >>= \; \lambda v. applyTail(t,v)
-	}{}
-	\end{array}
-	\]
-	
-	\fbox{$ applyMiddle(\ell,m,v) = v $}
-	\[
-	\begin{array}{rclr}
-	\funrule{applyMiddle(\ell,\POOunit,\hcvOOtt)}{\hcvOOtt}{}
-	\funrule{applyMiddle(\ell,\POOfun{c_3}{c_4},\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{
-		\hcvOOfun{(c_3 \fatsemi^\ell c_1)}{\rho}{x}{e}{(c_2 \fatsemi^\ell c_4)}
-	}{}
-	\funrule{applyMiddle(\ell,\POOprod{c_3}{c_4},\hcvOOcons{v_1}{c_1}{v_2}{c_2})}{
-		\hcvOOcons{v_1}{(c_1 \fatsemi^\ell c_3)}{v_2}{(c_2 \fatsemi^\ell c_4)}
-	}{}
-	\funrule{applyMiddle(\ell,\POOsum{c_3}{c_4},\hcvOOinl{v}{c_1})}{
-		\hcvOOinl{v}{(c_1 \fatsemi^\ell c_3)}
-	}{}
-	\funrule{applyMiddle(\ell,\POOsum{c_3}{c_4},\hcvOOinr{v}{c_2})}{
-		\hcvOOinr{v}{(c_2 \fatsemi^\ell c_4)}
-	}{}
-	\funrule{applyMiddle(\ell,m,v)}{
-		\rOOfail{l}
-	}{
-		\sidecond{\ell = l \; \text{and} \; \neg m \smile v}
-	}
-	\end{array}
-	\]
-	
-	\fbox{$ applyTail(t,v) = r $}
-	\[
-	\begin{array}{rclr}
-	\funrule{applyTail(\bot^l,v)}{\rOOfail{l}}{}
-	\funrule{applyTail(\epsilon,v)}{\rOOsucc{v}}{}
-	\funrule{applyTail(!,v)}{\rOOsucc{(\hcvOOinj{P}{v})}}{v : P}
-	\end{array}
-	\]
-	\caption{Applying hyper-coercions to values}
-	\label{hc-applyCast}
-\end{figure}
-
-\subsection{\lazyUD{} Hyper-coercion [Jeremy]}
-
-UNDER CONSTRUCTION
-
 
 
 \section{Conclusion} \label{sec:conclude}
