@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  15 OCT 2019 15:45
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  15 OCT 2019 16:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1809,95 +1809,95 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 Class acmart Warning: A possible image without description on input line 1318.
 
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 10.0pt on input line 1322.
+(Font)              scaled to size 10.0pt on input line 1325.
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 7.3pt on input line 1322.
+(Font)              scaled to size 7.3pt on input line 1325.
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 5.5pt on input line 1322.
+(Font)              scaled to size 5.5pt on input line 1325.
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/it' will be
-(Font)              scaled to size 9.0pt on input line 1376.
+(Font)              scaled to size 9.0pt on input line 1403.
 
-Class acmart Warning: A possible image without description on input line 1378.
+Class acmart Warning: A possible image without description on input line 1405.
 
-LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
-(Font)              scaled to size 10.0pt on input line 1390.
 [8.8]
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
+(Font)              scaled to size 10.0pt on input line 1417.
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 9.0pt on input line 1514.
+(Font)              scaled to size 9.0pt on input line 1541.
 
 
-Class acmart Warning: A possible image without description on input line 1516.
+Class acmart Warning: A possible image without description on input line 1543.
 
-[9.9]
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1549.
-
+[9.9] [10.10]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1549.
-
-[10.10]
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1603.
+(hyperref)                removing `math shift' on input line 1576.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1603.
+(hyperref)                removing `math shift' on input line 1576.
 
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1630.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1630.
+
+[11.11]
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 7.3pt on input line 1677.
+(Font)              scaled to size 7.3pt on input line 1704.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 5.5pt on input line 1677.
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1682.
+(Font)              scaled to size 5.5pt on input line 1704.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1682.
+(hyperref)                removing `math shift' on input line 1709.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1682.
+(hyperref)                removing `math shift' on input line 1709.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1682.
+(hyperref)                removing `math shift' on input line 1709.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1709.
 
 Package hyperref Info: bookmark level for unknown todo defaults to 0 on input l
-ine 1688.
-[11.11]
+ine 1715.
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1701.
+(hyperref)                removing `math shift' on input line 1728.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1701.
+(hyperref)                removing `math shift' on input line 1728.
 
 
-Overfull \hbox (13.84387pt too wide) detected at line 1753
+Overfull \hbox (13.84387pt too wide) detected at line 1780
 []
  []
 
 
-Class acmart Warning: A possible image without description on input line 1765.
+Class acmart Warning: A possible image without description on input line 1792.
 
-Excluding 'acks' comment. (./paper.bbl
+[12.12] Excluding 'acks' comment. (./paper.bbl
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
 (Font)              scaled to size 8.0pt on input line 46.
- [12.12])
+)
 
 Class acmart Warning: Some images may lack descriptions.
 
 [13.13]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1810.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1810.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1837.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1837.
  (./paper.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1810.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1810.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1837.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1837.
 
 Package rerunfilecheck Info: File `paper.out' has not changed.
 (rerunfilecheck)             Checksum: 32602E0B1DF13FF4CE18A2B95DD7C3C3;3356.
@@ -1911,11 +1911,11 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 29086 strings out of 492616
- 510007 string characters out of 6129482
- 612095 words of memory out of 5000000
+ 29085 strings out of 492616
+ 509979 string characters out of 6129482
+ 612101 words of memory out of 5000000
  31855 multiletter control sequences out of 15000+600000
- 205426 words of font info for 363 fonts, out of 8000000 for 9000
+ 205049 words of font info for 362 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
  62i,17n,94p,905b,867s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/libertine/lbtn_25tcsq.enc
@@ -1946,10 +1946,10 @@ xlive/2019/texmf-dist/fonts/type1/public/newtx/txexs.pfb></usr/local/texlive/20
 mf-dist/fonts/type1/public/newtx/txsys.pfb></usr/local/texlive/2019/texmf-dist/
 fonts/type1/public/newtx/zxlr.pfb></usr/local/texlive/2019/texmf-dist/fonts/typ
 e1/public/newtx/zxlri.pfb>
-Output written on paper.pdf (13 pages, 543597 bytes).
+Output written on paper.pdf (13 pages, 543816 bytes).
 PDF statistics:
- 437 PDF objects out of 1000 (max. 8388607)
- 356 compressed objects within 4 object streams
+ 438 PDF objects out of 1000 (max. 8388607)
+ 357 compressed objects within 4 object streams
  80 named destinations out of 1000 (max. 500000)
  68865 words of extra memory for PDF output out of 74296 (max. 10000000)
 
