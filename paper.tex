@@ -616,14 +616,12 @@ in addition, casts and blame. Unlike $ \mathtt{STLC+} $, we annotate the
 codomain of lambda abstractions explicitly.
 \todo[inline]{Why do you annotate the codomain of lambda abstractions
   explicitly? -Jeremy}
+\todo[inline]{Because I apply $ id(\cdot) $ to the codomain in the HC CEK. -KC}
 The end of \figref{fig:blame-static} shows the typing rules for the
 additional terms.
 
 Let $ o $ ranges over observations. They are what would be observed if a 
-program terminates. Observations include all value constructors and blames.
-\todo[inline]{``blames'' is incorrect. See
-https://www.wordhippo.com/what-is/the-plural-of/blame.html}
-
+program terminates. Observations include all value constructors and blame.
 
 Now let's move to the dynamic semantics. 
 
@@ -876,9 +874,8 @@ equivalent to an abstract machine that represents casts with hypercoercions.
 
 \todoKC{change the reduction rules of case}
 
-Let $ c $ ranges over casts. A cast is a triple of a type, a label, and a type.
-\todo[inline]{``ranges'' should be ``range'', not plural. -Jeremy}
-Let $ v $ ranges over values. A value is either a function, the 
+Let $ c $ range over casts. A cast is a triple of a type, a label, and a type.
+Let $ v $ range over values. A value is either a function, the 
 element of unit, a pair, a left injection, a right injection, or a casted value.
 The cast around a casted value is not arbitrary, as shown by value typing: the 
 source type must be a pre-type, and the source and the target must be 
