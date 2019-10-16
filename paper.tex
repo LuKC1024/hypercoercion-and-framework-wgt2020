@@ -353,7 +353,7 @@ calculus in \citet{siek2009exploring} and the Blame Calculus in
   labels, and the lazy UD calculus does not. So perhaps we should just
   say lazy UD cast calculus, and explain that it is very close to the
   blame calculus. -Jeremy}
-\todo[inline]{I replace most uses of blame calculus to cast calculus.}
+\todo[inline]{I replace most uses of blame calculus to cast calculus. -KC}
 They simplify the coercion calculi by only 
 working with normal coercions (i.e. coercions in normal form). 
 They conjecture that their revised coercion calculi bisimulate the 
@@ -395,12 +395,9 @@ easy enough to implement in a compiler \cite{kuhlenschmidt2018efficient}.
 Normal coercion is still not satisfactory, however, in at least two aspects.
 Firstly, as we mentioned above, it is hard to reason about normal coercion. The 
 major difficulty is from its non-structurally recursive composition.
-For instance, many developers of Grift report it is tricky to convince
+For instance, the developers of Grift report it is tricky to convince
 their proof assistants that the composition terminates.
-%
-\todo[inline]{Don't lie. There are not many developers of Grift.
-  I only know 2 people developing Grift: Andre and Deyaa. -Jeremy}
-%
+
 Secondly, the definition of normal coercion lies unnecessarily on top 
 of coercion: all coercions are normal when they are initially constructed, and 
 \citet{siek2012interpretations} have shown an function that 
@@ -409,6 +406,9 @@ composes and produces normal coercions.
 \todo[inline]{Many researchers would view this as a positive thing,
   not a negative. For example, the notion of normal forms comes up
   over and over again in mathematics and logic. -Jeremy}
+\todo[inline]{I guess having a notion of normal forms is more convenient when a 
+notion of normalization is convenient. But we don't even need a notion of 
+normalization for cast representations. -KC}
 
 Perhaps unsurprisingly, threesome has a structurally recursive compose and a 
 self-standing definition. Together with \citet{garcia2013calculating}'s 
@@ -447,6 +447,7 @@ Calculi.
 In section \ref{sec:hypercoercion} we present hypercoercion.
 Section \ref{sec:conclude} concludes.
 \todo[inline]{Lots of missing sections. -Jeremy}
+\todo[inline]{Will fix finally, I am moving stuff. -KC}
 
 
 \section{Background: Cast Calculi} \label{sec:blame-calculus}

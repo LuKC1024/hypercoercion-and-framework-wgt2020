@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.5.4)  16 OCT 2019 16:49
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.5.4)  16 OCT 2019 16:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1541,23 +1541,23 @@ File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-LaTeX Font Info:    Try loading font information for OT1+zi4 on input line 11.
+LaTeX Font Info:    Try loading font information for OT1+zi4 on input line 10.
 
 (/usr/share/texlive/texmf-dist/tex/latex/inconsolata/ot1zi4.fd
 File: ot1zi4.fd 2018/01/14 OT1/zi4 (Inconsolata)
 )
 LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
-(Font)              scaled to size 10.0pt on input line 11.
+(Font)              scaled to size 10.0pt on input line 10.
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `zi4' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
-(Font)              scaled to size 7.3pt on input line 11.
+(Font)              scaled to size 7.3pt on input line 10.
 LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
-(Font)              scaled to size 5.5pt on input line 11.
+(Font)              scaled to size 5.5pt on input line 10.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 7.0pt on input line 17.
+(Font)              scaled to size 7.0pt on input line 18.
 
 Underfull \hbox (badness 10000) has occurred while \output is active
 
@@ -1579,11 +1579,14 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 [3.3]
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 7.3pt on input line 461.
+(Font)              scaled to size 7.3pt on input line 458.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 5.5pt on input line 461.
+(Font)              scaled to size 5.5pt on input line 458.
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
-(Font)              scaled to size 9.0pt on input line 575.
+(Font)              scaled to size 9.0pt on input line 572.
+
+Underfull \vbox (badness 8170) has occurred while \output is active []
+
 
 Underfull \hbox (badness 10000) has occurred while \output is active
 
@@ -1592,18 +1595,18 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 [4.4]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 628.
+(hyperref)                removing `math shift' on input line 625.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 628.
+(hyperref)                removing `math shift' on input line 625.
 
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 9.0pt on input line 851.
+(Font)              scaled to size 9.0pt on input line 848.
 LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
-(Font)              scaled to size 9.0pt on input line 851.
+(Font)              scaled to size 9.0pt on input line 848.
 
-LaTeX Warning: Float too large for page by 3.14307pt on input line 853.
+LaTeX Warning: Float too large for page by 3.14307pt on input line 850.
 
 
 Underfull \hbox (badness 10000) has occurred while \output is active
@@ -1618,18 +1621,22 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 [6.6]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 916.
+(hyperref)                removing `math shift' on input line 913.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 916.
+(hyperref)                removing `math shift' on input line 913.
 
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 10.0pt on input line 921.
+(Font)              scaled to size 10.0pt on input line 918.
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 7.3pt on input line 921.
+(Font)              scaled to size 7.3pt on input line 918.
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 5.5pt on input line 921.
+(Font)              scaled to size 5.5pt on input line 918.
+LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/it' will be
+(Font)              scaled to size 9.0pt on input line 960.
+LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/it' will be
+(Font)              scaled to size 9.0pt on input line 960.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
@@ -1639,11 +1646,6 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [7.7]
-LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/it' will be
-(Font)              scaled to size 9.0pt on input line 963.
-LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 9.0pt on input line 963.
-
 Underfull \hbox (badness 10000) has occurred while \output is active
 
  []
@@ -1651,11 +1653,11 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 [8.8]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1179.
+(hyperref)                removing `math shift' on input line 1176.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1179.
+(hyperref)                removing `math shift' on input line 1176.
 
 
 Underfull \hbox (badness 10000) has occurred while \output is active
@@ -1666,15 +1668,15 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 ]
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 10.0pt on input line 1354.
+(Font)              scaled to size 10.0pt on input line 1351.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1370.
+(hyperref)                removing `math shift' on input line 1367.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1370.
+(hyperref)                removing `math shift' on input line 1367.
 
 
 Underfull \hbox (badness 10000) has occurred while \output is active
@@ -1683,7 +1685,7 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 [10.10]
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
-(Font)              scaled to size 10.0pt on input line 1550.
+(Font)              scaled to size 10.0pt on input line 1547.
 
 Underfull \hbox (badness 10000) has occurred while \output is active
 
@@ -1695,13 +1697,13 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [12.12]
-LaTeX Font Info:    Try loading font information for T1+zi4 on input line 1710.
+LaTeX Font Info:    Try loading font information for T1+zi4 on input line 1707.
 
  (/usr/share/texlive/texmf-dist/tex/latex/inconsolata/t1zi4.fd
 File: t1zi4.fd 2018/01/14 T1/zi4 (Inconsolata)
 )
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
-(Font)              scaled to size 10.0pt on input line 1710.
+(Font)              scaled to size 10.0pt on input line 1707.
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `zi4' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
@@ -1720,19 +1722,19 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 [13.13]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1723.
+(hyperref)                removing `math shift' on input line 1720.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1723.
+(hyperref)                removing `math shift' on input line 1720.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1725.
+(hyperref)                removing `math shift' on input line 1722.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1725.
+(hyperref)                removing `math shift' on input line 1722.
 
 
 Underfull \hbox (badness 10000) has occurred while \output is active
@@ -1742,42 +1744,42 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 [14.14]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1780.
+(hyperref)                removing `math shift' on input line 1777.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1780.
+(hyperref)                removing `math shift' on input line 1777.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1780.
+(hyperref)                removing `math shift' on input line 1777.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1780.
+(hyperref)                removing `math shift' on input line 1777.
 
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 7.3pt on input line 1919.
+(Font)              scaled to size 7.3pt on input line 1916.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 5.5pt on input line 1919.
+(Font)              scaled to size 5.5pt on input line 1916.
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1927.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1927.
+(hyperref)                removing `math shift' on input line 1924.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1927.
+(hyperref)                removing `math shift' on input line 1924.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1927.
+(hyperref)                removing `math shift' on input line 1924.
 
 
-Overfull \hbox (14.04388pt too wide) detected at line 1976
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1924.
+
+
+Overfull \hbox (14.04388pt too wide) detected at line 1973
 []
  []
 
@@ -1789,7 +1791,7 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 [15.15]
 
 LaTeX Warning: Reference `thm:hc-monoid' on page 16 undefined on input line 200
-8.
+5.
 
 
 Underfull \hbox (badness 10000) has occurred while \output is active
@@ -1805,14 +1807,14 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [17.17]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 2144.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 2144.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 2141.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 2141.
  (./paper.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 2144.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 2144.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 2141.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 2141.
 
 Package rerunfilecheck Info: File `paper.out' has not changed.
-(rerunfilecheck)             Checksum: 115A0523A512C7C34B8A786EE6E3E52E;3536.
+(rerunfilecheck)             Checksum: C90E00608C8C5A3DA29432442FF5D07A;3536.
 
 
 LaTeX Font Warning: Size substitutions with differences
@@ -1821,14 +1823,14 @@ LaTeX Font Warning: Size substitutions with differences
 
 LaTeX Warning: There were undefined references.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 2144.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 2141.
  ) 
 Here is how much of TeX's memory you used:
  28314 strings out of 494805
- 494091 string characters out of 6178001
- 596798 words of memory out of 5000000
- 30453 multiletter control sequences out of 15000+600000
- 213219 words of font info for 386 fonts, out of 8000000 for 9000
+ 494112 string characters out of 6178001
+ 596749 words of memory out of 5000000
+ 30451 multiletter control sequences out of 15000+600000
+ 213492 words of font info for 388 fonts, out of 8000000 for 9000
  242 hyphenation exceptions out of 8191
  62i,18n,94p,470b,797s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_nh77jq.enc}{/us
@@ -1861,10 +1863,10 @@ live/texmf-dist/fonts/type1/public/txfonts/txsyc.pfb></usr/share/texlive/texmf-
 dist/fonts/type1/public/newtx/txsys.pfb></usr/share/texlive/texmf-dist/fonts/ty
 pe1/public/newtx/zxlr.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/new
 tx/zxlri.pfb>
-Output written on paper.pdf (17 pages, 636413 bytes).
+Output written on paper.pdf (17 pages, 636098 bytes).
 PDF statistics:
- 552 PDF objects out of 1000 (max. 8388607)
- 477 compressed objects within 5 object streams
- 122 named destinations out of 1000 (max. 500000)
+ 549 PDF objects out of 1000 (max. 8388607)
+ 474 compressed objects within 5 object streams
+ 121 named destinations out of 1000 (max. 500000)
  71345 words of extra memory for PDF output out of 74296 (max. 10000000)
 
