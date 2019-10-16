@@ -277,7 +277,18 @@ languages</concept_desc>
 
 \todo[inline]{I see lots of mistakes regarding when to make words
   plural (whether they should have an ``s'' at the end). Please review
-  the rules of English regarding plurals. -Jeremy}
+  the rules of English regarding plurals. The rules are tricky...
+  some words don't have a plural form, like ``blame''. -Jeremy}
+
+\todo[inline]{The first paragraph of the introduction should summarize
+  the entire introduction, and in some sense, the entire paper. -Jeremy}
+
+\todo[inline]{BTW, using the Coercion and Blame paper as a model for
+  how to write papers is perhaps not the best idea. That paper intentionally
+  diverged from the normal paper format in several ways. You can
+  do that too after you've become a master at writing papers.
+  For now you are much better off following the advice of
+  Simon Peyton Jones about how to write a paper (google it).}
 
 Around 2006, many work on integrating dynamic typing and static typing emerge, 
 notably gradual types \cite{siek2006gradual} and hybrid types 
@@ -310,28 +321,31 @@ space efficiency.
 
 %\subsection{coercion-based approach and blame strategies}
 
-\citet{siek2009exploring} decorate \citet{herman2010space}'s coercions with 
-labels to restore 
-blame-tracking. They also propose that there are four blame 
-strategies for their coercion:
-$ \{Lazy, Eager\} \times \{D, UD\} $. 
-Eager strategies detect more potential type errors, 
-but blame more programs.
-$ D $ and $ UD $ assign blame labels differently.
-They prove partially that their \lazyUD{} coercion is correct by showing 
-that it simulates the Blame Calculus in \cite{wadler2009well}. It is unknown, 
-however, whether the simulation also works in the other direction.
+\citet{siek2009exploring} decorate \citet{herman2010space}'s coercions
+with labels to restore blame-tracking. They also propose that there
+are four blame strategies for coercions: $ \{Lazy, Eager\} \times \{D,
+UD\} $.  Eager strategies detect more potential type errors, but blame
+more programs.  $ D $ and $ UD $ assign blame labels differently.
+They prove that the \lazyUD{} calculus simulates the Blame Calculus of
+\citet{wadler2009well}.  They do not prove the other direction,
+whether the Blame Calculus simulates the \lazyUD{} calculus.
+\todo[inline]{Is it important to this paper whether there is a
+  simulation in the other direction? -Jeremy}
 
-\citet{siek2010threesomes} proposes another approach to combine blame 
-tracking and space efficiency. Their solution represents casts with threesomes, 
-a novel cast representation.
-They show that their calculus bisimulates the \lazyUD{} coercion 
-calculus in \citet{siek2009exploring} and the Blame Calculus in 
-\citet{wadler2009well}. They also prove that threesome is space-efficient as 
-well.
+\citet{siek2010threesomes} proposes another approach to combine blame
+tracking and space efficiency. Their solution represents casts with
+threesomes, a novel cast representation.  They show that their
+calculus bisimulates the \lazyUD{} coercion calculus in
+\citet{siek2009exploring} and the Blame Calculus in
+\citet{wadler2009well}. They also prove that threesome is
+space-efficient as well.
 
 \citet{siek2012interpretations} present the first \lazyD{} Blame Calculus and 
 revised coercion calculi.
+\todo[inline]{Not ``first''... lazy D is in the 2009 paper, right?
+  Or did you mean something else? -Jeremy}
+\todo[inline]{The ``Blame Calculus'' is a \lazyUD{} cast calculus.
+  There is no such thing as a \lazyD{} Blame Calculus. -Jeremy}
 They simplify the coercion calculi by only 
 working with normal coercions (i.e. coercions in normal form). 
 They conjecture that their revised coercion calculi bisimulate the 
@@ -346,13 +360,14 @@ threesome with labels, however, is easy to implement and easy to reason about
 but hard to understand. 
 His claim is mostly affirmed by the group of people who develop threesome 
 (\citet{siek2015blame}).
-His threesome calculi are equivalent to the coercion calculi in 
+His threesome calculi are equivalent to the coercion calculi of
 \citet{siek2009exploring} because the former ones are derived from the latter 
 ones.
 
-\citet{siek2015blame} revisit the coercion-based approach. They revise the 
-\lazyUD{} coercion in \citet{siek2012interpretations} and prove that 
-their revised coercion calculus bisimulates the \lazyUD{} Blame Calculus.
+\citet{siek2015blame} revisit the coercion-based approach. They revise
+the \lazyUD{} coercion in \citet{siek2012interpretations} and prove
+that their revised coercion calculus bisimulates the \lazyUD{} Blame
+Calculus \citet{wadler2009well}.
 
 Last year, \citet{kuhlenschmidt2018efficient} present Grift, a compiler for a 
 gradually typed language of the same name. 
@@ -373,22 +388,30 @@ Normal coercion is still not satisfactory, however, in at least two aspects.
 Firstly, as we mentioned above, it is hard to reason about normal coercion. The 
 major difficulty is from its non-structurally recursive composition.
 For instance, many developers of Grift report it is tricky to convince
-their proof assistants that the composition terminates. 
+their proof assistants that the composition terminates.
+%
+\todo[inline]{Don't lie. There are not many developers of Grift.
+  I only know 2 people developing Grift: Andre and Deyaa. -Jeremy}
+%
 Secondly, the definition of normal coercion lies unnecessarily on top 
 of coercion: all coercions are normal when they are initially constructed, and 
 \citet{siek2012interpretations} have shown an function that 
 composes and produces normal coercions.
+%
+\todo[inline]{Many researchers would view this as a positive thing,
+  not a negative. For example, the notion of normal forms comes up
+  over and over again in mathematics and logic. -Jeremy}
 
 Perhaps unsurprisingly, threesome has a structurally recursive compose and a 
 self-standing definition. Together with \citet{garcia2013calculating}'s 
 work, they suggest that there might be a cast representation whose definition 
 is self-standing, and whose composition is structurally recursive. 
-Super-coercion introduced in \citet{garcia2013calculating} could be a promising 
+supercoercion introduced in \citet{garcia2013calculating} could be a promising 
 candidate. It is believed even more complicated than threesome 
 \cite{siek2015blame}. In fact, it uses 10 constructors to deal with an 
 elementary type system with only base types and 
 function types. And four constructors are directly related to function types. 
-Thus, super-coercion might not scale very well to more sophisticated type 
+Thus, supercoercion might not scale very well to more sophisticated type 
 systems. 
 
 We present hypercoercion, a cast representation whose composition is 
@@ -400,11 +423,13 @@ a clear connection between them, as we will show in Section
 Our hypercoercion considers sum types and product types, which are not 
 considered in all proofs above. Adding each of them requires us to add only one 
 new constructor to a component of hypercoercion. This suggests that 
-hypercoercion might scale better than super-coercion.
+hypercoercion might scale better than supercoercion.
 
 We prove formally that the \lazyD{} (resp. \lazyUD{}) hypercoercion calculus 
 bisimulates the \lazyD{} (resp. \lazyUD{}) Blame Calculus. This is 
-the first bi-simulation proof for the \lazyD{} Blame Calculus as far as we know.
+the first bisimulation proof for the \lazyD{} Blame Calculus as far as we know.
+
+\todo[inline]{Explain why we care about \lazyD{} and \lazyUD{}. -Jeremy}
 
 The structure of this paper is as follows. 
 Section \ref{sec:blame-calculus} reviews the state-of-art of $Lazy$ Blame 
@@ -413,8 +438,10 @@ Section \ref{sec:coercion-calculus} reviews the state-of-art of $Lazy$ Coercion
 Calculi. 
 In section \ref{sec:hypercoercion} we present hypercoercion.
 Section \ref{sec:conclude} concludes.
+\todo[inline]{Lots of missing sections. -Jeremy}
 
-\section{Background: Blame Calculus} \label{sec:blame-calculus}
+
+\section{Background: Cast Calculi} \label{sec:blame-calculus}
 
 \begin{figure}
 	Syntax
@@ -537,17 +564,16 @@ Section \ref{sec:conclude} concludes.
 		}
 	\end{gather*}
 	
-	\caption{Blame Calculus and its static semantics}
+	\caption{Syntax and static semantics of the cast calculi.}
 	\label{fig:blame-static}
 \end{figure}
 
-\figref{fig:blame-static} defines the syntax of blame calculus and its static 
-semantics. It is little changed from previous definitions.
-\todo[inline]{Which previous definitions are you refering to?
-  What are the little changes? -Jeremy}
-\todo[inline]{The term typing rule for casts is broken. -Jeremy}
-The dynamic semantics of Blame Calculi depend on blame strategies, so we defer 
-them to sub-sections.
+\figref{fig:blame-static} defines the syntax of blame calculus and its
+static semantics. It is little changed from previous definitions.
+\todo[inline]{Which previous definitions are you refering to?  What
+  are the little changes? -Jeremy} \todo[inline]{The term typing rule
+  for casts is broken. -Jeremy} The dynamic semantics of Blame Calculi
+depend on blame strategies, so we defer them to sub-sections.
 
 Blame Calculus is based on Simply Typed Lambda Calculus with sum types and 
 product types ($ \mathtt{STLC+} $). 
@@ -570,22 +596,27 @@ Other pre-types are functions, products, and sums.
 %type-checking is usually gradual as well. 
 $ S \smile T $ reads ``$ S $ and $ T $ are shallowly-consistent''. Two types 
 are shallowly consistent if one of them is $ \star $, or they have the same 
-top-most type constructor. Shallow-inconsistency is the root of all blames in 
-all lazy strategies -- casting a value to a shallowly inconsistent type leads 
+top-most type constructor. Shallow-inconsistency is the root of all blame in 
+lazy cast strategies -- casting a value to a shallowly inconsistent type leads 
 to a blame. Shallow-consistency is reflexive, symmetric, but 
 not transitive.
 
 Let $ e $ ranges over terms, including all terms from $ \mathtt{STLC+} $ and, 
-in addition, casts and blames. Unlike $ \mathtt{STLC+} $, we annotate the 
-co-domain of lambda abstractions explicitly. 
-The end of the figure shows the typing rules for the additional terms.
+in addition, casts and blame. Unlike $ \mathtt{STLC+} $, we annotate the 
+codomain of lambda abstractions explicitly.
+\todo[inline]{Why do you annotate the codomain of lambda abstractions
+  explicitly? -Jeremy}
+The end of \figref{fig:blame-static} shows the typing rules for the
+additional terms.
 
 Let $ o $ ranges over observations. They are what would be observed if a 
 program terminates. Observations include all constructors and blames.
+\todo[inline]{``blames'' is incorrect. See
+https://www.wordhippo.com/what-is/the-plural-of/blame.html}
 
 Now let's move to the dynamic semantics. 
 
-\subsection{\lazyD{} Blame Calculus}
+\subsection{The Blame Calculus (a \lazyD{} cast calculus)}
 
 \begin{figure}
 	Syntax
@@ -813,7 +844,11 @@ Now let's move to the dynamic semantics.
 \end{figure}
 
 Fig.~\ref{machine-cekc} defines the dynamic semantics of the \lazyD{} Blame 
-Calculus in the style of CEK machines (\citet{felleisen1986control}).
+Calculus in the style of CEK machines \citep{felleisen1986control}.
+\todo[inline]{Briefly present the main ideas regarding how a CEK
+  machine works. (2-3 sentences) -Jeremy}
+\todo[inline]{Use citep to put a citation in parentheses, as I've
+  done above. -Jeremy }
 \todo[inline]{The figure is too tall. You may need to pull some things
   out of the figure, such as the value typing. -Jeremy}
 \todo[inline]{Please fill in the missing reduction rules. -Jeremy}
@@ -828,7 +863,9 @@ We conjecture that this CEK machines agree with the \lazyD{} blame calculus in
 We will show in \hyperref{sec:hypercoercion} that this abstract machine is 
 equivalent to an abstract machine that represents casts with hypercoercions.
 
-Let $ c $ ranges over casts. A cast is a triple of a type, a label, and a type.
+Let $ c $ ranges over casts.
+\todo[inline]{``ranges'' should be ``range'', not plural. -Jeremy}
+A cast is a triple of a type, a label, and a type.
 Let $ v $ ranges over values. A value is either a function, the 
 element of unit, a pair, a left injection, a right injection, or a casted value.
 The cast around a casted value is not arbitrary, as shown by value typing: the 
@@ -854,7 +891,10 @@ function application. To take out the first (resp. second) part of a casted
 pair, the machine firstly take out the first (resp. second) part of $ v $, the 
 un-casted pair, and cast the result. To case-split a sum, the machine looks 
 deep inside the value to find out whether it is a left injection or a right 
-one. Along the way, the machine accumulate the pending casts onto the 
+one.
+\todo[inline]{Change the rules for case to be small step, i.e.,
+ the case function should not be recursive. -Jeremy}
+Along the way, the machine accumulate the pending casts onto the 
 continuations. To cast a value, the machine try to apply the cast to the value. 
 If the cast succeeds, the machine returns the result to the next continuation. 
 If the cast fails, the machine halts with the blame label.
@@ -863,10 +903,10 @@ Transitive closure of reduction ($ \judgeDBreduceTrans{s}{s} $) and evaluation
 are 
 standard.
 
-\subsection{\lazyUD{} Blame Calculus [Jeremy]}
+\subsection{The \lazyUD{} cast calculus [Jeremy]}
 
 
-UNDER CONSTRUCTION
+
 
 Fig.~\ref{fig:apply-Cast-UD}
 
@@ -1769,7 +1809,7 @@ casts is special: \begin{gather*}
 }
 \end{gather*}
 
-\begin{proposition}[Strong Bi-simulation among $ \mathcal{S}(\cdot) $]
+\begin{proposition}[Strong bisimulation among $ \mathcal{S}(\cdot) $]
 	\label{thm:CEKS-bisim}
 	If 
 	$ C_1 $ and $ C_2 $ are surely \lazyD,
@@ -1814,7 +1854,7 @@ pre-continuations.
 
 \todo[inline]{bisimilarity}
 
-\begin{lemma}[Weak Bi-simulation between $ \mathcal{S}(\cdot) $ and $ 
+\begin{lemma}[Weak bisimulation between $ \mathcal{S}(\cdot) $ and $ 
 \mathcal{D} $]
 \label{thm:surely-monoidic-reduce}
 For all cast representations $ C $, 
