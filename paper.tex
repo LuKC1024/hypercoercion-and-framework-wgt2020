@@ -156,6 +156,8 @@
 % machine state simulations
 \newcommand{\eqvS}[4]{#3 \approx_{\mathcal{S}\mathcal{S}} #4}
 \newcommand{\eqvDS}[3]{#2 \approx_{\mathcal{DS}} #3}
+% to-dos
+\newcommand{\todoKC}[1]{\todo[inline]{KC needs to #1}}
 
 \begin{document}
 
@@ -220,7 +222,7 @@
 %% Note: \begin{abstract}...\end{abstract} environment must come
 %% before \maketitle command
 \begin{abstract}
-  \todo[inline]{Rewrite this abstract based on the comparision table. -Jeremy}
+\todoKC{rewrite this abstract based on the comparision table. -Jeremy}
   Gradual Typing is great. Implementing gradually typed with blame
   tracking and space efficiency is tricky. There exist two technique
   to do this: coercion and threesome. Coercion is easy to understand,
@@ -229,7 +231,7 @@
   easy to reason about formally. We propose hypercoercion, which is
   easy to understand, as easy to implement as coercion, and easy to
   reason about formally.
-  \todo[inline]{Spell it ``hypercoercion'' without the hyphen. -Jeremy}
+\todo[inline]{Spell it ``hypercoercion'' without the hyphen. -Jeremy}
 \end{abstract}
 
 
@@ -302,8 +304,8 @@ practical use of gradually typed languages.
 Implementing gradually typed languages naively on top of blame calculus, 
 however, suffices sever space leak.
 For example, translation to Blame Calculus can wrap some expressions with code 
-that performs runtime type-checking (casts), including those expressions at 
-tail position. Thus, mutually tail-recursive functions in source language can 
+that performs runtime type-checking (casts), including expressions at 
+tail positions. Thus, mutually tail-recursive functions in source language can 
 consume unbounded space at runtime. There are more examples of space leaking in 
 \citet{herman2010space}.
 
@@ -321,24 +323,26 @@ space efficiency.
 
 %\subsection{coercion-based approach and blame strategies}
 
-\citet{siek2009exploring} decorate \citet{herman2010space}'s coercions
-with labels to restore blame-tracking. They also propose that there
-are four blame strategies for coercions: $ \{Lazy, Eager\} \times \{D,
-UD\} $.  Eager strategies detect more potential type errors, but blame
-more programs.  $ D $ and $ UD $ assign blame labels differently.
-They prove that the \lazyUD{} calculus simulates the Blame Calculus of
-\citet{wadler2009well}.  They do not prove the other direction,
-whether the Blame Calculus simulates the \lazyUD{} calculus.
+\citet{siek2009exploring} decorate \citet{herman2010space}'s coercions with 
+labels to restore 
+blame-tracking. They also propose that there are four blame 
+strategies for their coercion:
+$ \{Lazy, Eager\} \times \{D, UD\} $. 
+Eager strategies detect more potential type errors, 
+but blame more programs.
+$ D $ and $ UD $ assign blame labels differently.
+They prove their \lazyUD{} coercion simulates the Blame Calculus in 
+\cite{wadler2009well}. It is unknown, however, whether the simulation in the 
+other direction also works.
 \todo[inline]{Is it important to this paper whether there is a
   simulation in the other direction? -Jeremy}
 
-\citet{siek2010threesomes} proposes another approach to combine blame
-tracking and space efficiency. Their solution represents casts with
-threesomes, a novel cast representation.  They show that their
-calculus bisimulates the \lazyUD{} coercion calculus in
-\citet{siek2009exploring} and the Blame Calculus in
-\citet{wadler2009well}. They also prove that threesome is
-space-efficient as well.
+\citet{siek2010threesomes} proposes another approach to combine blame 
+tracking and space efficiency. Their solution represents casts with threesomes, 
+a novel cast representation. Threesome is proved space-efficient as well.
+They prove that their calculus bisimulates the \lazyUD{} coercion 
+calculus in \citet{siek2009exploring} and the Blame Calculus in 
+\citet{wadler2009well}.
 
 \citet{siek2012interpretations} present the first \lazyD{} Blame Calculus and 
 revised coercion calculi.
@@ -351,8 +355,8 @@ working with normal coercions (i.e. coercions in normal form).
 They conjecture that their revised coercion calculi bisimulate the 
 corresponding Blame Calculi.
 
-Following \citet{siek2010threesomes}, \citet{garcia2013calculating} develops
-threesome for other blame strategies. After studying in depth the relation 
+\citet{garcia2013calculating} develops
+threesome for other blame strategies. After studying in depth the connection 
 between coercion and threesome,
 he claims that normal coercion with labels is easy to understand but hard to 
 implement and hard to reason about, and that 
@@ -596,7 +600,7 @@ Other pre-types are functions, products, and sums.
 %type-checking is usually gradual as well. 
 $ S \smile T $ reads ``$ S $ and $ T $ are shallowly-consistent''. Two types 
 are shallowly consistent if one of them is $ \star $, or they have the same 
-top-most type constructor. Shallow-inconsistency is the root of all blame in 
+type constructor at the top. Shallow-inconsistency is the root of all blame in 
 lazy cast strategies -- casting a value to a shallowly inconsistent type leads 
 to a blame. Shallow-consistency is reflexive, symmetric, but 
 not transitive.
@@ -610,9 +614,10 @@ The end of \figref{fig:blame-static} shows the typing rules for the
 additional terms.
 
 Let $ o $ ranges over observations. They are what would be observed if a 
-program terminates. Observations include all constructors and blames.
+program terminates. Observations include all value constructors and blames.
 \todo[inline]{``blames'' is incorrect. See
 https://www.wordhippo.com/what-is/the-plural-of/blame.html}
+
 
 Now let's move to the dynamic semantics. 
 
@@ -654,8 +659,8 @@ Now let's move to the dynamic semantics.
 	\stxrulecont{
 		\mathtt{app_1} \; e \; \rho \; \kappa \mid{}
 		\mathtt{app_2} \; v \; \kappa \mid{}
-		\mathtt{car} \; \kappa \mid{}
-		\mathtt{cdr} \; \kappa \mid
+		\mathtt{fst} \; \kappa \mid{}
+		\mathtt{snd} \; \kappa \mid
 		\mathtt{case_1} \; e_1 \; e_2 \; \rho \; \kappa
 	}
 	\stxrulecont{	
@@ -722,10 +727,10 @@ Now let's move to the dynamic semantics.
 		\sOOreturn{
 			\vOOcast{v}{\cOOcast{\POOprod{T_1}{T_2}}{l}{
 					\POOprod{T_3}{T_4}}}
-			}{(\mathtt{car} \; \kappa)}
+			}{(\mathtt{fst} \; \kappa)}
 	}{
 		\sOOreturn{v}{(
-			\mathtt{car} \;
+			\mathtt{fst} \;
 			\langle \cOOcast{T_1}{l}{T_3} \rangle \kappa
 			)}
 	}{}
@@ -734,10 +739,10 @@ Now let's move to the dynamic semantics.
 		\sOOreturn{
 			\vOOcast{v}{\cOOcast{\POOprod{T_1}{T_2}}{l}{
 					\POOprod{T_3}{T_4}}}
-		}{(\mathtt{cdr} \; \kappa)}
+		}{(\mathtt{snd} \; \kappa)}
 	}{
 		\sOOreturn{v}{(
-			\mathtt{cdr} \;
+			\mathtt{snd} \;
 			\langle \cOOcast{T_2}{l}{T_4} \rangle \kappa
 			)}
 	}{}
@@ -863,9 +868,10 @@ We conjecture that this CEK machines agree with the \lazyD{} blame calculus in
 We will show in \hyperref{sec:hypercoercion} that this abstract machine is 
 equivalent to an abstract machine that represents casts with hypercoercions.
 
-Let $ c $ ranges over casts.
+\todoKC{change the reduction rules of case}
+
+Let $ c $ ranges over casts. A cast is a triple of a type, a label, and a type.
 \todo[inline]{``ranges'' should be ``range'', not plural. -Jeremy}
-A cast is a triple of a type, a label, and a type.
 Let $ v $ ranges over values. A value is either a function, the 
 element of unit, a pair, a left injection, a right injection, or a casted value.
 The cast around a casted value is not arbitrary, as shown by value typing: the 
@@ -1222,8 +1228,9 @@ composition of hypercoercions.
 		\hyperCoercionC{h}{m'}{t'}
 	}{
 		\sidecond{
-			t_1 \neq \bot^{\centerdot} \; \text{and} \;
 			m_1 \fatsemi^{\ell} (m_2, t_2) = (m', t')
+			 \; \text{and} \;
+			 \forall l. t \neq \bot^{l}
 		}
 	}
 	
@@ -1235,8 +1242,9 @@ composition of hypercoercions.
 		\hyperCoercionC{h}{m'}{t'}
 	}{
 		\sidecond{
-			t_1 \neq \bot^{\centerdot} \; \text{and} \;
 			m_1 \fatsemi^{l'} (m_2, t_2) = (m', t')
+			\; \text{and} \;
+			\forall l. t \neq \bot^{l} 
 		}
 	}
 	\end{array}
@@ -1317,8 +1325,9 @@ composition of hypercoercions.
 	\label{fig:HC-D}
 \end{figure}
 
-\lazyD{} HC constructors are in \figref{fig:HC-D}.
+\figref{fig:HC-D} defines the constructors of \lazyD{} HC.
 
+\todoKC{check consistency before using middle composition.}
 $ c_1 \fatsemi^\ell c_2 = c' $ composes two hypercoercions. The target of $ 
 c_1 $ and the source of $ c_2 $ might be different, in which case $ \ell $ must 
 be a label.
@@ -1331,7 +1340,7 @@ $ id(T) $ constructs an identity coercion of $ T $ with the help of $ id(P) $.
 $ cast(T_1,l,T_2) $ constructs a coercion from a source type, a label, and a 
 target type. 
 
-\begin{proposition}[\lazyD\ hypercoercions is a Monoid]
+\begin{proposition}[\lazyD\ hypercoercion is a monoid]
 	For all $c : T_1 \Longrightarrow T_2$,
 	$c_1 : T_1 \Longrightarrow T_2$,
 	$c_2 : T_2 \Longrightarrow T_3$, and
@@ -1584,8 +1593,8 @@ machine. This machine is parameterized over \emph{cast representation} (CR).
 	\stxrulecont{
 		\mathtt{app_1} \; e \; \rho \; \kappa \mid{}
 		\mathtt{app_2} \; v \; \kappa \mid{}
-		\mathtt{car} \; \kappa \mid{}
-		\mathtt{cdr} \; \kappa
+		\mathtt{fst} \; \kappa \mid{}
+		\mathtt{snd} \; \kappa
 	}
 	\stxrulecont{
 		\mathtt{case_1} \; e_1 \; e_2 \; \rho \; \kappa \mid
@@ -1704,7 +1713,7 @@ evaluation are standard. Value typing ($ \judgeType{v}{T} $) is straightforward.
 
 \subsection{\lazyD\ Cast Representations}
 
-In this section we describe a subset of SR, where all 
+In this section we describe a subset of cast representations, where all 
 elements implement the \lazyD{} blame strategy. We will show in 
 Subsection~\ref{sec:LDHC-correct} that the \lazyD\ HC is in this subset.
 
@@ -1756,8 +1765,10 @@ Subsection~\ref{sec:LDHC-correct} that the \lazyD\ HC is in this subset.
 	\end{enumerate}
 \end{definition}
 
-\subsection{Relating All Surely \lazyD{} Cast Representations}
+\subsection{All Surely \lazyD{} and Monoidic Cast Representations Respect 
+$\mathcal{D}$}
 
+%%<<<<<<< HEAD
 With the properties of surely \lazyD{} CR, it is straightforward to proof that 
 all machines instantiated with these CRs bisimulate each other. 
 The state bisimilarity ($\eqvS{C}{C}{s}{s}$) is 
@@ -1848,12 +1859,17 @@ each other. But this does not mean they respect the semantics of the \lazyD{}
 Blame Calculus. We solve prove this part in this subsection.
 
 The state bisimilarity here ($\eqvDS{C}{s}{s}$) is mostly derived from the 
+%%=======
+We use bisimulation to proof equivalence between the two machines.
+The state bisimilarity ($\eqvDS{C}{s}{s}$) is mostly derived from the 
+%%>>>>>>> 6d40f5173c83f5f7f7b37a4128391ca516854ac9
 definitions of $ \mathcal{D} $. Exceptions include the bisimilarity relations 
 between continuations, between values, and from continuations to 
-pre-continuations. 
+pre-continuations. We omit subscripts when there is no ambiguity.
 
-\todo[inline]{bisimilarity}
+\todoKC{write down the exceptional bisimilarity relations}
 
+%%<<<<<<< HEAD
 \begin{lemma}[Weak bisimulation between $ \mathcal{S}(\cdot) $ and $ 
 \mathcal{D} $]
 \label{thm:surely-monoidic-reduce}
@@ -1879,13 +1895,40 @@ $ s_1 \approx s_2 $,
 		\item $ \judgeDBreduceTrans{s_1}{s_3} $
 	\end{itemize}
 \end{enumerate}
+%%=======
+\begin{lemma}[Weak Bi-simulation between $ \mathcal{S}(\cdot) $ and $ 
+	\mathcal{D} $]
+	\label{thm:surely-monoidic-reduce}
+	For all cast representations $ C $, 
+	if $ C $ is surely \lazyD{} and monoidic,
+	$ s_1 \in \mathcal{D} $,
+	$ s_2 \in \mathcal{S}(C) $, and
+	$ s_1 \approx s_2 $, 
+	\begin{enumerate}
+		\item If $ \judgeDBreduce{s_1}{s_3} $,
+		then
+		there exist $ s_5 \in \mathcal{D} $, $ s_4 \in \mathcal{S}(C) $,
+		such that \begin{itemize}
+			\item $ s_5 \approx s_4 $, and
+			\item $ \judgeSreduce{C}{s_2}{s_4} $,
+			\item $ \judgeDBreduceTrans{s_3}{s_5} $
+		\end{itemize}
+		\item If $ \judgeSreduce{C}{s_2}{s_4} $,
+		then
+		there exist $ s_3 \in \mathcal{D} $,
+		such that \begin{itemize}
+			\item $ s_3 \approx s_4 $
+			\item $ \judgeDBreduceTrans{s_1}{s_3} $
+		\end{itemize}
+	\end{enumerate}
+%%>>>>>>> 6d40f5173c83f5f7f7b37a4128391ca516854ac9
 \end{lemma}
 \begin{proof}
 	See the supplementary material.
 \end{proof}
 
 \begin{lemma}[Surely \lazyD\ and Monoidic Cast Representations Respect 
-$ \mathcal{D} $]
+	$ \mathcal{D} $]
 	\label{thm:surely-monoidic-eval}
 	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is surely 
 	\lazyD{} and monoidic,
@@ -1898,26 +1941,8 @@ $ \mathcal{D} $]
 	Immediately from Lemma~\ref{thm:surely-monoidic-reduce}.
 \end{proof}
 
-\begin{theorem}[Surely \lazyD\ Cast Representations Respect 
-	$ \mathcal{D} $]
-	\label{thm:surely-lazyD-correct}
-	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is surely 
-	\lazyD{}
-\[
-\judgeDBeval{e}{o} \; \text{if and only if} \; 
-\judgeSeval{C}{e}{o}
-\]
-\end{theorem}
-\begin{proof}
-	Immediately from Lemma~\ref{thm:surely-monoidic-eval} and 
-	Proposition~\ref{thm:surely-lazyD-eqv}.
-\end{proof}
-
-\subsection{\lazyD\ hypercoercion Respect $ \mathcal{D} $}
+\subsection{\lazyD\ Hyper-coercion Respect $ \mathcal{D} $}
 \label{sec:LDHC-correct}
-
-To show that \lazyD\ HC is correct, we first show it is surely \lazyD, then 
-uses the Theorem~\ref{thm:surely-lazyD-correct} to prove its correctness.
 
 \figref{hc-applyCast} defines $ applyCast $, the last interface function.
 We generalize shallow-consistency to middles and values ($ m \smile v $) in the 
@@ -1995,8 +2020,111 @@ $ applyMiddle(\ell,m,v) $ and $ applyTail(t,v) $ are straightforward.
 	\]
 \end{theorem}
 \begin{proof}
-	Immediately from Lemma~\ref{thm:hc-surely-lazyD} and 
-	Theorem~\ref{thm:surely-lazyD-correct}.
+	Immediately from Lemma~\ref{thm:surely-monoidic-eval},
+	Lemma~\ref{thm:hc-surely-lazyD}, and 
+	Proposition~\ref{thm:hc-monoid}.
+\end{proof}
+
+\subsection{Extra Theorems}
+
+In these section we show some extra theorems that might be useful in proving 
+the correctness of other cast representations.
+
+With the properties of surely \lazyD{} CR, it is straightforward to proof that 
+all machines instantiated with these CRs bisimulate each other. 
+The state bisimilarity ($\eqvS{C}{C}{s}{s}$) is 
+derived from the definition of states.
+\todo[inline]{The term ``bisimilarity'' has a different technical meaning from
+	``bisimulation relation''. I don't think you are using it properly
+	in the above sentence. -Jeremy}
+We omit subscripts when there is no 
+ambiguity. \begin{gather*}
+\inference{
+	\rho_1 \approx \rho_2 &
+	\kappa_1 \approx \kappa_2
+}{
+	\sOOinspect{e}{\rho_1}{\kappa_1} \approx \sOOinspect{e}{\rho_2}{\kappa_2}
+}
+\quad
+\inference{
+	\kappa_1 \approx \kappa_2 &
+	v_1 \approx v_2
+}{
+	\sOOreturn{v_1}{\kappa_1} \approx \sOOreturn{v_2}{\kappa_2}
+}
+\quad
+\inference{
+}{
+	\sOOhalt{o} \approx \sOOhalt{o}
+}
+\end{gather*}
+
+The relations between continuations, pre-continuations, enviroments, values, 
+cast results are also derived from their definitions. But the relation for 
+casts is special: \begin{gather*}
+\inference{
+}{
+	cast_1(T_1,l,T_2) \approx cast_2(T_1,l,T_2)
+}
+\quad
+\inference{
+}{
+	id_1(T) \approx id_2(T)
+}
+\quad
+\inference{
+	c_1 \approx c_2 &
+	c_3 \approx c_4
+}{
+	seq_1(c_1,c_3) \approx seq_2(c_2,c_4)
+}
+\end{gather*}
+
+\begin{lemma}[Strong Bi-simulation among $ \mathcal{S}(\cdot) $]
+	\label{thm:CEKS-bisim}
+	If 
+	$ C_1 $ and $ C_2 $ are surely \lazyD,
+	$ s_1, s_2 \in S(C_1) $ and $ s_3 \in S(C_2) $,
+	$ s_1 \approx s_3 $,
+	$ \judgeSreduce{C_1}{s_1}{s_2} $,
+	then there exists an $ s_4 $ such that
+	\begin{itemize}
+	\item $ s_2 \approx s_4 $ and
+	\item $ s_3 \longrightarrow_{S(C_2)} s_4 $
+	\end{itemize}
+\end{lemma}
+\begin{proof}
+	The key ideas of this proof are undoing sequencing with the property (2) of 
+	surely \lazyD{} CR, and handling all possibly uses of $ 
+	cast(T,l,T) $ with property (3)-(11).
+\end{proof}
+
+\begin{proposition}[Equivalence of Surely \lazyD{} Cast Representations]
+	\label{thm:surely-lazyD-eqv}
+	If $ \judgetype{\emptyset}{e}{T} $, $ o : T $, and $ C_1 $ and $ C_2 $ 
+	are surely \lazyD\ cast representations,
+	\[
+	e \Downarrow_{S(C_1)} o \; \text{if and only if} \; 
+	e \Downarrow_{S(C_2)} o
+	\]
+\end{proposition}
+\begin{proof}
+	Immediately from Lemma~\ref{thm:CEKS-bisim}.
+\end{proof}
+
+\begin{theorem}[Surely \lazyD\ Cast Representations Respect 
+	$ \mathcal{D} $]
+	\label{thm:surely-lazyD-correct}
+	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is surely 
+	\lazyD{}
+	\[
+	\judgeDBeval{e}{o} \; \text{if and only if} \; 
+	\judgeSeval{C}{e}{o}
+	\]
+\end{theorem}
+\begin{proof}
+	Immediately from Lemma~\ref{thm:surely-monoidic-eval} and 
+	Proposition~\ref{thm:surely-lazyD-eqv}.
 \end{proof}
 
 \section{Conclusion} \label{sec:conclude}
