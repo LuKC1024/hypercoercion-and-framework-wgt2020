@@ -131,10 +131,10 @@
 \newcommand{\hckOOconsI}[3]{\mathtt{cons_1}\;#1\;#2\;#3}
 \newcommand{\hckOOappII}[2]{\mathtt{app_2}\;#1\;#2}
 \newcommand{\sidecond}[1]{\text{if}\;#1}
-% Lazy D blame calculus on space-inefficient CEK
-\newcommand{\judgeDBreduce}[2]{#1 \longrightarrow_{\mathcal{D}} #2}
-\newcommand{\judgeDBreduceTrans}[2]{#1 \longrightarrow_{\mathcal{D}}^{*} #2}
-\newcommand{\judgeDBeval}[2]{#1 \Downarrow_{\mathcal{D}} #2}
+% Lazy D cast calculus on space-inefficient CEK
+\newcommand{\judgeDCreduce}[2]{#1 \longrightarrow_{\mathcal{D}} #2}
+\newcommand{\judgeDCreduceTrans}[2]{#1 \longrightarrow_{\mathcal{D}}^{*} #2}
+\newcommand{\judgeDCeval}[2]{#1 \Downarrow_{\mathcal{D}} #2}
 \newcommand{\redrule}[3]{#1 & \longrightarrow_\mathcal{D} & #2 & #3\\}
 % blame calculus on space-efficient CEK
 \newcommand{\judgeSreduce}[3]{#2 \longrightarrow_{\mathcal{S}(#1)} #3}
@@ -158,6 +158,8 @@
 \newcommand{\eqvDS}[3]{#2 \approx_{\mathcal{DS}} #3}
 % to-dos
 \newcommand{\todoKC}[1]{\todo[inline]{KC needs to #1}}
+% abbrev
+\newcommand{\castCalculus}[0]{$\lambda_{\rightarrow}^{\langle\cdot\rangle}$}
 
 \begin{document}
 
@@ -320,19 +322,19 @@ tracking.
 After that, many efforts have been made to combine blame tracking and 
 space efficiency. 
 
-%\subsection{coercion-based approach and blame strategies}
-
-\citet{siek2009exploring} decorate \citet{herman2010space}'s coercions with 
-labels to restore 
-blame-tracking. They also propose that there are four blame 
-strategies for their coercion:
-$ \{Lazy, Eager\} \times \{D, UD\} $. 
-Eager strategies detect more potential type errors, 
-but blame more programs.
-$ D $ and $ UD $ assign blame labels differently.
-They prove their \lazyUD{} coercion simulates the Blame Calculus in 
-\cite{wadler2009well}. It is unknown, however, whether the simulation in the 
-other direction also works.
+\citet{siek2009exploring} present another intermediate langauge for gradually 
+typed language, cast calculus \castCalculus\ and achieve both blame-tracking 
+and space-efficiency for this language by decorating \citet{herman2010space}'s 
+coercions with labels. \castCalculus\ is simply typed lambda calculus extended 
+with the dynamic type and cast expressions. The labels in \castCalculus\, 
+unlike their counterparts in the Blame Calculus, have no polarity. 
+They also propose that there are four blame strategies for \castCalculus{}:
+$ \{Lazy, Eager\} \times \{D, UD\} $. Eager strategies detect more potential 
+type errors, but blame more programs. $ D $ and $ UD $ assign blame labels 
+differently. They claim that their \lazyUD\ cast calculus is the same as the 
+Blame Calculus, modulo label polarity, and prove that their their \lazyUD\ 
+coercion calculus simulates their \lazyUD{} cast calculus. It is unknown, 
+however, whether the simulation in the other direction also works.
 \todo[inline]{Is it important to this paper whether there is a
   simulation in the other direction? -Jeremy}
 \todo[inline]{I guessed to say coercion is correct the other direction is 
@@ -345,17 +347,13 @@ They prove that their calculus bisimulates the \lazyUD{} coercion
 calculus in \citet{siek2009exploring} and the Blame Calculus in 
 \citet{wadler2009well}.
 
-\citet{siek2012interpretations} present the first \lazyD{} Blame Calculus and 
-revised coercion calculi.
-\todo[inline]{Not ``first''... lazy D is in the 2009 paper, right?
-  Or did you mean something else? -Jeremy}
-\todo[inline]{The ``Blame Calculus'' is a \lazyUD{} cast calculus.
-  There is no such thing as a \lazyD{} Blame Calculus. -Jeremy}
+\citet{siek2012interpretations} present a revised coercion calculi.
 \todo[inline]{Actually, Wadler might disagree that the blame calculus is
   a lazy UD calculus... because the blame calculus has polarity in the blame
   labels, and the lazy UD calculus does not. So perhaps we should just
   say lazy UD cast calculus, and explain that it is very close to the
   blame calculus. -Jeremy}
+\todo[inline]{I replace most uses of blame calculus to cast calculus.}
 They simplify the coercion calculi by only 
 working with normal coercions (i.e. coercions in normal form). 
 They conjecture that their revised coercion calculi bisimulate the 
@@ -436,8 +434,8 @@ new constructor to a component of hypercoercion. This suggests that
 hypercoercion might scale better than supercoercion.
 
 We prove formally that the \lazyD{} (resp. \lazyUD{}) hypercoercion calculus 
-bisimulates the \lazyD{} (resp. \lazyUD{}) Blame Calculus. This is 
-the first bisimulation proof for the \lazyD{} Blame Calculus as far as we know.
+bisimulates the \lazyD{} (resp. \lazyUD{}) cast calculus. This is 
+the first bisimulation proof for the \lazyD{} cast calculus as far as we know.
 
 \todo[inline]{Explain why we care about \lazyD{} and \lazyUD{}. -Jeremy}
 
@@ -578,15 +576,15 @@ Section \ref{sec:conclude} concludes.
 	\label{fig:blame-static}
 \end{figure}
 
-\figref{fig:blame-static} defines the syntax of blame calculus and its
+\figref{fig:blame-static} defines the syntax of cast calculus and its
 static semantics. It is little changed from previous definitions.
 \todo[inline]{Which previous definitions are you refering to?  What
   are the little changes? -Jeremy} \todo[inline]{The term typing rule
   for casts is broken. -Jeremy} The dynamic semantics of Blame Calculi
 depend on blame strategies, so we defer them to sub-sections.
 
-Blame Calculus is based on Simply Typed Lambda Calculus with sum types and 
-product types ($ \mathtt{STLC+} $). 
+Our cast calculus extend the one in \citet{siek2009exploring} with sum types 
+and product types ($ \mathtt{STLC+} $). 
 Let $ S,T $ range over types. A type is either the dynamic type $ \star $
 (a.k.a. $ \mathtt{Dyn} $, $ \mathbb{?} $, or $ \mathtt{Unknown} $), 
 or a pre-type. 
@@ -627,7 +625,7 @@ https://www.wordhippo.com/what-is/the-plural-of/blame.html}
 
 Now let's move to the dynamic semantics. 
 
-\subsection{The Blame Calculus (a \lazyD{} cast calculus)}
+\subsection{The \lazyD{} cast calculus}
 
 \begin{figure}
 	Syntax
@@ -700,7 +698,7 @@ Now let's move to the dynamic semantics.
 %	}
 %	\end{gather*}
 	
-	Reduction \fbox{$ \judgeDBreduce{s}{s} $}
+	Reduction \fbox{$ \judgeDCreduce{s}{s} $}
 	\[
 	\begin{array}{rclr}
 	
@@ -839,13 +837,13 @@ Now let's move to the dynamic semantics.
 	
 %	Transitive closure of reduction \fbox{$ s \longrightarrow_{D,B}^{*} s $}\\
 	
-	Evaluation \fbox{$\judgeDBeval{e}{o}$}
+	Evaluation \fbox{$\judgeDCeval{e}{o}$}
 	\[
 	\inference{
 		\sOOinspect{e}{\emptyset}{cont(\hckOOmt)} \longrightarrow_{B}^{*} 
 		\sOOhalt{o}
 	}{
-		\judgeDBeval{e}{o}
+		\judgeDCeval{e}{o}
 	}
 	\]
 	
@@ -869,7 +867,7 @@ Calculus in the style of CEK machines \citep{felleisen1986control}.
   the value first and the cast second. -Jeremy}
 \todo[inline]{The definition of values is too loose for a cast.
   You need to restrict the casts to just the inert ones. -Jeremy }
-We conjecture that this CEK machines agree with the \lazyD{} blame calculus in 
+We conjecture that this CEK machines agree with the \lazyD{} cast calculus in 
 \citet{siek2012interpretations}.
 We will show in \hyperref{sec:hypercoercion} that this abstract machine is 
 equivalent to an abstract machine that represents casts with hypercoercions.
@@ -911,20 +909,20 @@ continuations. To cast a value, the machine try to apply the cast to the value.
 If the cast succeeds, the machine returns the result to the next continuation. 
 If the cast fails, the machine halts with the blame label.
 
-Transitive closure of reduction ($ \judgeDBreduceTrans{s}{s} $) and evaluation 
+Transitive closure of reduction ($ \judgeDCreduceTrans{s}{s} $) and evaluation 
 are 
 standard.
 
-\subsection{The Blame Calculus (i.e. \lazyUD{} cast calculus) [Jeremy]}
+\subsection{The \lazyUD{} cast calculus [Jeremy]}
 
-The dynamic semantics of the Blame Calculus, which we define here as a
+The dynamic semantics of the \lazyUD{} cast calculus, which we define here as a
 CEK machine, is similar to that of the \lazyD{} cast calculus
 (Fig. \ref{machine-cekc}). The only difference is in the definition of
 the $\mathit{applyCast}$ function, in which a cast whose source or
 target is the unknown type $\star$ is always split into two casts that
 go through an injectiable type, that is, a type in which all
 sub-components are the unknown type, such as $\star \to \star$. The
-definition of $\mathit{applyCast}$ for the Blame Calculus is given in
+definition of $\mathit{applyCast}$ for the \lazyUD{} cast calculus is given in
 Fig.~\ref{fig:apply-Cast-UD}.
 
 \begin{figure}
@@ -1891,20 +1889,20 @@ pre-continuations. We omit subscripts when there is no ambiguity.
 	$ s_2 \in \mathcal{S}(C) $, and
 	$ s_1 \approx s_2 $, 
 	\begin{enumerate}
-		\item If $ \judgeDBreduce{s_1}{s_3} $,
+		\item If $ \judgeDCreduce{s_1}{s_3} $,
 		then
 		there exist $ s_5 \in \mathcal{D} $, $ s_4 \in \mathcal{S}(C) $,
 		such that \begin{itemize}
 			\item $ s_5 \approx s_4 $, and
 			\item $ \judgeSreduce{C}{s_2}{s_4} $,
-			\item $ \judgeDBreduceTrans{s_3}{s_5} $
+			\item $ \judgeDCreduceTrans{s_3}{s_5} $
 		\end{itemize}
 		\item If $ \judgeSreduce{C}{s_2}{s_4} $,
 		then
 		there exist $ s_3 \in \mathcal{D} $,
 		such that \begin{itemize}
 			\item $ s_3 \approx s_4 $
-			\item $ \judgeDBreduceTrans{s_1}{s_3} $
+			\item $ \judgeDCreduceTrans{s_1}{s_3} $
 		\end{itemize}
 	\end{enumerate}
 \end{lemma}
@@ -1918,7 +1916,7 @@ pre-continuations. We omit subscripts when there is no ambiguity.
 	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is surely 
 	\lazyD{} and monoidic,
 	\[
-	\judgeDBeval{e}{o} \; \text{if and only if} \; 
+	\judgeDCeval{e}{o} \; \text{if and only if} \; 
 	\judgeSeval{C}{e}{o}
 	\]
 \end{lemma}
@@ -2000,7 +1998,7 @@ $ applyMiddle(\ell,m,v) $ and $ applyTail(t,v) $ are straightforward.
 \begin{theorem}[\lazyD{} hypercoercion Respect $ \mathcal{D} $]
 	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ 
 	\[
-	\judgeDBeval{e}{o} \; \text{if and only if} \; 
+	\judgeDCeval{e}{o} \; \text{if and only if} \; 
 	\judgeSeval{H}{e}{o}
 	\]
 \end{theorem}
@@ -2103,7 +2101,7 @@ casts is special: \begin{gather*}
 	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is surely 
 	\lazyD{}
 	\[
-	\judgeDBeval{e}{o} \; \text{if and only if} \; 
+	\judgeDCeval{e}{o} \; \text{if and only if} \; 
 	\judgeSeval{C}{e}{o}
 	\]
 \end{theorem}
