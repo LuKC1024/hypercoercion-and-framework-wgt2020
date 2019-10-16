@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  16 OCT 2019 12:52
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  16 OCT 2019 12:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1675,7 +1675,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 \openout6 = `paper.tdo'.
 
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 7.0pt on input line 295.
+(Font)              scaled to size 7.0pt on input line 294.
 
 Underfull \hbox (badness 10000) has occurred while \output is active
 
@@ -1707,21 +1707,23 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [2.2]
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
+(Font)              scaled to size 10.0pt on input line 395.
+
+
+LaTeX Warning: Reference `sec:hypercoercion' on page 3 undefined on input line 
+395.
+
+
+LaTeX Warning: Reference `sec:hypercoercion' on page 3 undefined on input line 
+410.
+
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
 (Font)              scaled to size 7.3pt on input line 422.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
 (Font)              scaled to size 5.5pt on input line 422.
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
 (Font)              scaled to size 9.0pt on input line 536.
-
-Underfull \vbox (badness 5741) has occurred while \output is active []
-
-
-Underfull \hbox (badness 10000) has occurred while \output is active
-
- []
-
-[3.3]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 584.
@@ -1738,9 +1740,11 @@ LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
 LaTeX Warning: Float too large for page by 3.14307pt on input line 809.
 
 
-Underfull \vbox (badness 5652) has occurred while \output is active []
+Underfull \hbox (badness 10000) has occurred while \output is active
 
+ []
 
+[3.3]
 Underfull \hbox (badness 10000) has occurred while \output is active
 
  []
@@ -1776,6 +1780,10 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 [6.6]
 
+LaTeX Warning: Reference `fig:hypercoercion' on page 7 undefined on input line 
+1103.
+
+
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 1118.
 
@@ -1808,9 +1816,6 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [8.8]
-LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
-(Font)              scaled to size 10.0pt on input line 1486.
-
 Underfull \hbox (badness 10000) has occurred while \output is active
 
  []
@@ -1875,24 +1880,24 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 1715.
 
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 7.3pt on input line 1787.
+(Font)              scaled to size 7.3pt on input line 1792.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 5.5pt on input line 1787.
+(Font)              scaled to size 5.5pt on input line 1792.
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1795.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1795.
+(hyperref)                removing `math shift' on input line 1800.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1795.
+(hyperref)                removing `math shift' on input line 1800.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1795.
+(hyperref)                removing `math shift' on input line 1800.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1800.
 
 
 Underfull \hbox (badness 10000) has occurred while \output is active
@@ -1902,22 +1907,22 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 [13.13]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1867.
+(hyperref)                removing `math shift' on input line 1872.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1867.
+(hyperref)                removing `math shift' on input line 1872.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1867.
+(hyperref)                removing `math shift' on input line 1872.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1867.
+(hyperref)                removing `math shift' on input line 1872.
 
 
-Overfull \hbox (13.84387pt too wide) detected at line 1919
+Overfull \hbox (13.84387pt too wide) detected at line 1924
 []
  []
 
@@ -1935,32 +1940,41 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [15.15]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1984.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1984.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1989.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1989.
  (./paper.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1984.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1984.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1989.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1989.
 
-Package rerunfilecheck Info: File `paper.out' has not changed.
-(rerunfilecheck)             Checksum: 893D7AFA13B7A1FECD0C75A4320EDB3B;3650.
 
+
+Package rerunfilecheck Warning: File `paper.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `paper.out':
+(rerunfilecheck)             Before: ADB0FD209DCE90F03B2956AF9D172414;3650
+(rerunfilecheck)             After:  FE24C496BF7DC010230928930E245F9F;3625.
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.97499pt have occurred.
 
 
+LaTeX Warning: There were undefined references.
+
+
 LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1984.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1989.
  ) 
 Here is how much of TeX's memory you used:
- 29074 strings out of 492616
- 509492 string characters out of 6129482
- 624060 words of memory out of 5000000
- 31795 multiletter control sequences out of 15000+600000
- 213391 words of font info for 387 fonts, out of 8000000 for 9000
+ 29089 strings out of 492616
+ 509830 string characters out of 6129482
+ 623109 words of memory out of 5000000
+ 31799 multiletter control sequences out of 15000+600000
+ 214617 words of font info for 394 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
- 62i,18n,94p,1136b,932s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 62i,17n,94p,1136b,932s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-4.enc}{
 /usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/newtx/libertinealt.enc}{/usr
 /local/texlive/2019/texmf-dist/fonts/enc/dvips/libertine/lbtn_7grukw.enc}{/usr/
@@ -1968,33 +1982,35 @@ local/texlive/2019/texmf-dist/fonts/enc/dvips/libertine/lbtn_ncsllp.enc}{/usr/l
 ocal/texlive/2019/texmf-dist/fonts/enc/dvips/libertine/lbtn_25tcsq.enc}{/usr/lo
 cal/texlive/2019/texmf-dist/fonts/enc/dvips/libertine/lbtn_kijugd.enc}{/usr/loc
 al/texlive/2019/texmf-dist/fonts/enc/dvips/libertine/lbtn_oexx6f.enc}{/usr/loca
-l/texlive/2019/texmf-dist/fonts/enc/dvips/inconsolata/i4-ot1-4.enc}{/usr/local/
-texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/texlive/2019/te
-xmf-dist/fonts/enc/dvips/libertine/lbtn_76gpa5.enc}</usr/local/texlive/2019/tex
-mf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></usr/local/texlive
-/2019/texmf-dist/fonts/type1/public/libertine/LinBiolinumT.pfb></usr/local/texl
-ive/2019/texmf-dist/fonts/type1/public/libertine/LinBiolinumTB.pfb></usr/local/
-texlive/2019/texmf-dist/fonts/type1/public/libertine/LinBiolinumTI.pfb></usr/lo
-cal/texlive/2019/texmf-dist/fonts/type1/public/libertine/LinLibertineT.pfb></us
-r/local/texlive/2019/texmf-dist/fonts/type1/public/libertine/LinLibertineTI.pfb
-></usr/local/texlive/2019/texmf-dist/fonts/type1/public/newtx/fxlri-7letters.pf
-b></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/symbols/msam7
-.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/symbols/ms
-bm10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/txfonts/rtxmi.p
-fb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/newtx/rtxmi7.pfb></us
-r/local/texlive/2019/texmf-dist/fonts/type1/public/txfonts/rtxr.pfb></usr/local
-/texlive/2019/texmf-dist/fonts/type1/public/stmaryrd/stmary10.pfb></usr/local/t
-exlive/2019/texmf-dist/fonts/type1/public/stmaryrd/stmary7.pfb></usr/local/texl
-ive/2019/texmf-dist/fonts/type1/public/newtx/txexs.pfb></usr/local/texlive/2019
-/texmf-dist/fonts/type1/public/txfonts/txsya.pfb></usr/local/texlive/2019/texmf
--dist/fonts/type1/public/txfonts/txsyc.pfb></usr/local/texlive/2019/texmf-dist/
-fonts/type1/public/newtx/txsys.pfb></usr/local/texlive/2019/texmf-dist/fonts/ty
-pe1/public/newtx/zxlr.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/publi
-c/newtx/zxlri.pfb>
-Output written on paper.pdf (15 pages, 556148 bytes).
+l/texlive/2019/texmf-dist/fonts/enc/dvips/libertine/lbtn_nh77jq.enc}{/usr/local
+/texlive/2019/texmf-dist/fonts/enc/dvips/inconsolata/i4-ot1-4.enc}{/usr/local/t
+exlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/texlive/2019/tex
+mf-dist/fonts/enc/dvips/libertine/lbtn_76gpa5.enc}</usr/local/texlive/2019/texm
+f-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></usr/local/texlive/
+2019/texmf-dist/fonts/type1/public/libertine/LinBiolinumT.pfb></usr/local/texli
+ve/2019/texmf-dist/fonts/type1/public/libertine/LinBiolinumTB.pfb></usr/local/t
+exlive/2019/texmf-dist/fonts/type1/public/libertine/LinBiolinumTI.pfb></usr/loc
+al/texlive/2019/texmf-dist/fonts/type1/public/libertine/LinLibertineT.pfb></usr
+/local/texlive/2019/texmf-dist/fonts/type1/public/libertine/LinLibertineTB.pfb>
+</usr/local/texlive/2019/texmf-dist/fonts/type1/public/libertine/LinLibertineTI
+.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/newtx/fxlri-7letter
+s.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/symbols/m
+sam7.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/symbol
+s/msbm10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/txfonts/rtx
+mi.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/newtx/rtxmi7.pfb>
+</usr/local/texlive/2019/texmf-dist/fonts/type1/public/txfonts/rtxr.pfb></usr/l
+ocal/texlive/2019/texmf-dist/fonts/type1/public/stmaryrd/stmary10.pfb></usr/loc
+al/texlive/2019/texmf-dist/fonts/type1/public/stmaryrd/stmary7.pfb></usr/local/
+texlive/2019/texmf-dist/fonts/type1/public/newtx/txexs.pfb></usr/local/texlive/
+2019/texmf-dist/fonts/type1/public/txfonts/txsya.pfb></usr/local/texlive/2019/t
+exmf-dist/fonts/type1/public/txfonts/txsyc.pfb></usr/local/texlive/2019/texmf-d
+ist/fonts/type1/public/newtx/txsys.pfb></usr/local/texlive/2019/texmf-dist/font
+s/type1/public/newtx/zxlr.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/p
+ublic/newtx/zxlri.pfb>
+Output written on paper.pdf (15 pages, 633684 bytes).
 PDF statistics:
- 504 PDF objects out of 1000 (max. 8388607)
- 417 compressed objects within 5 object streams
- 101 named destinations out of 1000 (max. 500000)
+ 510 PDF objects out of 1000 (max. 8388607)
+ 421 compressed objects within 5 object streams
+ 102 named destinations out of 1000 (max. 500000)
  71441 words of extra memory for PDF output out of 74296 (max. 10000000)
 

@@ -150,7 +150,7 @@
 \newcommand{\ncFun}[2]{\POOfun{#1}{#2}}
 \newcommand{\ncProd}[2]{\POOprod{#1}{#2}}
 \newcommand{\ncSum}[2]{\POOsum{#1}{#2}}
-% Hyper-coercion
+% Hypercoercion
 \newcommand{\hyperCoercionI}[0]{\mathtt{id\star}}
 \newcommand{\hyperCoercionC}[3]{#1 \overset{#2}{\curvearrowright} #3}
 % machine state simulations
@@ -226,7 +226,7 @@
   to do this: coercion and threesome. Coercion is easy to understand,
   and easy enough to implement, but difficult to reason about
   formally. Threesome is hard to understand, easy to implement, and
-  easy to reason about formally. We propose hyper-coercion, which is
+  easy to reason about formally. We propose hypercoercion, which is
   easy to understand, as easy to implement as coercion, and easy to
   reason about formally.
   \todo[inline]{Spell it ``hypercoercion'' without the hyphen. -Jeremy}
@@ -330,7 +330,7 @@ well.
 revised coercion calculi.
 They simplify the coercion calculi by only 
 working with normal coercions (i.e. coercions in normal form). 
-They conjecture that their revised coercion calculi bi-simulate the 
+They conjecture that their revised coercion calculi bisimulate the 
 corresponding Blame Calculi.
 
 Following \citet{siek2010threesomes}, \citet{garcia2013calculating} develops
@@ -348,7 +348,7 @@ ones.
 
 \citet{siek2015blame} revisit the coercion-based approach. They revise the 
 \lazyUD{} coercion in \citet{siek2012interpretations} and prove that 
-their revised coercion calculus bi-simulates the \lazyUD{} Blame Calculus.
+their revised coercion calculus bisimulates the \lazyUD{} Blame Calculus.
 
 Last year, \citet{kuhlenschmidt2018efficient} present Grift, a compiler for a 
 gradually typed language of the same name. 
@@ -387,19 +387,19 @@ function types. And four constructors are directly related to function types.
 Thus, super-coercion might not scale very well to more sophisticated type 
 systems. 
 
-We present hyper-coercion, a cast representation whose composition is 
+We present hypercoercion, a cast representation whose composition is 
 structurally recursive, and whose definition is self-standing. What's more, it 
 should be at 
 least as easy to implement and understand as normal coercions, because there is 
 a clear connection between them, as we will show in Section 
-\ref{sec:hyper-coercion}.
-Our hyper-coercion considers sum types and product types, which are not 
+\ref{sec:hypercoercion}.
+Our hypercoercion considers sum types and product types, which are not 
 considered in all proofs above. Adding each of them requires us to add only one 
-new constructor to a component of hyper-coercion. This suggests that 
-hyper-coercion might scale better than super-coercion.
+new constructor to a component of hypercoercion. This suggests that 
+hypercoercion might scale better than super-coercion.
 
-We prove formally that the \lazyD{} (resp. \lazyUD{}) hyper-coercion calculus 
-bi-simulates the \lazyD{} (resp. \lazyUD{}) Blame Calculus. This is 
+We prove formally that the \lazyD{} (resp. \lazyUD{}) hypercoercion calculus 
+bisimulates the \lazyD{} (resp. \lazyUD{}) Blame Calculus. This is 
 the first bi-simulation proof for the \lazyD{} Blame Calculus as far as we know.
 
 The structure of this paper is as follows. 
@@ -407,7 +407,7 @@ Section \ref{sec:blame-calculus} reviews the state-of-art of $Lazy$ Blame
 Calculi. 
 Section \ref{sec:coercion-calculus} reviews the state-of-art of $Lazy$ Coercion 
 Calculi. 
-In section \ref{sec:hyper-coercion} we present Hyper-coercion.
+In section \ref{sec:hypercoercion} we present hypercoercion.
 Section \ref{sec:conclude} concludes.
 
 \section{Background: Blame Calculus} \label{sec:blame-calculus}
@@ -821,8 +821,8 @@ Calculus in the style of CEK machines (\citet{felleisen1986control}).
   You need to restrict the casts to just the inert ones. -Jeremy }
 We conjecture that this CEK machines agree with the \lazyD{} blame calculus in 
 \citet{siek2012interpretations}.
-We will show in \hyperref{sec:hyper-coercion} that this abstract machine is 
-equivalent to an abstract machine that represents casts with hyper-coercions.
+We will show in \hyperref{sec:hypercoercion} that this abstract machine is 
+equivalent to an abstract machine that represents casts with hypercoercions.
 
 Let $ c $ ranges over casts. A cast is a triple of a type, a label, and a type.
 Let $ v $ ranges over values. A value is either a function, the 
@@ -917,9 +917,9 @@ familiarity with coercion, and direct readers who do not know it to
 \citet{siek2012interpretations}.
 
 As the name suggests, 
-hyper-coercion is largely inspired by coercion, especially its subst NC. We 
-will highlight the similarity of normal coercion and hyper-coercion, and hope 
-this would convince you that hyper-coercion should be as difficult to implement 
+hypercoercion is largely inspired by coercion, especially its subst NC. We 
+will highlight the similarity of normal coercion and hypercoercion, and hope 
+this would convince you that hypercoercion should be as difficult to implement 
 as NC.
 
 \begin{figure}
@@ -999,7 +999,7 @@ re-arrange cases a little bit, the definition becomes:
 \end{array}
 \]
 
-Three observations on this definition leads to hyper-coercion: 
+Three observations on this definition leads to hypercoercion: 
 \begin{enumerate}
 	\item The length of normal coercion is at most three.
 	\item Projections are always at the beginning when presented.
@@ -1007,7 +1007,7 @@ Three observations on this definition leads to hyper-coercion:
 \end{enumerate}
 
 
-\section{Hyper-coercion} \label{sec:hyper-coercion}
+\section{hypercoercion} \label{sec:hypercoercion}
 
 \begin{figure}
 	Syntax
@@ -1020,7 +1020,7 @@ Three observations on this definition leads to hyper-coercion:
 		\POOprod{\TOOdyn}{\TOOdyn} \mid
 		\POOsum{\TOOdyn}{\TOOdyn}
 	}
-	\stxrule{c}{hyper-coercions}{
+	\stxrule{c}{hypercoercions}{
 		\hyperCoercionI \mid{}
 		\hyperCoercionC{h}{m}{t}
 	}
@@ -1042,7 +1042,7 @@ Three observations on this definition leads to hyper-coercion:
 	\end{array}
 	\]
 		
-	Hyper-coercion typing \fbox{$ c : T \Longrightarrow T $}
+	hypercoercion typing \fbox{$ c : T \Longrightarrow T $}
 	\begin{gather*}
 	\inference{}{\typingHC{\hyperCoercionI}{\TOOdyn}{\TOOdyn}}
 	\quad
@@ -1095,15 +1095,15 @@ Three observations on this definition leads to hyper-coercion:
 		\inference{}{\typingHC{\bot^l}{P}{T}} \quad
 		\end{gather*}
 	
-	\caption{Definition of Hyper-coercion (HC)}
-	\label{fig:hyper-coercion}
+	\caption{Definition of hypercoercion (HC)}
+	\label{fig:hypercoercion}
 \end{figure}
 
-This section presents our first contribution, hyper-coercion (HC). 
-\figref{fig:hyper-coercion} defines the syntax of HC.
+This section presents our first contribution, hypercoercion (HC). 
+\figref{fig:hypercoercion} defines the syntax of HC.
 Types, pre-types, and blame labels are as before.
 
-Let $ c $ ranges over hyper-coercions. A hyper-coercion is either 
+Let $ c $ ranges over hypercoercions. A hypercoercion is either 
 an identity cast between the dynamic types, or a complex including a head, a 
 middle, and a tail. 
 Let $ h $ ranges over heads. A head is either a no-op, or a projection.
@@ -1113,9 +1113,9 @@ We generalize shallow-consistency to middles $ m \smile m $ in the natural way.
 Let $ t $ ranges over tails. A tail is either a no-op, an injection, or a 
 failure. 
 Let $ \ell $ ranges over no-op and labels. It is useful when we introduce 
-composition of hyper-coercions.
+composition of hypercoercions.
 
-\subsection{\lazyD{} Hyper-coercion}
+\subsection{\lazyD{} hypercoercion}
 
 \begin{figure}
 	\[
@@ -1124,7 +1124,7 @@ composition of hyper-coercions.
 	\end{array}
 	\]
 	
-	Composition of hyper-coercions \fbox{$ c \fatsemi^\ell c = c $}
+	Composition of hypercoercions \fbox{$ c \fatsemi^\ell c = c $}
 	\[ 
 	\begin{array}{rclclr}
 	
@@ -1269,13 +1269,13 @@ composition of hyper-coercions.
 	}{}
 	\end{array}
 	\]
-	\caption{\lazyD{} Hyper-coercion}
+	\caption{\lazyD{} hypercoercion}
 	\label{fig:HC-D}
 \end{figure}
 
 \lazyD{} HC constructors are in \figref{fig:HC-D}.
 
-$ c_1 \fatsemi^\ell c_2 = c' $ composes two hyper-coercions. The target of $ 
+$ c_1 \fatsemi^\ell c_2 = c' $ composes two hypercoercions. The target of $ 
 c_1 $ and the source of $ c_2 $ might be different, in which case $ \ell $ must 
 be a label.
 $ m_1 \fatsemi^\ell (m_2,t) = (m',t') $ composes a middle with a 
@@ -1287,7 +1287,7 @@ $ id(T) $ constructs an identity coercion of $ T $ with the help of $ id(P) $.
 $ cast(T_1,l,T_2) $ constructs a coercion from a source type, a label, and a 
 target type. 
 
-\begin{proposition}[\lazyD\ Hyper-coercions is a Monoid]
+\begin{proposition}[\lazyD\ hypercoercions is a Monoid]
 	For all $c : T_1 \Longrightarrow T_2$,
 	$c_1 : T_1 \Longrightarrow T_2$,
 	$c_2 : T_2 \Longrightarrow T_3$, and
@@ -1303,7 +1303,7 @@ The correctness proof of \lazyD\ HC is deferred to \secref{sec:LDHC-correct}
 because it relies on the space-efficient CEK abstract machine in 
 \secref{sec:CEKS}.
 
-\subsection{\lazyUD{} Hyper-coercion [Jeremy]}
+\subsection{\lazyUD{} hypercoercion [Jeremy]}
 
 
 Figure~\ref{fig:HC-UD}
@@ -1635,15 +1635,15 @@ part is a pre-continuation.
 Pre-continuation are like the continuations before.
 
 We list a fraction of reduction rules due to space limitation.
-When values are constructed, their hyper-coercion parts are filled with outputs 
+When values are constructed, their hypercoercion parts are filled with outputs 
 of $ id $. For instance, when a function value is constructed, its first part 
 and last part are initialized to $ id(T_1) $ and $ id(T_2) $ respectively.
 When evaluating a cast expression, the current continuation is extended with a 
-hyper-coercion constructed by $ cast $. $ ext $ composes the new hyper-coercion 
-with the hyper-coercion on the top of the continuation.
+hypercoercion constructed by $ cast $. $ ext $ composes the new hypercoercion 
+with the hypercoercion on the top of the continuation.
 When evaluating a compound expression, the machine firstly construct the new 
 pre-continuation, then turn it to a continuation by adding an identity 
-hyper-coercion at the top. For instance, when evaluating a \texttt{cons} 
+hypercoercion at the top. For instance, when evaluating a \texttt{cons} 
 expression, the machine firstly construct $ \hckOOconsI{e_2}{\rho}{\kappa} $, 
 the new pre-continuation, then call $ cont $, which adds an identity cast to 
 form a continuation. 
@@ -1656,7 +1656,7 @@ Transitive closure of reduction ($ \judgeSreduceTrans{C}{s}{s} $) and
 evaluation are standard. Value typing ($ \judgeType{v}{T} $) is straightforward.
 
 
-\section{Correctness Proof of \lazyD{} Hyper-coercions}
+\section{Correctness Proof of \lazyD{} hypercoercions}
 
 \subsection{\lazyD\ Cast Representations}
 
@@ -1715,10 +1715,15 @@ Subsection~\ref{sec:LDHC-correct} that the \lazyD\ HC is in this subset.
 \subsection{Relating All Surely \lazyD{} Cast Representations}
 
 With the properties of surely \lazyD{} CR, it is straightforward to proof that 
-all machines instantiated with these CRs bi-simulate each other. 
+all machines instantiated with these CRs bisimulate each other. 
 The state bisimilarity ($\eqvS{C}{C}{s}{s}$) is 
-derived from the definition of states. We omit subscripts when there is no 
-ambiguity. \begin{gather*}
+derived from the definition of states.
+\todo[inline]{The term ``bisimilarity'' has a different technical meaning from
+  ``bisimulation relation''. I don't think you are using it properly
+  in the above sentence. -Jeremy}
+We omit subscripts when there is no 
+ambiguity.
+\begin{gather*}
 \inference{
 	\rho_1 \approx \rho_2 &
 	\kappa_1 \approx \kappa_2
@@ -1864,7 +1869,7 @@ $ \mathcal{D} $]
 	Proposition~\ref{thm:surely-lazyD-eqv}.
 \end{proof}
 
-\subsection{\lazyD\ Hyper-coercion Respect $ \mathcal{D} $}
+\subsection{\lazyD\ hypercoercion Respect $ \mathcal{D} $}
 \label{sec:LDHC-correct}
 
 To show that \lazyD\ HC is correct, we first show it is surely \lazyD, then 
@@ -1926,19 +1931,19 @@ $ applyMiddle(\ell,m,v) $ and $ applyTail(t,v) $ are straightforward.
 	\funrule{applyTail(!,v)}{\rOOsucc{(\hcvOOinj{P}{v})}}{v : P}
 	\end{array}
 	\]
-	\caption{\lazyD\ Hyper-coercion's $ applyCast $}
+	\caption{\lazyD\ hypercoercion's $ applyCast $}
 	\label{hc-applyCast}
 \end{figure}
 
 
-\begin{lemma}[\lazyD{} Hyper-coercion is Surely \lazyD]
+\begin{lemma}[\lazyD{} hypercoercion is Surely \lazyD]
 	\label{thm:hc-surely-lazyD}
 \end{lemma}
 \begin{proof}
 	See the supplementary material.
 \end{proof}
 
-\begin{theorem}[\lazyD{} Hyper-coercion Respect $ \mathcal{D} $]
+\begin{theorem}[\lazyD{} hypercoercion Respect $ \mathcal{D} $]
 	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ 
 	\[
 	\judgeDBeval{e}{o} \; \text{if and only if} \; 
