@@ -65,8 +65,8 @@
 \usepackage{hyperref}
                         
 \newtheorem{theorem}{Theorem}[]
+\newtheorem{lemma}{Lemma}[section]
 \newtheorem{proposition}{Proposition}[]
-\newtheorem{corollary}{Corollary}[]
 \newtheorem{definition}{Definition}
 
 \newcommand{\GTLC}{\texttt{GTLC+}}
@@ -153,6 +153,9 @@
 % Hyper-coercion
 \newcommand{\hyperCoercionI}[0]{\mathtt{id\star}}
 \newcommand{\hyperCoercionC}[3]{#1 \overset{#2}{\curvearrowright} #3}
+% machine state simulations
+\newcommand{\eqvS}[4]{#3 \approx_{\mathcal{S}\mathcal{S}} #4}
+\newcommand{\eqvDS}[3]{#2 \approx_{\mathcal{DS}} #3}
 
 \begin{document}
 
@@ -1246,13 +1249,27 @@ This section presents our second contribution, a space-efficient CEK abstract
 machine. This machine is parameterized over \emph{cast representation} (CR). 
 
 \begin{definition}[Cast Representation]
-	A cast representation has four interface functions:
+	A cast representation is a set indexed by two types and has four interface 
+	functions:
 	\begin{description}
 		\item[$ id(T) $] constructs an identity cast
 		\item[$ seq(c_1,c_2) $] composes two casts
 		\item[$ cast(T_1,l,T_2) $] constructs a cast from $ T_1 $ to $ T_2 $
 		\item[$ applyCast(c,v) $] applies a cast onto a value
 	\end{description}
+\end{definition}
+
+\begin{definition}[Monoidic Cast Representation]
+	A cast representation is monoidic if 
+	for all $c : T_1 \Longrightarrow T_2$,
+	$c_1 : T_1 \Longrightarrow T_2$,
+	$c_2 : T_2 \Longrightarrow T_3$, and
+	$c_3 : T_3 \Longrightarrow T_4$,
+	\begin{enumerate}
+		\item $seq(id(T_1),c) = c$,
+		\item $seq(c,id(T_2)) = c$, and
+		\item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
+	\end{enumerate}
 \end{definition}
 
 \begin{figure}
@@ -1407,13 +1424,16 @@ then halts with the blame label.
 Transitive closure of reduction ($ \judgeSreduceTrans{C}{s}{s} $) and 
 evaluation are standard. Value typing ($ \judgeType{v}{T} $) is straightforward.
 
-\section{\lazyD\ Cast Representations}
+
+\section{Correctness Proof of \lazyD{} Hyper-coercions}
+
+\subsection{\lazyD\ Cast Representations}
 
 In this section we describe a subset of SR, where all 
 elements implement the \lazyD{} blame strategy. We will show in 
-\secref{sec:LDHC-correct} that the \lazyD\ HC is a member of this set.
+Subsection~\ref{sec:LDHC-correct} that the \lazyD\ HC is in this subset.
 
-\begin{definition}[Surely \lazyD]
+\begin{definition}[Surely \lazyD\ Cast Representation]
 	A cast representation is surely \lazyD\ if
 	\begin{enumerate}
 		\item If $ v : T $, then $ applyCast(id(T), v) = \mathtt{succ} \; v $
@@ -1461,12 +1481,13 @@ elements implement the \lazyD{} blame strategy. We will show in
 	\end{enumerate}
 \end{definition}
 
-\subsection{All surely \lazyD{} cast representations are equivalents}
+\subsection{Relating All Surely \lazyD{} Cast Representations}
 
 With the properties of surely \lazyD{} CR, it is straightforward to proof that 
 all machines instantiated with these CRs bi-simulate each other. 
-The relation connecting states of these machines ($ s \approx s $) is derived 
-from the definition of states. \begin{gather*}
+The state bisimilarity ($\eqvS{C}{C}{s}{s}$) is 
+derived from the definition of states. We omit subscripts when there is no 
+ambiguity. \begin{gather*}
 \inference{
 	\rho_1 \approx \rho_2 &
 	\kappa_1 \approx \kappa_2
@@ -1489,7 +1510,7 @@ from the definition of states. \begin{gather*}
 
 The relations between continuations, pre-continuations, enviroments, values, 
 cast results are also derived from their definitions. But the relation for 
-casts is special. \begin{gather*}
+casts is special: \begin{gather*}
 \inference{
 }{
 	cast_1(T_1,l,T_2) \approx cast_2(T_1,l,T_2)
@@ -1508,65 +1529,118 @@ casts is special. \begin{gather*}
 }
 \end{gather*}
 
-\begin{proposition}[Strong Bi-simulation of surely \lazyD{} Cast 
-Representations]
+\begin{proposition}[Strong Bi-simulation among $ \mathcal{S}(\cdot) $]
+	\label{thm:CEKS-bisim}
 	If 
-	\begin{itemize}
-		\item $ C_1 $ and $ C_2 $ are surely \lazyD,
-		\item $ s_1, s_2 \in S(C_1) $ and $ s_3 \in S(C_2) $
-		\item $ s_1 \approx s_3 $
-		\item $ \judgeSreduce{C_1}{s_1}{s_2} $
-	\end{itemize}
+	$ C_1 $ and $ C_2 $ are surely \lazyD,
+	$ s_1, s_2 \in S(C_1) $ and $ s_3 \in S(C_2) $,
+	$ s_1 \approx s_3 $,
+	$ \judgeSreduce{C_1}{s_1}{s_2} $,
 	then there exists an $ s_4 $ such that
 	\begin{itemize}
-	\item $ s_3 \approx s_4 $ and
+	\item $ s_2 \approx s_4 $ and
 	\item $ s_3 \longrightarrow_{S(C_2)} s_4 $
 	\end{itemize}
 \end{proposition}
+\begin{proof}
+	The key ideas of this proof are undoing sequencing with the property (2) of 
+	surely \lazyD{} CR, and handling all possibly uses of $ 
+	cast(T,l,T) $ with property (3)-(11).
+\end{proof}
 
-The key idea of this proof is using the property (2) of surely 
-\lazyD{} CR to undo sequencing. Property (3)-(11) cover all possibly uses of $ 
-cast(T,l,T) $.
-
-As a corollary, machines instantiated with proper cast representations are 
-equivalent when used as interpreters.
-
-\begin{proposition}[Equivalence of surely \lazyD{} Cast Representations]
+\begin{proposition}[Equivalence of Surely \lazyD{} Cast Representations]
+	\label{thm:surely-lazyD-eqv}
 	If $ \judgetype{\emptyset}{e}{T} $, $ o : T $, and $ C_1 $ and $ C_2 $ 
-	are surely \lazyD,
+	are surely \lazyD cast representations,
 	\[
 	e \Downarrow_{S(C_1)} o \; \text{if and only if} \; 
 	e \Downarrow_{S(C_2)} o
 	\]
 \end{proposition}
+\begin{proof}
+	Immediately from Proposition~\ref{thm:CEKS-bisim}.
+\end{proof}
 
-\subsection{Relating Surely \lazyD\ Cast Representations to $ \mathcal{D} $}
+\subsection{Relating All Surely \lazyD{} Cast Representations to $\mathcal{D}$}
 
-Now we proof that all $ 
-\mathcal{S}(\cdot) $ instantiated with a surely \lazyD{} CR weakly bi-simulate 
-the machine $ \mathcal{D} $.
+So far, we have related all surely \lazyD{} CRs, i.e. they are equivalent to 
+each other. But this does not mean they respect the semantics of the \lazyD{} 
+Blame Calculus. We solve prove this part in this subsection.
 
-\todo[inline]{list of cast}
+The state bisimilarity here ($\eqvDS{C}{s}{s}$) is mostly derived from the 
+definitions of $ \mathcal{D} $. Exceptions include the bisimilarity relations 
+between continuations, between values, and from continuations to 
+pre-continuations. 
 
-\begin{proposition}[proper cast represenations are correct]
-	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is a surely 
-	\lazyD{} cast 
-	representation
+\todo[inline]{bisimilarity}
+
+\begin{lemma}[Weak Bi-simulation between $ \mathcal{S}(\cdot) $ and $ 
+\mathcal{D} $]
+\label{thm:surely-monoidic-reduce}
+For all cast representations $ C $, 
+if $ C $ is surely \lazyD{} and monoidic,
+$ s_1 \in \mathcal{D} $,
+$ s_2 \in \mathcal{S}(C) $, and
+$ s_1 \approx s_2 $, 
+\begin{enumerate}
+	\item If $ \judgeDBreduce{s_1}{s_3} $,
+	then
+	there exist $ s_5 \in \mathcal{D} $, $ s_4 \in \mathcal{S}(C) $,
+	such that \begin{itemize}
+		\item $ s_5 \approx s_4 $, and
+		\item $ \judgeSreduce{C}{s_2}{s_4} $,
+		\item $ \judgeDBreduceTrans{s_3}{s_5} $
+	\end{itemize}
+	\item If $ \judgeSreduce{C}{s_2}{s_4} $,
+	then
+	there exist $ s_3 \in \mathcal{D} $,
+	such that \begin{itemize}
+		\item $ s_3 \approx s_4 $
+		\item $ \judgeDBreduceTrans{s_1}{s_3} $
+	\end{itemize}
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+	See the supplementary material.
+\end{proof}
+
+\begin{lemma}[Surely \lazyD\ and Monoidic Cast Representations Respect 
+$ \mathcal{D} $]
+	\label{thm:surely-monoidic-eval}
+	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is surely 
+	\lazyD{} and monoidic,
 	\[
 	\judgeDBeval{e}{o} \; \text{if and only if} \; 
 	\judgeSeval{C}{e}{o}
 	\]
-\end{proposition}
+\end{lemma}
+\begin{proof}
+	Immediately from Lemma~\ref{thm:surely-monoidic-reduce}.
+\end{proof}
 
+\begin{theorem}[Surely \lazyD\ Cast Representations Respect 
+	$ \mathcal{D} $]
+	\label{thm:surely-lazyD-correct}
+	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is surely 
+	\lazyD{}
+\[
+\judgeDBeval{e}{o} \; \text{if and only if} \; 
+\judgeSeval{C}{e}{o}
+\]
+\end{theorem}
+\begin{proof}
+	Immediately from Lemma~\ref{thm:surely-monoidic-eval} and 
+	Proposition~\ref{thm:surely-lazyD-eqv}.
+\end{proof}
 
-\section{Correctness Proof of \lazyD{} Hyper-coercions}
+\subsection{\lazyD\ Hyper-coercion Respect $ \mathcal{D} $}
 \label{sec:LDHC-correct}
 
 To show that \lazyD\ HC is correct, we first show it is surely \lazyD, then 
-uses the theorems in \secref{sec:CEKS} to prove our goals.
+uses the Theorem~\ref{thm:surely-lazyD-correct} to prove its correctness.
 
 \figref{hc-applyCast} defines $ applyCast $, the last interface function.
-We generalize shallow-consistency to middles and values $ m \smile v $ in the 
+We generalize shallow-consistency to middles and values ($ m \smile v $) in the 
 natural way.
 Applying the identity cast for the 
 dynamic type succeeds immediately. When applying a compound cast, we firstly 
@@ -1626,17 +1700,24 @@ $ applyMiddle(\ell,m,v) $ and $ applyTail(t,v) $ are straightforward.
 \end{figure}
 
 
-\begin{lemma}[\lazyD{} Hyper-coercion is surely \lazyD]
-	See appendix.
+\begin{lemma}[\lazyD{} Hyper-coercion is Surely \lazyD]
+	\label{thm:hc-surely-lazyD}
 \end{lemma}
+\begin{proof}
+	See the supplementary material.
+\end{proof}
 
-\begin{theorem}[\lazyD{} hyper-coercion is correct]
+\begin{theorem}[\lazyD{} Hyper-coercion Respect $ \mathcal{D} $]
 	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ 
 	\[
 	\judgeDBeval{e}{o} \; \text{if and only if} \; 
 	\judgeSeval{H}{e}{o}
 	\]
 \end{theorem}
+\begin{proof}
+	Immediately from Lemma~\ref{thm:hc-surely-lazyD} and 
+	Theorem~\ref{thm:surely-lazyD-correct}.
+\end{proof}
 
 \section{Conclusion} \label{sec:conclude}
 
