@@ -611,7 +611,7 @@ lazy cast strategies -- casting a value to a shallowly inconsistent type leads
 to a blame. Shallow-consistency is reflexive, symmetric, but 
 not transitive.
 
-Let $ e $ ranges over terms, including all terms from $ \mathtt{STLC+} $ and, 
+Let $ e $ range over terms, including all terms from $ \mathtt{STLC+} $ and, 
 in addition, casts and blame. Unlike $ \mathtt{STLC+} $, we annotate the 
 codomain of lambda abstractions explicitly.
 \todo[inline]{Why do you annotate the codomain of lambda abstractions
@@ -620,7 +620,7 @@ codomain of lambda abstractions explicitly.
 The end of \figref{fig:blame-static} shows the typing rules for the
 additional terms.
 
-Let $ o $ ranges over observations. They are what would be observed if a 
+Let $ o $ range over observations. They are what would be observed if a 
 program terminates. Observations include all value constructors and blame.
 
 Now let's move to the dynamic semantics. 
@@ -880,12 +880,12 @@ element of unit, a pair, a left injection, a right injection, or a casted value.
 The cast around a casted value is not arbitrary, as shown by value typing: the 
 source type must be a pre-type, and the source and the target must be 
 shallow-consistent.
-Let $ r $ ranges over cast results. A cast result is either a success, which 
+Let $ r $ range over cast results. A cast result is either a success, which 
 brings a value, or a failure, which brings a blame label.
-Let $ s $ ranges over machine states. A state is either looking at an 
+Let $ s $ range over machine states. A state is either looking at an 
 expression to decide what to do next, returning a value to a continuation, or 
 halting with an observation.
-Let $ \kappa $ ranges over continuations. $ \mathtt{mt} $ is the top 
+Let $ \kappa $ range over continuations. $ \mathtt{mt} $ is the top 
 continuation. The remaining continuations correspond to expressions. For 
 example, $ (\mathtt{cons_1} \; e \; \rho \; \kappa) $ is the continuation where 
 we are waiting for the value of the first argument to a $ \mathtt{cons} $. And 
@@ -1038,16 +1038,16 @@ as NC.
 \figref{fig:normal-coercion} defines the normal coercion.
 \todo[inline]{Give a summary statement about the shape of the normal form.}
 Types, pre-types, and blame labels are as before.
-Let $ I $ ranges over injectable types. An injectable type is a type that can 
+Let $ I $ range over injectable types. An injectable type is a type that can 
 be cast directly to (injection) and from (projection) $ \TOOdyn $. The 
 definition of injectable type depends on blame strategy. With \lazyD, all 
 pre-types are injectable. With \lazyUD, only $ \POOfun{\TOOdyn}{\TOOdyn} $ 
 is injectable. 
-Let $ c $ ranges over coercions, a coercion is either injection, projection, 
+Let $ c $ range over coercions, a coercion is either injection, projection, 
 identity, failure, sequencing, or function coercion.
-Let $ \bar{c} $ ranges over wrapper coercions, which represent casts in $ 
+Let $ \bar{c} $ range over wrapper coercions, which represent casts in $ 
 \vOOcast{v}{c} $.
-Let $ \hat{c} $ ranges over normal coercions. If we inline $ \bar{c} $ and 
+Let $ \hat{c} $ range over normal coercions. If we inline $ \bar{c} $ and 
 re-arrange cases a little bit, the definition becomes:
 \todo[inline]{Be more specific than ``a little bit''. -Jeremy}
 \[
@@ -1178,16 +1178,16 @@ This section presents our first contribution, hypercoercion (HC).
 \figref{fig:hypercoercion} defines the syntax of HC.
 Types, pre-types, and blame labels are as before.
 
-Let $ c $ ranges over hypercoercions. A hypercoercion is either 
+Let $ c $ range over hypercoercions. A hypercoercion is either 
 an identity cast between the dynamic types, or a complex including a head, a 
 middle, and a tail. 
-Let $ h $ ranges over heads. A head is either a no-op, or a projection.
-Let $ m $ ranges over middles. There is a one-to-one 
+Let $ h $ range over heads. A head is either a no-op, or a projection.
+Let $ m $ range over middles. There is a one-to-one 
 correspondence between middles and type constructors. 
 We generalize shallow-consistency to middles $ m \smile m $ in the natural way.
-Let $ t $ ranges over tails. A tail is either a no-op, an injection, or a 
+Let $ t $ range over tails. A tail is either a no-op, an injection, or a 
 failure. 
-Let $ \ell $ ranges over no-op and labels. It is useful when we introduce 
+Let $ \ell $ range over no-op and labels. It is useful when we introduce 
 composition of hypercoercions.
 
 \subsection{\lazyD{} hypercoercion}
@@ -1703,10 +1703,10 @@ machine. This machine is parameterized over \emph{cast representation} (CR).
 \end{figure}
 
 \figref{machine-cekcc} defines the machine. 
-Let $ v $ ranges over value. A value is either the unit value, function, pair, 
+Let $ v $ range over value. A value is either the unit value, function, pair, 
 left injection of sum, right injection of sum, and injection to $ \TOOdyn $.
 Cast results ($ r $) and machine states ($ s $) are as before. 
-Let $ \kappa $ ranges over continuations and let $ k $ ranges over 
+Let $ \kappa $ range over continuations and let $ k $ range over 
 pre-continuations. 
 A continuation is now a pair where the first part is a cast and the second 
 part is a pre-continuation. 
