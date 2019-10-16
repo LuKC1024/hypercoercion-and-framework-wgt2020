@@ -577,14 +577,14 @@ Section \ref{sec:conclude} concludes.
 \end{figure}
 
 \figref{fig:blame-static} defines the syntax of cast calculus and its
-static semantics. It is little changed from previous definitions.
+static semantics. It extends the syntax in \citet{siek2009exploring} with sum 
+types and product types, and annotates function codomain explicitly. 
+Its semantics depend on blame strategies, so we defer them to sub-sections.
 \todo[inline]{Which previous definitions are you refering to?  What
-  are the little changes? -Jeremy} \todo[inline]{The term typing rule
-  for casts is broken. -Jeremy} The dynamic semantics of Blame Calculi
-depend on blame strategies, so we defer them to sub-sections.
-
-Our cast calculus extend the one in \citet{siek2009exploring} with sum types 
-and product types ($ \mathtt{STLC+} $). 
+  are the little changes? -Jeremy}
+\todo[inline]{Fixed -KC}
+\todo[inline]{The term typing rule for casts is broken. -Jeremy} 
+ 
 Let $ S,T $ range over types. A type is either the dynamic type $ \star $
 (a.k.a. $ \mathtt{Dyn} $, $ \mathbb{?} $, or $ \mathtt{Unknown} $), 
 or a pre-type. 
