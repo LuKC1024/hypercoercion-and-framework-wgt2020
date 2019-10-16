@@ -158,6 +158,7 @@
 \newcommand{\eqvDS}[3]{#2 \approx_{\mathcal{DS}} #3}
 % to-dos
 \newcommand{\todoKC}[1]{\todo[inline]{KC needs to #1}}
+\newcommand{\todoKCFixed}[0]{\todo[inline]{Fixed. -KC}}
 % abbrev
 \newcommand{\castCalculus}[0]{$\lambda_{\rightarrow}^{\langle\cdot\rangle}$}
 
@@ -562,7 +563,7 @@ Section \ref{sec:conclude} concludes.
 	\fbox{$ \judgetype{\Gamma}{e}{T} $}
 	\begin{gather*}
 		\inference{
-			S \sim T & \Gamma \vdash e : S 
+			\Gamma \vdash e : T_1 & T_1 \sim T_2
 		}{
 			\judgetype{\Gamma}{\eOOcast{e}{T_1}{l}{T_2}}{T_2}
 		} \quad
@@ -582,8 +583,9 @@ types and product types, and annotates function codomain explicitly.
 Its semantics depend on blame strategies, so we defer them to sub-sections.
 \todo[inline]{Which previous definitions are you refering to?  What
   are the little changes? -Jeremy}
-\todo[inline]{Fixed -KC}
-\todo[inline]{The term typing rule for casts is broken. -Jeremy} 
+\todoKCFixed{}
+\todo[inline]{The term typing rule for casts is broken. -Jeremy}
+\todoKCFixed{}
  
 Let $ S,T $ range over types. A type is either the dynamic type $ \star $
 (a.k.a. $ \mathtt{Dyn} $, $ \mathbb{?} $, or $ \mathtt{Unknown} $), 
