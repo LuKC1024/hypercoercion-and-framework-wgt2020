@@ -972,17 +972,25 @@ Fig.~\ref{fig:apply-Cast-UD}.
 
 \subsection{Coercions in Normal Form} \label{sec:coercion-calculus}
 
-In this section we review the normal coercion (NC) in 
-\citet{siek2012interpretations}. We ignore sum types and product types in this 
+In this section we review the normal coercions (NC) of 
+\citet{siek2012interpretations}.
+\todo[inline]{Don't abbreviate to NC. -Jeremy}
+We ignore sum types and product types in this 
 section, because they were not presented in the paper. We assume a basic 
 familiarity with coercion, and direct readers who do not know it to 
 \citet{siek2012interpretations}.
 
 As the name suggests, 
-hypercoercion is largely inspired by coercion, especially its subst NC. We 
+hypercoercion is largely inspired by coercion, especially its subst NC.
+\todo[inline]{``subst'' is not a word.}
+We 
 will highlight the similarity of normal coercion and hypercoercion, and hope 
 this would convince you that hypercoercion should be as difficult to implement 
 as NC.
+
+\todo[inline]{I don't think we should try to convince the reader that
+  hypercoercions are easier to implement. We don't have real evidence
+  for that.}
 
 \begin{figure}
 	\[
@@ -1029,7 +1037,8 @@ as NC.
 	\label{fig:normal-coercion}
 \end{figure}
 
-\figref{fig:normal-coercion} defines the normal coercion. 
+\figref{fig:normal-coercion} defines the normal coercion.
+\todo[inline]{Give a summary statement about the shape of the normal form.}
 Types, pre-types, and blame labels are as before.
 Let $ I $ ranges over injectable types. An injectable type is a type that can 
 be cast directly to (injection) and from (projection) $ \TOOdyn $. The 
@@ -1042,6 +1051,7 @@ Let $ \bar{c} $ ranges over wrapper coercions, which represent casts in $
 \vOOcast{v}{c} $.
 Let $ \hat{c} $ ranges over normal coercions. If we inline $ \bar{c} $ and 
 re-arrange cases a little bit, the definition becomes:
+\todo[inline]{Be more specific than ``a little bit''. -Jeremy}
 \[
 \begin{array}{rclr}
 \stxrule{\hat{c}}{normal coercions}{
@@ -1065,7 +1075,9 @@ Three observations on this definition leads to hypercoercion:
 \begin{enumerate}
 	\item The length of normal coercion is at most three.
 	\item Projections are always at the beginning when presented.
+          \todo[inline]{change ``presented'' to ``present''. }
 	\item Injections and failures are always at the end when presented.
+          \todo[inline]{change ``presented'' to ``present''. }
 \end{enumerate}
 
 
@@ -1160,6 +1172,9 @@ Three observations on this definition leads to hypercoercion:
 	\caption{Definition of hypercoercion (HC)}
 	\label{fig:hypercoercion}
 \end{figure}
+
+\todo[inline]{What is the main idea behind the organization of
+ hypercoercions?}
 
 This section presents our first contribution, hypercoercion (HC). 
 \figref{fig:hypercoercion} defines the syntax of HC.
