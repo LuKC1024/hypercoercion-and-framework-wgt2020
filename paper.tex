@@ -350,6 +350,11 @@ revised coercion calculi.
   Or did you mean something else? -Jeremy}
 \todo[inline]{The ``Blame Calculus'' is a \lazyUD{} cast calculus.
   There is no such thing as a \lazyD{} Blame Calculus. -Jeremy}
+\todo[inline]{Actually, Wadler might disagree that the blame calculus is
+  a lazy UD calculus... because the blame calculus has polarity in the blame
+  labels, and the lazy UD calculus does not. So perhaps we should just
+  say lazy UD cast calculus, and explain that it is very close to the
+  blame calculus. -Jeremy}
 They simplify the coercion calculi by only 
 working with normal coercions (i.e. coercions in normal form). 
 They conjecture that their revised coercion calculi bisimulate the 
@@ -909,18 +914,25 @@ Transitive closure of reduction ($ \judgeDBreduceTrans{s}{s} $) and evaluation
 are 
 standard.
 
-\subsection{The \lazyUD{} cast calculus [Jeremy]}
+\subsection{The Blame Calculus (i.e. \lazyUD{} cast calculus) [Jeremy]}
 
-
-
-
-Fig.~\ref{fig:apply-Cast-UD}
+The dynamic semantics of the Blame Calculus, which we define here as a
+CEK machine, is similar to that of the \lazyD{} cast calculus
+(Fig. \ref{machine-cekc}). The only difference is in the definition of
+the $\mathit{applyCast}$ function, in which a cast whose source or
+target is the unknown type $\star$ is always split into two casts that
+go through an injectiable type, that is, a type in which all
+sub-components are the unknown type, such as $\star \to \star$. The
+definition of $\mathit{applyCast}$ for the Blame Calculus is given in
+Fig.~\ref{fig:apply-Cast-UD}.
 
 \begin{figure}
 
   Syntax
   \[
   \begin{array}{rclr}
+     \stxrule{I}{injectable types}{
+		\POOfun{\star}{\star} \mid \POOunit \mid \star \times \star \mid \star + \star}
     \stxrule{v}{values}{
       \cdots \mid 
       \vOOcast{v}{ \cOOcast{I}{l}{\star} } \mid
@@ -958,7 +970,7 @@ Fig.~\ref{fig:apply-Cast-UD}
 \clearpage
 \pagebreak
 
-\section{Background: Normal Coercion} \label{sec:coercion-calculus}
+\subsection{Coercions in Normal Form} \label{sec:coercion-calculus}
 
 In this section we review the normal coercion (NC) in 
 \citet{siek2012interpretations}. We ignore sum types and product types in this 
