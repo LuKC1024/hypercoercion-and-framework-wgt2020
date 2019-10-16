@@ -63,11 +63,11 @@
 \usepackage{stmaryrd}
 \usepackage{semantic}
 \usepackage{hyperref}
-                        
-\newtheorem{theorem}{Theorem}[]
-\newtheorem{lemma}{Lemma}[section]
-\newtheorem{proposition}{Proposition}[]
-\newtheorem{definition}{Definition}
+
+%\newtheorem{theorem}{Theorem}[]
+%\newtheorem{lemma}{Lemma}[section]
+%\newtheorem{proposition}{Proposition}[]
+%\newtheorem{definition}{Definition}
 
 \newcommand{\GTLC}{\texttt{GTLC+}}
 \newcommand{\figref}[1]{Fig.~\ref{#1}}
@@ -311,7 +311,7 @@ however, whether the simulation also works in the other direction.
 \citet{siek2010threesomes} proposes another approach to combine blame 
 tracking and space efficiency. Their solution represents casts with threesomes, 
 a novel cast representation.
-They show that their calculus bi-simulates the \lazyUD{} coercion 
+They show that their calculus bisimulates the \lazyUD{} coercion 
 calculus in \citet{siek2009exploring} and the Blame Calculus in 
 \citet{wadler2009well}. They also prove that threesome is space-efficient as 
 well.
@@ -842,6 +842,17 @@ standard.
 
 UNDER CONSTRUCTION
 
+\begin{figure}
+  
+  \fbox{$\mathit{applyCast}(v,c) = r$}
+  \[
+  \begin{array}{rclr}
+    \mathit{applyCast}(v,c) = r
+  \end{array}
+  \]
+
+\end{figure}
+
 
 \section{Background: Normal Coercion} \label{sec:coercion-calculus}
 
@@ -1180,7 +1191,7 @@ composition of hyper-coercions.
 	}{}
 	\funrule{id(\POOsum{T_1}{T_2})}{
 		\POOsum{id(T_1)}{id(T_2)}
-	}{}s
+	}{}
 	\end{array}
 	\]
 	
@@ -1240,7 +1251,173 @@ because it relies on the space-efficient CEK abstract machine in
 
 \subsection{\lazyUD{} Hyper-coercion [Jeremy]}
 
-UNDER CONSTRUCTION
+
+Figure~\ref{fig:HC-UD}
+
+\begin{figure}
+  Composition of hypercoercions \fbox{$ c \fatsemi c = c $}
+  \[
+  \begin{array}{rclclr}
+  c &\fatsemi& \hyperCoercionI{} &=& c\\
+  \hyperCoercionI{} &\fatsemi& \hyperCoercionC{p_2}{m_2}{i_2} &=&
+       \hyperCoercionC{p_2}{m_2}{i_2} \\
+  \hyperCoercionC{p_1}{m_1}{\epsilon} &\fatsemi& \hyperCoercionC{\epsilon}{m_2}{i_2} &=&
+       \hyperCoercionC{p_1}{m_1 \fatsemi m_2}{i_2} \\
+  \hyperCoercionC{p_1}{m_1}{!} &\fatsemi& \hyperCoercionC{?^l}{m_2}{i_2} &=&
+  \begin{cases}
+    \hyperCoercionC{p_1}{m_1 \fatsemi m_2}{i_2} & \text{if } m_1 \smile m_2 \\
+    \hyperCoercionC{p_1}{m_1}{\bot^l} & \text{otherwise}
+  \end{cases} \\
+  \hyperCoercionC{p_1}{m_1}{\bot^l} &\fatsemi& \hyperCoercionC{p_2}{m_2}{i_2} &=&
+     \hyperCoercionC{p_1}{m_1}{\bot^l}
+  \end{array}
+  \]
+  Composition of middles \fbox{$m \fatsemi m = m$}
+  \[
+  \begin{array}{rclclr}  
+  \POOunit &\fatsemi& \POOunit &=& \POOunit \\
+  c \to d &\fatsemi& c' \to d' &=& (c' \fatsemi c) \to (d \fatsemi d') \\
+  c \times d &\fatsemi& c' \times d' &=& (c \fatsemi c') \times (d \fatsemi d') \\
+  c + d &\fatsemi& c' + d' &=& (c \fatsemi c') + (d \fatsemi d')
+  \end{array}
+  \]
+  Shallow consistency of middles \fbox{$m \smile m$}
+  \[
+  \POOunit \smile \POOunit \quad
+  (c \to d) \smile (c' \to d') \quad
+  (c \times d) \smile (c' \times d') \quad
+  (c + d) \smile (c' + d')
+  \]
+
+  \fbox{$seq(c,c) = c$}
+  \[
+  \begin{array}{rclr}
+    \funrule{seq(c_1,c_2)}{
+      c_1 \fatsemi c_2
+    }{}
+  \end{array}
+  \]
+  
+  \fbox{$ id( P ) = m $}
+  \[
+  \begin{array}{rclr}
+    \funrule{id(\POOunit)}{\POOunit}{}
+    \funrule{id(\POOfun{T_1}{T_2})}{
+		\POOfun{id(T_1)}{id(T_2)}
+    }{}
+    \funrule{id(\POOprod{T_1}{T_2})}{
+		\POOprod{id(T_1)}{id(T_2)}
+    }{}
+    \funrule{id(\POOsum{T_1}{T_2})}{
+		\POOsum{id(T_1)}{id(T_2)}
+    }{}
+  \end{array}
+  \]
+  
+  \fbox{$ id( T ) = c $}
+  \[
+  \begin{array}{rclr}
+    \funrule{id(\star)}{
+		\hyperCoercionI
+    }{}
+    \funrule{id(P)}{
+		\hyperCoercionC{\epsilon}{id(P)}{\epsilon}
+    }{}
+  \end{array}
+  \]
+
+  
+  \caption{Lazy UD Hypercoercions}
+  \label{fig:HC-UD}
+\end{figure}
+
+
+Figure~\ref{fig:HC-UD-cast}
+
+
+\begin{figure}
+  \fbox{$ \mathit{castToDyn}(P,l) = c$}
+  \[
+  \begin{array}{rclr}
+    \mathit{castToDyn}(\star,l) &=& \hyperCoercionI{} \\
+    \mathit{castToDyn}(P,l) &=&
+      \hyperCoercionC{\epsilon}{m}{!} \\
+    && \text{where } m = \mathit{castToInj}(P,l,\mathit{ground}(P)) 
+  \end{array}
+  \]
+  \fbox{$ \mathit{castFromDyn}(P,l) = c$}
+  \[
+  \begin{array}{rclr}
+    \mathit{castFromDyn}(\star,l) &=& \hyperCoercionI{} \\
+    \mathit{castFromDyn}(P,l) &=& \hyperCoercionC{?^l}{m}{\epsilon} \\
+    && \text{where } m = \mathit{castFromInj}(\mathit{ground}(P),l,P) 
+  \end{array}
+  \]
+  \fbox{$ \mathit{castToInj}(P,l,I) = m$}
+  \[
+  \begin{array}{rclr}
+    \mathit{castToInj}(\POOunit,l,\POOunit) &=& \POOunit \\
+    \mathit{castToInj}(T_1 \to T_2,l, \star \to \star) &=&
+        \mathit{castFromDyn}(T_1,l) \to \mathit{castToDyn}(T_2,l) \\
+    \mathit{castToInj}(T_1 \times T_2,l, \star \times \star) &=&
+        \mathit{castToDyn}(T_1,l) \times \mathit{castToDyn}(T_2,l) \\
+    \mathit{castToInj}(T_1 + T_2,l, \star + \star) &=&
+        \mathit{castToDyn}(T_1,l) + \mathit{castToDyn}(T_2,l) \\
+  \end{array}
+  \]
+  
+  \fbox{$ \mathit{castFromInj}(I,l,P) = m$}
+  \[
+  \begin{array}{rclr}
+    \mathit{castFromInj}(\POOunit,l,\POOunit) &=& \POOunit \\
+    \mathit{castFromInj}(\star \to \star,l, T_1 \to T_2) &=&
+        \mathit{castToDyn}(T_1,l) \to \mathit{castFromDyn}(T_2,l) \\
+    \mathit{castFromInj}(\star \times \star,l, T_1 \times T_2) &=&
+        \mathit{castFromDyn}(T_1,l) \times \mathit{castFromDyn}(T_2,l) \\
+    \mathit{castFromInj}(\star + \star,l, T_1 + T_2) &=&
+        \mathit{castFromDyn}(T_1,l) + \mathit{castFromDyn}(T_2,l) \\
+  \end{array}
+  \]
+
+  
+  \fbox{$ cast(T,l,T) = c$}
+  \[
+  \begin{array}{rclr}
+    \funrule{cast(\star,l,T_2)}{ castFromDyn(T_2, l) }{} 
+    \funrule{cast(T_1,l,\star)}{ castToDyn(T_1, l) }{} 
+    \funrule{cast(\POOunit,l,\POOunit)}{
+        \hyperCoercionC{\epsilon}{\POOunit}{\epsilon} }{} 
+    cast(T_1 \to T_2,l, T_3 \to T_4) &=&
+      \hyperCoercionC{\epsilon}{
+         c_1
+        \to
+         c_2
+      }{\epsilon}
+      \quad \text{where } c_1 = cast(T_3, l, T_1) \\
+      &&  \qquad\qquad\qquad \text{and } c_2 = cast(T_2, l, T_4)\\
+    cast(T_1 \times T_2,l, T_3 \times T_4) &=&
+      \hyperCoercionC{\epsilon}{
+         c_1
+        \times
+         c_2
+      }{\epsilon}
+      \quad \text{where } c_1 = cast(T_1, l, T_3) \\
+      &&  \qquad\qquad\qquad \text{and } c_2 = cast(T_2, l, T_4)\\
+    cast(T_1 + T_2,l, T_3 + T_4) &=&
+      \hyperCoercionC{\epsilon}{
+         c_1
+        +
+         c_2
+      }{\epsilon}
+      \quad \text{where } c_1 = cast(T_1, l, T_3) \\
+      &&  \qquad\qquad\qquad \text{and } c_2 = cast(T_2, l, T_4)
+  \end{array}
+  \]
+
+  \caption{\textit{cast} and its auxilliary functions for Lazy UD.}
+  \label{fig:HC-UD-cast}
+\end{figure}
+
 
 \section{Space-efficient CEK Abstract Machine}
 \label{sec:CEKS}

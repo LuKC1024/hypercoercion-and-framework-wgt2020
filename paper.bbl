@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{13}
+\begin{thebibliography}{00}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -42,8 +42,8 @@
         {felleisen1986control}
 \bibfield{author}{\bibinfo{person}{Matthias Felleisen} {and}
   \bibinfo{person}{Daniel~P Friedman}.} \bibinfo{year}{1986}\natexlab{}.
-\newblock \bibinfo{booktitle}{\emph{Control Operators, the SECD-machine, and
-  the [1]-calculus}}.
+\newblock \bibinfo{booktitle}{{\em Control Operators, the SECD-machine, and the
+  [1]-calculus}}.
 \newblock \bibinfo{publisher}{Indiana University, Computer Science Department}.
 \newblock
 
@@ -52,9 +52,9 @@
         {flanagan2006hybrid}
 \bibfield{author}{\bibinfo{person}{Cormac Flanagan}.}
   \bibinfo{year}{2006}\natexlab{}.
-\newblock \showarticletitle{Hybrid type checking}. In
-  \bibinfo{booktitle}{\emph{ACM Sigplan Notices}}, Vol.~\bibinfo{volume}{41}.
-  ACM, \bibinfo{pages}{245--256}.
+\newblock \showarticletitle{Hybrid type checking}. In \bibinfo{booktitle}{{\em
+  ACM Sigplan Notices}}, Vol.~\bibinfo{volume}{41}. ACM,
+  \bibinfo{pages}{245--256}.
 \newblock
 
 
@@ -63,7 +63,7 @@
 \bibfield{author}{\bibinfo{person}{Ronald Garcia}.}
   \bibinfo{year}{2013}\natexlab{}.
 \newblock \showarticletitle{Calculating threesomes, with blame}. In
-  \bibinfo{booktitle}{\emph{ACM SIGPLAN Notices}}, Vol.~\bibinfo{volume}{48}.
+  \bibinfo{booktitle}{{\em ACM SIGPLAN Notices}}, Vol.~\bibinfo{volume}{48}.
   ACM, \bibinfo{pages}{417--428}.
 \newblock
 
@@ -73,7 +73,7 @@
 \bibfield{author}{\bibinfo{person}{Fritz Henglein}.}
   \bibinfo{year}{1994}\natexlab{}.
 \newblock \showarticletitle{Dynamic typing: Syntax and proof theory}.
-\newblock \bibinfo{journal}{\emph{Science of Computer Programming}}
+\newblock \bibinfo{journal}{{\em Science of Computer Programming\/}}
   \bibinfo{volume}{22}, \bibinfo{number}{3} (\bibinfo{year}{1994}),
   \bibinfo{pages}{197--230}.
 \newblock
@@ -85,7 +85,7 @@
 \bibfield{author}{\bibinfo{person}{David Herman}, \bibinfo{person}{Aaron Tomb},
   {and} \bibinfo{person}{Cormac Flanagan}.} \bibinfo{year}{2010}\natexlab{}.
 \newblock \showarticletitle{Space-efficient gradual typing}.
-\newblock \bibinfo{journal}{\emph{Higher-Order and Symbolic Computation}}
+\newblock \bibinfo{journal}{{\em Higher-Order and Symbolic Computation\/}}
   \bibinfo{volume}{23}, \bibinfo{number}{2} (\bibinfo{year}{2010}),
   \bibinfo{pages}{167}.
 \newblock
@@ -98,7 +98,7 @@
   \bibinfo{person}{Deyaaeldeen Almahallawi}, {and} \bibinfo{person}{Jeremy~G
   Siek}.} \bibinfo{year}{2018}\natexlab{}.
 \newblock \showarticletitle{An efficient compiler for the gradually typed
-  lambda calculus}. In \bibinfo{booktitle}{\emph{Scheme and Functional
+  lambda calculus}. In \bibinfo{booktitle}{{\em Scheme and Functional
   Programming Workshop}}, Vol.~\bibinfo{volume}{18}.
 \newblock
 
@@ -110,8 +110,8 @@
   Licata}, {and} \bibinfo{person}{Amal Ahmed}.}
   \bibinfo{year}{2019}\natexlab{}.
 \newblock \showarticletitle{Gradual type theory}.
-\newblock \bibinfo{journal}{\emph{Proceedings of the ACM on Programming
-  Languages}} \bibinfo{volume}{3}, \bibinfo{number}{POPL}
+\newblock \bibinfo{journal}{{\em Proceedings of the ACM on Programming
+  Languages\/}} \bibinfo{volume}{3}, \bibinfo{number}{POPL}
   (\bibinfo{year}{2019}), \bibinfo{pages}{15}.
 \newblock
 
@@ -123,7 +123,7 @@
   Garcia}, {and} \bibinfo{person}{Walid Taha}.}
   \bibinfo{year}{2009}\natexlab{}.
 \newblock \showarticletitle{Exploring the design space of higher-order casts}.
-  In \bibinfo{booktitle}{\emph{European Symposium on Programming}}. Springer,
+  In \bibinfo{booktitle}{{\em European Symposium on Programming}}. Springer,
   \bibinfo{pages}{17--31}.
 \newblock
 
@@ -135,7 +135,7 @@
   Thiemann}, {and} \bibinfo{person}{Philip Wadler}.}
   \bibinfo{year}{2015}\natexlab{}.
 \newblock \showarticletitle{Blame and coercion: together again for the first
-  time}. In \bibinfo{booktitle}{\emph{ACM SIGPLAN Notices}},
+  time}. In \bibinfo{booktitle}{{\em ACM SIGPLAN Notices}},
   Vol.~\bibinfo{volume}{50}. ACM, \bibinfo{pages}{425--435}.
 \newblock
 
@@ -145,7 +145,7 @@
 \bibfield{author}{\bibinfo{person}{Jeremy~G Siek} {and} \bibinfo{person}{Ronald
   Garcia}.} \bibinfo{year}{2012}\natexlab{}.
 \newblock \showarticletitle{Interpretations of the gradually-typed lambda
-  calculus}. In \bibinfo{booktitle}{\emph{Proceedings of the 2012 Annual
+  calculus}. In \bibinfo{booktitle}{{\em Proceedings of the 2012 Annual
   Workshop on Scheme and Functional Programming}}. ACM,
   \bibinfo{pages}{68--80}.
 \newblock
@@ -156,7 +156,7 @@
 \bibfield{author}{\bibinfo{person}{Jeremy~G Siek} {and} \bibinfo{person}{Walid
   Taha}.} \bibinfo{year}{2006}\natexlab{}.
 \newblock \showarticletitle{Gradual typing for functional languages}. In
-  \bibinfo{booktitle}{\emph{Scheme and Functional Programming Workshop}},
+  \bibinfo{booktitle}{{\em Scheme and Functional Programming Workshop}},
   Vol.~\bibinfo{volume}{6}. \bibinfo{pages}{81--92}.
 \newblock
 
@@ -166,7 +166,7 @@
 \bibfield{author}{\bibinfo{person}{Jeremy~G Siek} {and} \bibinfo{person}{Philip
   Wadler}.} \bibinfo{year}{2010}\natexlab{}.
 \newblock \showarticletitle{Threesomes, with and without blame}. In
-  \bibinfo{booktitle}{\emph{ACM Sigplan Notices}}, Vol.~\bibinfo{volume}{45}.
+  \bibinfo{booktitle}{{\em ACM Sigplan Notices}}, Vol.~\bibinfo{volume}{45}.
   ACM, \bibinfo{pages}{365--376}.
 \newblock
 
@@ -177,7 +177,7 @@
 \bibfield{author}{\bibinfo{person}{Philip Wadler} {and}
   \bibinfo{person}{Robert~Bruce Findler}.} \bibinfo{year}{2009}\natexlab{}.
 \newblock \showarticletitle{Well-typed programs can{\rq}t be blamed}. In
-  \bibinfo{booktitle}{\emph{European Symposium on Programming}}. Springer,
+  \bibinfo{booktitle}{{\em European Symposium on Programming}}. Springer,
   \bibinfo{pages}{1--16}.
 \newblock
 
