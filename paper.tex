@@ -176,7 +176,7 @@
 \author{Kuang-Chen Lu}
 
 \affiliation{
-  \department{School of Informatics, Computing, and Engineering}              
+  \department{Computer Science Department}              
   %% \department is recommended
   \institution{Indiana University}
   %% \institution is required
@@ -186,19 +186,22 @@
 \email{kl13@iu.edu}          %% \email is recommended
 
 
-\author{Jeremy Siek}
+\author{Jeremy G. Siek}
+\email{jsiek@indiana.edu}         %% \email is recommended
 
-\orcid{nnnn-nnnn-nnnn-nnnn}             %% \orcid is optional
+%\orcid{nnnn-nnnn-nnnn-nnnn}             %% \orcid is optional
 \affiliation{
-  \position{Position2a}
-  \department{Department2a}             %% \department is recommended
-  \institution{Institution2a}           %% \institution is required
+%  \position{Position2a}
+  \department{Computer Science Department}             %% \department is recommended
+  \institution{Indiana University}           %% \institution is required
   \streetaddress{Street2a Address2a}
-  \city{City2a}
-  \state{State2a}
-  \postcode{Post-Code2a}
-  \country{Country2a}                   %% \country is recommended
+  %% \city{City2a}
+  %% \state{State2a}
+  %% \postcode{Post-Code2a}
+  \country{United States}                   %% \country is recommended
 }
+
+\author{Andre Kuhlenschmidt}
 \email{first2.last2@inst2a.com}         %% \email is recommended
 \affiliation{
   \position{Position2b}
@@ -217,13 +220,16 @@
 %% Note: \begin{abstract}...\end{abstract} environment must come
 %% before \maketitle command
 \begin{abstract}
-	Gradual Typing is great. Implementing gradually typed with blame tracking 
-	and space efficiency is tricky. There exist two technique to do this: 
-	coercion and threesome. Coercion is easy to understand, and easy enough to 
-	implement, but difficult to reason about formally. Threesome is hard to 
-	understand, easy to implement, and easy to reason about formally. We 
-	propose hyper-coercion, which is easy to understand, as easy to implement 
-	as coercion, and easy to reason about formally.
+  \todo[inline]{Rewrite this abstract based on the comparision table. -Jeremy}
+  Gradual Typing is great. Implementing gradually typed with blame
+  tracking and space efficiency is tricky. There exist two technique
+  to do this: coercion and threesome. Coercion is easy to understand,
+  and easy enough to implement, but difficult to reason about
+  formally. Threesome is hard to understand, easy to implement, and
+  easy to reason about formally. We propose hyper-coercion, which is
+  easy to understand, as easy to implement as coercion, and easy to
+  reason about formally.
+  \todo[inline]{Spell it ``hypercoercion'' without the hyphen. -Jeremy}
 \end{abstract}
 
 
@@ -262,6 +268,10 @@ languages</concept_desc>
 %% commands, abstract environment, Computing Classification System
 %% environment and commands, and keywords command.
 \maketitle
+
+
+\listoftodos{}
+
 
 \section{Introduction}
 
@@ -528,7 +538,10 @@ Section \ref{sec:conclude} concludes.
 \end{figure}
 
 \figref{fig:blame-static} defines the syntax of blame calculus and its static 
-semantics. It is little changed from previous definitions. 
+semantics. It is little changed from previous definitions.
+\todo[inline]{Which previous definitions are you refering to?
+  What are the little changes? -Jeremy}
+\todo[inline]{The term typing rule for casts is broken. -Jeremy}
 The dynamic semantics of Blame Calculi depend on blame strategies, so we defer 
 them to sub-sections.
 
@@ -645,7 +658,7 @@ Now let's move to the dynamic semantics.
 	\[
 	\begin{array}{rclr}
 	
-	& \dots \\
+	& \dots  \\
 	\redrule{
 		\sOOinspect{\eOOcast{e}{T_1}{l}{T_2}}{\rho}{\kappa}
 	}{
@@ -796,7 +809,16 @@ Now let's move to the dynamic semantics.
 \end{figure}
 
 Fig.~\ref{machine-cekc} defines the dynamic semantics of the \lazyD{} Blame 
-Calculus in the style of CEK machines (\citet{felleisen1986control}). 
+Calculus in the style of CEK machines (\citet{felleisen1986control}).
+\todo[inline]{The figure is too tall. You may need to pull some things
+  out of the figure, such as the value typing. -Jeremy}
+\todo[inline]{Please fill in the missing reduction rules. -Jeremy}
+\todo[inline]{Explain why you are using a CEK machine instead of
+  reduction semantics. -Jeremy}
+\todo[inline]{Change the order of parameters for applyCast to take
+  the value first and the cast second. -Jeremy}
+\todo[inline]{The definition of values is too loose for a cast.
+  You need to restrict the casts to just the inert ones. -Jeremy }
 We conjecture that this CEK machines agree with the \lazyD{} blame calculus in 
 \citet{siek2012interpretations}.
 We will show in \hyperref{sec:hyper-coercion} that this abstract machine is 
@@ -842,17 +864,49 @@ standard.
 
 UNDER CONSTRUCTION
 
+Fig.~\ref{fig:apply-Cast-UD}
+
 \begin{figure}
+
+  Syntax
+  \[
+  \begin{array}{rclr}
+    \stxrule{v}{values}{
+      \cdots \mid 
+      \vOOcast{v}{ \cOOcast{I}{l}{\star} } \mid
+      \vOOcast{v}{ \cOOcast{P}{l}{P} }
+    }
+  \end{array}
+  \]
   
   \fbox{$\mathit{applyCast}(v,c) = r$}
   \[
   \begin{array}{rclr}
-    \mathit{applyCast}(v,c) = r
+    \mathit{applyCast}(v, \cOOcast{\star}{l}{\star} ) &=& v \\
+    \mathit{applyCast}(v, \cOOcast{P}{l}{\star}) &=&
+        v \langle \cOOcast{P}{l}{I} \rangle
+          \langle \cOOcast{I}{l}{\star} \rangle
+        & \text{if } I \sim P, I \neq P \\  
+    \mathit{applyCast}(v, \cOOcast{\star}{l}{P}) &=&          
+        v \langle \cOOcast{\star}{l}{I} \rangle
+          \langle \cOOcast{I}{l}{P} \rangle
+        & \text{if } I \sim P, I \neq P \\  
+  \mathit{applyCast}(v \langle \cOOcast{I}{l}{\star} \rangle , \cOOcast{\star}{l}{I}) &=& v \\
+  \mathit{applyCast}(v \langle \cOOcast{I_1}{l}{\star} \rangle , \cOOcast{\star}{l}{I_2}) &=& \rOOfail{l} & \text{if } I_1 \neq I_2 \\
+  \mathit{applyCast}(v, \cOOcast{P_1}{l}{P_2}) &=&
+     v \langle \cOOcast{P_1}{l}{P_2} \rangle & \text{if } P_1 \smile P_2
   \end{array}
   \]
 
+
+  \caption{Definition of \textit{applyCast} for \lazyUD{}.}
+  \label{fig:apply-Cast-UD}
 \end{figure}
 
+
+% the following are temporary -Jeremy
+\clearpage
+\pagebreak
 
 \section{Background: Normal Coercion} \label{sec:coercion-calculus}
 
@@ -1925,5 +1979,6 @@ $ applyMiddle(\ell,m,v) $ and $ applyTail(t,v) $ are straightforward.
 \section{Appendix}
 
 Text of appendix \ldots
+
 
 \end{document}
