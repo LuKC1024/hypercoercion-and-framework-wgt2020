@@ -384,10 +384,6 @@ This implementation is based on the \lazyD{} coercion in
 Their result suggests that normal coercion is easy enough to implement in a 
 compiler. 
 
-Recently, \citet{new2019gradual} show that \eager{} strategies are 
-incompatible with $\eta$-equivalence of functions, which suggest that these 
-strategies are not very ideal. 
-
 So far, it seems that normal coercion is the best way to combine 
 space-efficiency and blame-tracking: normal coercion is claimed easy to 
 understand \cite{garcia2013calculating}\cite{siek2015blame} and is shown 
@@ -436,8 +432,11 @@ hypercoercion might scale better than supercoercion.
 We prove formally that the \lazyD{} (resp. \lazyUD{}) hypercoercion calculus 
 bisimulates the \lazyD{} (resp. \lazyUD{}) cast calculus. This is 
 the first bisimulation proof for the \lazyD{} cast calculus as far as we know.
-
+We care more about lazy strategies because recently, \citet{new2019gradual} 
+show that \eager{} strategies are incompatible with $\eta$-equivalence of 
+functions, which suggest that these strategies are not very ideal. 
 \todo[inline]{Explain why we care about \lazyD{} and \lazyUD{}. -Jeremy}
+\todo[inline]{Explained, not sure if it suffice. -KC}
 
 The structure of this paper is as follows. 
 Section \ref{sec:blame-calculus} reviews the state-of-art of $Lazy$ Blame 
