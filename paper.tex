@@ -1802,21 +1802,16 @@ Figure~\ref{fig:HC-UD-cast}
 This section presents our second contribution, a framework for proving 
 correctness of cast representations.
 In subsection~\ref{ssec:framework:cek}, we introduce \effCEK{C}, a family 
-of semantics (in the style of CEK machines) indexed by cast representations ($ 
-C $). 
+of space-efficient semantics (in the style of CEK machines) indexed by cast 
+representations ($ C $). 
 In subsection~\ref{secc:framework:bisim}, we prove when $ C $ is 
 $ surely \; \text{\lazyD} $, $ \judgeDeval{e}{o} $ if and only $ 
 \judgeSeval{C}{e}{o} $, that is, every $ surely \text{\lazyD} $ cast 
 representation respects the \lazyD\ cast calculus. 
 Proving a similar theorem for \lazyUD\ is in progress.
 
-\subsection{A Space-efficient CEK machine}
-\label{ssec:framework:cek}
-
-We define cast representations and \effCEK{C} 
-
-space-efficient CEK abstract 
-machine. This machine is parameterized over \emph{cast representation}. 
+Our space-efficient CEK machine is parameterized over \emph{cast 
+	representations}. 
 
 \begin{definition}[Cast Representation]
 	A cast representation is a set indexed by two types and has four interface 
@@ -1829,8 +1824,11 @@ machine. This machine is parameterized over \emph{cast representation}.
 	\end{description}
 \end{definition}
 
-\begin{definition}[Monoidic Cast Representation]
-	A cast representation is monoidic if 
+Some cast representations are monoids as well. They are useful in our 
+correctness proof.
+
+\begin{definition}[Monoid]
+	A cast representation is a monoid if 
 	for all $c : T_1 \Longrightarrow T_2$,
 	$c_1 : T_1 \Longrightarrow T_2$,
 	$c_2 : T_2 \Longrightarrow T_3$, and
@@ -1841,6 +1839,9 @@ machine. This machine is parameterized over \emph{cast representation}.
 		\item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
 	\end{enumerate}
 \end{definition}
+
+\subsection{A Space-efficient CEK machine}
+\label{ssec:framework:cek}
 
 \begin{figure}
 	Syntax
@@ -1963,16 +1964,33 @@ machine. This machine is parameterized over \emph{cast representation}.
 	\label{machine-cekcc}
 \end{figure}
 
-\figref{machine-cekcc} defines the machine. 
+\figref{machine-cekcc} defines the space-efficient CEK machine \effCEK{C}. This 
+machine is similar to \ineffCEK{}. 
+The most important differences are in values and continuations.
+In \ineffCEK\, we have one value constructor for all casted value.
+In \effCEK{C}, however, we do not have this generic value constructor, 
+instead we push those casts into the value constructors most of the time and 
+use $ \hcvOOinj{P}{v} $ to construct values injected to $ \TOOdyn $.
+Non-casted values in \ineffCEK\ correspond to values in \effCEK{C} where the 
+casts are identity (i.e. constructed by $ id(T) $).
+In \ineffCEK\, a continuation have zero or more casts at the top.
+In \effCEK{C}, however, every continuation has exactly one cast at the top.
+Continuations in \ineffCEK\ that have no casts at the top correspond to 
+continuations in \effCEK{C}\ whose casts are identity.
+And continuations in \ineffCEK\ that have many casts at the top correspond to 
+continuations in \effCEK{C}\ where those casts are composed by $ 
+seq(c,c) $.
+
+
 Let $ v $ range over value. A value is either the unit value, function, pair, 
 left injection of sum, right injection of sum, and injection to $ \TOOdyn $.
 Cast results ($ r $) and machine states ($ s $) are as before. 
 Let $ \kappa $ range over continuations and let $ k $ range over 
 pre-continuations. 
-A continuation is now a pair where the first part is a cast and the second 
-part is a pre-continuation. 
-Pre-continuation are like the continuations before.
+A continuation is now a pre-continuation capped with a cast.
+Pre-continuation are like the continuations in \ineffCEK.
 
+\todo[inline]{KC needs to describe added rules. -KC}
 We list a fraction of reduction rules due to space limitation.
 When values are constructed, their hypercoercion parts are filled with outputs 
 of $ id $. For instance, when a function value is constructed, its first part 
