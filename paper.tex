@@ -621,7 +621,10 @@ because we need the codomain when evaluating cast calculus with hypercoercions.
 \todo[inline]{Why do you annotate the codomain of lambda abstractions
 	explicitly? -Jeremy
 	\\---\\
-	Because I apply $ id(\cdot) $ to the codomain in the HC CEK. -KC}
+	Because I apply $ id(\cdot) $ to the codomain in the HC CEK. -KC
+        \\---\\
+        The answer you put in the text is to vague. -JS
+        }
 Let $ T $ range over types. A type is either the dynamic type $ \star $
 (a.k.a. $ \mathtt{Dyn} $, $ \mathbb{?} $, or $ \mathtt{Unknown} $), 
 or a pre-type. 
@@ -858,7 +861,12 @@ convenient because space-efficiency is about compressing continuations.
 	the value first and the cast second. -Jeremy
 	\\---\\
 	Could you tell me why taking the value first is better?
-	I am always taking the target of induction first. -KC}
+	I am always taking the target of induction first. -KC
+	\\---\\
+        It's better because it matches the postfix syntax we are using for
+        casts. Currently line 2 of applyCast for D is difficult to read,
+        compare it with line 4 of applyCast for UD. -JS
+        }
 
 Let $ r $ range over cast results. A cast result is either a success, which 
 brings back a value, or a failure, which brings a blame label.
