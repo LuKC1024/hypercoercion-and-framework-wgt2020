@@ -319,168 +319,232 @@ languages</concept_desc>
 \todo[inline]{The first paragraph of the introduction should summarize
   the entire introduction, and in some sense, the entire paper. -JS}
 
-Around 2006, many work on integrating dynamic typing and static typing emerge, 
-notably gradual types \citep{siek2006gradual} and hybrid types 
-\citep{flanagan2006hybrid}. 
-Later \citet{wadler2009well} introduces Blame Calculus, an intermediate 
-language for gradual types and hybrid types. 
-Blame Calculus throws a blame label when a runtime type-check fails.
-Labels provide useful debugging information, therefore are necessary for 
-practical use of gradually typed languages.
+There are two basic ways to represent cast efficiently: coercions 
+\citep{herman2010space}\citep{siek2009exploring}\citep{siek2012interpretations} 
+\citep{siek2015blame} and threesomes 
+\citep{siek2010threesomes}\citep{garcia2013calculating}. They have different 
+strength and 
+weakness. \citet{garcia2013calculating} and \citet{siek2015blame} claim that 
+coercion is easy to understand, but hard to implement, while threesome is easy 
+to implement, but hard to understand. \citet{garcia2013calculating} in addition 
+claims that coercion is more difficult to reason about formally, because 
+composition of coercions is not structurally recurisive. The developers of 
+Grift \citep{kuhlenschmidt2018efficient} affirm that it is tricky to convince 
+their proof assistants that composition of coercions terminates.
 
-Implementing gradually typed languages naively on top of blame calculus, 
-however, suffices sever space leak.
-For example, translation to Blame Calculus can wrap some expressions with code 
-that performs runtime type-checking (casts), including expressions at 
-tail positions. Thus, mutually tail-recursive functions in source language can 
-consume unbounded space at runtime. There are more examples of space leaking in 
-\citet{herman2010space}.
+We present a new cast representation, hypercoercion, which has a structurally 
+recursive composition. We believe hypercoercion is easier to understand than 
+threesome, because its syntax is close to coercion. For instance, the 
+coercion approach represents $ 
+\cOOcast{\TOOdyn}{l}{\cOOcast{\POOunit}{l'}{\TOOdyn}} $ as $ \POOunit 
+?^{l} ; \POOunit\! $, while the hypercoercion approach gives $ 
+\hyperCoercionC{?^l}{\POOunit}{!} $. In Section~\ref{sec:background}, we review 
+coercion together with cast calculus, the intermediate languages in 
+\citet{kuhlenschmidt2018efficient}. And we present hypercoerion in 
+Section~\ref{sec:hypercoercion-definition}.
 
-In 2007, \citet{herman2010space} proposes a solution to this problem by 
-representing casts with coercion \citep{henglein1994dynamic}, 
-which can be composed and normalized. Every coercion looks like a list of 
-trees. For normal coercion, the length of the list is bounded by a small 
-constant. And the depths of trees do not grow during composition and
-normalization. These two facts implies that coercion is a space-efficient cast 
-representation. This coercion, however, does not support blame 
-tracking. 
+Another strength of hypercoercion over coercion is that hypercoercion might 
+have a more compact memory representations ...
+\todo[inline]{Could Jeremy explain here why hypercoercion is more compact in 
+memory? -KC}
 
-After that, many efforts have been made to combine blame tracking and 
-space efficiency. 
+Many of the existing research on coercions or threesomes include proof(s) of 
+correctness, that is, the cast calculus reduces to an observation ($ e 
+\Downarrow o $) if and only if their calcului reduce to the same observation ($ 
+e \Downarrow_{*} o $), where an observation is a value constructor or a blame. 
+Despite the striking similarity of these proves, they are all built from ground 
+up. We present a framework for proving correctness of cast reprensentation 
+(Section~\ref{sec:framework}), and use it to prove the correctness of 
+hypercoercion (Section~\ref{sec:hypercoercion-correctness}). We are optimistic 
+that this framework is general enough to include coercion and threesome.
 
-\citet{siek2009exploring} present another intermediate langauge for gradually 
-typed language, cast calculus \castCalculus\ and achieve both blame-tracking 
-and space-efficiency for this language by decorating \citet{herman2010space}'s 
-coercions with labels. \castCalculus\ is simply typed lambda calculus extended 
-with the dynamic type and cast expressions. The labels in \castCalculus{}, 
-unlike their counterparts in the Blame Calculus, have no polarity. 
-They also propose that there are four blame strategies for \castCalculus{}:
-$ \{Lazy, Eager\} \times \{D, UD\} $. Eager strategies detect more potential 
-type errors, but blame more programs. $ D $ and $ UD $ assign blame labels 
-differently. They claim that their \lazyUD\ cast calculus is the same as the 
-Blame Calculus, modulo label polarity, and prove that their their \lazyUD\ 
-coercion calculus simulates their \lazyUD{} cast calculus. It is unknown, 
-however, whether the simulation in the other direction also works.
-\todo[inline]{Is it important to this paper whether there is a
-simulation in the other direction? -JS
-\\ --- \\
-I guessed to say coercion is correct the other direction is 
-necessary. -KC}
-
-\citet{siek2010threesomes} proposes another approach to combine blame 
-tracking and space efficiency. Their solution represents casts with threesomes, 
-a novel cast representation. Threesome is proved space-efficient as well.
-They prove that their calculus bisimulates the \lazyUD{} coercion 
-calculus in \citet{siek2009exploring} and the Blame Calculus in 
-\citet{wadler2009well}.
-
-\citet{siek2012interpretations} present a revised coercion calculi.
-They simplify the coercion calculi by only 
-working with normal coercions (i.e. coercions in normal form). 
-They conjecture that their revised coercion calculi bisimulate the 
-corresponding cast calculi.
-
-\citet{garcia2013calculating} develops
-threesome for other blame strategies. After studying in depth the connection 
-between coercion and threesome,
-he claims that normal coercion with labels is easy to understand but hard to 
-implement and hard to reason about, and that 
-threesome with labels, however, is easy to implement and easy to reason about 
-but hard to understand. 
-His claim is mostly affirmed by the group of people who develop threesome 
-(\citet{siek2015blame}).
-His threesome calculi are equivalent to the coercion calculi of
-\citet{siek2009exploring} because the former ones are derived from the latter 
-ones.
-
-\citet{siek2015blame} revisit the coercion-based approach. They revise
-the \lazyUD{} coercion in \citet{siek2012interpretations} and prove
-that their revised coercion calculus bisimulates the \lazyUD{} Blame
-Calculus \citet{wadler2009well}.
-
-Last year, \citet{kuhlenschmidt2018efficient} present Grift, a compiler for a 
-gradually typed language of the same name. 
-This implementation is based on the \lazyD{} coercion in 
-\citet{siek2012interpretations}.
-Their result suggests that normal coercion is easy enough to implement in a 
-compiler. 
-
-So far, it seems that normal coercion is the best way to combine 
-space-efficiency and blame-tracking: normal coercion is claimed easy to 
-understand \citep{garcia2013calculating}\citep{siek2015blame} and is shown 
-easy enough to implement in a compiler \citep{kuhlenschmidt2018efficient}.
-Normal coercion is still not satisfactory, however, in at least two aspects.
-Firstly, as we mentioned above, it is hard to reason about normal coercion. The 
-major difficulty is from its non-structurally recursive composition.
-For instance, the developers of Grift report it is tricky to convince
-their proof assistants that the composition terminates.
-
-Secondly, the definition of normal coercion lies unnecessarily on top 
-of coercion: all coercions are normal when they are initially constructed, and 
-\citet{siek2012interpretations} have shown an function that 
-composes and produces normal coercions.
-%
-\todo[inline]{Many researchers would view this as a positive thing,
-  not a negative. For example, the notion of normal forms comes up
-  over and over again in mathematics and logic. -JS
-\\ --- \\
-I guess having a notion of normal forms is more convenient when a 
-notion of normalization is convenient. But we don't even need a notion of 
-normalization for cast representations. -KC
-\\ --- \\
-FWIW, I agree with you. But the point is that the argument is not
-likely to be convincing to the reader, so we're probably better off
-not wasting space on it. -JS
-}
-
-Perhaps unsurprisingly, threesome has a structurally recursive compose and a 
-self-standing definition. Together with \citet{garcia2013calculating}'s 
-work, they suggest that there might be a cast representation whose definition 
-is self-standing, and whose composition is structurally recursive. 
-supercoercion introduced in \citet{garcia2013calculating} could be a promising 
-candidate. It is believed even more complicated than threesome 
-\citep{siek2015blame}. In fact, it uses 10 constructors to deal with an 
-elementary type system with only base types and 
-function types. And four constructors are directly related to function types. 
-Thus, supercoercion might not scale very well to more sophisticated type 
-systems. 
-
-We present hypercoercion, a cast representation whose composition is 
-structurally recursive, and whose definition is self-standing. What's more, it 
-should be at 
-least as easy to implement and understand as normal coercions, because there is 
-a clear connection between them, as we will show in Section 
-\ref{sec:hypercoercion}.
-Our hypercoercion considers sum types and product types, which are not 
-considered in all proofs above. Adding each of them requires us to add only one 
-new constructor to a component of hypercoercion. This suggests that 
-hypercoercion might scale better than supercoercion.
-
-We prove formally that the \lazyD{} (resp. \lazyUD{}) hypercoercion calculus 
-bisimulates the \lazyD{} (resp. \lazyUD{}) cast calculus. This is 
-the first bisimulation proof for the \lazyD{} cast calculus as far as we know.
-We care more about lazy strategies because recently, \citet{new2019gradual} 
+Some readers might know that there are four blame strategies: $ \{Lazy, Eager\} 
+\times \{D, UD\} $. Eager strategies detect more potential type errors, but 
+blame more programs. $ D $ and $ UD $ assign blame labels differently.
+We focus on lazy strategies because recently \citet{new2019gradual} 
 show that \eager{} strategies are incompatible with $\eta$-equivalence of 
-functions, which suggest that these strategies are not very ideal. 
-\todo[inline]{Explain why we care about \lazyD{} and \lazyUD{}. -JS
-  \\ --- \\ Explained, not sure if it suffice. -KC
-  \\ --- \\
-  That's good that you explained why lazy instead of eager.
-  (Also, you should add that we are interested in lazy because
-  that's what Grift does.)\\
-  But you haven't explained why we are interested in both D and UD. -JS
-}
+functions, which suggest that they are not very ideal. 
+\todo[inline]{Why do we need to explain why both LD and LUD? -KC}
 
-The structure of this paper is as follows. 
-Section \ref{sec:blame-calculus} reviews the state-of-art of $Lazy$ cast 
-calculi. 
-Section \ref{sec:coercion-calculus} reviews the state-of-art of $Lazy$ Coercion 
-Calculi. 
-In section \ref{sec:hypercoercion} we present hypercoercion.
-Section \ref{sec:conclude} concludes.
-\todo[inline]{Lots of missing sections. -JS}
+Here are our major contribution:
+\begin{itemize}
+	\item hypercoercion, a new space-efficient cast representation, which has a 
+	structurally recursive composition and has a more compact memory 
+	representation.
+	\item a framework in Agda for proving correctness of cast represantations. 
+	We conjecture that both coercion and threesome can fit into this framework.
+	\item a formal proof that hypercoercion respect the semantics of cast 
+	calculus
+\end{itemize}
 
-\section{Background} \label{sec:blame-calculus}
+%Around 2006, many work on integrating dynamic typing and static typing emerge, 
+%notably gradual types \citep{siek2006gradual} and hybrid types 
+%\citep{flanagan2006hybrid}. 
+%Later \citet{wadler2009well} introduces Blame Calculus, an intermediate 
+%language for gradual types and hybrid types. 
+%Blame Calculus throws a blame label when a runtime type-check fails.
+%Labels provide useful debugging information, therefore are necessary for 
+%practical use of gradually typed languages.
+%
+%Implementing gradually typed languages naively on top of blame calculus, 
+%however, suffices sever space leak.
+%For example, translation to Blame Calculus can wrap some expressions with code 
+%that performs runtime type-checking (casts), including expressions at 
+%tail positions. Thus, mutually tail-recursive functions in source language can 
+%consume unbounded space at runtime. There are more examples of space leaking 
+%in 
+%\citet{herman2010space}.
+%
+%In 2007, \citet{herman2010space} proposes a solution to this problem by 
+%representing casts with coercion \citep{henglein1994dynamic}, 
+%which can be composed and normalized. Every coercion looks like a list of 
+%trees. For normal coercion, the length of the list is bounded by a small 
+%constant. And the depths of trees do not grow during composition and
+%normalization. These two facts implies that coercion is a space-efficient cast 
+%representation. This coercion, however, does not support blame 
+%tracking. 
+%
+%After that, many efforts have been made to combine blame tracking and 
+%space efficiency. 
+%
+%\citet{siek2009exploring} present another intermediate langauge for gradually 
+%typed language, cast calculus \castCalculus\ and achieve both blame-tracking 
+%and space-efficiency for this language by decorating \citet{herman2010space}'s 
+%coercions with labels. \castCalculus\ is simply typed lambda calculus extended 
+%with the dynamic type and cast expressions. The labels in \castCalculus{}, 
+%unlike their counterparts in the Blame Calculus, have no polarity. 
+%They also propose that there are four blame strategies for \castCalculus{}:
+%$ \{Lazy, Eager\} \times \{D, UD\} $. Eager strategies detect more potential 
+%type errors, but blame more programs. $ D $ and $ UD $ assign blame labels 
+%differently. They claim that their \lazyUD\ cast calculus is the same as the 
+%Blame Calculus, modulo label polarity, and prove that their their \lazyUD\ 
+%coercion calculus simulates their \lazyUD{} cast calculus. It is unknown, 
+%however, whether the simulation in the other direction also works.
+%\todo[inline]{Is it important to this paper whether there is a
+%simulation in the other direction? -JS
+%\\ --- \\
+%I guessed to say coercion is correct the other direction is 
+%necessary. -KC}
+%
+%\citet{siek2010threesomes} proposes another approach to combine blame 
+%tracking and space efficiency. Their solution represents casts with 
+%threesomes, 
+%a novel cast representation. Threesome is proved space-efficient as well.
+%They prove that their calculus bisimulates the \lazyUD{} coercion 
+%calculus in \citet{siek2009exploring} and the Blame Calculus in 
+%\citet{wadler2009well}.
+%
+%\citet{siek2012interpretations} present a revised coercion calculi.
+%They simplify the coercion calculi by only 
+%working with normal coercions (i.e. coercions in normal form). 
+%They conjecture that their revised coercion calculi bisimulate the 
+%corresponding cast calculi.
+%
+%\citet{garcia2013calculating} develops
+%threesome for other blame strategies. After studying in depth the connection 
+%between coercion and threesome,
+%he claims that normal coercion with labels is easy to understand but hard to 
+%implement and hard to reason about, and that 
+%threesome with labels, however, is easy to implement and easy to reason about 
+%but hard to understand. 
+%His claim is mostly affirmed by the group of people who develop threesome 
+%(\citet{siek2015blame}).
+%His threesome calculi are equivalent to the coercion calculi of
+%\citet{siek2009exploring} because the former ones are derived from the latter 
+%ones.
+%
+%\citet{siek2015blame} revisit the coercion-based approach. They revise
+%the \lazyUD{} coercion in \citet{siek2012interpretations} and prove
+%that their revised coercion calculus bisimulates the \lazyUD{} Blame
+%Calculus \citet{wadler2009well}.
+%
+%Last year, \citet{kuhlenschmidt2018efficient} present Grift, a compiler for a 
+%gradually typed language of the same name. 
+%This implementation is based on the \lazyD{} coercion in 
+%\citet{siek2012interpretations}.
+%Their result suggests that normal coercion is easy enough to implement in a 
+%compiler. 
+%
+%So far, it seems that normal coercion is the best way to combine 
+%space-efficiency and blame-tracking: normal coercion is claimed easy to 
+%understand \citep{garcia2013calculating}\citep{siek2015blame} and is shown 
+%easy enough to implement in a compiler \citep{kuhlenschmidt2018efficient}.
+%Normal coercion is still not satisfactory, however, in at least two aspects.
+%Firstly, as we mentioned above, it is hard to reason about normal coercion. 
+%The 
+%major difficulty is from its non-structurally recursive composition.
+%For instance, the developers of Grift report it is tricky to convince
+%their proof assistants that the composition terminates.
+%
+%Secondly, the definition of normal coercion lies unnecessarily on top 
+%of coercion: all coercions are normal when they are initially constructed, and 
+%\citet{siek2012interpretations} have shown an function that 
+%composes and produces normal coercions.
+%%
+%\todo[inline]{Many researchers would view this as a positive thing,
+%  not a negative. For example, the notion of normal forms comes up
+%  over and over again in mathematics and logic. -JS
+%\\ --- \\
+%I guess having a notion of normal forms is more convenient when a 
+%notion of normalization is convenient. But we don't even need a notion of 
+%normalization for cast representations. -KC
+%\\ --- \\
+%FWIW, I agree with you. But the point is that the argument is not
+%likely to be convincing to the reader, so we're probably better off
+%not wasting space on it. -JS
+%}
+%
+%Perhaps unsurprisingly, threesome has a structurally recursive compose and a 
+%self-standing definition. Together with \citet{garcia2013calculating}'s 
+%work, they suggest that there might be a cast representation whose definition 
+%is self-standing, and whose composition is structurally recursive. 
+%supercoercion introduced in \citet{garcia2013calculating} could be a promising 
+%candidate. It is believed even more complicated than threesome 
+%\citep{siek2015blame}. In fact, it uses 10 constructors to deal with an 
+%elementary type system with only base types and 
+%function types. And four constructors are directly related to function types. 
+%Thus, supercoercion might not scale very well to more sophisticated type 
+%systems. 
+%
+%We present hypercoercion, a cast representation whose composition is 
+%structurally recursive, and whose definition is self-standing. What's more, it 
+%should be at 
+%least as easy to implement and understand as normal coercions, because there 
+%is 
+%a clear connection between them, as we will show in Section 
+%\ref{sec:hypercoercion}.
+%Our hypercoercion considers sum types and product types, which are not 
+%considered in all proofs above. Adding each of them requires us to add only 
+%one 
+%new constructor to a component of hypercoercion. This suggests that 
+%hypercoercion might scale better than supercoercion.
+%
+%We prove formally that the \lazyD{} (resp. \lazyUD{}) hypercoercion calculus 
+%bisimulates the \lazyD{} (resp. \lazyUD{}) cast calculus. This is 
+%the first bisimulation proof for the \lazyD{} cast calculus as far as we know.
+%We care more about lazy strategies because recently, \citet{new2019gradual} 
+%show that \eager{} strategies are incompatible with $\eta$-equivalence of 
+%functions, which suggest that these strategies are not very ideal. 
+%\todo[inline]{Explain why we care about \lazyD{} and \lazyUD{}. -JS
+%  \\ --- \\ Explained, not sure if it suffice. -KC
+%  \\ --- \\
+%  That's good that you explained why lazy instead of eager.
+%  (Also, you should add that we are interested in lazy because
+%  that's what Grift does.)\\
+%  But you haven't explained why we are interested in both D and UD. -JS
+%}
+%
+%The structure of this paper is as follows. 
+%Section \ref{sec:blame-calculus} reviews the state-of-art of $Lazy$ cast 
+%calculi. 
+%Section \ref{sec:coercion-calculus} reviews the state-of-art of $Lazy$ 
+%Coercion 
+%Calculi. 
+%In section \ref{sec:hypercoercion} we present hypercoercion.
+%Section \ref{sec:conclude} concludes.
+%\todo[inline]{Lots of missing sections. -JS}
+
+\section{Background} \label{sec:background}
 
 In this section, we review lazy cast calculi (\ref{sec:cast-calculi}) and
 normal coercion (\ref{sec:coercion-calculus}). 
@@ -1236,7 +1300,7 @@ Three observations on this definition leads to hypercoercion:
 \end{enumerate}
 
 
-\section{hypercoercion} \label{sec:hypercoercion}
+\section{Definition of Hypercoercion} \label{sec:hypercoercion-definition}
 
 \begin{figure}
 	Syntax
@@ -1721,8 +1785,8 @@ Figure~\ref{fig:HC-UD-cast}
 \end{proposition}
 
 
-\section{Space-efficient CEK Abstract Machine}
-\label{sec:CEKS}
+\section{a framework for proving correctness of cast representations}
+\label{sec:framework}
 
 This section presents our second contribution, a space-efficient CEK abstract 
 machine. This machine is parameterized over \emph{cast representation}. 
@@ -1905,6 +1969,7 @@ evaluation are standard. Value typing ($ \judgeType{v}{T} $) is straightforward.
 
 
 \section{Correctness Proof of \lazyD{} hypercoercions}
+\label{sec:hypercoercion-correctness}
 
 \todo[inline]{Give a high-level summary of the proof.
   The summary should be enough so that the reader knows a bit
@@ -1965,43 +2030,42 @@ Subsection~\ref{sec:LDHC-correct} that the \lazyD\ HC is in this subset.
 \end{definition}
 
 \subsection{All Surely \lazyD{} and Monoidic Cast Representations Respect 
-$\mathcal{C}_{\mathtt{D}}$}
+\ineffCEKD}
 
 \todo[inline]{``monoidic'' is not a word. -JS}
 
 We use bisimulation to proof equivalence between the two machines.
 \todo[inline]{Which two machines? -JS}
 The bisimulation relation of states ($\eqvDS{C}{s}{s}$) is mostly derived from 
-the definitions of $ \mathcal{C} $. Exceptions include the relations from 
+the definitions of \ineffCEKD. Exceptions include the relations from 
 continuations to pre-continuations, between continuations, and between values. 
 We omit subscripts when there is no ambiguity.
 
 \todoKC{write down the exceptional bisimilarity relations}
 
 
-\begin{lemma}[Weak Bisimulation between $ \mathcal{S}(\cdot) $ and $ 
-	\mathcal{C} $]
+\begin{lemma}[Weak Bisimulation between $ \mathcal{S}(\cdot) $ and \ineffCEKD]
 	\label{thm:surely-monoidic-reduce}
 	For all cast representations $ C $, 
 	if $ C $ is surely \lazyD{} and monoidic,
-	$ s_1 \in \mathcal{C} $,
+	$ s_1 \in \text{\ineffCEKD} $,
 	$ s_2 \in \mathcal{S}(C) $, and
 	$ s_1 \approx s_2 $, 
 	\begin{enumerate}
-		\item If $ \judgeCreduce{s_1}{s_3} $,
+		\item If $ \judgeDreduce{s_1}{s_3} $,
 		then
-		there exist $ s_5 \in \mathcal{C} $, $ s_4 \in \mathcal{S}(C) $,
+		there exist $ s_5 \in \text{\ineffCEKD} $, $ s_4 \in \mathcal{S}(C) $,
 		such that \begin{itemize}
 			\item $ s_5 \approx s_4 $, and
 			\item $ \judgeSreduce{C}{s_2}{s_4} $,
-			\item $ \judgeCreduceTrans{s_3}{s_5} $
+			\item $ \judgeDreduceTrans{s_3}{s_5} $
 		\end{itemize}
 		\item If $ \judgeSreduce{C}{s_2}{s_4} $,
 		then
 		there exist $ s_3 \in \mathcal{C} $,
 		such that \begin{itemize}
 			\item $ s_3 \approx s_4 $
-			\item $ \judgeCreduceTrans{s_1}{s_3} $
+			\item $ \judgeDreduceTrans{s_1}{s_3} $
 		\end{itemize}
 	\end{enumerate}
 \end{lemma}
@@ -2015,7 +2079,7 @@ We omit subscripts when there is no ambiguity.
 	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is surely 
 	\lazyD{} and monoidic,
 	\[
-	\judgeCeval{e}{o} \; \text{if and only if} \; 
+	\judgeDeval{e}{o} \; \text{if and only if} \; 
 	\judgeSeval{C}{e}{o}
 	\]
 \end{lemma}
@@ -2026,7 +2090,7 @@ We omit subscripts when there is no ambiguity.
     Proofs by induction are not ``immediate''. -JS}
 \end{proof}
 
-\subsection{\lazyD\ Hyper-coercion Respect $ \mathcal{C}_\mathtt{D} $}
+\subsection{\lazyD\ Hyper-coercion Respect \ineffCEKD}
 \label{sec:LDHC-correct}
 
 \figref{hc-applyCast} defines $ applyCast $, the last interface function.
