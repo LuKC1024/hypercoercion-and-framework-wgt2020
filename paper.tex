@@ -1746,8 +1746,8 @@ machine. This machine is parameterized over \emph{cast representation}.
 	
 	\stxrule{v}{values}{
 		\hcvOOtt \mid
-		\hcvOOfun{c_1}{\rho}{x}{b}{c_2} \mid
-		\hcvOOcons{v_1}{c_1}{v_2}{c_2}
+		\hcvOOfun{c}{\rho}{x}{e}{c} \mid
+		\hcvOOcons{v}{c}{v}{c}
 	}
 	\stxrulecont{
 		\hcvOOinl{v}{c} \mid
@@ -1764,7 +1764,7 @@ machine. This machine is parameterized over \emph{cast representation}.
 		\sOOhalt{o}
 	}
 	\stxrule{\kappa}{continuation}{
-		(c,k)
+		\langle c \rangle k
 	}
 	\stxrule{k}{pre-continuations}{
 		\hckOOmt \mid{}
@@ -1780,9 +1780,9 @@ machine. This machine is parameterized over \emph{cast representation}.
 		\mathtt{snd} \; \kappa
 	}
 	\stxrulecont{
-		\mathtt{case_1} \; e_1 \; e_2 \; \rho \; \kappa \mid
-		\mathtt{case_2} \; v   \; e   \; \rho \; \kappa \mid{}
-		\mathtt{case_3} \; v_1 \; v_2 \; \rho \; \kappa
+		\mathtt{case_1} \; e \; e \; \rho \; \kappa \mid
+		\mathtt{case_2} \; v \; e \; \rho \; \kappa \mid{}
+		\mathtt{case_3} \; v \; v \; \rho \; \kappa
 	}
 	\end{array}
 	\]
@@ -1790,7 +1790,7 @@ machine. This machine is parameterized over \emph{cast representation}.
 	Build continuation \fbox{$ cont(k) = \kappa $}
 	\[
 	\begin{array}{rclc}
-	\funrule{cont(k)}{(id(T_1),k)}{
+	\funrule{cont(k)}{\langle id(T_1) \rangle k}{
 		\sidecond{k : T_1 \Longrightarrow T_2}}
 	\end{array}
 	\]
@@ -1798,7 +1798,7 @@ machine. This machine is parameterized over \emph{cast representation}.
 	Extend continuation \fbox{$ ext(c,\kappa) = \kappa $}
 	\[
 	\begin{array}{rclc}
-	\funrule{ext(c_1,(c_2,k))}{(seq(c_1,c_2),k)}{}
+	\funrule{ext(c_1,\langle c_2 \rangle k)}{\langle seq(c_1,c_2) \rangle k}{}
 	\end{array}
 	\]
 	
@@ -1859,14 +1859,6 @@ machine. This machine is parameterized over \emph{cast representation}.
 	\caption{Space-efficient CEK machine $ \mathcal{S}(C) $}
 	\label{machine-cekcc}
 \end{figure}
-
-\todo[inline]{In the definition of values, there is a ``b'' in the fun
-  case. I don't see any definitions of a nonterminal ``b''.
-  Perhaps you meant ``e''. -JS}
-\todo[inline]{In the grammars for values and pre-continuations,
-   remove all the subscripts on c's and v's. -JS}
-\todo[inline]{Change the syntax $(c,k)$ for continuations to
-  $\langle c \rangle$ k. -JS}
 
 \figref{machine-cekcc} defines the machine. 
 Let $ v $ range over value. A value is either the unit value, function, pair, 
