@@ -1961,8 +1961,8 @@ $\mathcal{D}$}
 
 We use bisimulation to proof equivalence between the two machines.
 \todo[inline]{Which two machines? -JS}
-The state bisimilarity ($\eqvDS{C}{s}{s}$) is mostly derived from the 
-definitions of $ \mathcal{D} $. Exceptions include the bisimilarity relations 
+The bisimulation relation of states ($\eqvDS{C}{s}{s}$) is mostly derived from 
+the definitions of $ \mathcal{D} $. Exceptions include the relations 
 between continuations, between values, and from continuations to 
 pre-continuations. We omit subscripts when there is no ambiguity.
 
@@ -2109,11 +2109,16 @@ With the properties of surely \lazyD{} cast representation, it is
 straightforward to proof that 
 all machines instantiated with these cast representations bisimulate each 
 other. 
-The state bisimilarity ($\eqvS{C}{C}{s}{s}$) is 
+The bisimulation relation of states ($\eqvS{C}{C}{s}{s}$) is 
 derived from the definition of states.
 \todo[inline]{The term ``bisimilarity'' has a different technical meaning from
 	``bisimulation relation''. I don't think you are using it properly
-	in the above sentence. -JS}
+	in the above sentence. -JS
+\\---\\
+Fixed.
+I learn that $ s_1 \sim s_1 $ reads ``$ s_1 $ is bisimilar to $ s_2 $'' from 
+wikipedia. (https://en.wikipedia.org/wiki/Bisimulation).
+-KC}
 We omit subscripts when there is no 
 ambiguity. \begin{gather*}
 \inference{
