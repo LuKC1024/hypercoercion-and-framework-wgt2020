@@ -2026,10 +2026,10 @@ Subsection~\ref{sec:LDHC-correct} that the \lazyD\ HC is in this subset.
 		$ 
 		\item $ 
 		applyCast(cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}),\hcvOOinl{v}{c})
-		= \rOOsucc{(\hcvOOinl{v}{seq(c,cast(T_1,l,T_2))})} $
+		= \rOOsucc{(\hcvOOinl{v}{seq(c,cast(T_1,l,T_3))})} $
 		\item $ 
 		applyCast(cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}),\hcvOOinr{v}{c})
-		= \rOOsucc{(\hcvOOinr{v}{seq(c,cast(T_3,l,T_4))})} $
+		= \rOOsucc{(\hcvOOinr{v}{seq(c,cast(T_2,l,T_4))})} $
 	\end{enumerate}
 \end{definition}
 
