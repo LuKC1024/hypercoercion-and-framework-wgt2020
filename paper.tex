@@ -1757,6 +1757,14 @@ machine. This machine is parameterized over \emph{cast representation}.
 	\label{machine-cekcc}
 \end{figure}
 
+\todo[inline]{In the definition of values, there is a ``b'' in the fun
+  case. I don't see any definitions of a nonterminal ``b''.
+  Perhaps you meant ``e''. -JS}
+\todo[inline]{In the grammars for values and pre-continuations,
+   remove all the subscripts on c's and v's. -JS}
+\todo[inline]{Change the syntax $(c,k)$ for continuations to
+  $\langle c \rangle$ k. -JS}
+
 \figref{machine-cekcc} defines the machine. 
 Let $ v $ range over value. A value is either the unit value, function, pair, 
 left injection of sum, right injection of sum, and injection to $ \TOOdyn $.
@@ -1790,6 +1798,10 @@ evaluation are standard. Value typing ($ \judgeType{v}{T} $) is straightforward.
 
 
 \section{Correctness Proof of \lazyD{} hypercoercions}
+
+\todo[inline]{Give a high-level summary of the proof.
+  The summary should be enough so that the reader knows a bit
+  about why you introduce the various definitions below. -JS}
 
 \subsection{\lazyD\ Cast Representations}
 
@@ -1848,7 +1860,10 @@ Subsection~\ref{sec:LDHC-correct} that the \lazyD\ HC is in this subset.
 \subsection{All Surely \lazyD{} and Monoidic Cast Representations Respect 
 $\mathcal{D}$}
 
+\todo[inline]{``monoidic'' is not a word. -JS}
+
 We use bisimulation to proof equivalence between the two machines.
+\todo[inline]{Which two machines? -JS}
 The state bisimilarity ($\eqvDS{C}{s}{s}$) is mostly derived from the 
 definitions of $ \mathcal{D} $. Exceptions include the bisimilarity relations 
 between continuations, between values, and from continuations to 
@@ -1898,7 +1913,10 @@ pre-continuations. We omit subscripts when there is no ambiguity.
 	\]
 \end{lemma}
 \begin{proof}
-	Immediately from Lemma~\ref{thm:surely-monoidic-reduce}.
+  Immediately from Lemma~\ref{thm:surely-monoidic-reduce}.
+  \todo[inline]{I'm guessing that you prove this lemma by induction,
+    using Lemma~\ref{thm:surely-monoidic-reduce}.
+    Proofs by induction are not ``immediate''. -JS}
 \end{proof}
 
 \subsection{\lazyD\ Hyper-coercion Respect $ \mathcal{D} $}
