@@ -637,6 +637,8 @@ blame in lazy cast strategies -- casting a value to a shallowly inconsistent
 type leads to a blame. Shallow-consistency is reflexive, symmetric, but 
 not transitive.
 
+Let $ c $ range over casts. A cast is a triple of a type, a label, and a type.
+
 Let $ e $ range over terms. Most terms are standard. We annotate the codomain 
 of lambda abstractions explicitly because we need it when evaluating cast 
 calculus with hypercoercion. We have two additional terms: cast expressions and 
@@ -852,26 +854,22 @@ convenient because space-efficiency is about compressing continuations.
 	Could you tell me why taking the value first is better?
 	I am always taking the target of induction first. -KC}
 
-
-Let $ c $ range over casts. A cast is a triple of a type, a label, and a type.
-Let $ v $ range over values. A value is either a function, the 
-element of unit, a pair, a left injection, a right injection, or a casted value.
-The cast around a casted value is not arbitrary, as shown by value typing: the 
-source type must be a pre-type, and the source and the target must be 
-shallow-consistent.
 Let $ r $ range over cast results. A cast result is either a success, which 
-brings a value, or a failure, which brings a blame label.
+brings back a value, or a failure, which brings a blame label.
+
 Let $ s $ range over machine states. A state is either looking at an 
 expression to decide what to do next, returning a value to a continuation, or 
 halting with an observation.
-Let $ \kappa $ range over continuations. $ \mathtt{mt} $ is the top 
+
+Let $ \kappa $ range over continuations. $ \mathtt{stop} $ is the top 
 continuation. The remaining continuations correspond to expressions. For 
 example, $ (\mathtt{cons_1} \; e \; \rho \; \kappa) $ is the continuation where 
 we are waiting for the value of the first argument to a $ \mathtt{cons} $. And 
 the last continuation, $ \langle c \rangle \kappa $ is to cast the value before 
 returning to $ \kappa $.
 
-In the reduction rules, to evaluate a cast expression, the machine move the 
+In the reduction relation $ \judgeDCreduce{s}{s} $, to evaluate a cast 
+expression, the machine move the 
 cast to the continuation and evaluate the inner expression. To apply a casted 
 function, the machine firstly cast $ v_1 $, the operand, then apply the casted 
 operand to $ v_2 $, the un-casted function, and finally cast the result of the 
@@ -887,9 +885,8 @@ continuations. To cast a value, the machine try to apply the cast to the value.
 If the cast succeeds, the machine returns the result to the next continuation. 
 If the cast fails, the machine halts with the blame label.
 
-Transitive closure of reduction ($ \judgeDCreduceTrans{s}{s} $) and evaluation 
-are 
-standard.
+The reflexive transitive closure of reduction ($ \judgeDCreduceTrans{s}{s} $) 
+and evaluation ($ \judgeDCeval{e}{o} $) are standard.
 
 \subsection{The \lazyD{} cast calculus}
 
