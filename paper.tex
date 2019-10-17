@@ -1970,7 +1970,7 @@ The most important differences are in values and continuations.
 In \ineffCEK\, we have one value constructor for all casted value.
 In \effCEK{C}, however, we do not have this generic value constructor, 
 instead we push those casts into the value constructors most of the time and 
-use $ \hcvOOinj{P}{v} $ to construct values injected to $ \TOOdyn $.
+use $ \hcvOOinj{P}{v} $ to construct values casted to $ \TOOdyn $.
 Non-casted values in \ineffCEK\ correspond to values in \effCEK{C} where the 
 casts are identity (i.e. constructed by $ id(T) $).
 In \ineffCEK\, a continuation have zero or more casts at the top.
