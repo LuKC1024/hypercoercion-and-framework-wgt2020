@@ -184,6 +184,14 @@
 \newcommand{\todoKCFixed}[0]{\todo[inline]{Fixed. -KC}}
 % abbrev
 \newcommand{\castCalculus}[0]{$\lambda_{\rightarrow}^{\langle\cdot\rangle}$}
+% names
+\newcommand{\ineffCEK}{$ \mathcal{C} $}
+\newcommand{\ineffCEKD}{$ \mathcal{D} $}
+\newcommand{\ineffCEKUD}{$ \mathcal{UD} $}
+\newcommand{\judgeDreduce}[2]{#1 \longrightarrow_{\mathcal{D}} #2}
+\newcommand{\judgeDreduceTrans}[2]{#1 \longrightarrow_{\mathcal{D}}^{*} #2}
+\newcommand{\judgeDeval}[2]{#1 \Downarrow_{\mathcal{D}} #2}
+\newcommand{\effCEK}[1]{$ \mathcal{S}(#1) $}
 
 \begin{document}
 
@@ -934,8 +942,7 @@ in the natural way.
 	}
 	\]
 	
-	\caption{Dynamic semantics of the cast calculi as a CEK machine ($ 
-	\mathcal{C} $)}
+	\caption{Dynamic semantics of the cast calculi as a CEK machine}
 	\label{machine-cekc}
 \end{figure}
 
@@ -1064,8 +1071,9 @@ subsection above. -KC}
 \figref{fig:applyCast-D-C} defines the $ applyCast $ for \lazyD. 
 We conjecture that with this $ applyCast $, the CEK machine in 
 \figref{machine-cekc} would agree with the \lazyD{} cast calculus in 
-\citet{siek2009exploring}. We denote this \lazyD{} machine by $ 
-\mathcal{C}_{\mathtt{D}} $.
+\citet{siek2009exploring}. We denote this \lazyD{} machine by \ineffCEKD{},
+and the corresponding relations by $ \judgeDreduce{s}{s} $, $ 
+\judgeDreduceTrans{s}{s} $, and $ \judgeDeval{e}{o} $
 
 \subsection{The \lazyUD{} cast calculus [Jeremy]}
 
@@ -1957,14 +1965,14 @@ Subsection~\ref{sec:LDHC-correct} that the \lazyD\ HC is in this subset.
 \end{definition}
 
 \subsection{All Surely \lazyD{} and Monoidic Cast Representations Respect 
-$\mathcal{D}$}
+$\mathcal{C}_{\mathtt{D}}$}
 
 \todo[inline]{``monoidic'' is not a word. -JS}
 
 We use bisimulation to proof equivalence between the two machines.
 \todo[inline]{Which two machines? -JS}
 The bisimulation relation of states ($\eqvDS{C}{s}{s}$) is mostly derived from 
-the definitions of $ \mathcal{D} $. Exceptions include the relations from 
+the definitions of $ \mathcal{C} $. Exceptions include the relations from 
 continuations to pre-continuations, between continuations, and between values. 
 We omit subscripts when there is no ambiguity.
 
@@ -1972,17 +1980,17 @@ We omit subscripts when there is no ambiguity.
 
 
 \begin{lemma}[Weak Bisimulation between $ \mathcal{S}(\cdot) $ and $ 
-	\mathcal{D} $]
+	\mathcal{C} $]
 	\label{thm:surely-monoidic-reduce}
 	For all cast representations $ C $, 
 	if $ C $ is surely \lazyD{} and monoidic,
-	$ s_1 \in \mathcal{D} $,
+	$ s_1 \in \mathcal{C} $,
 	$ s_2 \in \mathcal{S}(C) $, and
 	$ s_1 \approx s_2 $, 
 	\begin{enumerate}
 		\item If $ \judgeCreduce{s_1}{s_3} $,
 		then
-		there exist $ s_5 \in \mathcal{D} $, $ s_4 \in \mathcal{S}(C) $,
+		there exist $ s_5 \in \mathcal{C} $, $ s_4 \in \mathcal{S}(C) $,
 		such that \begin{itemize}
 			\item $ s_5 \approx s_4 $, and
 			\item $ \judgeSreduce{C}{s_2}{s_4} $,
@@ -1990,7 +1998,7 @@ We omit subscripts when there is no ambiguity.
 		\end{itemize}
 		\item If $ \judgeSreduce{C}{s_2}{s_4} $,
 		then
-		there exist $ s_3 \in \mathcal{D} $,
+		there exist $ s_3 \in \mathcal{C} $,
 		such that \begin{itemize}
 			\item $ s_3 \approx s_4 $
 			\item $ \judgeCreduceTrans{s_1}{s_3} $
@@ -2002,7 +2010,7 @@ We omit subscripts when there is no ambiguity.
 \end{proof}
 
 \begin{lemma}[Surely \lazyD\ and Monoidic Cast Representations Respect 
-	$ \mathcal{D} $]
+	$ \mathcal{C} $]
 	\label{thm:surely-monoidic-eval}
 	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is surely 
 	\lazyD{} and monoidic,
@@ -2018,7 +2026,7 @@ We omit subscripts when there is no ambiguity.
     Proofs by induction are not ``immediate''. -JS}
 \end{proof}
 
-\subsection{\lazyD\ Hyper-coercion Respect $ \mathcal{D} $}
+\subsection{\lazyD\ Hyper-coercion Respect $ \mathcal{C}_\mathtt{D} $}
 \label{sec:LDHC-correct}
 
 \figref{hc-applyCast} defines $ applyCast $, the last interface function.
@@ -2089,7 +2097,7 @@ $ applyMiddle(\ell,m,v) $ and $ applyTail(t,v) $ are straightforward.
 	See the supplementary material.
 \end{proof}
 
-\begin{theorem}[\lazyD{} hypercoercion Respect $ \mathcal{D} $]
+\begin{theorem}[\lazyD{} hypercoercion Respect $ \mathcal{C}_\mathtt{D} $]
 	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ 
 	\[
 	\judgeCeval{e}{o} \; \text{if and only if} \; 
@@ -2197,7 +2205,7 @@ casts is special: \begin{gather*}
 \end{proof}
 
 \begin{theorem}[Surely \lazyD\ Cast Representations Respect 
-	$ \mathcal{D} $]
+	$ \mathcal{C}_\mathtt{D} $]
 	\label{thm:surely-lazyD-correct}
 	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is surely 
 	\lazyD{}
