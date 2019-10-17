@@ -461,9 +461,7 @@ Section \ref{sec:conclude} concludes.
 		\eOOvar{x} \mid{}
 		\eOOsole{} \mid{}
 		\eOOlam{T_1}{T_2}{x}{e} \mid
-		\eOOapp{e_1}{e_2}
-	}
-	\stxrulecont{
+		\eOOapp{e_1}{e_2} \mid
 		\eOOcons{e_1}{e_2} \mid
 		\eOOcar{e} \mid
 		\eOOcdr{e}
@@ -471,11 +469,17 @@ Section \ref{sec:conclude} concludes.
 	\stxrulecont{
 		\eOOinl{e} \mid
 		\eOOinr{e} \mid
-		\eOOcase{e_1}{e_2}{e_3}
-	}
-	\stxrulecont{
+		\eOOcase{e_1}{e_2}{e_3} \mid
 		\eOOcast{e}{c} \mid
 		\eOOblame{l}
+	}
+	\stxrule{v}{values}{
+		\vOOfun{\rho}{x}{e} \mid
+		\vOOtt{} \mid
+		\vOOcons{v_1}{v_2} \mid
+		\vOOinl{v} \mid
+		\vOOinr{v} \mid		
+		\vOOcast{v}{c}
 	}
 	\stxrule{I}{injectable types (\lazyD)}{
 		P
@@ -485,14 +489,6 @@ Section \ref{sec:conclude} concludes.
 		\POOfun{\star}{\star} \mid
 		\star \times \star \mid
 		\star + \star
-	}
-	\stxrule{v}{values}{
-		\vOOfun{\rho}{x}{e} \mid
-		\vOOtt{} \mid
-		\vOOcons{v_1}{v_2} \mid
-		\vOOinl{v} \mid
-		\vOOinr{v} \mid		
-		\vOOcast{v}{c}
 	}
 	\stxrule{o}{observations}{
 		\oOOinj \mid
