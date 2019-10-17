@@ -677,6 +677,12 @@ Now let's move to the dynamic semantics.
 	}
 	\end{gather*}
 	
+	\caption{Syntax of CEK abstract machine ($ \mathcal{D} $) for the \lazyD{} 
+	cast calculus}
+\label{machine-cekc-syntax}
+\end{figure}
+	
+\begin{figure}
 %	Continuation typing \fbox{$ \kappa : T_1 \Longrightarrow T_2 $}
 %	\begin{gather*}
 %	\dots \quad
@@ -837,13 +843,14 @@ Now let's move to the dynamic semantics.
 	}
 	\]
 	
-	\caption{CEK abstract machine ($ \mathcal{D} $) for the \lazyD{} cast 
-	calculus}
-	\label{machine-cekc}
+	\caption{Reduction rules of CEK abstract machine ($ \mathcal{D} $) for the 
+	\lazyD{} cast calculus}
+	\label{machine-cekc-reduction}
 \end{figure}
 
-Fig.~\ref{machine-cekc} defines the dynamic semantics of the \lazyD{} Blame 
-Calculus in the style of CEK machines \citep{felleisen1986control}.
+Fig.~\ref{machine-cekc-syntax} defines the syntax of a CEK machine 
+\citep{felleisen1986control} evaluating 
+the \lazyD{} cast calculus.
 \todo[inline]{Briefly present the main ideas regarding how a CEK
   machine works. (2-3 sentences) -Jeremy}
 \todo[inline]{Use citep to put a citation in parentheses, as I've
