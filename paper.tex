@@ -474,8 +474,8 @@ Section \ref{sec:conclude} concludes.
 		\eOOblame{l}
 	}
 	\stxrule{v}{values}{
-		\vOOfun{\rho}{x}{e} \mid
 		\vOOtt{} \mid
+		\vOOfun{\rho}{x}{e} \mid
 		\vOOcons{v_1}{v_2} \mid
 		\vOOinl{v} \mid
 		\vOOinr{v} \mid		
@@ -636,8 +636,19 @@ Let $ e $ range over terms. Most terms are standard. We annotate the codomain
 of lambda abstractions explicitly because we need it when evaluating cast 
 calculus with hypercoercion. We have two additional terms: cast expressions and 
 blame expressions. Cast expressions insert runtime type checks. And blame 
-expressions raise an error. The end of \figref{fig:blame-static} shows the 
-typing rules for the additional terms.
+expressions raise an error. The typing rules for the additional terms are
+straightforward.
+
+Let $ v $ range over values. A value is either the unit, a function (a 
+closure), a pair, a left injection, a right injection, or a 
+casted value. As shown 
+by the value typing rules, if the target type of a casted value is the dynamic 
+type, the underlying value must be of an injectable type. The definition of 
+injectable types depends on blame strategies: for the \lazyD\ strategy, every 
+pre-type is injectable; for the \lazyUD\ strategy, a pre-types is injectable if 
+and only if all its sub-parts are the dynamic type. If the target type of a 
+casted value is a pre-type, the type of the underlying value must have the same 
+type constructor.
 
 Let $ o $ range over observations. They are what would be observed if a 
 program terminates. Observations include all value constructors and blame.
