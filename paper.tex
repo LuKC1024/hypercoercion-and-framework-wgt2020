@@ -139,8 +139,8 @@
 	\mathtt{case_1} \; #1 \; #2 \; #3 \; #4}
 \newcommand{\kOOcaseII}[4]{
 	\mathtt{case_2} \; #1 \; #2 \; #3 \; #4}
-\newcommand{\kOOcaseIII}[4]{
-	\mathtt{case_3} \; #1 \; #2 \; #3 \; #4}
+\newcommand{\kOOcaseIII}[3]{
+	\mathtt{case_3} \; #1 \; #2 \; #3}
 \newcommand{\kOOcast}[2]{
 	\langle #1 \rangle #2}
 \newcommand{\typingHC}[3]{#1 : #2 \Longrightarrow #3}
@@ -740,7 +740,7 @@ program terminates. Observations include all value constructors and blame.
 	}
 	\stxrulecont{	
 		\kOOcaseII{v}{e}{\rho}{\kappa} \mid
-		\kOOcaseII{v_1}{v_2}{\rho}{\kappa} \mid
+		\kOOcaseIII{v_1}{v_2}{\kappa} \mid
 		\kOOcast{c}{\kappa}
 	}
 	\end{array}
@@ -749,8 +749,6 @@ program terminates. Observations include all value constructors and blame.
 	Reduction \fbox{$ \judgeDCreduce{s}{s} $}
 	\[
 	\begin{array}{rclr}
-	
-	& \dots  \\
 	\redrule{
 		\sOOinspect{\eOOvar{x}}{\rho}{\kappa}
 	}{	
@@ -764,18 +762,65 @@ program terminates. Observations include all value constructors and blame.
 	\redrule{
 		\sOOinspect{\eOOlam{T_1}{T_2}{x}{e}}{\rho}{\kappa}
 	}{
-		\sOOreturn{\vOOfun{\rho}{x}{e}}{\kappa}
+		\sOOreturn{(\vOOfun{\rho}{x}{e})}{\kappa}
 	}{}
 	\redrule{
 		\sOOinspect{(\eOOcons{e_1}{e_2})}{\rho}{\kappa}
 	}{
 		\sOOinspect{e_1}{E}{}
-	}{arg3}
+	}{}
+	\redrule{
+		\sOOinspect{(\eOOinl{e})}{\rho}{\kappa}
+	}{
+		\sOOinspect{e}{\rho}{(\kOOinl{\kappa})}
+	}{}
+	\redrule{
+	\sOOinspect{(\eOOinr{e})}{\rho}{\kappa}
+	}{
+	\sOOinspect{e}{\rho}{(\kOOinr{\kappa})}
+	}{}
+	\redrule{
+		\sOOinspect{(\eOOapp{e_1}{e_2})}{\rho}{\kappa}
+	}{
+\sOOinspect{e_1}{\rho}{(\kOOappI{E}{e_2}{\kappa})}}{}
+\redrule{
+\sOOinspect{(\eOOcar{e})}{\rho}{\kappa}}{
+\sOOinspect{e}{\rho}{(\kOOcar{\kappa})}}{}
+\redrule{
+	\sOOinspect{(\eOOcdr{e})}{\rho}{\kappa}}{
+	\sOOinspect{e}{\rho}{(\kOOcdr{\kappa})}}{}
+\redrule{
+\sOOinspect{(\eOOcase{e_1}{e_2}{e_3})}{\rho}{\kappa}}{
+\sOOinspect{e_1}{\rho}{(\kOOcaseI{E}{e_2}{e_3}{\kappa})}}{}
 	\redrule{
 		\sOOinspect{\eOOcast{e}{T_1}{l}{T_2}}{\rho}{\kappa}
 	}{
 		\sOOinspect{e}{\rho}{\langle\cOOcast{T_1}{l}{T_2}\rangle\kappa}
 	}{}
+
+\redrule{
+\sOOreturn{v_1}{(\kOOconsI{\rho}{e_2}{\kappa})}}{
+\sOOinspect{e_2}{\rho}{(\kOOconsII{v_1}{\kappa})}}{}
+
+\redrule{
+\sOOreturn{v_2}{(\kOOconsII{v_1}{\kappa})}}{
+\sOOreturn{(\vOOcons{v_1}{v_2})}{\kappa}}{}
+
+\redrule{
+\sOOreturn{v}{(\kOOinl{\kappa})}}{
+\sOOreturn{(\vOOinl{v})}{\kappa}}{}
+
+\redrule{
+\sOOreturn{v}{(\kOOinr{\kappa})}}{
+\sOOreturn{(\vOOinr{v})}{\kappa}}{}
+
+\redrule{
+\sOOreturn{v_1}{(\kOOappI{\rho}{e_2}{\kappa})}}{
+\sOOinspect{e_2}{\rho}{(\kOOappII{v_1}{\kappa})}}{}
+
+\redrule{
+\sOOreturn{v_2}{(\kOOappII{(\vOOfun{\rho}{x}{e})}{\kappa})}}{
+\sOOinspect{e}{\rho[x:=v_2]}{\kappa}}{}
 	\redrule{
 		\sOOreturn{v_1}{(\mathtt{app_2} \; \vOOcast{v_2}{
 				\cOOcast{\POOfun{T_1}{T_2}}{l}{\POOfun{T_3}{T_4}}
@@ -786,15 +831,6 @@ program terminates. Observations include all value constructors and blame.
 			(\mathtt{app_2} \; v_2 \; 
 			\langle\cOOcast{T_2}{l}{T_4}\rangle \kappa)}
 	}{}
-	
-	%	\redrule{
-	%		\sOOreturn{v}{(
-	%			\mathtt{app_2} \;
-	%			(\vOOfun{\rho}{x}{e}) \;
-	%			\kappa
-	%		)}
-	%	}{\sOOinspect{e}{\rho{}[x := v]}{\kappa}}{}
-	
 	\redrule{
 		\sOOreturn{
 			\vOOcast{v}{\cOOcast{\POOprod{T_1}{T_2}}{l}{
@@ -818,8 +854,17 @@ program terminates. Observations include all value constructors and blame.
 			\langle \cOOcast{T_2}{l}{T_4} \rangle \kappa
 			)}
 	}{}
-	
-	\redrule{
+
+\redrule{
+\sOOreturn{v_1}{(\kOOcaseI{\rho}{e_2}{e_3}{\kappa})}}{
+\sOOinspect{e_2}{\rho}{(\kOOcaseII{E}{v_1}{e_3}{\kappa})}}{}
+
+\redrule{
+\sOOreturn{v_2}{(\kOOcaseII{\rho}{v_1}{e_3}{\kappa})}}{
+\sOOinspect{e_3}{\rho}{
+	(\kOOcaseIII{v_1}{v_2}{\kappa})
+}}{}	
+		\redrule{
 		\sOOreturn{v_3}{(
 			\mathtt{case_3} \;
 			v_1 \; v_2 \;
@@ -851,6 +896,9 @@ program terminates. Observations include all value constructors and blame.
 	}{
 		\sidecond{applyCast(c,v) = \rOOfail{l}}
 	}
+\redrule{
+\sOOreturn{v}{\kOOmt}}{
+\sOOhalt{observe(v)}}{}
 	\end{array}
 	\]	
 	
@@ -911,7 +959,8 @@ convenient because space-efficiency is about compressing continuations.
 }
 
 
-\todo[inline]{Please fill in the missing reduction rules. -JS}
+\todo[inline]{Please fill in the missing reduction rules. -JS
+\\---\\ Fixed -KC}
 \todo[inline]{Change the order of parameters for applyCast to take
 	the value first and the cast second. -JS
 	\\---\\
