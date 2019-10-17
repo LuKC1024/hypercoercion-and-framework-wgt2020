@@ -1804,9 +1804,9 @@ correctness of cast representations.
 In subsection~\ref{ssec:framework:cek}, we introduce \effCEK{C}, a family 
 of space-efficient semantics (in the style of CEK machines) indexed by cast 
 representations ($ C $). 
-In subsection~\ref{secc:framework:bisim}, we prove when $ C $ is 
+In subsection~\ref{secc:framework:correctness}, we prove when $ C $ is 
 $ surely \; \text{\lazyD} $, $ \judgeDeval{e}{o} $ if and only $ 
-\judgeSeval{C}{e}{o} $, that is, every $ surely \text{\lazyD} $ cast 
+\judgeSeval{C}{e}{o} $, that is, every $ surely\;\text{\lazyD} $ cast 
 representation respects the \lazyD\ cast calculus. 
 Proving a similar theorem for \lazyUD\ is in progress.
 
@@ -2013,39 +2013,27 @@ Transitive closure of reduction ($ \judgeSreduceTrans{C}{s}{s} $) and
 evaluation are standard. Value typing ($ \judgeType{v}{T} $) is straightforward.
 
 \subsection{Correctness Proof of Surely \lazyD\ Cast Representations}
-\label{ssec:framework:correctness}
-
-\todo[inline]{KC needs to move some content in the next section to here. -KC}
-
-
-
-\section{Correctness Proof of \lazyD{} hypercoercions}
-\label{sec:hypercoercion-correctness}
+\label{secc:framework:correctness}
 
 \todo[inline]{Give a high-level summary of the proof.
-  The summary should be enough so that the reader knows a bit
-  about why you introduce the various definitions below. -JS}
-
-\subsection{\lazyD\ Cast Representations}
-
-In this section we describe a subset of cast representations, where all 
-elements implement the \lazyD{} blame strategy. We will show in 
-Subsection~\ref{sec:LDHC-correct} that the \lazyD\ HC is in this subset.
+	The summary should be enough so that the reader knows a bit
+	about why you introduce the various definitions below. -JS}
+\todo[inline]{KC needs to move some content in the next section to here. -KC}
 
 \begin{definition}[Surely \lazyD\ Cast Representation]
 	A cast representation is surely \lazyD\ if
 	\begin{enumerate}
 		\item If $ v : T $, then $ applyCast(id(T), v) = \mathtt{succ} \; v $
 		\item If $ \judgeType{v}{T_1} $,
-				 $ \judgeTypeFT{c_1}{T_1}{T_2} $, and
-				 $ \judgeTypeFT{c_2}{T_2}{T_3} $,\\
+		$ \judgeTypeFT{c_1}{T_1}{T_2} $, and
+		$ \judgeTypeFT{c_2}{T_2}{T_3} $,\\
 		then $ applyCast(seq(c_1,c_2),v) = 
-			   applyCast(c_1,v) >>= \lambda v.applyCast(c_2,v) $ \\
+		applyCast(c_1,v) >>= \lambda v.applyCast(c_2,v) $ \\
 		where 
 		\[
 		\begin{array}{rcl}
-			\rOOsucc{v} >>= f & = & f(v) \\
-			\rOOfail{l} >>= f & = & \rOOfail{l}
+		\rOOsucc{v} >>= f & = & f(v) \\
+		\rOOfail{l} >>= f & = & \rOOfail{l}
 		\end{array}
 		\]
 		\item If $ v : T_1 $ and $ \neg T_1 \smile T_2 $,
@@ -2080,13 +2068,6 @@ Subsection~\ref{sec:LDHC-correct} that the \lazyD\ HC is in this subset.
 	\end{enumerate}
 \end{definition}
 
-\subsection{All Surely \lazyD{} and Monoidic Cast Representations Respect 
-\ineffCEKD}
-
-\todo[inline]{``monoidic'' is not a word. -JS}
-
-We use bisimulation to proof equivalence between the two machines.
-\todo[inline]{Which two machines? -JS}
 The bisimulation relation of states ($\eqvDS{C}{s}{s}$) is mostly derived from 
 the definitions of \ineffCEKD. Exceptions include the relations from 
 continuations to pre-continuations, between continuations, and between values. 
@@ -2135,11 +2116,26 @@ We omit subscripts when there is no ambiguity.
 	\]
 \end{lemma}
 \begin{proof}
-  Immediately from Lemma~\ref{thm:surely-monoidic-reduce}.
-  \todo[inline]{I'm guessing that you prove this lemma by induction,
-    using Lemma~\ref{thm:surely-monoidic-reduce}.
-    Proofs by induction are not ``immediate''. -JS}
+	Immediately from Lemma~\ref{thm:surely-monoidic-reduce}.
+	\todo[inline]{I'm guessing that you prove this lemma by induction,
+		using Lemma~\ref{thm:surely-monoidic-reduce}.
+		Proofs by induction are not ``immediate''. -JS}
 \end{proof}
+
+\section{Correctness Proof of \lazyD{} hypercoercions}
+\label{sec:hypercoercion-correctness}
+
+In this section we prove \lazyD\ hypercoercions is correct by showing it, as a 
+cast representation, is surely \lazyD\ and a monoid. To use hypercoercion as a 
+cast representation in our framework, we need to defined four functions: $ 
+cast(T,l,T) $, $ id(T) $, $ seq(c,c) $, and $ applyCast(c,v) $. We have defined 
+the first three functions in Section~\ref{sec:hypercoercion-definition}. Now we 
+define the $ applyCast(c,v) $  
+
+\todo[inline]{``monoidic'' is not a word. -JS}
+
+We use bisimulation to proof equivalence between the two machines.
+\todo[inline]{Which two machines? -JS}
 
 \subsection{\lazyD\ Hyper-coercion Respect \ineffCEKD}
 \label{sec:LDHC-correct}
