@@ -395,7 +395,12 @@ composes and produces normal coercions.
 \\ --- \\
 I guess having a notion of normal forms is more convenient when a 
 notion of normalization is convenient. But we don't even need a notion of 
-normalization for cast representations. -KC}
+normalization for cast representations. -KC
+\\ --- \\
+FWIW, I agree with you. But the point is that the argument is not
+likely to be convinving to the reader, so we're probably better off
+not wasting space on it. -JS
+}
 
 Perhaps unsurprisingly, threesome has a structurally recursive compose and a 
 self-standing definition. Together with \citet{garcia2013calculating}'s 
@@ -623,7 +628,7 @@ because we need the codomain when evaluating cast calculus with hypercoercions.
 	\\---\\
 	Because I apply $ id(\cdot) $ to the codomain in the HC CEK. -KC
         \\---\\
-        The answer you put in the text is to vague. -JS
+        The answer you put in the text is too vague. -JS
         }
 Let $ T $ range over types. A type is either the dynamic type $ \star $
 (a.k.a. $ \mathtt{Dyn} $, $ \mathbb{?} $, or $ \mathtt{Unknown} $), 
