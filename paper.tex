@@ -283,16 +283,9 @@ languages</concept_desc>
   plural (whether they should have an ``s'' at the end). Please review
   the rules of English regarding plurals. The rules are tricky...
   some words don't have a plural form, like ``blame''. -Jeremy}
-
+\todo[inline]{Will fix grammar after fixing all other problems -KC}
 \todo[inline]{The first paragraph of the introduction should summarize
   the entire introduction, and in some sense, the entire paper. -Jeremy}
-
-\todo[inline]{BTW, using the Coercion and Blame paper as a model for
-  how to write papers is perhaps not the best idea. That paper intentionally
-  diverged from the normal paper format in several ways. You can
-  do that too after you've become a master at writing papers.
-  For now you are much better off following the advice of
-  Simon Peyton Jones about how to write a paper (google it).}
 
 Around 2006, many work on integrating dynamic typing and static typing emerge, 
 notably gradual types \citep{siek2006gradual} and hybrid types 
@@ -349,12 +342,6 @@ calculus in \citet{siek2009exploring} and the Blame Calculus in
 \citet{wadler2009well}.
 
 \citet{siek2012interpretations} present a revised coercion calculi.
-\todo[inline]{Actually, Wadler might disagree that the blame calculus is
-  a lazy UD calculus... because the blame calculus has polarity in the blame
-  labels, and the lazy UD calculus does not. So perhaps we should just
-  say lazy UD cast calculus, and explain that it is very close to the
-  blame calculus. -Jeremy}
-\todo[inline]{I replace most uses of blame calculus to cast calculus. -KC}
 They simplify the coercion calculi by only 
 working with normal coercions (i.e. coercions in normal form). 
 They conjecture that their revised coercion calculi bisimulate the 
@@ -847,8 +834,8 @@ Now let's move to the dynamic semantics.
 	}
 	\]
 	
-	\caption{CEK abstract machine ($ \mathcal{D} $) for the \lazyD{} Blame 
-	Calculus}
+	\caption{CEK abstract machine ($ \mathcal{D} $) for the \lazyD{} cast 
+	calculus}
 	\label{machine-cekc}
 \end{figure}
 
@@ -865,14 +852,10 @@ Calculus in the style of CEK machines \citep{felleisen1986control}.
   reduction semantics. -Jeremy}
 \todo[inline]{Change the order of parameters for applyCast to take
   the value first and the cast second. -Jeremy}
-\todo[inline]{The definition of values is too loose for a cast.
-  You need to restrict the casts to just the inert ones. -Jeremy }
 We conjecture that this CEK machines agree with the \lazyD{} cast calculus in 
 \citet{siek2012interpretations}.
 We will show in \hyperref{sec:hypercoercion} that this abstract machine is 
 equivalent to an abstract machine that represents casts with hypercoercions.
-
-\todoKC{change the reduction rules of case}
 
 Let $ c $ range over casts. A cast is a triple of a type, a label, and a type.
 Let $ v $ range over values. A value is either a function, the 
@@ -970,25 +953,19 @@ Fig.~\ref{fig:apply-Cast-UD}.
 
 \subsection{Coercions in Normal Form} \label{sec:coercion-calculus}
 
-In this section we review the normal coercions (NC) of 
-\citet{siek2012interpretations}.
-\todo[inline]{Don't abbreviate to NC. -Jeremy}
+In this section we review the normal coercions \citep{siek2012interpretations} 
+to motivate the design of hypercoercion. 
 We ignore sum types and product types in this 
-section, because they were not presented in the paper. We assume a basic 
+section, because they were not in the paper. We assume a basic 
 familiarity with coercion, and direct readers who do not know it to 
 \citet{siek2012interpretations}.
-
-As the name suggests, 
-hypercoercion is largely inspired by coercion, especially its subst NC.
-\todo[inline]{``subst'' is not a word.}
-We 
-will highlight the similarity of normal coercion and hypercoercion, and hope 
-this would convince you that hypercoercion should be as difficult to implement 
-as NC.
-
-\todo[inline]{I don't think we should try to convince the reader that
-  hypercoercions are easier to implement. We don't have real evidence
-  for that.}
+%We 
+%will highlight the similarity of normal coercion and hypercoercion, and hope 
+%this would convince you that hypercoercion should be as difficult to implement 
+%as normal coercions.
+%\todo[inline]{I don't think we should try to convince the reader that
+%  hypercoercions are easier to implement. We don't have real evidence
+%  for that.}
 
 \begin{figure}
 	\[
@@ -1035,8 +1012,11 @@ as NC.
 	\label{fig:normal-coercion}
 \end{figure}
 
-\figref{fig:normal-coercion} defines the normal coercion.
 \todo[inline]{Give a summary statement about the shape of the normal form.}
+\todo[inline]{The three-part shape is not obvious before the transformation at 
+the end of the next paragraph. So the summary is given after that. -KC}
+
+\figref{fig:normal-coercion} defines the normal coercion.
 Types, pre-types, and blame labels are as before.
 Let $ I $ range over injectable types. An injectable type is a type that can 
 be cast directly to (injection) and from (projection) $ \TOOdyn $. The 
@@ -1048,8 +1028,7 @@ identity, failure, sequencing, or function coercion.
 Let $ \bar{c} $ range over wrapper coercions, which represent casts in $ 
 \vOOcast{v}{c} $.
 Let $ \hat{c} $ range over normal coercions. If we inline $ \bar{c} $ and 
-re-arrange cases a little bit, the definition becomes:
-\todo[inline]{Be more specific than ``a little bit''. -Jeremy}
+re-order the cases, the definition of $ \hat{c} $ becomes:
 \[
 \begin{array}{rclr}
 \stxrule{\hat{c}}{normal coercions}{
