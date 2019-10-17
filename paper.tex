@@ -319,7 +319,7 @@ languages</concept_desc>
 \todo[inline]{The first paragraph of the introduction should summarize
   the entire introduction, and in some sense, the entire paper. -JS}
 
-There are two basic ways to represent cast efficiently: coercions 
+There are two basic ways to represent cast space-efficiently: coercions 
 \citep{herman2010space}\citep{siek2009exploring}\citep{siek2012interpretations} 
 \citep{siek2015blame} and threesomes 
 \citep{siek2010threesomes}\citep{garcia2013calculating}. They have different 
@@ -327,21 +327,23 @@ strength and
 weakness. \citet{garcia2013calculating} and \citet{siek2015blame} claim that 
 coercion is easy to understand, but hard to implement, while threesome is easy 
 to implement, but hard to understand. \citet{garcia2013calculating} in addition 
-claims that coercion is more difficult to reason about formally, because 
-composition of coercions is not structurally recurisive. The developers of 
-Grift \citep{kuhlenschmidt2018efficient} affirm that it is tricky to convince 
-their proof assistants that composition of coercions terminates.
+claims that coercion is more difficult to reason about formally because 
+its compose function is not structurally recurisive. For instance, the 
+developers of Grift \citep{kuhlenschmidt2018efficient} report that it is tricky 
+to convince their proof assistants that the compose function terminates.
 
 We present a new cast representation, hypercoercion, which has a structurally 
-recursive composition. We believe hypercoercion is easier to understand than 
-threesome, because its syntax is close to coercion. For instance, the 
+recursive composition. When we prove theorems about hypercoercion in Agda, the 
+definition ``just works''. 
+Besides, We believe hypercoercion is about as easy to understand as coercion 
+because their syntax definitions are similar. For instance, the 
 coercion approach represents $ 
 \cOOcast{\TOOdyn}{l}{\cOOcast{\POOunit}{l'}{\TOOdyn}} $ as $ \POOunit 
 ?^{l} ; \POOunit\! $, while the hypercoercion approach gives $ 
 \hyperCoercionC{?^l}{\POOunit}{!} $. In Section~\ref{sec:background}, we review 
-coercion together with cast calculus, the intermediate languages in 
-\citet{kuhlenschmidt2018efficient}. And we present hypercoerion in 
-Section~\ref{sec:hypercoercion-definition}.
+coercion together with cast calculus, an intermediate languages for gradual 
+typing \citep{siek2009exploring}\citep{kuhlenschmidt2018efficient}. And we 
+present hypercoerion in Section~\ref{sec:hypercoercion-definition}.
 
 Another strength of hypercoercion over coercion is that hypercoercion might 
 have a more compact memory representations ...
@@ -360,7 +362,8 @@ hypercoercion (Section~\ref{sec:hypercoercion-correctness}). We are optimistic
 that this framework is general enough to include coercion and threesome.
 
 Some readers might know that there are four blame strategies: $ \{Lazy, Eager\} 
-\times \{D, UD\} $. Eager strategies detect more potential type errors, but 
+\times \{D, UD\} $ \citep{siek2009exploring}. Eager strategies detect more 
+potential type errors, but 
 blame more programs. $ D $ and $ UD $ assign blame labels differently.
 We focus on lazy strategies because recently \citet{new2019gradual} 
 show that \eager{} strategies are incompatible with $\eta$-equivalence of 
@@ -737,7 +740,7 @@ $.
 Other pre-types are functions, products, and sums.
 
 $ T_1 \sim T_2 $ reads ``$ T_1 $ and $ T_2 $ are consistent''.
-The intuition of $ T_1 \sim T $ is that $ T_1 $ and $ T_2 $ have no conflict 
+The intuition of $ T_1 \sim T_2 $ is that $ T_1 $ and $ T_2 $ have no conflict 
 type information. Two types are consistent if one of them is $ \star $, or they 
 have the same top-most type constructor and the corresponding sub-parts are 
 consistent. Consistency is reflexive and symmetric, but not transitive.
