@@ -282,11 +282,11 @@ languages</concept_desc>
 \todo[inline]{I see lots of mistakes regarding when to make words
   plural (whether they should have an ``s'' at the end). Please review
   the rules of English regarding plurals. The rules are tricky...
-  some words don't have a plural form, like ``blame''. -Jeremy
+  some words don't have a plural form, like ``blame''. -JS
   \\---\\
   Will fix grammar after fixing all other problems -KC}
 \todo[inline]{The first paragraph of the introduction should summarize
-  the entire introduction, and in some sense, the entire paper. -Jeremy}
+  the entire introduction, and in some sense, the entire paper. -JS}
 
 Around 2006, many work on integrating dynamic typing and static typing emerge, 
 notably gradual types \citep{siek2006gradual} and hybrid types 
@@ -331,7 +331,7 @@ Blame Calculus, modulo label polarity, and prove that their their \lazyUD\
 coercion calculus simulates their \lazyUD{} cast calculus. It is unknown, 
 however, whether the simulation in the other direction also works.
 \todo[inline]{Is it important to this paper whether there is a
-simulation in the other direction? -Jeremy
+simulation in the other direction? -JS
 \\ --- \\
 I guessed to say coercion is correct the other direction is 
 necessary. -KC}
@@ -391,14 +391,14 @@ composes and produces normal coercions.
 %
 \todo[inline]{Many researchers would view this as a positive thing,
   not a negative. For example, the notion of normal forms comes up
-  over and over again in mathematics and logic. -Jeremy
+  over and over again in mathematics and logic. -JS
 \\ --- \\
 I guess having a notion of normal forms is more convenient when a 
 notion of normalization is convenient. But we don't even need a notion of 
 normalization for cast representations. -KC
 \\ --- \\
 FWIW, I agree with you. But the point is that the argument is not
-likely to be convinving to the reader, so we're probably better off
+likely to be convincing to the reader, so we're probably better off
 not wasting space on it. -JS
 }
 
@@ -431,7 +431,7 @@ the first bisimulation proof for the \lazyD{} cast calculus as far as we know.
 We care more about lazy strategies because recently, \citet{new2019gradual} 
 show that \eager{} strategies are incompatible with $\eta$-equivalence of 
 functions, which suggest that these strategies are not very ideal. 
-\todo[inline]{Explain why we care about \lazyD{} and \lazyUD{}. -Jeremy
+\todo[inline]{Explain why we care about \lazyD{} and \lazyUD{}. -JS
   \\ --- \\ Explained, not sure if it suffice. -KC
   \\ --- \\
   That's good that you explained why lazy instead of eager.
@@ -447,7 +447,7 @@ Section \ref{sec:coercion-calculus} reviews the state-of-art of $Lazy$ Coercion
 Calculi. 
 In section \ref{sec:hypercoercion} we present hypercoercion.
 Section \ref{sec:conclude} concludes.
-\todo[inline]{Lots of missing sections. -Jeremy}
+\todo[inline]{Lots of missing sections. -JS}
 
 \section{Background} \label{sec:blame-calculus}
 
@@ -620,12 +620,12 @@ types and product types. Besides, we annotate function codomain explicitly
 because we need to compute identity hypercoercion for the codomain when 
 evaluating cast calculus with hypercoercions.
 \todo[inline]{Which previous definitions are you refering to?  What
-  are the little changes? -Jeremy
+  are the little changes? -JS
 \\ --- \\ Fixed -KC}
-\todo[inline]{The term typing rule for casts is broken. -Jeremy
+\todo[inline]{The term typing rule for casts is broken. -JS
 \\ --- \\ Fixed -KC}
 \todo[inline]{Why do you annotate the codomain of lambda abstractions
-	explicitly? -Jeremy
+	explicitly? -JS
 	\\---\\
 	Because I apply $ id(\cdot) $ to the codomain in the HC CEK. -KC
         \\---\\
@@ -852,7 +852,7 @@ processes:
 (1) dive into an expression and extend the continuation;
 (2) return a value to the current continuation.
 \todo[inline]{Briefly present the main ideas regarding how a CEK
-	machine works. (2-3 sentences) -Jeremy
+	machine works. (2-3 sentences) -JS
 \\---\\Fixed -KC}
 
 Most existing proofs about cast calculi defines the dynamic semantics with 
@@ -860,12 +860,16 @@ reduction semantics. We use a CEK machine instead because one of us is more
 familiar with CEK machines, and that he believes CEK machines are more 
 convenient because space-efficiency is about compressing continuations.
 \todo[inline]{Explain why you are using a CEK machine instead of
-	reduction semantics. -Jeremy
-\\---\\Fixed -KC}
+	reduction semantics. -JS
+        \\---\\Fixed -KC
+        \\---\\
+        Change ``one of us'' to ``first author''. -JS
+}
 
-\todo[inline]{Please fill in the missing reduction rules. -Jeremy}
+
+\todo[inline]{Please fill in the missing reduction rules. -JS}
 \todo[inline]{Change the order of parameters for applyCast to take
-	the value first and the cast second. -Jeremy
+	the value first and the cast second. -JS
 	\\---\\
 	Could you tell me why taking the value first is better?
 	I am always taking the target of induction first. -KC
@@ -903,7 +907,7 @@ un-casted pair, and cast the result. To case-split a sum, the machine looks
 deep inside the value to find out whether it is a left injection or a right 
 one.
 \todo[inline]{Change the rules for case to be small step, i.e.,
-	the case function should not be recursive. -Jeremy}
+	the case function should not be recursive. -JS}
 Along the way, the machine accumulates the pending casts onto the 
 continuations. To cast a value, the machine try to apply the cast to the value. 
 If the cast succeeds, the machine returns the result to the next continuation. 
@@ -1008,7 +1012,7 @@ Fig.~\ref{fig:apply-Cast-UD}.
 \end{figure}
 
 
-% the following are temporary -Jeremy
+% the following are temporary -JS
 \clearpage
 \pagebreak
 
@@ -1075,7 +1079,7 @@ familiarity with coercion, and direct readers who do not know it to
 \end{figure}
 
 \todo[inline]{Give a summary statement about the shape of the normal form. 
--Jeremy
+-JS
 \\---\\The three-part shape is not obvious before the transformation at 
 the end of the next paragraph. So the summary is given after that. -KC}
 
@@ -1591,6 +1595,17 @@ Figure~\ref{fig:HC-UD-cast}
 \end{figure}
 
 
+\begin{proposition}[\lazyUD\ hypercoercions form a monoid]
+	For all $c : T_1 \Longrightarrow T_2$,
+	$c_1 : T_1 \Longrightarrow T_2$,
+	$c_2 : T_2 \Longrightarrow T_3$, and
+	$c_3 : T_3 \Longrightarrow T_4$,
+	\begin{enumerate}
+		\item $seq(id(T_1),c) = c$,
+		\item $seq(c,id(T_2)) = c$, and
+		\item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
+	\end{enumerate}
+\end{proposition}
 
 
 \section{Space-efficient CEK Abstract Machine}
@@ -1985,7 +2000,7 @@ The state bisimilarity ($\eqvS{C}{C}{s}{s}$) is
 derived from the definition of states.
 \todo[inline]{The term ``bisimilarity'' has a different technical meaning from
 	``bisimulation relation''. I don't think you are using it properly
-	in the above sentence. -Jeremy}
+	in the above sentence. -JS}
 We omit subscripts when there is no 
 ambiguity. \begin{gather*}
 \inference{
