@@ -427,7 +427,13 @@ We care more about lazy strategies because recently, \citet{new2019gradual}
 show that \eager{} strategies are incompatible with $\eta$-equivalence of 
 functions, which suggest that these strategies are not very ideal. 
 \todo[inline]{Explain why we care about \lazyD{} and \lazyUD{}. -Jeremy
-	\\ --- \\ Explained, not sure if it suffice. -KC}
+  \\ --- \\ Explained, not sure if it suffice. -KC
+  \\ --- \\
+  That's good that you explained why lazy instead of eager.
+  (Also, you should add that we are interested in lazy because
+  that's what Grift does.)\\
+  But you haven't explained why we are interested in both D and UD. -JS
+}
 
 The structure of this paper is as follows. 
 Section \ref{sec:blame-calculus} reviews the state-of-art of $Lazy$ cast 
@@ -1568,6 +1574,8 @@ Figure~\ref{fig:HC-UD-cast}
   \caption{\textit{cast} and its auxilliary functions for Lazy UD.}
   \label{fig:HC-UD-cast}
 \end{figure}
+
+
 
 
 \section{Space-efficient CEK Abstract Machine}
