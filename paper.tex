@@ -155,10 +155,10 @@
 \newcommand{\hckOOappII}[2]{\mathtt{app_2}\;#1\;#2}
 \newcommand{\sidecond}[1]{\text{if}\;#1}
 % Lazy D cast calculus on space-inefficient CEK
-\newcommand{\judgeDCreduce}[2]{#1 \longrightarrow_{\mathcal{D}} #2}
-\newcommand{\judgeDCreduceTrans}[2]{#1 \longrightarrow_{\mathcal{D}}^{*} #2}
-\newcommand{\judgeDCeval}[2]{#1 \Downarrow_{\mathcal{D}} #2}
-\newcommand{\redrule}[3]{#1 & \longrightarrow_\mathcal{D} & #2 & #3\\}
+\newcommand{\judgeCreduce}[2]{#1 \longrightarrow_{\mathcal{C}} #2}
+\newcommand{\judgeCreduceTrans}[2]{#1 \longrightarrow_{\mathcal{C}}^{*} #2}
+\newcommand{\judgeCeval}[2]{#1 \Downarrow_{\mathcal{C}} #2}
+\newcommand{\redrule}[3]{#1 & \longrightarrow_\mathcal{C} & #2 & #3\\}
 % blame calculus on space-efficient CEK
 \newcommand{\judgeSreduce}[3]{#2 \longrightarrow_{\mathcal{S}(#1)} #3}
 \newcommand{\judgeSreduceTrans}[3]{#2 \longrightarrow_{\mathcal{S}(#1)}^{*} #3}
@@ -748,7 +748,7 @@ in the natural way.
 	\end{array}
 	\]
 	
-	Reduction \fbox{$ \judgeDCreduce{s}{s} $}
+	Reduction \fbox{$ \judgeCreduce{s}{s} $}
 	\[
 	\begin{array}{rclr}
 	\redrule{
@@ -924,17 +924,18 @@ in the natural way.
 	%	Transitive closure of reduction \fbox{$ s \longrightarrow_{D,B}^{*} s 
 	%$}\\
 	
-	Evaluation \fbox{$\judgeDCeval{e}{o}$}
+	Evaluation \fbox{$\judgeCeval{e}{o}$}
 	\[
 	\inference{
 		\sOOinspect{e}{\emptyset}{cont(\hckOOmt)} \longrightarrow_{B}^{*} 
 		\sOOhalt{o}
 	}{
-		\judgeDCeval{e}{o}
+		\judgeCeval{e}{o}
 	}
 	\]
 	
-	\caption{dynamic semantics of the cast calculi as a CEK machine}
+	\caption{Dynamic semantics of the cast calculi as a CEK machine ($ 
+	\mathcal{C} $)}
 	\label{machine-cekc}
 \end{figure}
 
@@ -996,7 +997,7 @@ we are waiting for the value of the first argument to a $ \mathtt{cons} $. And
 the last continuation, $ \langle c \rangle \kappa $ is to cast the value before 
 returning to $ \kappa $.
 
-The reduction relation $ \judgeDCreduce{s}{s} $ depends on $ applyCast $, a 
+The reduction relation $ \judgeCreduce{s}{s} $ depends on $ applyCast $, a 
 function depending on blame strategies. We will give the definitions of $ 
 applyCast $ shortly.
 To evaluate a cast 
@@ -1016,8 +1017,8 @@ continuations. To cast a value, the machine try to apply the cast to the value.
 If the cast succeeds, the machine returns the result to the next continuation. 
 If the cast fails, the machine halts with the blame label.
 
-The reflexive transitive closure of reduction ($ \judgeDCreduceTrans{s}{s} $) 
-and evaluation ($ \judgeDCeval{e}{o} $) are standard.
+The reflexive transitive closure of reduction ($ \judgeCreduceTrans{s}{s} $) 
+and evaluation ($ \judgeCeval{e}{o} $) are standard.
 
 \subsection{The \lazyD{} cast calculus}
 \todo[inline]{I want to merge this and the following subsetion to the 
@@ -1063,7 +1064,8 @@ subsection above. -KC}
 \figref{fig:applyCast-D-C} defines the $ applyCast $ for \lazyD. 
 We conjecture that with this $ applyCast $, the CEK machine in 
 \figref{machine-cekc} would agree with the \lazyD{} cast calculus in 
-\citet{siek2009exploring}.
+\citet{siek2009exploring}. We denote this \lazyD{} machine by $ 
+\mathcal{C}_{\mathtt{D}} $.
 
 \subsection{The \lazyUD{} cast calculus [Jeremy]}
 
@@ -1978,20 +1980,20 @@ We omit subscripts when there is no ambiguity.
 	$ s_2 \in \mathcal{S}(C) $, and
 	$ s_1 \approx s_2 $, 
 	\begin{enumerate}
-		\item If $ \judgeDCreduce{s_1}{s_3} $,
+		\item If $ \judgeCreduce{s_1}{s_3} $,
 		then
 		there exist $ s_5 \in \mathcal{D} $, $ s_4 \in \mathcal{S}(C) $,
 		such that \begin{itemize}
 			\item $ s_5 \approx s_4 $, and
 			\item $ \judgeSreduce{C}{s_2}{s_4} $,
-			\item $ \judgeDCreduceTrans{s_3}{s_5} $
+			\item $ \judgeCreduceTrans{s_3}{s_5} $
 		\end{itemize}
 		\item If $ \judgeSreduce{C}{s_2}{s_4} $,
 		then
 		there exist $ s_3 \in \mathcal{D} $,
 		such that \begin{itemize}
 			\item $ s_3 \approx s_4 $
-			\item $ \judgeDCreduceTrans{s_1}{s_3} $
+			\item $ \judgeCreduceTrans{s_1}{s_3} $
 		\end{itemize}
 	\end{enumerate}
 \end{lemma}
@@ -2005,7 +2007,7 @@ We omit subscripts when there is no ambiguity.
 	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is surely 
 	\lazyD{} and monoidic,
 	\[
-	\judgeDCeval{e}{o} \; \text{if and only if} \; 
+	\judgeCeval{e}{o} \; \text{if and only if} \; 
 	\judgeSeval{C}{e}{o}
 	\]
 \end{lemma}
@@ -2090,7 +2092,7 @@ $ applyMiddle(\ell,m,v) $ and $ applyTail(t,v) $ are straightforward.
 \begin{theorem}[\lazyD{} hypercoercion Respect $ \mathcal{D} $]
 	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ 
 	\[
-	\judgeDCeval{e}{o} \; \text{if and only if} \; 
+	\judgeCeval{e}{o} \; \text{if and only if} \; 
 	\judgeSeval{H}{e}{o}
 	\]
 \end{theorem}
@@ -2200,7 +2202,7 @@ casts is special: \begin{gather*}
 	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is surely 
 	\lazyD{}
 	\[
-	\judgeDCeval{e}{o} \; \text{if and only if} \; 
+	\judgeCeval{e}{o} \; \text{if and only if} \; 
 	\judgeSeval{C}{e}{o}
 	\]
 \end{theorem}
