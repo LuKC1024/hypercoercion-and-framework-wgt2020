@@ -225,7 +225,7 @@
 %% Note: \begin{abstract}...\end{abstract} environment must come
 %% before \maketitle command
 \begin{abstract}
-\todoKC{rewrite this abstract based on the comparision table. -Jeremy}
+\todoKC{rewrite this abstract based on the comparision table.}
   Gradual Typing is great. Implementing gradually typed with blame
   tracking and space efficiency is tricky. There exist two technique
   to do this: coercion and threesome. Coercion is easy to understand,
@@ -282,8 +282,9 @@ languages</concept_desc>
 \todo[inline]{I see lots of mistakes regarding when to make words
   plural (whether they should have an ``s'' at the end). Please review
   the rules of English regarding plurals. The rules are tricky...
-  some words don't have a plural form, like ``blame''. -Jeremy}
-\todo[inline]{Will fix grammar after fixing all other problems -KC}
+  some words don't have a plural form, like ``blame''. -Jeremy
+  \\---\\
+  Will fix grammar after fixing all other problems -KC}
 \todo[inline]{The first paragraph of the introduction should summarize
   the entire introduction, and in some sense, the entire paper. -Jeremy}
 
@@ -330,8 +331,9 @@ Blame Calculus, modulo label polarity, and prove that their their \lazyUD\
 coercion calculus simulates their \lazyUD{} cast calculus. It is unknown, 
 however, whether the simulation in the other direction also works.
 \todo[inline]{Is it important to this paper whether there is a
-  simulation in the other direction? -Jeremy}
-\todo[inline]{I guessed to say coercion is correct the other direction is 
+simulation in the other direction? -Jeremy
+\\ --- \\
+I guessed to say coercion is correct the other direction is 
 necessary. -KC}
 
 \citet{siek2010threesomes} proposes another approach to combine blame 
@@ -389,8 +391,9 @@ composes and produces normal coercions.
 %
 \todo[inline]{Many researchers would view this as a positive thing,
   not a negative. For example, the notion of normal forms comes up
-  over and over again in mathematics and logic. -Jeremy}
-\todo[inline]{I guess having a notion of normal forms is more convenient when a 
+  over and over again in mathematics and logic. -Jeremy
+\\ --- \\
+I guess having a notion of normal forms is more convenient when a 
 notion of normalization is convenient. But we don't even need a notion of 
 normalization for cast representations. -KC}
 
@@ -423,8 +426,8 @@ the first bisimulation proof for the \lazyD{} cast calculus as far as we know.
 We care more about lazy strategies because recently, \citet{new2019gradual} 
 show that \eager{} strategies are incompatible with $\eta$-equivalence of 
 functions, which suggest that these strategies are not very ideal. 
-\todo[inline]{Explain why we care about \lazyD{} and \lazyUD{}. -Jeremy}
-\todo[inline]{Explained, not sure if it suffice. -KC}
+\todo[inline]{Explain why we care about \lazyD{} and \lazyUD{}. -Jeremy
+	\\ --- \\ Explained, not sure if it suffice. -KC}
 
 The structure of this paper is as follows. 
 Section \ref{sec:blame-calculus} reviews the state-of-art of $Lazy$ Blame 
@@ -434,7 +437,6 @@ Calculi.
 In section \ref{sec:hypercoercion} we present hypercoercion.
 Section \ref{sec:conclude} concludes.
 \todo[inline]{Lots of missing sections. -Jeremy}
-\todo[inline]{Will fix finally, I am moving stuff. -KC}
 
 
 \section{Background: Cast Calculi} \label{sec:blame-calculus}
@@ -569,10 +571,10 @@ static semantics. It extends the syntax in \citet{siek2009exploring} with sum
 types and product types, and annotates function codomain explicitly. 
 Its semantics depend on blame strategies, so we defer them to sub-sections.
 \todo[inline]{Which previous definitions are you refering to?  What
-  are the little changes? -Jeremy}
-\todoKCFixed{}
-\todo[inline]{The term typing rule for casts is broken. -Jeremy}
-\todoKCFixed{}
+  are the little changes? -Jeremy
+\\ --- \\ Fixed -KC}
+\todo[inline]{The term typing rule for casts is broken. -Jeremy
+\\ --- \\ Fixed -KC}
  
 Let $ S,T $ range over types. A type is either the dynamic type $ \star $
 (a.k.a. $ \mathtt{Dyn} $, $ \mathbb{?} $, or $ \mathtt{Unknown} $), 
@@ -602,8 +604,9 @@ Let $ e $ range over terms, including all terms from $ \mathtt{STLC+} $ and,
 in addition, casts and blame. Unlike $ \mathtt{STLC+} $, we annotate the 
 codomain of lambda abstractions explicitly.
 \todo[inline]{Why do you annotate the codomain of lambda abstractions
-  explicitly? -Jeremy}
-\todo[inline]{Because I apply $ id(\cdot) $ to the codomain in the HC CEK. -KC}
+  explicitly? -Jeremy
+  \\---\\
+  Because I apply $ id(\cdot) $ to the codomain in the HC CEK. -KC}
 The end of \figref{fig:blame-static} shows the typing rules for the
 additional terms.
 
@@ -851,7 +854,10 @@ Calculus in the style of CEK machines \citep{felleisen1986control}.
 \todo[inline]{Explain why you are using a CEK machine instead of
   reduction semantics. -Jeremy}
 \todo[inline]{Change the order of parameters for applyCast to take
-  the value first and the cast second. -Jeremy}
+  the value first and the cast second. -Jeremy
+\\---\\
+Could you tell me why taking the value first is better?
+I am always taking the target of induction/match first. -KC}
 We conjecture that this CEK machines agree with the \lazyD{} cast calculus in 
 \citet{siek2012interpretations}.
 We will show in \hyperref{sec:hypercoercion} that this abstract machine is 
@@ -1012,8 +1018,9 @@ familiarity with coercion, and direct readers who do not know it to
 	\label{fig:normal-coercion}
 \end{figure}
 
-\todo[inline]{Give a summary statement about the shape of the normal form.}
-\todo[inline]{The three-part shape is not obvious before the transformation at 
+\todo[inline]{Give a summary statement about the shape of the normal form. 
+-Jeremy
+\\---\\The three-part shape is not obvious before the transformation at 
 the end of the next paragraph. So the summary is given after that. -KC}
 
 \figref{fig:normal-coercion} defines the normal coercion.
