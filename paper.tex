@@ -321,7 +321,7 @@ space efficiency.
 typed language, cast calculus \castCalculus\ and achieve both blame-tracking 
 and space-efficiency for this language by decorating \citet{herman2010space}'s 
 coercions with labels. \castCalculus\ is simply typed lambda calculus extended 
-with the dynamic type and cast expressions. The labels in \castCalculus\, 
+with the dynamic type and cast expressions. The labels in \castCalculus{}, 
 unlike their counterparts in the Blame Calculus, have no polarity. 
 They also propose that there are four blame strategies for \castCalculus{}:
 $ \{Lazy, Eager\} \times \{D, UD\} $. Eager strategies detect more potential 
@@ -704,40 +704,6 @@ program terminates. Observations include all value constructors and blame.
 	}
 	\end{array}
 	\]
-	Syntax
-	\[
-	\begin{array}{rclr}
-	\stxrule{r}{cast results}{
-		\rOOsucc{v} \mid
-		\rOOfail{l}
-	}
-	\stxrule{s}{states}{
-		\sOOinspect{e}{\rho}{\kappa} \mid{}
-		\sOOreturn{v}{\kappa} \mid{}
-		\sOOhalt{o}
-	}
-	
-	\stxrule{\kappa}{continuations}{
-		\mathtt{stop} \mid{}
-		\mathtt{cons_1} \; e \; \rho \; \kappa \mid{}
-		\mathtt{cons_2} \; v \; \kappa \mid{}
-		\mathtt{inl} \; \kappa \mid{}
-		\mathtt{inr} \; \kappa
-	}
-	\stxrulecont{
-		\mathtt{app_1} \; e \; \rho \; \kappa \mid{}
-		\mathtt{app_2} \; v \; \kappa \mid{}
-		\mathtt{fst} \; \kappa \mid{}
-		\mathtt{snd} \; \kappa \mid
-		\mathtt{case_1} \; e_1 \; e_2 \; \rho \; \kappa
-	}
-	\stxrulecont{	
-		\mathtt{case_2} \; v   \; e   \; \rho \; \kappa \mid{}
-		\mathtt{case_3} \; v_1 \; v_2 \; \rho \; \kappa \mid
-		\langle c \rangle \kappa
-	}
-	\end{array}
-	\]
 	
 	Reduction \fbox{$ \judgeDCreduce{s}{s} $}
 	\[
@@ -862,17 +828,29 @@ program terminates. Observations include all value constructors and blame.
 \end{figure}
 
 Fig.~\ref{machine-cekc} defines the dynamic semantics of cast calculi as a 
-CEK machine \citep{felleisen1986control}.
+CEK machine \citep{felleisen1986control}. CEK machines include continuation as 
+part of their states. They evaluate expressions with two interleaving 
+processes: 
+(1) dive into an expression and extend the continuation;
+(2) return a value to the current continuation.
 \todo[inline]{Briefly present the main ideas regarding how a CEK
-	machine works. (2-3 sentences) -Jeremy}
-\todo[inline]{Please fill in the missing reduction rules. -Jeremy}
+	machine works. (2-3 sentences) -Jeremy
+\\---\\Fixed -KC}
+
+Most existing proofs about cast calculi defines the dynamic semantics with 
+reduction semantics. We use a CEK machine instead because one of us is more 
+familiar with CEK machines, and that he believes CEK machines are more 
+convenient because space-efficiency is about compressing continuations.
 \todo[inline]{Explain why you are using a CEK machine instead of
-	reduction semantics. -Jeremy}
+	reduction semantics. -Jeremy
+\\---\\Fixed -KC}
+
+\todo[inline]{Please fill in the missing reduction rules. -Jeremy}
 \todo[inline]{Change the order of parameters for applyCast to take
 	the value first and the cast second. -Jeremy
 	\\---\\
 	Could you tell me why taking the value first is better?
-	I am always taking the target of induction/match first. -KC}
+	I am always taking the target of induction first. -KC}
 
 
 Let $ c $ range over casts. A cast is a triple of a type, a label, and a type.
