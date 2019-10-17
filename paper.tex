@@ -617,7 +617,8 @@ normal coercion (\ref{sec:coercion-calculus}).
 \figref{fig:blame-static} defines the syntax of cast calculi and its
 static semantics. We extend the syntax in \citet{siek2009exploring} with sum 
 types and product types. Besides, we annotate function codomain explicitly 
-because we need the codomain when evaluating cast calculus with hypercoercions.
+because we need to compute identity hypercoercion for the codomain when 
+evaluating cast calculus with hypercoercions.
 \todo[inline]{Which previous definitions are you refering to?  What
   are the little changes? -Jeremy
 \\ --- \\ Fixed -KC}
@@ -629,7 +630,8 @@ because we need the codomain when evaluating cast calculus with hypercoercions.
 	Because I apply $ id(\cdot) $ to the codomain in the HC CEK. -KC
         \\---\\
         The answer you put in the text is too vague. -JS
-        }
+        \\---\\
+        Fixed. -KC}
 Let $ T $ range over types. A type is either the dynamic type $ \star $
 (a.k.a. $ \mathtt{Dyn} $, $ \mathbb{?} $, or $ \mathtt{Unknown} $), 
 or a pre-type. 
