@@ -868,7 +868,10 @@ we are waiting for the value of the first argument to a $ \mathtt{cons} $. And
 the last continuation, $ \langle c \rangle \kappa $ is to cast the value before 
 returning to $ \kappa $.
 
-In the reduction relation $ \judgeDCreduce{s}{s} $, to evaluate a cast 
+The reduction relation $ \judgeDCreduce{s}{s} $ depends on $ applyCast $, a 
+function depending on blame strategies. We will give the definitions of $ 
+applyCast $ shortly.
+To evaluate a cast 
 expression, the machine move the 
 cast to the continuation and evaluate the inner expression. To apply a casted 
 function, the machine firstly cast $ v_1 $, the operand, then apply the casted 
@@ -880,7 +883,7 @@ deep inside the value to find out whether it is a left injection or a right
 one.
 \todo[inline]{Change the rules for case to be small step, i.e.,
 	the case function should not be recursive. -Jeremy}
-Along the way, the machine accumulate the pending casts onto the 
+Along the way, the machine accumulates the pending casts onto the 
 continuations. To cast a value, the machine try to apply the cast to the value. 
 If the cast succeeds, the machine returns the result to the next continuation. 
 If the cast fails, the machine halts with the blame label.
@@ -889,6 +892,8 @@ The reflexive transitive closure of reduction ($ \judgeDCreduceTrans{s}{s} $)
 and evaluation ($ \judgeDCeval{e}{o} $) are standard.
 
 \subsection{The \lazyD{} cast calculus}
+\todo[inline]{I want to merge this and the following subsetion to the 
+subsection above. -KC}
 
 \begin{figure}
 	
@@ -924,13 +929,13 @@ and evaluation ($ \judgeDCeval{e}{o} $) are standard.
 	\end{array}
 	\]
 	\caption{Definition of $ applyCast $ for \lazyD}
+	\label{fig:applyCast-D-C}
 \end{figure}
 
-We conjecture that this CEK machines agree with the \lazyD{} cast calculus in 
-\citet{siek2012interpretations}.
-We will show in \hyperref{sec:hypercoercion} that this abstract machine is 
-equivalent to an abstract machine that represents casts with hypercoercions.
-
+\figref{fig:applyCast-D-C} defines the $ applyCast $ for \lazyD. 
+We conjecture that with this $ applyCast $, the CEK machine in 
+\figref{machine-cekc} would agree with the \lazyD{} cast calculus in 
+\citet{siek2009exploring}.
 
 \subsection{The \lazyUD{} cast calculus [Jeremy]}
 
