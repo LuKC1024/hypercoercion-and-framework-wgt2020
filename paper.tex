@@ -438,7 +438,6 @@ In section \ref{sec:hypercoercion} we present hypercoercion.
 Section \ref{sec:conclude} concludes.
 \todo[inline]{Lots of missing sections. -Jeremy}
 
-
 \section{Background: Cast Calculi} \label{sec:blame-calculus}
 
 \begin{figure}
@@ -455,14 +454,8 @@ Section \ref{sec:conclude} concludes.
 		\POOprod{T_1}{T_2} \mid
 		\POOsum{T_1}{T_2}
 	}
-	\stxrule{I}{injectable types (\lazyD)}{
-		P
-	}
-	\stxrule{I}{injectable types (\lazyUD)}{
-		\POOunit \mid
-		\POOfun{\star}{\star} \mid
-		\star \times \star \mid
-		\star + \star
+	\stxrule{c}{casts}{
+		\cOOcast{T_1}{l}{T_2}
 	}
 	\stxrule{e}{terms}{
 		\eOOvar{x} \mid{}
@@ -484,6 +477,15 @@ Section \ref{sec:conclude} concludes.
 		\eOOcast{e}{c} \mid
 		\eOOblame{l}
 	}
+	\stxrule{I}{injectable types (\lazyD)}{
+		P
+	}
+	\stxrule{I}{injectable types (\lazyUD)}{
+		\POOunit \mid
+		\POOfun{\star}{\star} \mid
+		\star \times \star \mid
+		\star + \star
+	}
 	\stxrule{v}{values}{
 		\vOOfun{\rho}{x}{e} \mid
 		\vOOtt{} \mid
@@ -491,9 +493,6 @@ Section \ref{sec:conclude} concludes.
 		\vOOinl{v} \mid
 		\vOOinr{v} \mid		
 		\vOOcast{v}{c}
-	}
-	\stxrule{c}{casts}{
-		\cOOcast{T_1}{l}{T_2}
 	}
 	\stxrule{o}{observations}{
 		\oOOinj \mid
@@ -616,35 +615,33 @@ because we need the codomain when evaluating cast calculus with hypercoercions.
 	explicitly? -Jeremy
 	\\---\\
 	Because I apply $ id(\cdot) $ to the codomain in the HC CEK. -KC}
-Let $ S,T $ range over types. A type is either the dynamic type $ \star $
+Let $ T $ range over types. A type is either the dynamic type $ \star $
 (a.k.a. $ \mathtt{Dyn} $, $ \mathbb{?} $, or $ \mathtt{Unknown} $), 
 or a pre-type. 
-Let $ P,Q $ range over pre-types. Every pre-type is a type with a type 
+Let $ P $ range over pre-types. Every pre-type is a type with a type 
 constructor at the top. For simplicity, we only have one base type, $ \POOunit 
 $. 
 Other pre-types are functions, products, and sums.
 
-%$ S \sim T $ reads ``$ S $ and $ T $ are consistent''.
-%Two types are consistent if one of them is $ \star $, or they have the same 
-%top-most type constructor and the corresponding sub-parts are consistent. 
-%The intuition of $ S \sim T $ is that $ S $ and $ T $ have no conflict type 
-%information. Consistency is reflexive and symmetric, but not transitive.
+$ T_1 \sim T_2 $ reads ``$ T_1 $ and $ T_2 $ are consistent''.
+The intuition of $ T_1 \sim T $ is that $ T_1 $ and $ T_2 $ have no conflict 
+type information. Two types are consistent if one of them is $ \star $, or they 
+have the same top-most type constructor and the corresponding sub-parts are 
+consistent. Consistency is reflexive and symmetric, but not transitive.
 
-%One might be tempted to conclude that inconsistency is the root of all runtime 
-%type errors (blames). In the setting of gradual typing, however, runtime 
-%type-checking is usually gradual as well. 
-$ S \smile T $ reads ``$ S $ and $ T $ are shallowly-consistent''. Two types 
-are shallowly consistent if one of them is $ \star $, or they have the same 
-type constructor at the top. Shallow-inconsistency is the root of all blame in 
-lazy cast strategies -- casting a value to a shallowly inconsistent type leads 
-to a blame. Shallow-consistency is reflexive, symmetric, but 
+$ T_1 \smile T_2 $ reads ``$ T_1 $ and $ T_2 $ are shallowly-consistent''. Two 
+types are shallowly consistent if one of them is $ \star $, or they have the 
+same type constructor at the top. Shallow-inconsistency is the root of all 
+blame in lazy cast strategies -- casting a value to a shallowly inconsistent 
+type leads to a blame. Shallow-consistency is reflexive, symmetric, but 
 not transitive.
 
-Let $ e $ range over terms, including all terms from $ \mathtt{STLC+} $ and, 
-in addition, casts and blame. Unlike $ \mathtt{STLC+} $, we annotate the 
-codomain of lambda abstractions explicitly.
-The end of \figref{fig:blame-static} shows the typing rules for the
-additional terms.
+Let $ e $ range over terms. Most terms are standard. We annotate the codomain 
+of lambda abstractions explicitly because we need it when evaluating cast 
+calculus with hypercoercion. We have two additional terms: cast expressions and 
+blame expressions. Cast expressions insert runtime type checks. And blame 
+expressions raise an error. The end of \figref{fig:blame-static} shows the 
+typing rules for the additional terms.
 
 Let $ o $ range over observations. They are what would be observed if a 
 program terminates. Observations include all value constructors and blame.
