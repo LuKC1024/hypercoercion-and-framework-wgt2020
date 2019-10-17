@@ -1593,6 +1593,17 @@ Figure~\ref{fig:HC-UD-cast}
 \end{figure}
 
 
+\begin{proposition}[\lazyUD\ hypercoercions form a monoid]
+	For all $c : T_1 \Longrightarrow T_2$,
+	$c_1 : T_1 \Longrightarrow T_2$,
+	$c_2 : T_2 \Longrightarrow T_3$, and
+	$c_3 : T_3 \Longrightarrow T_4$,
+	\begin{enumerate}
+		\item $seq(id(T_1),c) = c$,
+		\item $seq(c,id(T_2)) = c$, and
+		\item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
+	\end{enumerate}
+\end{proposition}
 
 
 \section{Space-efficient CEK Abstract Machine}
