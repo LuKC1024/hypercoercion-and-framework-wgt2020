@@ -102,7 +102,7 @@
 \newcommand{\eOOinl}[1]{\mathtt{inl} \; #1}
 \newcommand{\eOOinr}[1]{\mathtt{inr} \; #1}
 \newcommand{\eOOcase}[3]{\mathtt{case} \; #1 \; #2 \; #3}
-\newcommand{\eOOcast}[4]{#1 \langle \cOOcast{#2}{#3}{#4} \rangle}
+\newcommand{\eOOcast}[4]{\langle \cOOcast{#2}{#3}{#4} \rangle #1}
 \newcommand{\eOOblame}[1]{\mathtt{blame} \; #1}
 \newcommand{\oOOinj}{\mathtt{dyn}}
 \newcommand{\oOOsole}{\mathtt{unit}}
@@ -111,8 +111,9 @@
 \newcommand{\oOOinl}{\mathtt{inl}}
 \newcommand{\oOOinr}{\mathtt{inr}}
 \newcommand{\oOOblame}[1]{\mathtt{blame} \; #1}
-\newcommand{\cOOcast}[3]{#1 \overset{#2}{\Rightarrow} #3}
-\newcommand{\vOOcast}[2]{#1\langle#2\rangle}
+%\newcommand{\cOOcast}[3]{#3 \overset{#2}{\Leftarrow} #1}
+\newcommand{\cOOcast}[3]{#3 \Leftarrow^{#2} #1}
+\newcommand{\vOOcast}[2]{\langle#2\rangle#1}
 \newcommand{\vOOfun}[3]{\mathtt{fun} \; #1 \; #2 \; #3}
 \newcommand{\vOOtt}[0]{\mathtt{unit}}
 \newcommand{\vOOcons}[2]{\mathtt{cons}\;#1\;#2}
@@ -875,10 +876,18 @@ convenient because space-efficiency is about compressing continuations.
 	Could you tell me why taking the value first is better?
 	I am always taking the target of induction first. -KC
 	\\---\\
-        It's better because it matches the postfix syntax we are using for
-        casts. Currently line 2 of applyCast for D is difficult to read,
-        compare it with line 4 of applyCast for UD. -JS
-        }
+    It's better because it matches the postfix syntax we are using for
+    casts. Currently line 2 of applyCast for D is difficult to read,
+    compare it with line 4 of applyCast for UD. -JS
+    \\---\\
+    Does it mean changing the syntax for casts to a prefix syntax would work as 
+    well? 
+    If yes, I prefer this way, because of the reason in my first response 
+    and that function applications (apply) also takes arguments in this order.
+    I have fixed it with my idea so that we can see if it works. This change is 
+    easy to undo.
+    -KC
+    }
 
 Let $ r $ range over cast results. A cast result is either a success, which 
 brings back a value, or a failure, which brings a blame label.
