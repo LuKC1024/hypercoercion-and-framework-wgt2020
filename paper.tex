@@ -438,8 +438,13 @@ In section \ref{sec:hypercoercion} we present hypercoercion.
 Section \ref{sec:conclude} concludes.
 \todo[inline]{Lots of missing sections. -Jeremy}
 
-\section{Background: Cast Calculi} \label{sec:blame-calculus}
+\section{Background} \label{sec:blame-calculus}
 
+In this section, we review lazy cast calculi (\ref{sec:cast-calculi}) and
+normal coercion (\ref{sec:coercion-calculus}). 
+
+\subsection{Cast Calculi}
+\label{sec:cast-calculi}
 \begin{figure}
 	Syntax
 	\[
@@ -598,7 +603,7 @@ Section \ref{sec:conclude} concludes.
 	\label{fig:blame-static}
 \end{figure}
 
-\figref{fig:blame-static} defines the syntax of cast calculus and its
+\figref{fig:blame-static} defines the syntax of cast calculi and its
 static semantics. We extend the syntax in \citet{siek2009exploring} with sum 
 types and product types. Besides, we annotate function codomain explicitly 
 because we need the codomain when evaluating cast calculus with hypercoercions.
@@ -653,11 +658,18 @@ type constructor.
 Let $ o $ range over observations. They are what would be observed if a 
 program terminates. Observations include all value constructors and blame.
 
-Now let's move to the dynamic semantics. 
-
-\subsection{The \lazyD{} cast calculus}
-
 \begin{figure}
+	%	Continuation typing \fbox{$ \kappa : T_1 \Longrightarrow T_2 $}
+	%	\begin{gather*}
+	%	\dots \quad
+	%	\inference{
+	%		c : T_1 \Longrightarrow T_2 &
+	%		\kappa : T_2 \Longrightarrow T_3
+	%	}{
+	%		\langle c \rangle \kappa : T_1 \Longrightarrow T_3
+	%	}
+	%	\end{gather*}
+	
 	Syntax
 	\[
 	\begin{array}{rclr}
@@ -670,7 +682,41 @@ Now let's move to the dynamic semantics.
 		\sOOreturn{v}{\kappa} \mid{}
 		\sOOhalt{o}
 	}
-		
+	
+	\stxrule{\kappa}{continuations}{
+		\mathtt{stop} \mid{}
+		\mathtt{cons_1} \; e \; \rho \; \kappa \mid{}
+		\mathtt{cons_2} \; v \; \kappa \mid{}
+		\mathtt{inl} \; \kappa \mid{}
+		\mathtt{inr} \; \kappa
+	}
+	\stxrulecont{
+		\mathtt{app_1} \; e \; \rho \; \kappa \mid{}
+		\mathtt{app_2} \; v \; \kappa \mid{}
+		\mathtt{fst} \; \kappa \mid{}
+		\mathtt{snd} \; \kappa \mid
+		\mathtt{case_1} \; e_1 \; e_2 \; \rho \; \kappa
+	}
+	\stxrulecont{	
+		\mathtt{case_2} \; v   \; e   \; \rho \; \kappa \mid{}
+		\mathtt{case_3} \; v_1 \; v_2 \; \rho \; \kappa \mid
+		\langle c \rangle \kappa
+	}
+	\end{array}
+	\]
+	Syntax
+	\[
+	\begin{array}{rclr}
+	\stxrule{r}{cast results}{
+		\rOOsucc{v} \mid
+		\rOOfail{l}
+	}
+	\stxrule{s}{states}{
+		\sOOinspect{e}{\rho}{\kappa} \mid{}
+		\sOOreturn{v}{\kappa} \mid{}
+		\sOOhalt{o}
+	}
+	
 	\stxrule{\kappa}{continuations}{
 		\mathtt{stop} \mid{}
 		\mathtt{cons_1} \; e \; \rho \; \kappa \mid{}
@@ -693,23 +739,6 @@ Now let's move to the dynamic semantics.
 	\end{array}
 	\]
 	
-	\caption{Syntax of CEK abstract machine ($ \mathcal{D} $) for the \lazyD{} 
-	cast calculus}
-\label{machine-cekc-syntax}
-\end{figure}
-	
-\begin{figure}
-%	Continuation typing \fbox{$ \kappa : T_1 \Longrightarrow T_2 $}
-%	\begin{gather*}
-%	\dots \quad
-%	\inference{
-%		c : T_1 \Longrightarrow T_2 &
-%		\kappa : T_2 \Longrightarrow T_3
-%	}{
-%		\langle c \rangle \kappa : T_1 \Longrightarrow T_3
-%	}
-%	\end{gather*}
-	
 	Reduction \fbox{$ \judgeDCreduce{s}{s} $}
 	\[
 	\begin{array}{rclr}
@@ -726,31 +755,31 @@ Now let's move to the dynamic semantics.
 			} \; \kappa)}
 	}{
 		\sOOreturn{v_1}{
-		\langle\cOOcast{T_3}{l}{T_1}\rangle
-		(\mathtt{app_2} \; v_2 \; 
-		\langle\cOOcast{T_2}{l}{T_4}\rangle \kappa)}
+			\langle\cOOcast{T_3}{l}{T_1}\rangle
+			(\mathtt{app_2} \; v_2 \; 
+			\langle\cOOcast{T_2}{l}{T_4}\rangle \kappa)}
 	}{}
 	
-%	\redrule{
-%		\sOOreturn{v}{(
-%			\mathtt{app_2} \;
-%			(\vOOfun{\rho}{x}{e}) \;
-%			\kappa
-%		)}
-%	}{\sOOinspect{e}{\rho{}[x := v]}{\kappa}}{}
-
+	%	\redrule{
+	%		\sOOreturn{v}{(
+	%			\mathtt{app_2} \;
+	%			(\vOOfun{\rho}{x}{e}) \;
+	%			\kappa
+	%		)}
+	%	}{\sOOinspect{e}{\rho{}[x := v]}{\kappa}}{}
+	
 	\redrule{
 		\sOOreturn{
 			\vOOcast{v}{\cOOcast{\POOprod{T_1}{T_2}}{l}{
 					\POOprod{T_3}{T_4}}}
-			}{(\mathtt{fst} \; \kappa)}
+		}{(\mathtt{fst} \; \kappa)}
 	}{
 		\sOOreturn{v}{(
 			\mathtt{fst} \;
 			\langle \cOOcast{T_1}{l}{T_3} \rangle \kappa
 			)}
 	}{}
-
+	
 	\redrule{
 		\sOOreturn{
 			\vOOcast{v}{\cOOcast{\POOprod{T_1}{T_2}}{l}{
@@ -762,29 +791,29 @@ Now let's move to the dynamic semantics.
 			\langle \cOOcast{T_2}{l}{T_4} \rangle \kappa
 			)}
 	}{}
-
+	
 	\redrule{
 		\sOOreturn{v_3}{(
 			\mathtt{case_3} \;
 			v_1 \; v_2 \;
 			\kappa
-		)}
+			)}
 	}{case(v_1,
-	\mathtt{app_2} \; v_2 \; \kappa,
-	\mathtt{app_2} \; v_3 \; \kappa
-	)}{}
-
+		\mathtt{app_2} \; v_2 \; \kappa,
+		\mathtt{app_2} \; v_3 \; \kappa
+		)}{}
+	
 	\redrule{
 		\sOOreturn{v}{(
 			\mathtt{cast} \; c \; \kappa
-		)}
+			)}
 	}{
 		\sOOreturn{u}{\kappa}
 		\\ &
 	}{
 		\sidecond{applyCast(c,v) = \rOOsucc{u}}
 	}
-
+	
 	\redrule{
 		\sOOreturn{v}{(
 			\mathtt{cast} \; c \; \kappa
@@ -814,6 +843,79 @@ Now let's move to the dynamic semantics.
 	}{}
 	\end{array}
 	\]
+		
+	%	Transitive closure of reduction \fbox{$ s \longrightarrow_{D,B}^{*} s 
+	%$}\\
+	
+	Evaluation \fbox{$\judgeDCeval{e}{o}$}
+	\[
+	\inference{
+		\sOOinspect{e}{\emptyset}{cont(\hckOOmt)} \longrightarrow_{B}^{*} 
+		\sOOhalt{o}
+	}{
+		\judgeDCeval{e}{o}
+	}
+	\]
+	
+	\caption{dynamic semantics of the cast calculi as a CEK machine}
+	\label{machine-cekc}
+\end{figure}
+
+Fig.~\ref{machine-cekc} defines the dynamic semantics of cast calculi as a 
+CEK machine \citep{felleisen1986control}.
+\todo[inline]{Briefly present the main ideas regarding how a CEK
+	machine works. (2-3 sentences) -Jeremy}
+\todo[inline]{Please fill in the missing reduction rules. -Jeremy}
+\todo[inline]{Explain why you are using a CEK machine instead of
+	reduction semantics. -Jeremy}
+\todo[inline]{Change the order of parameters for applyCast to take
+	the value first and the cast second. -Jeremy
+	\\---\\
+	Could you tell me why taking the value first is better?
+	I am always taking the target of induction/match first. -KC}
+
+
+Let $ c $ range over casts. A cast is a triple of a type, a label, and a type.
+Let $ v $ range over values. A value is either a function, the 
+element of unit, a pair, a left injection, a right injection, or a casted value.
+The cast around a casted value is not arbitrary, as shown by value typing: the 
+source type must be a pre-type, and the source and the target must be 
+shallow-consistent.
+Let $ r $ range over cast results. A cast result is either a success, which 
+brings a value, or a failure, which brings a blame label.
+Let $ s $ range over machine states. A state is either looking at an 
+expression to decide what to do next, returning a value to a continuation, or 
+halting with an observation.
+Let $ \kappa $ range over continuations. $ \mathtt{mt} $ is the top 
+continuation. The remaining continuations correspond to expressions. For 
+example, $ (\mathtt{cons_1} \; e \; \rho \; \kappa) $ is the continuation where 
+we are waiting for the value of the first argument to a $ \mathtt{cons} $. And 
+the last continuation, $ \langle c \rangle \kappa $ is to cast the value before 
+returning to $ \kappa $.
+
+In the reduction rules, to evaluate a cast expression, the machine move the 
+cast to the continuation and evaluate the inner expression. To apply a casted 
+function, the machine firstly cast $ v_1 $, the operand, then apply the casted 
+operand to $ v_2 $, the un-casted function, and finally cast the result of the 
+function application. To take out the first (resp. second) part of a casted 
+pair, the machine firstly take out the first (resp. second) part of $ v $, the 
+un-casted pair, and cast the result. To case-split a sum, the machine looks 
+deep inside the value to find out whether it is a left injection or a right 
+one.
+\todo[inline]{Change the rules for case to be small step, i.e.,
+	the case function should not be recursive. -Jeremy}
+Along the way, the machine accumulate the pending casts onto the 
+continuations. To cast a value, the machine try to apply the cast to the value. 
+If the cast succeeds, the machine returns the result to the next continuation. 
+If the cast fails, the machine halts with the blame label.
+
+Transitive closure of reduction ($ \judgeDCreduceTrans{s}{s} $) and evaluation 
+are 
+standard.
+
+\subsection{The \lazyD{} cast calculus}
+
+\begin{figure}
 	
 	\fbox{$applyCast(c,v) = r$}
 	\[
@@ -846,83 +948,14 @@ Now let's move to the dynamic semantics.
 	
 	\end{array}
 	\]
-	
-%	Transitive closure of reduction \fbox{$ s \longrightarrow_{D,B}^{*} s $}\\
-	
-	Evaluation \fbox{$\judgeDCeval{e}{o}$}
-	\[
-	\inference{
-		\sOOinspect{e}{\emptyset}{cont(\hckOOmt)} \longrightarrow_{B}^{*} 
-		\sOOhalt{o}
-	}{
-		\judgeDCeval{e}{o}
-	}
-	\]
-	
-	\caption{Reduction rules of CEK abstract machine ($ \mathcal{D} $) for the 
-	\lazyD{} cast calculus}
-	\label{machine-cekc-reduction}
+	\caption{Definition of $ applyCast $ for \lazyD}
 \end{figure}
 
-Fig.~\ref{machine-cekc-syntax} defines the syntax of a CEK machine 
-\citep{felleisen1986control} evaluating 
-the \lazyD{} cast calculus.
-\todo[inline]{Briefly present the main ideas regarding how a CEK
-  machine works. (2-3 sentences) -Jeremy}
-\todo[inline]{Use citep to put a citation in parentheses, as I've
-  done above. -Jeremy }
-\todo[inline]{The figure is too tall. You may need to pull some things
-  out of the figure, such as the value typing. -Jeremy}
-\todo[inline]{Please fill in the missing reduction rules. -Jeremy}
-\todo[inline]{Explain why you are using a CEK machine instead of
-  reduction semantics. -Jeremy}
-\todo[inline]{Change the order of parameters for applyCast to take
-  the value first and the cast second. -Jeremy
-\\---\\
-Could you tell me why taking the value first is better?
-I am always taking the target of induction/match first. -KC}
 We conjecture that this CEK machines agree with the \lazyD{} cast calculus in 
 \citet{siek2012interpretations}.
 We will show in \hyperref{sec:hypercoercion} that this abstract machine is 
 equivalent to an abstract machine that represents casts with hypercoercions.
 
-Let $ c $ range over casts. A cast is a triple of a type, a label, and a type.
-Let $ v $ range over values. A value is either a function, the 
-element of unit, a pair, a left injection, a right injection, or a casted value.
-The cast around a casted value is not arbitrary, as shown by value typing: the 
-source type must be a pre-type, and the source and the target must be 
-shallow-consistent.
-Let $ r $ range over cast results. A cast result is either a success, which 
-brings a value, or a failure, which brings a blame label.
-Let $ s $ range over machine states. A state is either looking at an 
-expression to decide what to do next, returning a value to a continuation, or 
-halting with an observation.
-Let $ \kappa $ range over continuations. $ \mathtt{mt} $ is the top 
-continuation. The remaining continuations correspond to expressions. For 
-example, $ (\mathtt{cons_1} \; e \; \rho \; \kappa) $ is the continuation where 
-we are waiting for the value of the first argument to a $ \mathtt{cons} $. And 
-the last continuation, $ \langle c \rangle \kappa $ is to cast the value before 
-returning to $ \kappa $.
-
-In the reduction rules, to evaluate a cast expression, the machine move the 
-cast to the continuation and evaluate the inner expression. To apply a casted 
-function, the machine firstly cast $ v_1 $, the operand, then apply the casted 
-operand to $ v_2 $, the un-casted function, and finally cast the result of the 
-function application. To take out the first (resp. second) part of a casted 
-pair, the machine firstly take out the first (resp. second) part of $ v $, the 
-un-casted pair, and cast the result. To case-split a sum, the machine looks 
-deep inside the value to find out whether it is a left injection or a right 
-one.
-\todo[inline]{Change the rules for case to be small step, i.e.,
- the case function should not be recursive. -Jeremy}
-Along the way, the machine accumulate the pending casts onto the 
-continuations. To cast a value, the machine try to apply the cast to the value. 
-If the cast succeeds, the machine returns the result to the next continuation. 
-If the cast fails, the machine halts with the blame label.
-
-Transitive closure of reduction ($ \judgeDCreduceTrans{s}{s} $) and evaluation 
-are 
-standard.
 
 \subsection{The \lazyUD{} cast calculus [Jeremy]}
 
@@ -937,18 +970,18 @@ definition of $\mathit{applyCast}$ for the \lazyUD{} cast calculus is given in
 Fig.~\ref{fig:apply-Cast-UD}.
 
 \begin{figure}
-
-  Syntax
-  \[
-  \begin{array}{rclr}
-    \stxrule{v}{values}{
-      \cdots \mid 
-      \vOOcast{v}{ \cOOcast{I}{l}{\star} } \mid
-      \vOOcast{v}{ \cOOcast{P}{l}{P} }
-    }
-  \end{array}
-  \]
-  
+%
+%  Syntax
+%  \[
+%  \begin{array}{rclr}
+%    \stxrule{v}{values}{
+%      \cdots \mid 
+%      \vOOcast{v}{ \cOOcast{I}{l}{\star} } \mid
+%      \vOOcast{v}{ \cOOcast{P}{l}{P} }
+%    }
+%  \end{array}
+%  \]
+%  
   \fbox{$\mathit{applyCast}(v,c) = r$}
   \[
   \begin{array}{rclr}
@@ -978,7 +1011,8 @@ Fig.~\ref{fig:apply-Cast-UD}.
 \clearpage
 \pagebreak
 
-\subsection{Coercions in Normal Form} \label{sec:coercion-calculus}
+\subsection{Coercions in Normal Form} 
+\label{sec:coercion-calculus}
 
 In this section we review the normal coercions \citep{siek2012interpretations} 
 to motivate the design of hypercoercion. 
