@@ -1399,9 +1399,16 @@ Three observations on this definition leads to hypercoercion:
 \todo[inline]{What is the main idea behind the organization of
  hypercoercions?}
 
-This section presents our first contribution, hypercoercion (HC). 
-\figref{fig:hypercoercion} defines the syntax of HC.
-Types, pre-types, and blame labels are as before.
+This section presents our first contribution, the definition of hypercoercion. 
+The functions that construct hypercoercions are deferred to subsections because 
+they depend on blame strategies.
+And the functions that apply hypercoercions to values are deferred to 
+Section~\ref{sec:hypercoercion-correctness} because 
+they depends on a new definition of values, which is part of the framework in
+Section~\ref{sec:framework}.
+
+\figref{fig:hypercoercion} defines the syntax of hypercoercion. Types, 
+pre-types, and blame labels are as before.
 
 Let $ c $ range over hypercoercions. A hypercoercion is either 
 an identity cast between the dynamic types, or a complex including a head, a 
@@ -1792,7 +1799,23 @@ Figure~\ref{fig:HC-UD-cast}
 \section{a framework for proving correctness of cast representations}
 \label{sec:framework}
 
-This section presents our second contribution, a space-efficient CEK abstract 
+This section presents our second contribution, a framework for proving 
+correctness of cast representations.
+In subsection~\ref{ssec:framework:cek}, we introduce \effCEK{C}, a family 
+of semantics (in the style of CEK machines) indexed by cast representations ($ 
+C $). 
+In subsection~\ref{secc:framework:bisim}, we prove when $ C $ is 
+$ surely \; \text{\lazyD} $, $ \judgeDeval{e}{o} $ if and only $ 
+\judgeSeval{C}{e}{o} $, that is, every $ surely \text{\lazyD} $ cast 
+representation respects the \lazyD\ cast calculus. 
+Proving a similar theorem for \lazyUD\ is in progress.
+
+\subsection{A Space-efficient CEK machine}
+\label{ssec:framework:cek}
+
+We define cast representations and \effCEK{C} 
+
+space-efficient CEK abstract 
 machine. This machine is parameterized over \emph{cast representation}. 
 
 \begin{definition}[Cast Representation]
@@ -1970,6 +1993,12 @@ then halts with the blame label.
 
 Transitive closure of reduction ($ \judgeSreduceTrans{C}{s}{s} $) and 
 evaluation are standard. Value typing ($ \judgeType{v}{T} $) is straightforward.
+
+\subsection{Correctness Proof of Surely \lazyD\ Cast Representations}
+\label{ssec:framework:correctness}
+
+\todo[inline]{KC needs to move some content in the next section to here. -KC}
+
 
 
 \section{Correctness Proof of \lazyD{} hypercoercions}
