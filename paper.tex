@@ -80,9 +80,8 @@
 \newcommand{\judgetype}[3]{#1 \vdash #2 : #3}
 \newcommand{\judgeType}[2]{#1 : #2}
 \newcommand{\judgeTypeFT}[3]{#1 : #2 \Longrightarrow #3} % FT = From To
-\newcommand{\lazyUD}{$\mathtt{Lazy UD}$}
-\newcommand{\lazyD}{$\mathtt{Lazy D}$}
-\newcommand{\eager}{$\mathtt{Eager}$}
+\newcommand{\lazyUD}{Lazy\;UD}
+\newcommand{\lazyD}{Lazy\;D}
 \newcommand{\sOOinspect}[3]{\mathtt{Eval} \; #1 \; #2 \; #3}
 \newcommand{\sOOreturn}[2]{\mathtt{Cont} \; #2 \; #1}
 \newcommand{\sOOhalt}[1]{\mathtt{Halt} \; #1}
@@ -397,7 +396,7 @@ that this framework is general enough to include coercion and threesome.
 %potential type errors, but 
 %blame more programs. $ D $ and $ UD $ assign blame labels differently.
 We focus on lazy strategies because recently \citet{new2019gradual} 
-show that \eager{} strategies are incompatible with $\eta$-equivalence of 
+show that eager strategies are incompatible with $\eta$-equivalence of 
 functions, which suggest that they are not very ideal. We are unaware of any 
 strong argument favoring D or UD, so we study both \lazyD\ and \lazyUD.
 \todo[inline]{Why do we need to explain why both LD and LUD? -KC
