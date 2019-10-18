@@ -1807,8 +1807,12 @@ representations ($ C $).
 In subsection~\ref{secc:framework:correctness}, we prove when $ C $ is 
 $ surely \; \text{\lazyD} $, $ \judgeDeval{e}{o} $ if and only $ 
 \judgeSeval{C}{e}{o} $, that is, every $ surely\;\text{\lazyD} $ cast 
-representation respects the \lazyD\ cast calculus. 
-Proving a similar theorem for \lazyUD\ is in progress.
+representation respects the semantics of \lazyD\ cast calculus. Having this 
+theorem means when people want to prove a \lazyD\ cast reprentation is correct, 
+all they have to do is to prove that their cast representation is $ surely \;
+LazyD $ and apply our framework to this proof, which should be much simpler 
+than proving equivalence of semantics.
+We are working on a similar theorem for \lazyUD{}.
 
 Our space-efficient CEK machine is parameterized over \emph{cast 
 	representations}. 
@@ -1837,6 +1841,54 @@ correctness proof.
 		\item $seq(id(T_1),c) = c$,
 		\item $seq(c,id(T_2)) = c$, and
 		\item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
+	\end{enumerate}
+\end{definition}
+
+\begin{definition}[Surely \lazyD\ Cast Representation]
+	A cast representation is surely \lazyD\ if
+	\begin{enumerate}
+		\item If $ v : T $, then $ applyCast(id(T), v) = \mathtt{succ} \; v $
+		\item If $ \judgeType{v}{T_1} $,
+		$ \judgeTypeFT{c_1}{T_1}{T_2} $, and
+		$ \judgeTypeFT{c_2}{T_2}{T_3} $,\\
+		then $ applyCast(seq(c_1,c_2),v) = 
+		applyCast(c_1,v) >>= \lambda v.applyCast(c_2,v) $ \\
+		where 
+		\[
+		\begin{array}{rcl}
+		\rOOsucc{v} >>= f & = & f(v) \\
+		\rOOfail{l} >>= f & = & \rOOfail{l}
+		\end{array}
+		\]
+		\item If $ v : T_1 $ and $ \neg T_1 \smile T_2 $,
+		then $ applyCast(cast(T_1, l, T_2),v) = \rOOfail{l} $
+		\item If $ v : \star $, 
+		then $ applyCast(cast(\TOOdyn,l,\TOOdyn),v) = \rOOsucc{v} $
+		\item If $ v : P $,
+		then $ applyCast(cast(\star,l,Q),\hcvOOinj{P}{v}) 
+		= applyCast(cast(P,l,Q),v) $
+		\item If $ v : P $,
+		then $ applyCast(cast(P,l,\star),v) = \rOOsucc{(\hcvOOinj{P}{v})} $
+		\item If $ v : \POOunit $,
+		then $ applyCast(cast(\POOunit,l,\POOunit),v) = \rOOsucc{v} $
+		\item
+		$ 
+		applyCast(cast(\POOfun{T_1}{T_2},l,\POOfun{T_3}{T_4}) ,
+		\hcvOOfun{c_1}{\rho}{x}{b}{c_2}) \\
+		= 
+		\rOOsucc{(\hcvOOfun{seq(cast(T_3,l,T_1),c_1)}{\rho}{x}{b}{seq(c_2,cast(T_2,l,T_4))})}$
+		
+		\item $ applyCast(cast(\POOprod{T_1}{T_2},l,T_3 \times 
+		T_4),\hcvOOcons{v_1}{c_1}{v_2}{c_2}) $ \\
+		$ = 
+		\rOOsucc{(\hcvOOcons{v_1}{seq(c_1,cast(T_1,l,T_3))}{v_2}{seq(c_2,cast(T_2,l,T_4))})}
+		$ 
+		\item $ 
+		applyCast(cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}),\hcvOOinl{v}{c})
+		= \rOOsucc{(\hcvOOinl{v}{seq(c,cast(T_1,l,T_3))})} $
+		\item $ 
+		applyCast(cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}),\hcvOOinr{v}{c})
+		= \rOOsucc{(\hcvOOinr{v}{seq(c,cast(T_2,l,T_4))})} $
 	\end{enumerate}
 \end{definition}
 
@@ -2019,54 +2071,6 @@ evaluation are standard. Value typing ($ \judgeType{v}{T} $) is straightforward.
 	The summary should be enough so that the reader knows a bit
 	about why you introduce the various definitions below. -JS}
 \todo[inline]{KC needs to move some content in the next section to here. -KC}
-
-\begin{definition}[Surely \lazyD\ Cast Representation]
-	A cast representation is surely \lazyD\ if
-	\begin{enumerate}
-		\item If $ v : T $, then $ applyCast(id(T), v) = \mathtt{succ} \; v $
-		\item If $ \judgeType{v}{T_1} $,
-		$ \judgeTypeFT{c_1}{T_1}{T_2} $, and
-		$ \judgeTypeFT{c_2}{T_2}{T_3} $,\\
-		then $ applyCast(seq(c_1,c_2),v) = 
-		applyCast(c_1,v) >>= \lambda v.applyCast(c_2,v) $ \\
-		where 
-		\[
-		\begin{array}{rcl}
-		\rOOsucc{v} >>= f & = & f(v) \\
-		\rOOfail{l} >>= f & = & \rOOfail{l}
-		\end{array}
-		\]
-		\item If $ v : T_1 $ and $ \neg T_1 \smile T_2 $,
-		then $ applyCast(cast(T_1, l, T_2),v) = \rOOfail{l} $
-		\item If $ v : \star $, 
-		then $ applyCast(cast(\TOOdyn,l,\TOOdyn),v) = \rOOsucc{v} $
-		\item If $ v : P $,
-		then $ applyCast(cast(\star,l,Q),\hcvOOinj{P}{v}) 
-		= applyCast(cast(P,l,Q),v) $
-		\item If $ v : P $,
-		then $ applyCast(cast(P,l,\star),v) = \rOOsucc{(\hcvOOinj{P}{v})} $
-		\item If $ v : \POOunit $,
-		then $ applyCast(cast(\POOunit,l,\POOunit),v) = \rOOsucc{v} $
-		\item
-		$ 
-		applyCast(cast(\POOfun{T_1}{T_2},l,\POOfun{T_3}{T_4}) ,
-		\hcvOOfun{c_1}{\rho}{x}{b}{c_2}) \\
-		= 
-		\rOOsucc{(\hcvOOfun{seq(cast(T_3,l,T_1),c_1)}{\rho}{x}{b}{seq(c_2,cast(T_2,l,T_4))})}$
-		
-		\item $ applyCast(cast(\POOprod{T_1}{T_2},l,T_3 \times 
-		T_4),\hcvOOcons{v_1}{c_1}{v_2}{c_2}) $ \\
-		$ = 
-		\rOOsucc{(\hcvOOcons{v_1}{seq(c_1,cast(T_1,l,T_3))}{v_2}{seq(c_2,cast(T_2,l,T_4))})}
-		$ 
-		\item $ 
-		applyCast(cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}),\hcvOOinl{v}{c})
-		= \rOOsucc{(\hcvOOinl{v}{seq(c,cast(T_1,l,T_3))})} $
-		\item $ 
-		applyCast(cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}),\hcvOOinr{v}{c})
-		= \rOOsucc{(\hcvOOinr{v}{seq(c,cast(T_2,l,T_4))})} $
-	\end{enumerate}
-\end{definition}
 
 The bisimulation relation of states ($\eqvDS{C}{s}{s}$) is mostly derived from 
 the definitions of \ineffCEKD. Exceptions include the relations from 
