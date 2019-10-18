@@ -332,15 +332,20 @@ implementations of casts on higher-order values (functions, objects,
 etc.) impose significant runtime overheads that can change the
 asymptotic time and space complexity of a program
 \citep{herman2010space}. There are several known space-efficient cast
-representations, with various strengths and weaknesses \citep{siek2015blame,siek2010threesomes,garcia2013calculating,kuhlenschmidt2018efficient,siek2012interpretations,garcia2014deriving}. This paper
-presents a new cast representation, named \emph{hypercoercions}, that
-is good for both mechanized metatheory and good for implementation.
-The composition operator for hypercoercions is structurally recursive
-and the hypercoercions are suggestive of a bit-level representation
-that minimizes the need for pointers and fits all first-order casts
-into 64 bits.  Of course, valid cast representation must not change
-the result of programs. This paper presents first steps toward a
-framework for proving the equivalence of cast calculi.
+representations, with various strengths and weaknesses
+\citep{siek2015blame,siek2010threesomes,garcia2013calculating,kuhlenschmidt2018efficient,siek2012interpretations,garcia2014deriving}. This
+paper presents a new cast representation, named \emph{hypercoercions},
+that is good for both mechanized metatheory and good for
+implementation. Recall that it is the composition operator in these
+systems that enables space-efficiency by compressing casts.  The
+composition operator for hypercoercions is structurally recursive and
+hypercoercions are suggestive of a bit-level representation that
+minimizes the need for pointers and fits all first-order casts into 64
+bits.  Of course, an alternative cast representation must not change
+the result of programs. This paper presents steps toward a framework
+for proving the equivalence of cast calculi and, in particular, proves
+that an abstract machine using hypercoercions is equivalent to an
+abstract machine using standard casts.
 
 %
 %For example, translation to intermediate languages can wrap some expressions 
@@ -348,18 +353,39 @@ framework for proving the equivalence of cast calculi.
 %tail-recursive functions in source language can consume unbounded space at 
 %runtime. There are more examples of space leaking in \citet{herman2010space}.
 
-There are two best studied ways to represent cast space-efficiently: coercions 
-\citep{herman2010space}\citep{siek2009exploring}\citep{siek2012interpretations} 
-\citep{siek2015blame} and threesomes 
-\citep{siek2010threesomes}\citep{garcia2013calculating}. They have different 
-strength and 
-weakness. \citet{garcia2013calculating} and \citet{siek2015blame} claim that 
-coercion is easy to understand, but hard to implement, while threesome is easy 
-to implement, but hard to understand. \citet{garcia2013calculating} in addition 
-claims that coercion is more difficult to reason about formally because 
-its compose function is not structurally recurisive. For instance, the 
-developers of Grift \citep{kuhlenschmidt2018efficient} report that it is tricky 
-to convince their proof assistants that the compose function terminates.
+The current state of the art regarding cast representations includes
+\begin{itemize}
+\item threesomes \citep{siek2010threesomes},
+\item supercoercions \citep{garcia2014deriving}, and
+\item coercions in normal form
+  \citep{siek2012interpretations,siek2015blame}.
+\end{itemize}
+Threesomes and supercoercions are good for mechanized metatheory
+because their compose operators are structurally recursive, making
+them easy to define in a proof assistant such as Agda. In contrast,
+the coercions in normal form have compose operators that are not
+structurally recursive, which makes it more difficult to define in
+Agda, requiring what amounts to an explicit proof of termination.
+%
+On the other hand, coercions in normal form are easier to understand
+than threesomes (with a strange labelled bottom type), and
+supercoercions (with 10 different kinds). 
+
+
+%% There are two best studied ways to represent cast space-efficiently:
+%% coercions
+%% \citep{herman2010space}\citep{siek2009exploring}\citep{siek2012interpretations}
+%% \citep{siek2015blame} and threesomes
+%% \citep{siek2010threesomes}\citep{garcia2013calculating}. They have
+%% different strength and weakness. \citet{garcia2013calculating} and
+%% \citet{siek2015blame} claim that coercion is easy to understand, but
+%% hard to implement, while threesome is easy to implement, but hard to
+%% understand. \citet{garcia2013calculating} in addition claims that
+%% coercion is more difficult to reason about formally because its
+%% compose function is not structurally recurisive. For instance, the
+%% developers of Grift \citep{kuhlenschmidt2018efficient} report that it
+%% is tricky to convince their proof assistants that the compose function
+%% terminates.
 
 We present a new cast representation, hypercoercion, which has a structurally 
 recursive composition. When we prove theorems about hypercoercion in Agda, the 
