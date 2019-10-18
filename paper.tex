@@ -1821,19 +1821,22 @@ Figure~\ref{fig:HC-UD-cast}
 \section{a framework for proving correctness of cast representations}
 \label{sec:framework}
 
+\todo[inline]{What is the framework? Why can it simply proofs? Soundness?}
+
 This section presents our second contribution, a framework for proving 
 correctness of cast representations. The framework is a theorem saying that for 
 all cast representation $ C $, if $ C $ satisfies a collection of properties, 
-that an interpreter using $ C $ as the cast representation is extensionally 
-equivalent to the standard interpreter for \lazyD\ cast calculus. 
-We are working on a similar theorem for \lazyUD{}.
+then instantiating our parameterized space-efficient interpreter with $ C $ 
+gives an interpter that is extensionally equal to the standard interpreter for 
+\lazyD\ cast calculus. We are working on a similar theorem for \lazyUD{}.
 
-Firstly, let us define what we mean by \emph{cast representations}. The first 
-three operators allow the interpreter to construct casts. We call them cast 
-constructors. 
+Firstly, let us define what we mean by \emph{cast representations} 
+(Definition~\ref{def:cast-rep}). The first three operators allow the 
+interpreter to construct casts. We call them \textit{cast constructors}. 
 And the forth and last operator enable the interpreter to use casts.
 
 \begin{definition}[Cast Representation]
+	\label{def:cast-rep}
 	A cast representation is a set indexed by two types and has four interface 
 	functions:
 	\begin{description}
@@ -1845,15 +1848,21 @@ And the forth and last operator enable the interpreter to use casts.
 \end{definition}
 
 To use the framework, users needs to prove that their cast representation is 
-\emph{surely LazyD}. The properties of surely \lazyD\ allow the framework to 
-compute the result of $ applyCast(c,v) $ without referring to its actual 
-definitions. This is because every casts at runtime is constructed by one of 
-the three cast constructors. The first property handles casts constructed by $ 
-id(T) $. And the second property handles $ seq(c,c) $. All remaining properties 
-handles $ cast(T,l,T) $. They are effectively a duplication of the $ 
-applyCast(c,v) $ in \ineffCEKD\ (Fig.~\ref{fig:applyCast-D-C}).
+\emph{surely LazyD} (Definition~\ref{def:surely-lazyd}).
+The definition confines the behavior of $ applyCast(c,v) $ so narrowly that it 
+allows the framework to apply casts without referring to the actual definition 
+of $ applyCast(c,v) $. This 
+is because every casts at runtime is constructed by one of 
+the three cast constructors. 
+Property (1) handles casts constructed by $ id(T) $. 
+And property (2) handles $ seq(c,c) $, which says applying the 
+composition of $ c_1 $ and $ c_2 $ is the same as applying $ c_1 $ then $ c_2 $.
+All remaining properties handles $ cast(T,l,T) $. They are effectively a 
+duplication of the $ applyCast(c,v) $ in \ineffCEKD\ 
+(Fig.~\ref{fig:applyCast-D-C}).
 
 \begin{definition}[Surely \lazyD\ Cast Representation]
+	\label{def:surely-lazyd}
 	A cast representation is surely \lazyD\ if
 	\begin{enumerate}
 		\item If $ v : T $, then $ applyCast(id(T), v) = \mathtt{succ} \; v $
@@ -1901,39 +1910,33 @@ applyCast(c,v) $ in \ineffCEKD\ (Fig.~\ref{fig:applyCast-D-C}).
 	\end{enumerate}
 \end{definition}
 
-In subsection~\ref{ssec:framework:cek}, we introduce \effCEK{C}, a family 
-of space-efficient semantics (in the style of CEK machines) indexed by cast 
-representations ($ C $). 
-In subsection~\ref{secc:framework:correctness}, we prove when $ C $ is 
-$ surely \; \text{\lazyD} $, $ \judgeDeval{e}{o} $ if and only $ 
-\judgeSeval{C}{e}{o} $, that is, every $ surely\;\text{\lazyD} $ cast 
-representation respects the semantics of \lazyD\ cast calculus. Having this 
-theorem means when people want to prove a \lazyD\ cast reprentation is correct, 
-all they have to do is to prove that their cast representation is $ surely \;
-LazyD $ and apply our framework to this proof, which should be much simpler 
-than proving equivalence of semantics.
+If a cast representation is surely LazyD, proving this should be easier than 
+proving equivalence to the standard semantics of cast calculus.
 
-
-Our space-efficient CEK machine is parameterized over \emph{cast 
-	representations}. 
-
-Some cast representations are monoids as well. They are useful in our 
-correctness proof.
+Some cast representations are also \textit{monoids}. They are useful in the 
+proof of our framework, and might be interesting elsewhere.
 
 \begin{definition}[Monoid]
 	A cast representation is a monoid if 
-	for all $c : T_1 \Longrightarrow T_2$,
+	for all
 	$c_1 : T_1 \Longrightarrow T_2$,
 	$c_2 : T_2 \Longrightarrow T_3$, and
 	$c_3 : T_3 \Longrightarrow T_4$,
 	\begin{enumerate}
-		\item $seq(id(T_1),c) = c$,
-		\item $seq(c,id(T_2)) = c$, and
+		\item $seq(id(T_1),c_1) = c_1$,
+		\item $seq(c_1,id(T_2)) = c_1$, and
 		\item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
 	\end{enumerate}
 \end{definition}
 
-
+In subsection~\ref{ssec:framework:cek}, we introduce \effCEK{C}, a family 
+of space-efficient semantics indexed by cast representations ($ C $). 
+In subsection~\ref{secc:framework:monoid-correct}, we prove when $ C $ is 
+$ surely \; \text{\lazyD} $ and is a monoid as well, $ \judgeDeval{e}{o} $ if 
+and only if $ \judgeSeval{C}{e}{o} $. In 
+subsection~\ref{secc:framework:all-correct}, we strengthen the theorem to drop 
+the requirement that $ C $ must be a monoid, that is, every surely \lazyD\ cast 
+representation is correct.
 
 \subsection{A Space-efficient CEK machine}
 \label{ssec:framework:cek}
@@ -2058,7 +2061,7 @@ correctness proof.
 	\caption{Space-efficient CEK machine $ \mathcal{S}(C) $}
 	\label{machine-cekcc}
 \end{figure}
-
+ (in the style of CEK machines)
 \figref{machine-cekcc} defines the space-efficient CEK machine \effCEK{C}. This 
 machine is similar to \ineffCEK{}. 
 The most important differences are in values and continuations.
@@ -2107,8 +2110,9 @@ then halts with the blame label.
 Transitive closure of reduction ($ \judgeSreduceTrans{C}{s}{s} $) and 
 evaluation are standard. Value typing ($ \judgeType{v}{T} $) is straightforward.
 
-\subsection{Surely \lazyD\ Cast Representations Respect \ineffCEKD}
-\label{secc:framework:correctness}
+\subsection{Surely \lazyD\ Cast Representations Respect \ineffCEKD\ if They are 
+Monoids}
+\label{secc:framework:monoid-correct}
 
 \todo[inline]{Give a high-level summary of the proof.
 	The summary should be enough so that the reader knows a bit
@@ -2168,6 +2172,9 @@ We omit subscripts when there is no ambiguity.
 		using Lemma~\ref{thm:surely-monoidic-reduce}.
 		Proofs by induction are not ``immediate''. -JS}
 \end{proof}
+
+\subsection{Surely \lazyD\ Cast Representations Respect \ineffCEKD}
+\label{secc:framework:all-correct}
 
 With the properties of surely \lazyD{} cast representation, it is 
 straightforward to proof that 
