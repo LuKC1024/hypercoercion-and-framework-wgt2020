@@ -367,14 +367,21 @@ coercion together with cast calculus
 present hypercoerion in Section~\ref{sec:hypercoercion-definition}.
 
 Another strength of hypercoercion over coercion is that hypercoercion might 
-have a more compact memory representations ...
-\todo[inline]{Could Jeremy explain here why hypercoercion is more compact in 
-memory? -KC}
+have a more compact memory representations. In Grift 
+\citep{kuhlenschmidt2018efficient}, the longest coercions are represented with
+two cons boxes. But for hypercoercion, we are optimistic that one cons box 
+suffices. Using less cons boxes saves memory as well as running time.
+\todo[inline]{
+	Could Jeremy help explain explaining why hypercoercion is more compact in 
+	memory?
+	Cons boxes seem to be non-standard, but I don't know a better name.
+ -KC}
 
 Many of the existing research on coercions or threesomes include proof(s) of 
 correctness, that is, the cast calculus reduces to an observation ($ e 
-\Downarrow o $) if and only if their calcului reduce to the same observation ($ 
-e \Downarrow_{*} o $), where an observation is either a value constructor or 
+\Downarrow o $) if and only if their space-efficient calcului reduce to the 
+same observation ($ e \Downarrow_{*} o $), where an observation is either a 
+value constructor or 
 blame. 
 Despite the striking similarity of these proofs, they are all built from ground 
 up.
@@ -391,20 +398,23 @@ that this framework is general enough to include coercion and threesome.
 %blame more programs. $ D $ and $ UD $ assign blame labels differently.
 We focus on lazy strategies because recently \citet{new2019gradual} 
 show that \eager{} strategies are incompatible with $\eta$-equivalence of 
-functions, which suggest that they are not very ideal. 
+functions, which suggest that they are not very ideal. We are unaware of any 
+strong argument favoring D or UD, so we study both \lazyD\ and \lazyUD.
 \todo[inline]{Why do we need to explain why both LD and LUD? -KC
   \\---\\
-Because the paper includes both. -JS}
+Because the paper includes both. -JS
+\\---\\
+Fixed. -KC}
 
 
 Here are our major contribution:
 \begin{itemize}
 	\item hypercoercion, a new space-efficient cast representation, which has a 
-	structurally recursive composition and has a more compact memory 
+	structurally recursive composition and a more compact memory 	
 	representation.
 	\item a framework in Agda for proving correctness of cast represantations. 
 	We conjecture that both coercion and threesome can fit into this framework.
-	\item a formal proof that hypercoercion respect the semantics of cast 
+	\item a formal proof that hypercoercion respects the semantics of cast 
 	calculus
 \end{itemize}
 
