@@ -385,7 +385,10 @@ that this framework is general enough to include coercion and threesome.
 We focus on lazy strategies because recently \citet{new2019gradual} 
 show that \eager{} strategies are incompatible with $\eta$-equivalence of 
 functions, which suggest that they are not very ideal. 
-\todo[inline]{Why do we need to explain why both LD and LUD? -KC}
+\todo[inline]{Why do we need to explain why both LD and LUD? -KC
+  \\---\\
+Because the paper includes both. -JS}
+
 
 Here are our major contribution:
 \begin{itemize}
@@ -731,68 +734,53 @@ normal coercion (\ref{sec:coercion-calculus}).
 \end{figure}
 
 \figref{fig:blame-static} defines the syntax of cast calculi and its
-static semantics. We extend the syntax in \citet{siek2009exploring} with sum 
-types and product types. Besides, we annotate function codomain explicitly 
-because we need to compute identity hypercoercion for the codomain when 
-evaluating cast calculus with hypercoercions.
-\todo[inline]{Which previous definitions are you refering to?  What
-  are the little changes? -JS
-\\ --- \\ Fixed -KC}
-\todo[inline]{The term typing rule for casts is broken. -JS
-\\ --- \\ Fixed -KC}
-\todo[inline]{Why do you annotate the codomain of lambda abstractions
-	explicitly? -JS
-	\\---\\
-	Because I apply $ id(\cdot) $ to the codomain in the HC CEK. -KC
-        \\---\\
-        The answer you put in the text is too vague. -JS
-        \\---\\
-        Fixed. -KC}
-Let $ T $ range over types. A type is either the dynamic type $ \star $
-(a.k.a. $ \mathtt{Dyn} $, $ \mathbb{?} $, or $ \mathtt{Unknown} $), 
-or a pre-type. 
-Let $ P $ range over pre-types. Every pre-type is a type with a type 
-constructor at the top. For simplicity, we only have one base type, $ \POOunit 
-$. 
-Other pre-types are functions, products, and sums.
+static semantics. We extend the syntax of \citet{siek2009exploring}
+with sum and product types.  Let $ T $ range over types. A type is
+either the dynamic type $ \star $ (a.k.a. $ \mathtt{Dyn} $, $
+\mathbb{?} $, or $ \mathtt{Unknown} $), or a type with a type
+constructor at the top, that is, a pre-type, ranged over by $ P $. We
+include just one base type, $\POOunit$. The other pre-types are
+functions, products, and sums.
 
-$ T_1 \sim T_2 $ reads ``$ T_1 $ and $ T_2 $ are consistent''.
-The intuition of $ T_1 \sim T_2 $ is that $ T_1 $ and $ T_2 $ have no conflict 
-type information. Two types are consistent if one of them is $ \star $, or they 
-have the same top-most type constructor and the corresponding sub-parts are 
-consistent. Consistency is reflexive and symmetric, but not transitive.
+As usual we write $ T_1 \sim T_2 $ when $ T_1 $ and $ T_2 $ are
+consistent. The intuition of $ T_1 \sim T_2 $ is that $ T_1 $ and $
+T_2 $ have no conflicting type information. Two types are consistent
+if one of them is $ \star $, or they have the same top-most type
+constructor and the corresponding sub-parts are
+consistent. Consistency is reflexive and symmetric, but not
+transitive.
 
-$ T_1 \smile T_2 $ reads ``$ T_1 $ and $ T_2 $ are shallowly-consistent''. Two 
-types are shallowly consistent if one of them is $ \star $, or they have the 
-same type constructor at the top. Shallow-inconsistency is the root of all 
-blame in lazy cast strategies -- casting a value to a shallowly inconsistent 
-type leads to a blame. Shallow-consistency is reflexive, symmetric, but 
-not transitive.
+We write $ T_1 \smile T_2 $ when $ T_1 $ and $ T_2 $ are
+shallowly-consistent, that is, if one of them is $ \star $, or they
+have the same type constructor at the top. Shallow-inconsistency is
+the root of all blame in lazy cast strategies -- casting a value to a
+shallowly inconsistent type leads to a blame. Shallow-consistency is
+reflexive, symmetric, but not transitive.
 
-Let $ e $ range over terms. Most terms are standard. We annotate the codomain 
-of lambda abstractions explicitly because we need it when evaluating cast 
-calculus with hypercoercion. We have two additional terms: cast expressions and 
-blame expressions. Cast expressions insert runtime type checks. And blame 
-expressions raise an error. The typing rules for the additional terms are
-straightforward.
+Let $ e $ range over terms. Most terms are standard for a simply-typed
+lambda calculus. We annotate the codomain of a lambda abstraction
+explicitly because we refer to it in the dynamic semantics. Becuase
+this is a cast calculus, we have two additional terms: cast
+expressions and blame expressions. Cast expressions perform runtime
+type checks and blame expressions raise an error.
 
-Let $ v $ range over values. A value is either the unit, a function (a 
-closure), a pair, a left injection, a right injection, or a 
-casted value. As shown 
-by the value typing rules, if the target type of a casted value is the dynamic 
-type, the underlying value must be of an injectable type. The definition of 
-injectable types depends on blame strategies: for the \lazyD\ strategy, every 
-pre-type is injectable; for the \lazyUD\ strategy, a pre-types is injectable if 
-and only if all its sub-parts are the dynamic type. If the target type of a 
-casted value is a pre-type, the type of the underlying value must have the same 
-type constructor.
+Let $ v $ range over values. A value is either the unit, a function (a
+closure), a pair, a left injection, a right injection, or a casted
+value. As shown by the value typing rules, if the target type of a
+casted value is the dynamic type, the underlying value must be of an
+injectable type. The definition of injectable types depends on blame
+strategies: for the \lazyD\ strategy, every pre-type is injectable;
+for the \lazyUD\ strategy, a pre-types is injectable if and only if
+all its sub-parts are the dynamic type. If the target type of a casted
+value is a pre-type, the type of the underlying value must have the
+same type constructor.
 
 Let $ c $ range over casts. A cast is a triple of a type, a label, and a type.
 
-Let $ o $ range over observations. They are what would be observed if a 
-program terminates. Observations include all value constructors and blame.
-The function converting values to observations ($ observe(v) = o $) is defined 
-in the natural way.
+Let $ o $ range over observations. They are what would be observed if
+a program terminates. Observations include all value constructors and
+blame.  The function converting values to observations ($ observe(v) =
+o $) is defined in the natural way.
 
 \begin{figure}
 	%	Continuation typing \fbox{$ \kappa : T_1 \Longrightarrow T_2 $}
@@ -1031,25 +1019,14 @@ part of their states. They evaluate expressions with two interleaving
 processes: 
 (1) dive into an expression and extend the continuation;
 (2) return a value to the current continuation.
-\todo[inline]{Briefly present the main ideas regarding how a CEK
-	machine works. (2-3 sentences) -JS
-\\---\\Fixed -KC}
 
 Most existing proofs about cast calculi defines the dynamic semantics with 
 reduction semantics. We use a CEK machine instead because the first author is 
 more familiar with CEK machines, and that he believes CEK machines are more 
 convenient because space-efficiency is about compressing continuations.
-\todo[inline]{Explain why you are using a CEK machine instead of
-	reduction semantics. -JS
-        \\---\\Fixed -KC
-        \\---\\
-        Change ``one of us'' to ``first author''. -JS
- 		\\---\\Fixed -KC
-}
 
 
-\todo[inline]{Please fill in the missing reduction rules. -JS
-\\---\\ Fixed -KC}
+
 \todo[inline]{Change the order of parameters for applyCast to take
 	the value first and the cast second. -JS
 	\\---\\
@@ -1067,6 +1044,10 @@ convenient because space-efficiency is about compressing continuations.
     I have fixed it with my idea so that we can see if it works. This change is 
     easy to undo.
     -KC
+    \\---\\
+    Postfix is better than prefix because then the casts read left to right,
+    which is the normal direction for English readers.
+    Please make it so. -JS
     }
 
 Let $ r $ range over cast results. A cast result is either a success, which 
@@ -1409,7 +1390,10 @@ Three observations on this definition leads to hypercoercion:
  hypercoercions? -JS
  \\---\\
  Are you asking why hc has three parts? Or why these subsections 
-in this section? -KC}
+ in this section? -KC
+ \\---\\
+ three parts -JS
+}
 
 This section presents our first contribution, the definition of hypercoercion. 
 The functions that construct hypercoercions are deferred to subsections because 
@@ -2102,12 +2086,6 @@ evaluation are standard. Value typing ($ \judgeType{v}{T} $) is straightforward.
 Monoids}
 \label{secc:framework:monoid-correct}
 
-\todo[inline]{Give a high-level summary of the proof.
-	The summary should be enough so that the reader knows a bit
-	about why you introduce the various definitions below. -JS
-\\---\\
-Fixed -KC}
-
 In this subsection, we prove that for all $ C $, if $ C $ is surely LazyD and 
 is a monoid, then $ \judgeDeval{e}{o} $ if and only if $ \judgeSeval{C}{e}{o} 
 $. We proof this theorem with a weak bisimulation between \ineffCEKD\ and 
@@ -2267,10 +2245,6 @@ To prove $ \judgeDeval{e}{o} $ implies $ \judgeSeval{C}{e}{o} $,
 we firstly take one steps in \effCEK{C}, and catch it up in \ineffCEKD\ by 
 taking one or more steps in \ineffCEKD. As we just took a positive number of 
 steps, we are closer to the halting state.
-	\todo[inline]{I'm guessing that you prove this lemma by induction,
-		using Lemma~\ref{thm:surely-monoidic-reduce}.
-		Proofs by induction are not ``immediate''. -JS
-	\\---\\Fixed. -KC}
 \end{proof}
 
 \subsection{Surely \lazyD\ Cast Representations Respect \ineffCEKD}
