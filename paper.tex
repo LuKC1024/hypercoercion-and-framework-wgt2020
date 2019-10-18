@@ -320,19 +320,28 @@ languages</concept_desc>
 \\---\\
 Fixed -KC}
 
-Around 2006, many work on integrating dynamic typing and static typing emerge, 
-notably gradual types \citep{siek2006gradual} and hybrid types 
-\citep{flanagan2006hybrid}. People usually define the semantics of gradually 
-typed languages with intermediate languages that have cast expressions, such as
-the blame calculus \citep{wadler2009well} and
-the cast calculus \citep{siek2009exploring}. Casts are ubiquitous at runtime. 
-For example, they can go in to values and continuations. Thus, representing 
-casts naively with types can change asymptotically the space consumption of 
-programs \citep{herman2010space}. There are several known space-efficient cast 
-representations, but they have different strength and weakness. This paper 
-presents a new solution that combines some of their best parts. Also, a valid 
-cast representation must not change the result of programs. This paper presents 
-the first framework for proving this kind of theorems.
+Around 2006, several groups of researchers proposed ways to integrate
+dynamic typing and static typing, notably gradual typing
+\citep{siek2006gradual}, hybrid typing \citep{flanagan2006hybrid},
+migratory typing \citep{Tobin-Hochstadt:2006fk}, and multi-language
+iteroperability \citep{Gray:2005ij,Matthews:2007zr}. Researchers
+usually define the semantics of gradually typed languages by
+translation to an intermediate language with casts, such as the blame
+calculus \citep{wadler2009well} and other cast calculi
+\citep{siek2009exploring}. Unfortunately, straightforward
+implementations of casts on higher-order values (functions, objects,
+etc.) impose significant runtime overheads that can change the
+asymptotic time and space complexity of a program
+\citep{herman2010space}. There are several known space-efficient cast
+representations, with various strengths and weaknesses. This paper
+presents a new cast representation, named \emph{hypercoercions}, that
+is good for both mechanized metatheory and good for implementation.
+The composition operator for hypercoercions is structurally recursive
+and the hypercoercions are suggestive of a bit-level representation
+that minimizes the need for pointers and fits all first-order casts
+into 64 bits.  Of course, valid cast representation must not change
+the result of programs. This paper presents first steps toward a
+framework for proving the equivalence of cast calculi.
 
 %
 %For example, translation to intermediate languages can wrap some expressions 
@@ -2479,7 +2488,7 @@ natural way.
 
 
 %% Bibliography
-\bibliography{bibfile}
+\bibliography{bibfile,all}
 
 
 %% Appendix

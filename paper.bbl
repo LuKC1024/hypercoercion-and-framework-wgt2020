@@ -68,6 +68,20 @@
 \newblock
 
 
+\bibitem[\protect\citeauthoryear{Gray, Findler, and Flatt}{Gray
+  et~al\mbox{.}}{2005}]%
+        {Gray:2005ij}
+\bibfield{author}{\bibinfo{person}{Kathryn~E. Gray},
+  \bibinfo{person}{Robert~Bruce Findler}, {and} \bibinfo{person}{Matthew
+  Flatt}.} \bibinfo{year}{2005}\natexlab{}.
+\newblock \showarticletitle{Fine-grained interoperability through mirrors and
+  contracts}. In \bibinfo{booktitle}{{\em OOPSLA '05: Proceedings of the 20th
+  annual ACM SIGPLAN conference on Object oriented programming systems
+  languages and applications}}. \bibinfo{publisher}{ACM Press},
+  \bibinfo{address}{New York, NY, USA}, \bibinfo{pages}{231--245}.
+\newblock
+
+
 \bibitem[\protect\citeauthoryear{Herman, Tomb, and Flanagan}{Herman
   et~al\mbox{.}}{2010}]%
         {herman2010space}
@@ -89,6 +103,17 @@
 \newblock \showarticletitle{An efficient compiler for the gradually typed
   lambda calculus}. In \bibinfo{booktitle}{{\em Scheme and Functional
   Programming Workshop}}, Vol.~\bibinfo{volume}{18}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Matthews and Findler}{Matthews and
+  Findler}{2007}]%
+        {Matthews:2007zr}
+\bibfield{author}{\bibinfo{person}{Jacob Matthews} {and}
+  \bibinfo{person}{Robert~Bruce Findler}.} \bibinfo{year}{2007}\natexlab{}.
+\newblock \showarticletitle{Operational Semantics for Multi-Language Programs}.
+  In \bibinfo{booktitle}{{\em The 34th ACM SIGPLAN-SIGACT Symposium on
+  Principles of Programming Languages}}.
 \newblock
 
 
@@ -157,6 +182,16 @@
 \newblock \showarticletitle{Threesomes, with and without blame}. In
   \bibinfo{booktitle}{{\em ACM Sigplan Notices}}, Vol.~\bibinfo{volume}{45}.
   ACM, \bibinfo{pages}{365--376}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Tobin-Hochstadt and Felleisen}{Tobin-Hochstadt
+  and Felleisen}{2006}]%
+        {Tobin-Hochstadt:2006fk}
+\bibfield{author}{\bibinfo{person}{Sam Tobin-Hochstadt} {and}
+  \bibinfo{person}{Matthias Felleisen}.} \bibinfo{year}{2006}\natexlab{}.
+\newblock \showarticletitle{Interlanguage Migration: From Scripts to Programs}.
+  In \bibinfo{booktitle}{{\em Dynamic Languages Symposium}}.
 \newblock
 
 
