@@ -319,7 +319,6 @@ languages</concept_desc>
 \todo[inline]{The first paragraph of the introduction should summarize
   the entire introduction, and in some sense, the entire paper. -JS}
 
-\todo[inline]{Big background}
 Around 2006, many work on integrating dynamic typing and static typing emerge, 
 notably gradual types \citep{siek2006gradual} and hybrid types 
 \citep{flanagan2006hybrid}. The semantics of gradually typed languages is 
@@ -334,7 +333,6 @@ with casts, including expressions at tail positions. Thus, mutually
 tail-recursive functions in source language can consume unbounded space at 
 runtime. There are more examples of space leaking in \citet{herman2010space}.
 
-\todo[inline]{The problem: space-efficient cast representation}
 There are two best studied ways to represent cast space-efficiently: coercions 
 \citep{herman2010space}\citep{siek2009exploring}\citep{siek2012interpretations} 
 \citep{siek2015blame} and threesomes 
@@ -348,7 +346,6 @@ its compose function is not structurally recurisive. For instance, the
 developers of Grift \citep{kuhlenschmidt2018efficient} report that it is tricky 
 to convince their proof assistants that the compose function terminates.
 
-\todo[inline]{Our solution: hypercoercion}
 We present a new cast representation, hypercoercion, which has a structurally 
 recursive composition. When we prove theorems about hypercoercion in Agda, the 
 definition ``just works''. 
@@ -367,7 +364,6 @@ have a more compact memory representations ...
 \todo[inline]{Could Jeremy explain here why hypercoercion is more compact in 
 memory? -KC}
 
-\todo[inline]{The problem: proving correctness of cast representations}
 Many of the existing research on coercions or threesomes include proof(s) of 
 correctness, that is, the cast calculus reduces to an observation ($ e 
 \Downarrow o $) if and only if their calcului reduce to the same observation ($ 
@@ -376,7 +372,6 @@ blame.
 Despite the striking similarity of these proofs, they are all built from ground 
 up.
 
-\todo[inline]{Our solution: a framework}
 We present a framework for proving correctness of cast reprensentation 
 (Section~\ref{sec:framework}), and use it to prove the correctness of 
 hypercoercion (Section~\ref{sec:hypercoercion-correctness}). We are optimistic 
@@ -1112,8 +1107,6 @@ The reflexive transitive closure of reduction ($ \judgeCreduceTrans{s}{s} $)
 and evaluation ($ \judgeCeval{e}{o} $) are standard.
 
 \subsection{The \lazyD{} cast calculus}
-\todo[inline]{I want to merge this and the following subsetion to the 
-subsection above. -KC}
 
 \begin{figure}
 	
@@ -1413,7 +1406,10 @@ Three observations on this definition leads to hypercoercion:
 \end{figure}
 
 \todo[inline]{What is the main idea behind the organization of
- hypercoercions?}
+ hypercoercions? -JS
+ \\---\\
+ Are you asking why hc has three parts? Or why these subsections 
+in this section? -KC}
 
 This section presents our first contribution, the definition of hypercoercion. 
 The functions that construct hypercoercions are deferred to subsections because 
@@ -1600,7 +1596,6 @@ composition of hypercoercions.
 
 \figref{fig:HC-D} defines the constructors of \lazyD{} HC.
 
-\todoKC{check consistency before using middle composition.}
 $ c_1 \fatsemi^\ell c_2 = c' $ composes two hypercoercions. The target of $ 
 c_1 $ and the source of $ c_2 $ might be different, in which case $ \ell $ must 
 be a label.
@@ -1815,8 +1810,6 @@ Figure~\ref{fig:HC-UD-cast}
 
 \section{a framework for proving correctness of cast representations}
 \label{sec:framework}
-
-\todo[inline]{What is the framework? Why can it simply proofs? Soundness?}
 
 This section presents our second contribution, a framework for proving 
 correctness of cast representations. The framework is a theorem saying that for 
@@ -2083,7 +2076,7 @@ pre-continuations.
 A continuation is now a pre-continuation prefixed with a cast.
 Pre-continuation are like the continuations in \ineffCEK.
 
-\todo[inline]{KC needs to describe added rules. -KC}
+\todo[inline]{KC needs to add missing rules in and describe them. -KC}
 We list a fraction of reduction rules due to space limitation.
 When values are constructed, their hypercoercion parts are filled with outputs 
 of $ id $. For instance, when a function value is constructed, its first part 
