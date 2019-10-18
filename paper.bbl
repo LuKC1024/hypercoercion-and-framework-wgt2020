@@ -68,6 +68,19 @@
 \newblock
 
 
+\bibitem[\protect\citeauthoryear{Garc\'{\i}a-P{\'e}rez, Nogueira, and
+  Sergey}{Garc\'{\i}a-P{\'e}rez et~al\mbox{.}}{2014}]%
+        {garcia2014deriving}
+\bibfield{author}{\bibinfo{person}{{\'A}lvaro Garc\'{\i}a-P{\'e}rez},
+  \bibinfo{person}{Pablo Nogueira}, {and} \bibinfo{person}{Ilya Sergey}.}
+  \bibinfo{year}{2014}\natexlab{}.
+\newblock \showarticletitle{Deriving interpretations of the gradually-typed
+  lambda calculus}. In \bibinfo{booktitle}{{\em Proceedings of the ACM SIGPLAN
+  2014 Workshop on Partial Evaluation and Program Manipulation}}. ACM,
+  \bibinfo{pages}{157--168}.
+\newblock
+
+
 \bibitem[\protect\citeauthoryear{Gray, Findler, and Flatt}{Gray
   et~al\mbox{.}}{2005}]%
         {Gray:2005ij}
