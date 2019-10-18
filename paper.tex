@@ -319,7 +319,23 @@ languages</concept_desc>
 \todo[inline]{The first paragraph of the introduction should summarize
   the entire introduction, and in some sense, the entire paper. -JS}
 
-There are two basic ways to represent cast space-efficiently: coercions 
+\todo[inline]{Big background}
+Around 2006, many work on integrating dynamic typing and static typing emerge, 
+notably gradual types \citep{siek2006gradual} and hybrid types 
+\citep{flanagan2006hybrid}. The semantics of gradually typed languages is 
+usuallly defined in terms of intermediate languages, where places for runtime 
+type checking are explicitly stated in the forms of cast expressions. Examples 
+of these intermediate languages include the blame calculus 
+\citep{wadler2009well} 
+and the cast calculus \citep{siek2009exploring}.
+Representing casts naively, however, suffices sever space leak. 
+For example, translation to intermediate languages can wrap some expressions 
+with casts, including expressions at tail positions. Thus, mutually 
+tail-recursive functions in source language can consume unbounded space at 
+runtime. There are more examples of space leaking in \citet{herman2010space}.
+
+\todo[inline]{The problem: space-efficient cast representation}
+There are two best studied ways to represent cast space-efficiently: coercions 
 \citep{herman2010space}\citep{siek2009exploring}\citep{siek2012interpretations} 
 \citep{siek2015blame} and threesomes 
 \citep{siek2010threesomes}\citep{garcia2013calculating}. They have different 
@@ -332,6 +348,7 @@ its compose function is not structurally recurisive. For instance, the
 developers of Grift \citep{kuhlenschmidt2018efficient} report that it is tricky 
 to convince their proof assistants that the compose function terminates.
 
+\todo[inline]{Our solution: hypercoercion}
 We present a new cast representation, hypercoercion, which has a structurally 
 recursive composition. When we prove theorems about hypercoercion in Agda, the 
 definition ``just works''. 
@@ -341,8 +358,8 @@ coercion approach represents $
 \cOOcast{\TOOdyn}{l}{\cOOcast{\POOunit}{l'}{\TOOdyn}} $ as $ \POOunit 
 ?^{l} ; \POOunit\! $, while the hypercoercion approach gives $ 
 \hyperCoercionC{?^l}{\POOunit}{!} $. In Section~\ref{sec:background}, we review 
-coercion together with cast calculus, an intermediate languages for gradual 
-typing \citep{siek2009exploring}\citep{kuhlenschmidt2018efficient}. And we 
+coercion together with cast calculus 
+\citep{siek2009exploring}\citep{kuhlenschmidt2018efficient}. And we 
 present hypercoerion in Section~\ref{sec:hypercoercion-definition}.
 
 Another strength of hypercoercion over coercion is that hypercoercion might 
@@ -350,21 +367,26 @@ have a more compact memory representations ...
 \todo[inline]{Could Jeremy explain here why hypercoercion is more compact in 
 memory? -KC}
 
+\todo[inline]{The problem: proving correctness of cast representations}
 Many of the existing research on coercions or threesomes include proof(s) of 
 correctness, that is, the cast calculus reduces to an observation ($ e 
 \Downarrow o $) if and only if their calcului reduce to the same observation ($ 
 e \Downarrow_{*} o $), where an observation is either a value constructor or 
 blame. 
 Despite the striking similarity of these proofs, they are all built from ground 
-up. We present a framework for proving correctness of cast reprensentation 
+up.
+
+\todo[inline]{Our solution: a framework}
+We present a framework for proving correctness of cast reprensentation 
 (Section~\ref{sec:framework}), and use it to prove the correctness of 
 hypercoercion (Section~\ref{sec:hypercoercion-correctness}). We are optimistic 
 that this framework is general enough to include coercion and threesome.
 
-Some readers might know that there are four blame strategies: $ \{Lazy, Eager\} 
-\times \{D, UD\} $ \citep{siek2009exploring}. Eager strategies detect more 
-potential type errors, but 
-blame more programs. $ D $ and $ UD $ assign blame labels differently.
+%Some readers might know that there are four blame strategies: $ \{Lazy, 
+%Eager\} 
+%\times \{D, UD\} $ \citep{siek2009exploring}. Eager strategies detect more 
+%potential type errors, but 
+%blame more programs. $ D $ and $ UD $ assign blame labels differently.
 We focus on lazy strategies because recently \citet{new2019gradual} 
 show that \eager{} strategies are incompatible with $\eta$-equivalence of 
 functions, which suggest that they are not very ideal. 
