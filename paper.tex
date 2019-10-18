@@ -178,7 +178,7 @@
 \newcommand{\hyperCoercionC}[3]{#1 \overset{#2}{\curvearrowright} #3}
 % machine state simulations
 \newcommand{\eqvS}[4]{#3 \approx_{\mathcal{S}\mathcal{S}} #4}
-\newcommand{\eqvDS}[3]{#2 \approx_{\mathcal{DS}} #3}
+\newcommand{\eqvSD}[3]{#2 \approx_{\mathcal{SD}} #3}
 % to-dos
 \newcommand{\todoKC}[1]{\todo[inline]{KC needs to #1}}
 \newcommand{\todoKCFixed}[0]{\todo[inline]{Fixed. -KC}}
@@ -980,25 +980,19 @@ in the natural way.
 			\mathtt{cast} \; c \; \kappa
 			)}
 	}{
-		\sOOreturn{u}{\kappa}
-		\\ &
-	}{
-		\sidecond{applyCast(c,v) = \rOOsucc{u}}
-	}
-	
-	\redrule{
-		\sOOreturn{v}{(
-			\mathtt{cast} \; c \; \kappa
-			)}
-	}{
-		\sOOhalt{(\oOOblame{l})}
-		\\ &
-	}{
-		\sidecond{applyCast(c,v) = \rOOfail{l}}
-	}
+\begin{cases}
+	\sOOreturn{u}{\kappa} & \sidecond{applyCast(c,v) = \rOOsucc{u}}
+	\\
+	\sOOhalt{(\oOOblame{l})} & \sidecond{applyCast(c,v) = \rOOfail{l}}
+\end{cases}
+	}{}
 \redrule{
 \sOOreturn{v}{\kOOmt}}{
 \sOOhalt{observe(v)}}{}
+
+\redrule{
+\sOOhalt{o}}{
+\sOOhalt{o}}{}
 	\end{array}
 	\]	
 	
@@ -1620,6 +1614,7 @@ $ cast(T_1,l,T_2) $ constructs a coercion from a source type, a label, and a
 target type. 
 
 \begin{proposition}[\lazyD\ hypercoercion is a monoid]
+	\label{thm:hc-monoid}
 	For all $c : T_1 \Longrightarrow T_2$,
 	$c_1 : T_1 \Longrightarrow T_2$,
 	$c_2 : T_2 \Longrightarrow T_3$, and
@@ -2061,9 +2056,9 @@ representation is correct.
 	\caption{Space-efficient CEK machine $ \mathcal{S}(C) $}
 	\label{machine-cekcc}
 \end{figure}
- (in the style of CEK machines)
-\figref{machine-cekcc} defines the space-efficient CEK machine \effCEK{C}. This 
-machine is similar to \ineffCEK{}. 
+\figref{machine-cekcc} defines, \effCEK{C}, a space-efficient semantics of cast 
+calculus in the style of CEK machines.
+This machine is similar to \ineffCEK{}. 
 The most important differences are in values and continuations.
 In \ineffCEK\, we have one value constructor for all casted value.
 In \effCEK{C}, however, we do not have this generic value constructor, 
@@ -2085,7 +2080,7 @@ left injection of sum, right injection of sum, and injection to $ \TOOdyn $.
 Cast results ($ r $) and machine states ($ s $) are as before. 
 Let $ \kappa $ range over continuations and let $ k $ range over 
 pre-continuations. 
-A continuation is now a pre-continuation capped with a cast.
+A continuation is now a pre-continuation prefixed with a cast.
 Pre-continuation are like the continuations in \ineffCEK.
 
 \todo[inline]{KC needs to describe added rules. -KC}
@@ -2116,83 +2111,17 @@ Monoids}
 
 \todo[inline]{Give a high-level summary of the proof.
 	The summary should be enough so that the reader knows a bit
-	about why you introduce the various definitions below. -JS}
-\todo[inline]{KC needs to move some content in the next section to here. -KC}
+	about why you introduce the various definitions below. -JS
+\\---\\
+Fixed -KC}
 
-The bisimulation relation of states ($\eqvDS{C}{s}{s}$) is mostly derived from 
-the definitions of \ineffCEKD. Exceptions include the relations from 
-continuations to pre-continuations, between continuations, and between values. 
-We omit subscripts when there is no ambiguity.
+In this subsection, we prove that for all $ C $, if $ C $ is surely LazyD and 
+is a monoid, then $ \judgeDeval{e}{o} $ if and only if $ \judgeSeval{C}{e}{o} 
+$. We proof this theorem with a weak bisimulation between \ineffCEKD\ and 
+\effCEK{C}. 
 
-\todoKC{write down the exceptional bisimilarity relations}
-
-
-\begin{lemma}[Weak Bisimulation between $ \mathcal{S}(\cdot) $ and \ineffCEKD]
-	\label{thm:surely-monoidic-reduce}
-	For all cast representations $ C $, 
-	if $ C $ is surely \lazyD{} and monoidic,
-	$ s_1 \in \text{\ineffCEKD} $,
-	$ s_2 \in \mathcal{S}(C) $, and
-	$ s_1 \approx s_2 $, 
-	\begin{enumerate}
-		\item If $ \judgeDreduce{s_1}{s_3} $,
-		then
-		there exist $ s_5 \in \text{\ineffCEKD} $, $ s_4 \in \mathcal{S}(C) $,
-		such that \begin{itemize}
-			\item $ s_5 \approx s_4 $, and
-			\item $ \judgeSreduce{C}{s_2}{s_4} $,
-			\item $ \judgeDreduceTrans{s_3}{s_5} $
-		\end{itemize}
-		\item If $ \judgeSreduce{C}{s_2}{s_4} $,
-		then
-		there exist $ s_3 \in \mathcal{C} $,
-		such that \begin{itemize}
-			\item $ s_3 \approx s_4 $
-			\item $ \judgeDreduceTrans{s_1}{s_3} $
-		\end{itemize}
-	\end{enumerate}
-\end{lemma}
-\begin{proof}
-	See the supplementary material.
-\end{proof}
-
-\begin{lemma}[Surely \lazyD\ and Monoidic Cast Representations Respect 
-	$ \mathcal{C} $]
-	\label{thm:surely-monoidic-eval}
-	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is surely 
-	\lazyD{} and monoidic,
-	\[
-	\judgeDeval{e}{o} \; \text{if and only if} \; 
-	\judgeSeval{C}{e}{o}
-	\]
-\end{lemma}
-\begin{proof}
-	Immediately from Lemma~\ref{thm:surely-monoidic-reduce}.
-	\todo[inline]{I'm guessing that you prove this lemma by induction,
-		using Lemma~\ref{thm:surely-monoidic-reduce}.
-		Proofs by induction are not ``immediate''. -JS}
-\end{proof}
-
-\subsection{Surely \lazyD\ Cast Representations Respect \ineffCEKD}
-\label{secc:framework:all-correct}
-
-With the properties of surely \lazyD{} cast representation, it is 
-straightforward to proof that 
-all machines instantiated with these cast representations bisimulate each 
-other. 
-The bisimulation relation of states ($\eqvS{C}{C}{s}{s}$) is 
-derived from the definition of states.
-\todo[inline]{The term ``bisimilarity'' has a different technical meaning from
-	``bisimulation relation''. I don't think you are using it properly
-	in the above sentence. -JS
-	\\---\\
-	Fixed.
-	I learn that $ s_1 \sim s_1 $ reads ``$ s_1 $ is bisimilar to $ s_2 $'' 
-	from 
-	wikipedia. (https://en.wikipedia.org/wiki/Bisimulation).
-	-KC}
-We omit subscripts when there is no 
-ambiguity. \begin{gather*}
+The bisimulation relation between states ($\eqvSD{C}{s}{s}$) is mostly derived 
+from the state definition: \begin{gather*}
 \inference{
 	\rho_1 \approx \rho_2 &
 	\kappa_1 \approx \kappa_2
@@ -2213,9 +2142,156 @@ ambiguity. \begin{gather*}
 }
 \end{gather*}
 
-The relations between continuations, pre-continuations, enviroments, values, 
-cast results are also derived from their definitions. But the relation for 
-casts is special: \begin{gather*}
+The bisimulation relation between environments and cast results are derived 
+from their definitions as well. And the relation from continuations in 
+\ineffCEKD\ and the pre-continuation in \effCEK{C} is in the natural way, for 
+example: \begin{gather*}
+\inference{
+	\rho_1 \approx \rho_2 &
+	\kappa_1 \approx \kappa_2
+}{
+	\kOOconsI{e}{\rho_1}{\kappa_1} \approx \kOOconsI{e}{\rho_2}{\kappa_2}
+}
+\end{gather*}
+
+And the relation between continuations is defined in terms of $ cont(k) $ and $ 
+ext(c,k) $: \begin{gather*}
+\inference{
+	k \approx \kappa
+}{
+	cont(k) \approx \kappa
+}
+\quad
+\inference{
+	\kappa_1 \approx \kappa_2
+}{
+	ext(cast(T_1,l,T_2),\kappa_1)
+	\approx
+	\kOOcast{\cOOcast{T_1}{l}{T_2}}{\kappa_2} 
+}
+\end{gather*}
+
+The relation between values is more special. When the \ineffCEKD\ value is 
+non-casted, the casts in the \effCEK{C} value are identity. Otherwise, we push 
+the cast into the value constructors, except injections. For examples: 
+\begin{gather*}
+\inference{
+	v_1, v_2 : P &
+	v_1 \approx v_2
+}{
+	\hcvOOinj{P_1}{v_1} \approx \vOOcast{v_2}{\cOOcast{P}{l}{\TOOdyn}}
+}
+\quad
+\inference{
+	\Gamma , x : T_1 \vdash T_2 &
+	\rho_1 \approx \rho_2
+}{
+	\hcvOOfun{id(T_1)}{\rho_1}{x}{e}{id(T_2)} \approx \vOOfun{\rho_2}{x}{e}
+}
+%\quad
+%\inference{
+%	\hcvOOcons{v_1}{c_1}{v_2}{c_2}
+%	\approx
+%	v
+%}{
+%	\hcvOOcons{v_1}{seq(c_1,cast(T_1,l,T_3))}{v_2}{seq(c_2,cast(T_2,l,T_4))}
+%}
+\\
+\inference{
+	\hcvOOfun{c_1}{\rho}{x}{e}{c_2} : \POOfun{T_1}{T_2} &
+	\hcvOOfun{c_1}{\rho}{x}{e}{c_2} \approx v
+}{
+	\hcvOOfun{seq(cast(T_3,l,T_1), c_1)}{\rho}{x}{e}{seq(c_2,cast(T_2,l,T_4))}
+	\approx
+	\vOOcast{v}{\cOOcast{\POOfun{T_1}{T_2}}{l}{\POOfun{T3}{T_4}}}
+}
+\end{gather*}
+
+Before proving the weak bisimulation between \effCEK{C} and \ineffCEKD, we 
+introduce one more definition: $ s_1 \approx^{*} s_2 $ if and only if there 
+exists $ s_2' \in \text{\ineffCEKD} $ 
+such that $ \judgeCreduceTrans{s_2}{s_2'}$ and $ s_1 \approx s_2' $.
+
+\begin{lemma}[Weak Bisimulation between \effCEK{C} and \ineffCEKD]
+	\label{thm:surely-monoidic-reduce}
+	For all cast representations $ C $, 
+	if $ C $ is surely \lazyD{} and is a monoid, 
+	$ s_{1}, s_{1}' \in \text{\effCEK{C}} $,
+	$ s_{2}, s_{2}' \in \text{\ineffCEKD} $,
+	$ s_{1} \approx s_{2} $,
+	$ \judgeSreduce{C}{s_{1}}{s_{1}'} $, and
+	$ \judgeDreduce{s_{2}}{s_{2}'} $, then
+%	then there exist $ s_2'' \in \text{\ineffCEKD} $ such that
+	\[ \exists s_2'' \in \text{\ineffCEKD}: \;
+	\judgeDreduceTrans{s_{2}'}{s_{2}''} \;\text{and}\; s_1' \approx s_2'' \]
+%	\begin{enumerate}
+%		\item If $ \judgeDreduce{s_1}{s_3} $,
+%		then
+%		there exist $ s_5 \in \text{\ineffCEKD} $, $ s_4 \in \mathcal{S}(C) $,
+%		such that \begin{itemize}
+%			\item $ s_5 \approx s_4 $, and
+%			\item $ \judgeSreduce{C}{s_2}{s_4} $,
+%			\item $ \judgeDreduceTrans{s_3}{s_5} $
+%		\end{itemize}
+%		\item If $ \judgeSreduce{C}{s_2}{s_4} $,
+%		then
+%		there exist $ s_3 \in \mathcal{C} $,
+%		such that \begin{itemize}
+%			\item $ s_3 \approx s_4 $
+%			\item $ \judgeDreduceTrans{s_1}{s_3} $
+%		\end{itemize}
+%	\end{enumerate}
+
+Or diagrammatically, 
+\[\begin{array}{clclc}
+s_{1} & \longrightarrow_{\text{\effCEK{C}}} & s_1'\\
+\rotatebox[origin=c]{90}{$\approx$} 
+& & & \;\;\;\rotatebox[origin=c]{-20}{$\approx$} \\
+s_{2} & 
+\longrightarrow_{\text{\ineffCEKD}} & s_2' &
+\longrightarrow^{*}_{\text{\ineffCEKD}} & s_2'' \\
+\end{array}\]
+
+\end{lemma}
+\begin{proof}
+	By following the transition rule of \ineffCEKD. See the supplementary 
+	materials for details.
+\end{proof}
+
+\begin{lemma}[Surely \lazyD\ and Monoidic Cast Representations Respect 
+	$ \mathcal{C} $]
+	\label{thm:surely-monoidic-eval}
+	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is surely 
+	\lazyD{} and is a monoid,
+	\[
+	\judgeSeval{C}{e}{o}
+	 \; \text{if and only if} \; 
+	\judgeDeval{e}{o}
+	\]
+\end{lemma}
+\begin{proof}Proving left implies right is trivial.
+To prove $ \judgeDeval{e}{o} $ implies $ \judgeSeval{C}{e}{o} $, 
+we firstly take one steps in \effCEK{C}, and catch it up in \ineffCEKD\ by 
+taking one or more steps in \ineffCEKD. As we just took a positive number of 
+steps, we are closer to the halting state.
+	\todo[inline]{I'm guessing that you prove this lemma by induction,
+		using Lemma~\ref{thm:surely-monoidic-reduce}.
+		Proofs by induction are not ``immediate''. -JS
+	\\---\\Fixed. -KC}
+\end{proof}
+
+\subsection{Surely \lazyD\ Cast Representations Respect \ineffCEKD}
+\label{secc:framework:all-correct}
+
+In this subsection, we prove that for all $ C $, if $ C $ is surely LazyD, then 
+$ \judgeDeval{e}{o} $ if and only if $\judgeSeval{C}{e}{o}$. We first prove 
+that all $ S(C) $ where $ C $ is surely lazyD are equivalent, then connect this 
+theorem to Lemma~\ref{thm:surely-monoidic-eval}.
+
+We prove the equivalence among \effCEK{S(C)} with strong bisimulation. This 
+time almost all the bisimulation relations are all derived from definitions 
+except the relaton for casts, which is by cast constructors:
+\begin{gather*}
 \inference{
 }{
 	cast_1(T_1,l,T_2) \approx cast_2(T_1,l,T_2)
@@ -2238,16 +2314,24 @@ casts is special: \begin{gather*}
 	\label{thm:CEKS-bisim}
 	If 
 	$ C_1 $ and $ C_2 $ are surely \lazyD,
-	$ s_1, s_2 \in S(C_1) $ and $ s_3 \in S(C_2) $,
-	$ s_1 \approx s_3 $,
-	$ \judgeSreduce{C_1}{s_1}{s_2} $,
-	then there exists an $ s_4 $ such that
-	\begin{itemize}
-		\item $ s_2 \approx s_4 $ and
-		\item $ s_3 \longrightarrow_{S(C_2)} s_4 $
-	\end{itemize}
+	$ s_1, s_1' \in S(C_1) $ and $ s_2,s_2' \in S(C_2) $,
+	$ s_1 \approx s_2 $,
+	$ \judgeSreduce{C_1}{s_1}{s_1'} $, and
+	$ \judgeSreduce{C_2}{s_2}{s_2'} $, then 
+	$ s_1' \approx s_2' $
+	
+	Or diagrammatically, 
+	\[\begin{array}{clc}
+	s_{1} & \longrightarrow_{\text{\effCEK{C}}} & s_1'\\
+	\rotatebox[origin=c]{90}{$\approx$} 
+	& & \rotatebox[origin=c]{90}{$\approx$} \\
+	s_{2} & 
+	\longrightarrow_{\text{\ineffCEKD}} & s_2' \\
+	\end{array}\]
 \end{lemma}
-\begin{proof}
+\begin{proof} 
+	This proof is effectively a duplication of the transition rule of 
+	\effCEK{S(C)}.
 	The key ideas of this proof are undoing sequencing with the property (2) of 
 	surely \lazyD{} cast representation, and handling all possibly uses of $ 
 	cast(T,l,T) $ with property (3)-(11).
@@ -2263,11 +2347,10 @@ casts is special: \begin{gather*}
 	\]
 \end{proposition}
 \begin{proof}
-	Immediately from Lemma~\ref{thm:CEKS-bisim}.
+	By induction with the help of Lemma~\ref{thm:CEKS-bisim}.
 \end{proof}
 
-\begin{theorem}[Surely \lazyD\ Cast Representations Respect 
-	$ \mathcal{C}_\mathtt{D} $]
+\begin{theorem}[Surely \lazyD\ Cast Representations Respect \ineffCEKD]
 	\label{thm:surely-lazyD-correct}
 	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is surely 
 	\lazyD{}
@@ -2277,8 +2360,12 @@ casts is special: \begin{gather*}
 	\]
 \end{theorem}
 \begin{proof}
-	Immediately from Lemma~\ref{thm:surely-monoidic-eval} and 
-	Proposition~\ref{thm:surely-lazyD-eqv}.
+	If we have a surely LazyD cast representation and it is a monoid, this 
+	proof is immediately from Lemma~\ref{thm:surely-monoidic-eval} and 
+	Proposition~\ref{thm:surely-lazyD-eqv}. One such representation is to 
+	represent casts as a list of triples of type, label, and type, where $ 
+	id(T) $ is the empty list and $ seq(c,c,) $ is list append. Another such 
+	representation is the \lazyD\ hypercoercion!
 \end{proof}
 
 
@@ -2286,14 +2373,18 @@ casts is special: \begin{gather*}
 \label{sec:hypercoercion-correctness}
 
 In this section we prove \lazyD\ hypercoercion, as a cast representation, is 
-correct. 
+correct. First we define $ applyCast(c,v) $ to make it a cast representation, 
+then prove that it is surely lazyD, and finally apply 
+Theorem~\ref{thm:surely-lazyD-correct} to finish the proof.
 
-To use hypercoercion as a 
-cast representation in our framework, we need to defined four functions: $ 
-cast(T,l,T) $, $ id(T) $, $ seq(c,c) $, and $ applyCast(c,v) $. We have defined 
-the first three functions in Section~\ref{sec:hypercoercion-definition}. Now we 
-define the $ applyCast(c,v) $  in \figref{hc-applyCast}
+%To use hypercoercion as a 
+%cast representation in our framework, we need to defined four functions: $ 
+%cast(T,l,T) $, $ id(T) $, $ seq(c,c) $, and . We have defined 
+%the first three functions in Section~\ref{sec:hypercoercion-definition}. Now 
+%we 
+%define the $ applyCast(c,v) $  in 
 
+\figref{hc-applyCast} defines $ applyCast(c,v) $ for \lazyD\ hypercoercion. 
 Applying the identity cast for the 
 dynamic type succeeds immediately. When applying a compound cast, we firstly 
 apply the middle, then apply the tail. We denote by $ r \; >>= \; f $ to mean 
@@ -2358,9 +2449,7 @@ natural way.
 \begin{lemma}[\lazyD{} hypercoercion is Surely \lazyD]
 	\label{thm:hc-surely-lazyD}
 \end{lemma}
-\begin{proof}
-	See the supplementary material.
-\end{proof}
+\begin{proof} See the supplementary material. \end{proof}
 
 \begin{theorem}[\lazyD{} hypercoercion Respect \ineffCEKD]
 	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ 
@@ -2370,7 +2459,9 @@ natural way.
 	\]
 \end{theorem}
 \begin{proof}
-	Immediately from Lemma~\ref{thm:surely-monoidic-eval},
+	Immediately from Theorem~\ref{thm:surely-lazyD-correct} and 
+	Lemma~\ref{thm:hc-surely-lazyD}.
+	Alternatively, from Lemma~\ref{thm:surely-monoidic-eval},
 	Lemma~\ref{thm:hc-surely-lazyD}, and 
 	Proposition~\ref{thm:hc-monoid}.
 \end{proof}
