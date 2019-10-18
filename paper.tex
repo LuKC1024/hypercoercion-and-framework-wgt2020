@@ -102,8 +102,9 @@
 \newcommand{\eOOinl}[1]{\mathtt{inl} \; #1}
 \newcommand{\eOOinr}[1]{\mathtt{inr} \; #1}
 \newcommand{\eOOcase}[3]{\mathtt{case} \; #1 \; #2 \; #3}
-\newcommand{\eOOcast}[4]{\langle \cOOcast{#2}{#3}{#4} \rangle #1}
+\newcommand{\eOOcast}[4]{#1 \langle \cOOcast{#2}{#3}{#4} \rangle}
 \newcommand{\eOOblame}[1]{\mathtt{blame} \; #1}
+\newcommand{\cOOcast}[3]{#1 \overset{#2}{\Rightarrow} #3}
 \newcommand{\oOOinj}{\mathtt{dyn}}
 \newcommand{\oOOsole}{\mathtt{unit}}
 \newcommand{\oOOfun}{\mathtt{fun}}
@@ -111,9 +112,7 @@
 \newcommand{\oOOinl}{\mathtt{inl}}
 \newcommand{\oOOinr}{\mathtt{inr}}
 \newcommand{\oOOblame}[1]{\mathtt{blame} \; #1}
-%\newcommand{\cOOcast}[3]{#3 \overset{#2}{\Leftarrow} #1}
-\newcommand{\cOOcast}[3]{#3 \Leftarrow^{#2} #1}
-\newcommand{\vOOcast}[2]{\langle#2\rangle#1}
+\newcommand{\vOOcast}[2]{#1\langle#2\rangle}
 \newcommand{\vOOfun}[3]{\mathtt{fun} \; #1 \; #2 \; #3}
 \newcommand{\vOOtt}[0]{\mathtt{unit}}
 \newcommand{\vOOcons}[2]{\mathtt{cons}\;#1\;#2}
@@ -964,9 +963,9 @@ o $) is defined in the natural way.
 			)}
 	}{
 \begin{cases}
-	\sOOreturn{u}{\kappa} & \sidecond{applyCast(c,v) = \rOOsucc{u}}
+	\sOOreturn{u}{\kappa} & \sidecond{applyCast(v,c) = \rOOsucc{u}}
 	\\
-	\sOOhalt{(\oOOblame{l})} & \sidecond{applyCast(c,v) = \rOOfail{l}}
+	\sOOhalt{(\oOOblame{l})} & \sidecond{applyCast(v,c) = \rOOfail{l}}
 \end{cases}
 	}{}
 \redrule{
@@ -1052,6 +1051,9 @@ convenient because space-efficiency is about compressing continuations.
     necessary for me to collaborate with you. If this keeps up,
     I may decide to stop. It's fine for you to ask why, it's not fine
     for you to choose to make things difficult for me. -JS
+    \\---\\
+    Sorry, I don't indent to make things difficult for you. I have turned to 
+    postfix notation. -KC
     }
 
 Let $ r $ range over cast results. A cast result is either a success, which 
@@ -1095,31 +1097,31 @@ and evaluation ($ \judgeCeval{e}{o} $) are standard.
 
 \begin{figure}
 	
-	\fbox{$applyCast(c,v) = r$}
+	\fbox{$applyCast(v,c) = r$}
 	\[
 	\begin{array}{rclr}
 	\funrule{
-		applyCast(\cOOcast{\star}{l}{\star},v)
+		applyCast(v,\cOOcast{\star}{l}{\star})
 	}{
 		\rOOsucc{v}
 	}{}
 	\funrule{
-		applyCast(\cOOcast{\star}{l}{P_2},\vOOcast{v}{\cOOcast{P_1}{l'}{\star}})
+		applyCast(\vOOcast{v}{\cOOcast{P_1}{l_1}{\star}},\cOOcast{\star}{l_2}{P_2})
 	}{
-		applyCast(\cOOcast{P_1}{l}{P_2},v)
+		applyCast(v,\cOOcast{P_1}{l_2}{P_2})
 	}{}
 	\funrule{
-		applyCast(\cOOcast{P}{l}{\star},v)
+		applyCast(v,\cOOcast{P}{l}{\star})
 	}{
 		\rOOsucc{\vOOcast{v}{\cOOcast{P}{l}{\star}}}
 	}{}
 	\funrule{
-		applyCast(\cOOcast{P_1}{l}{P_2},v)
+		applyCast(v,\cOOcast{P_1}{l}{P_2})
 	}{
 		\rOOsucc{\vOOcast{v}{\cOOcast{P_1}{l}{P_2}}}
 	}{\sidecond{P_1 \smile P_2}}
 	\funrule{
-		applyCast(\cOOcast{P_1}{l}{P_2},v)
+		applyCast(v,\cOOcast{P_1}{l}{P_2})
 	}{
 		\rOOfail{l}
 	}{\sidecond{\neg P_1 \smile P_2}}
@@ -1819,34 +1821,34 @@ And the forth and last operator enable the interpreter to use casts.
 		\item[$ id(T) $] constructs an identity cast
 		\item[$ seq(c_1,c_2) $] composes two casts
 		\item[$ cast(T_1,l,T_2) $] constructs a cast from $ T_1 $ to $ T_2 $
-		\item[$ applyCast(c,v) $] applies a cast onto a value
+		\item[$ applyCast(v,c) $] applies a cast onto a value
 	\end{description}
 \end{definition}
 
 To use the framework, users needs to prove that their cast representation is 
 \emph{surely LazyD} (Definition~\ref{def:surely-lazyd}).
-The definition confines the behavior of $ applyCast(c,v) $ so narrowly that it 
+The definition confines the behavior of $ applyCast(v,c) $ so narrowly that it 
 allows the framework to apply casts without referring to the actual definition 
-of $ applyCast(c,v) $. This 
+of $ applyCast(v,c) $. This 
 is because every casts at runtime is constructed by one of 
 the three cast constructors. 
 Property (1) handles casts constructed by $ id(T) $. 
 And property (2) handles $ seq(c,c) $, which says applying the 
 composition of $ c_1 $ and $ c_2 $ is the same as applying $ c_1 $ then $ c_2 $.
 All remaining properties handles $ cast(T,l,T) $. They are effectively a 
-duplication of the $ applyCast(c,v) $ in \ineffCEKD\ 
+duplication of the $ applyCast(v,c) $ in \ineffCEKD\ 
 (Fig.~\ref{fig:applyCast-D-C}).
 
 \begin{definition}[Surely \lazyD\ Cast Representation]
 	\label{def:surely-lazyd}
 	A cast representation is surely \lazyD\ if
 	\begin{enumerate}
-		\item If $ v : T $, then $ applyCast(id(T), v) = \mathtt{succ} \; v $
+		\item If $ v : T $, then $ applyCast(v,id(T)) = \mathtt{succ} \; v $
 		\item If $ \judgeType{v}{T_1} $,
 		$ \judgeTypeFT{c_1}{T_1}{T_2} $, and
 		$ \judgeTypeFT{c_2}{T_2}{T_3} $,\\
-		then $ applyCast(seq(c_1,c_2),v) = 
-		applyCast(c_1,v) >>= \lambda v.applyCast(c_2,v) $ \\
+		then $ applyCast(v,seq(c_1,c_2)) = 
+		applyCast(v,c_1) >>= \lambda v.applyCast(v,c_2) $ \\
 		where 
 		\[
 		\begin{array}{rcl}
@@ -1855,33 +1857,35 @@ duplication of the $ applyCast(c,v) $ in \ineffCEKD\
 		\end{array}
 		\]
 		\item If $ v : T_1 $ and $ \neg T_1 \smile T_2 $,
-		then $ applyCast(cast(T_1, l, T_2),v) = \rOOfail{l} $
+		then $ applyCast(v,cast(T_1, l, T_2)) = \rOOfail{l} $
 		\item If $ v : \star $, 
-		then $ applyCast(cast(\TOOdyn,l,\TOOdyn),v) = \rOOsucc{v} $
+		then $ applyCast(v,cast(\TOOdyn,l,\TOOdyn)) = \rOOsucc{v} $
 		\item If $ v : P_1 $,
-		then $ applyCast(cast(\star,l,P_2),\hcvOOinj{P_1}{v}) 
-		= applyCast(cast(P_1,l,P_2),v) $
+		then $ applyCast(\hcvOOinj{P_1}{v},cast(\star,l,P_2)) 
+		= applyCast(v,cast(P_1,l,P_2)) $
 		\item If $ v : P $,
-		then $ applyCast(cast(P,l,\star),v) = \rOOsucc{(\hcvOOinj{P}{v})} $
+		then $ applyCast(v,cast(P,l,\star)) = \rOOsucc{(\hcvOOinj{P}{v})} $
 		\item If $ v : \POOunit $,
-		then $ applyCast(cast(\POOunit,l,\POOunit),v) = \rOOsucc{v} $
+		then $ applyCast(v,cast(\POOunit,l,\POOunit)) = \rOOsucc{v} $
 		\item
 		$ 
-		applyCast(cast(\POOfun{T_1}{T_2},l,\POOfun{T_3}{T_4}) ,
-		\hcvOOfun{c_1}{\rho}{x}{b}{c_2}) \\
+		applyCast(\hcvOOfun{c_1}{\rho}{x}{b}{c_2}, 
+		cast(\POOfun{T_1}{T_2},l,\POOfun{T_3}{T_4})) \\
 		= 
 		\rOOsucc{(\hcvOOfun{seq(cast(T_3,l,T_1),c_1)}{\rho}{x}{b}{seq(c_2,cast(T_2,l,T_4))})}$
 		
-		\item $ applyCast(cast(\POOprod{T_1}{T_2},l,T_3 \times 
-		T_4),\hcvOOcons{v_1}{c_1}{v_2}{c_2}) $ \\
+		\item $ 
+		applyCast(\hcvOOcons{v_1}{c_1}{v_2}{c_2},cast(\POOprod{T_1}{T_2},l,T_3 
+		\times 
+		T_4)) $ \\
 		$ = 
 		\rOOsucc{(\hcvOOcons{v_1}{seq(c_1,cast(T_1,l,T_3))}{v_2}{seq(c_2,cast(T_2,l,T_4))})}
 		$ 
 		\item $ 
-		applyCast(cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}),\hcvOOinl{v}{c})
+		applyCast(\hcvOOinl{v}{c},cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}))
 		= \rOOsucc{(\hcvOOinl{v}{seq(c,cast(T_1,l,T_3))})} $
 		\item $ 
-		applyCast(cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}),\hcvOOinr{v}{c})
+		applyCast(\hcvOOinr{v}{c},cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}))
 		= \rOOsucc{(\hcvOOinr{v}{seq(c,cast(T_2,l,T_4))})} $
 	\end{enumerate}
 \end{definition}
@@ -2002,19 +2006,15 @@ representation is correct.
 	\redruleS{
 		\sOOreturn{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{(c,\hckOOappII{v}{\kappa})}
 	}{
-		\sOOinspect{e}{\rho[x:=v']}{ext(c_2,\kappa)}
-	}{
-		\\ & &
-		\sidecond{applyCast(c_1,v) = \rOOsucc{v'}}
-	}
-	\redruleS{
-		\sOOreturn{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{(c,\hckOOappII{v}{\kappa})}
-	}{
-		\sOOhalt{(\oOOblame{l})}
-	}{
-		\\ & &
-		\sidecond{applyCast(c_1,v) = \rOOfail{l}}
-	}
+		\begin{cases}
+		\sOOinspect{e}{\rho[x:=v']}{ext(c_2,\kappa)} \\
+		\;\;\;\;\;\;\;\;\;\sidecond{applyCast(v,c_1) = \rOOsucc{v'}} 
+		\\
+		\sOOhalt{(\oOOblame{l})} \\
+		\;\;\;\;\;\;\;\;\;\sidecond{applyCast(v,c_1) = \rOOfail{l}}
+		\end{cases}
+		
+	}{}
 	\end{array}
 	\]
 	
@@ -2344,7 +2344,7 @@ except the relaton for casts, which is by cast constructors:
 \label{sec:hypercoercion-correctness}
 
 In this section we prove \lazyD\ hypercoercion, as a cast representation, is 
-correct. First we define $ applyCast(c,v) $ to make it a cast representation, 
+correct. First we define $ applyCast(v,c) $ to make it a cast representation, 
 then prove that it is surely lazyD, and finally apply 
 Theorem~\ref{thm:surely-lazyD-correct} to finish the proof.
 
@@ -2353,63 +2353,65 @@ Theorem~\ref{thm:surely-lazyD-correct} to finish the proof.
 %cast(T,l,T) $, $ id(T) $, $ seq(c,c) $, and . We have defined 
 %the first three functions in Section~\ref{sec:hypercoercion-definition}. Now 
 %we 
-%define the $ applyCast(c,v) $  in 
+%define the $ applyCast(v,c) $  in 
 
-\figref{hc-applyCast} defines $ applyCast(c,v) $ for \lazyD\ hypercoercion. 
+\figref{hc-applyCast} defines $ applyCast(v,c) $ for \lazyD\ hypercoercion. 
 Applying the identity cast for the 
 dynamic type succeeds immediately. When applying a compound cast, we firstly 
 apply the middle, then apply the tail. We denote by $ r \; >>= \; f $ to mean 
 that if $ r $ is $ \rOOsucc{v} $, the result is $ f(v) $, otherwise the result 
 is the failure.
-$ applyMiddle(\ell,m,v) $ and $ applyTail(t,v) $ are straightforward.
-In the definition of $ applyMiddle(\ell,m,v) $, we generalize 
-shallow-consistency to compare middles and values ($ m \smile v $) in the 
+$ applyMiddle(v,\ell,m) $ and $ applyTail(v,t) $ are straightforward.
+In the definition of $ applyMiddle(v,\ell,m) $, we generalize 
+shallow-consistency to compare middles and values ($ v \smile m $) in the 
 natural way.
 
 \begin{figure}
-	\fbox{$ applyCast(c,v) = r $}
+	\fbox{$ applyCast(v,c) = r $}
 	\[
 	\begin{array}{rclr}
-	\funrule{applyCast(\hyperCoercionI,\;v)}{\rOOsucc{v}}{}
-	\funrule{applyCast(\hyperCoercionC{?^l}{m}{t},\;\hcvOOinj{P}{v})}{
-		applyMiddle(l,m,v) \; >>= \; \lambda v. applyTail(t,v)
+	\funrule{applyCast(v,\hyperCoercionI,)}{\rOOsucc{v}}{}
+	\funrule{applyCast(\hcvOOinj{P}{v},\hyperCoercionC{?^l}{m}{t})}{
+		applyMiddle(v,l,m) \; >>= \; \lambda v. applyTail(t,v)
 	}{}
-	\funrule{applyCast(\hyperCoercionC{\epsilon}{m}{t},\;v)}{
-		applyMiddle(\epsilon,m,v) \; >>= \; \lambda v. applyTail(t,v)
+	\funrule{applyCast(v,\hyperCoercionC{\epsilon}{m}{t})}{
+		applyMiddle(v,\epsilon,m) \; >>= \; \lambda v. applyTail(t,v)
 	}{}
 	\end{array}
 	\]
 	
-	\fbox{$ applyMiddle(\ell,m,v) = v $}
+	\fbox{$ applyMiddle(v,\ell,m) = r $}
 	\[
 	\begin{array}{rclr}
-	\funrule{applyMiddle(\ell,\POOunit,\hcvOOtt)}{\hcvOOtt}{}
-	\funrule{applyMiddle(\ell,\POOfun{c_3}{c_4},\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{
-		\hcvOOfun{(c_3 \fatsemi^\ell c_1)}{\rho}{x}{e}{(c_2 \fatsemi^\ell c_4)}
+	\funrule{applyMiddle(\hcvOOtt,\ell,\POOunit)}{\rOOsucc{\hcvOOtt}}{}
+	\funrule{applyMiddle(\hcvOOfun{c_1}{\rho}{x}{e}{c_2}\ell,\POOfun{c_3}{c_4})}{
+		\rOOsucc{(\hcvOOfun{(c_3 \fatsemi^\ell c_1)}{\rho}{x}{e}{(c_2 
+		\fatsemi^\ell c_4)})}
 	}{}
-	\funrule{applyMiddle(\ell,\POOprod{c_3}{c_4},\hcvOOcons{v_1}{c_1}{v_2}{c_2})}{
-		\hcvOOcons{v_1}{(c_1 \fatsemi^\ell c_3)}{v_2}{(c_2 \fatsemi^\ell c_4)}
+	\funrule{applyMiddle(\hcvOOcons{v_1}{c_1}{v_2}{c_2},\ell,\POOprod{c_3}{c_4})}{
+		\rOOsucc{(\hcvOOcons{v_1}{(c_1 \fatsemi^\ell c_3)}{v_2}{(c_2 
+		\fatsemi^\ell c_4)})}
 	}{}
-	\funrule{applyMiddle(\ell,\POOsum{c_3}{c_4},\hcvOOinl{v}{c_1})}{
-		\hcvOOinl{v}{(c_1 \fatsemi^\ell c_3)}
+	\funrule{applyMiddle(\hcvOOinl{v}{c_1},\ell,\POOsum{c_3}{c_4})}{
+		\rOOsucc{(\hcvOOinl{v}{(c_1 \fatsemi^\ell c_3)})}
 	}{}
-	\funrule{applyMiddle(\ell,\POOsum{c_3}{c_4},\hcvOOinr{v}{c_2})}{
-		\hcvOOinr{v}{(c_2 \fatsemi^\ell c_4)}
+	\funrule{applyMiddle(\hcvOOinr{v}{c_2},\ell,\POOsum{c_3}{c_4})}{
+		\rOOsucc{(\hcvOOinr{v}{(c_2 \fatsemi^\ell c_4)})}
 	}{}
-	\funrule{applyMiddle(\ell,m,v)}{
+	\funrule{applyMiddle(v,l,m)}{
 		\rOOfail{l}
 	}{
-		\sidecond{\ell = l \; \text{and} \; \neg m \smile v}
+		\sidecond{\neg v \smile m}
 	}
 	\end{array}
 	\]
 	
-	\fbox{$ applyTail(t,v) = r $}
+	\fbox{$ applyTail(v,t) = r $}
 	\[
 	\begin{array}{rclr}
-	\funrule{applyTail(\bot^l,v)}{\rOOfail{l}}{}
-	\funrule{applyTail(\epsilon,v)}{\rOOsucc{v}}{}
-	\funrule{applyTail(!,v)}{\rOOsucc{(\hcvOOinj{P}{v})}}{v : P}
+	\funrule{applyTail(v,\bot^l)}{\rOOfail{l}}{}
+	\funrule{applyTail(v,\epsilon)}{\rOOsucc{v}}{}
+	\funrule{applyTail(v,!)}{\rOOsucc{(\hcvOOinj{P}{v})}}{}
 	\end{array}
 	\]
 	\caption{\lazyD\ hypercoercion's $ applyCast $}
