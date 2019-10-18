@@ -316,21 +316,29 @@ languages</concept_desc>
   \\---\\
   Will fix grammar after fixing all other problems -KC}
 \todo[inline]{The first paragraph of the introduction should summarize
-  the entire introduction, and in some sense, the entire paper. -JS}
+  the entire introduction, and in some sense, the entire paper. -JS
+\\---\\
+Fixed -KC}
 
 Around 2006, many work on integrating dynamic typing and static typing emerge, 
 notably gradual types \citep{siek2006gradual} and hybrid types 
-\citep{flanagan2006hybrid}. The semantics of gradually typed languages is 
-usuallly defined in terms of intermediate languages, where places for runtime 
-type checking are explicitly stated in the forms of cast expressions. Examples 
-of these intermediate languages include the blame calculus 
-\citep{wadler2009well} 
-and the cast calculus \citep{siek2009exploring}.
-Representing casts naively, however, suffices sever space leak. 
-For example, translation to intermediate languages can wrap some expressions 
-with casts, including expressions at tail positions. Thus, mutually 
-tail-recursive functions in source language can consume unbounded space at 
-runtime. There are more examples of space leaking in \citet{herman2010space}.
+\citep{flanagan2006hybrid}. People usually define the semantics of gradually 
+typed languages with intermediate languages that have cast expressions, such as
+the blame calculus \citep{wadler2009well} and
+the cast calculus \citep{siek2009exploring}. Casts are ubiquitous at runtime. 
+For example, they can go in to values and continuations. Thus, representing 
+casts naively with types can change asymptotically the space consumption of 
+programs \citep{herman2010space}. There are several known space-efficient cast 
+representations, but they have different strength and weakness. This paper 
+presents a new solution that combines some of their best parts. Also, a valid 
+cast representation must not change the result of programs. This paper presents 
+the first framework for proving this kind of theorems.
+
+%
+%For example, translation to intermediate languages can wrap some expressions 
+%with casts, including expressions at tail positions. Thus, mutually 
+%tail-recursive functions in source language can consume unbounded space at 
+%runtime. There are more examples of space leaking in \citet{herman2010space}.
 
 There are two best studied ways to represent cast space-efficiently: coercions 
 \citep{herman2010space}\citep{siek2009exploring}\citep{siek2012interpretations} 
