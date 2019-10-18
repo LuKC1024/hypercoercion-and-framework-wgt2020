@@ -2160,7 +2160,7 @@ the cast into the value constructors, except injections. For examples:
 \inference{
 	\Gamma , x : T_1 \vdash T_2 &
 	\rho_1 \approx \rho_2
-}{
+}{z
 	\hcvOOfun{id(T_1)}{\rho_1}{x}{e}{id(T_2)} \approx \vOOfun{\rho_2}{x}{e}
 }
 %\quad
@@ -2181,6 +2181,7 @@ the cast into the value constructors, except injections. For examples:
 	\vOOcast{v}{\cOOcast{\POOfun{T_1}{T_2}}{l}{\POOfun{T3}{T_4}}}
 }
 \end{gather*}
+\todo[inline]{need a more readable example -KC}
 
 Before proving the weak bisimulation between \effCEK{C} and \ineffCEKD, we 
 introduce one more definition: $ s_1 \approx^{*} s_2 $ if and only if there 
