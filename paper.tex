@@ -103,7 +103,7 @@
 \newcommand{\eOOcase}[3]{\mathtt{case} \; #1 \; #2 \; #3}
 \newcommand{\eOOcast}[4]{#1 \langle \cOOcast{#2}{#3}{#4} \rangle}
 \newcommand{\eOOblame}[1]{\mathtt{blame} \; #1}
-\newcommand{\cOOcast}[3]{#1 \overset{#2}{\Rightarrow} #3}
+\newcommand{\cOOcast}[3]{#1 \Rightarrow^{#2} #3}
 \newcommand{\oOOinj}{\mathtt{dyn}}
 \newcommand{\oOOsole}{\mathtt{unit}}
 \newcommand{\oOOfun}{\mathtt{fun}}
@@ -157,6 +157,7 @@
 \newcommand{\judgeCreduceTrans}[2]{#1 \longmapsto_{\mathcal{C}}^{*} #2}
 \newcommand{\judgeCeval}[2]{eval_{\mathcal{C}}(#1) = #2}
 \newcommand{\redrule}[3]{#1 & \longmapsto_\mathcal{C} & #2 & #3\\}
+\newcommand{\hiredrule}[3]{\highlight{#1} & \highlight{\longmapsto_\mathcal{C}} & \highlight{#2} & \highlight{#3} \\}
 % blame calculus on space-efficient CEK
 \newcommand{\judgeSreduce}[3]{#2 \longmapsto_{\mathcal{S}(#1)} #3}
 \newcommand{\judgeSreduceTrans}[3]{#2 \longmapsto_{\mathcal{S}(#1)}^{*} #3}
@@ -191,8 +192,8 @@
 \newcommand{\judgeDeval}[2]{eval_{\mathcal{D}}(#1) = #2}
 \newcommand{\effCEK}[1]{$ \mathcal{S}(#1) $}
 \newcommand{\evalEqv}[2]{$ eval_{\text{#1}} = eval_{\text{#2}} $}
-
 \newcommand{\continue}[2]{continue(#2,#1)}
+\newcommand{\highlight}[1]{{\color{red} #1}}
 
 \begin{document}
 
@@ -257,12 +258,13 @@
 %% Note: \begin{abstract}...\end{abstract} environment must come
 %% before \maketitle command
 \begin{abstract}
-	Designing a space-efficient cast representation that is good for both 
-	mechanized metatheory and implementation is challenging. Existing solution 
-	solutions have various strengths and weaknesses. We presents a new cast 
-	representation, named hypercoercions, that is good for both. On our way to 
-	prove the correctness of hypercoercions, we also step toward a framework 
-	for proving correctness of cast representations.
+  Designing a space-efficient cast representation that is good for
+  both mechanized metatheory and implementation is
+  challenging. Existing solutions are good for one or the other. This
+  paper presents a new cast representation, named hypercoercions, that
+  is good for both. On the way to proving the correctness of
+  hypercoercions, this paper also makes progress on a general
+  framework for proving the correctness of cast representations.
 \end{abstract}
 
 
@@ -329,299 +331,82 @@ etc.) impose significant runtime overheads that can change the
 asymptotic time and space complexity of a program
 \citep{herman2010space}. There are several known space-efficient cast
 representations, with various strengths and weaknesses
-\citep{siek2015blame,siek2010threesomes,garcia2013calculating,kuhlenschmidt2018efficient,siek2012interpretations,garcia2014deriving}. This
-paper presents a new cast representation, named \emph{hypercoercions},
-that is good for both mechanized metatheory and good for
-implementation. Recall that it is the composition operator in these
-systems that enables space-efficiency by compressing casts.  The
-composition operator for hypercoercions is structurally recursive and
-hypercoercions are suggestive of a bit-level representation that
-minimizes the need for pointers and fits all first-order casts into 64
-bits.  Of course, an alternative cast representation must not change
-the result of programs. This paper presents steps toward a framework
-for proving the equivalence of cast calculi and, in particular, proves
-that an abstract machine using hypercoercions is equivalent to an
-abstract machine using standard casts.
-
-%
-%For example, translation to intermediate languages can wrap some expressions 
-%with casts, including expressions at tail positions. Thus, mutually 
-%tail-recursive functions in source language can consume unbounded space at 
-%runtime. There are more examples of space leaking in \citet{herman2010space}.
-
-The current state of the art regarding cast representations includes
+\citep{siek2015blame,siek2010threesomes,garcia2013calculating,kuhlenschmidt2018efficient,siek2012interpretations,garcia2014deriving}.
+The current state of the art includes
 \begin{itemize}
 \item threesomes \citep{siek2010threesomes},
 \item supercoercions \citep{garcia2014deriving}, and
 \item coercions in normal form
   \citep{siek2012interpretations,siek2015blame}.
 \end{itemize}
-Threesomes and supercoercions are good for mechanized metatheory
-because their compose operators are structurally recursive, making
-them easy to define in a proof assistant such as Agda. In contrast,
-the coercions in normal form have compose operators that are not
-structurally recursive, which makes it more difficult to define in
+Recall that in these systems, casts are compressed using a composition
+operator.  Threesomes and supercoercions are good for mechanized
+metatheory because their compose operators are structurally recursive,
+making them easy to define in a proof assistant such as Agda. In
+contrast, the coercions in normal form have compose operators that are
+not structurally recursive, which makes it more difficult to define in
 Agda, requiring what amounts to an explicit proof of termination.
 %
 On the other hand, coercions in normal form are easier to understand
 than threesomes (with a strange labelled bottom type), and
-supercoercions (with 10 different kinds). 
+supercoercions (10 different kinds).
 
+This paper presents a new cast representation, named
+\emph{hypercoercions}, that is good for both mechanized metatheory and
+good for implementation. The composition operator for hypercoercions
+is defined by structural recursion and hypercoercions are suggestive
+of a bit-level representation that minimizes the need for pointers and
+fits all first-order casts into 64 bits. We present two flavors of
+hypercoercions to support the two blame tracking strategies from the
+literature: D and UD~\citep{siek2009exploring}. We are interested in
+the D blame tracking strategy because it comes with a more
+straightforward notion safe cast compared to
+UD~\citep{siek2009exploring}, which is why D was chosen Grift
+compiler. We are also intersted in UD because it plays a prominent
+role in the gradual typing literature \citep{wadler2009well}. The
+semantics of casts can also be lazy or
+eager~\citep{siek2009exploring}. In this paper we focus on lazy cast
+strategies because we suspect that they are more efficient than eager
+strategies and because \citet{new2019gradual} show that eager
+strategies are incompatible with $\eta$-equivalence of functions.
 
-%% There are two best studied ways to represent cast space-efficiently:
-%% coercions
-%% \citep{herman2010space}\citep{siek2009exploring}\citep{siek2012interpretations}
-%% \citep{siek2015blame} and threesomes
-%% \citep{siek2010threesomes}\citep{garcia2013calculating}. They have
-%% different strength and weakness. \citet{garcia2013calculating} and
-%% \citet{siek2015blame} claim that coercion is easy to understand, but
-%% hard to implement, while threesome is easy to implement, but hard to
-%% understand. \citet{garcia2013calculating} in addition claims that
-%% coercion is more difficult to reason about formally because its
-%% compose function is not structurally recurisive. For instance, the
-%% developers of Grift \citep{kuhlenschmidt2018efficient} report that it
-%% is tricky to convince their proof assistants that the compose function
-%% terminates.
+Of course, an alternative cast representation must be proved
+correct. This paper presents steps toward a general framework for
+proving equivalence of cast calculi and, in particular, proves that an
+abstract machine using \lazyD{} hypercoercions is equivalent to an
+abstract machine using standard \lazyD{}
+casts~\citep{siek2009exploring}. We conjecture that the framework can
+be generalized to \lazyUD{} and that it can be applied to coercions in
+normal form and threesomes.
 
-We present a new cast representation, hypercoercion, which has a structurally 
-recursive composition. When we prove theorems about hypercoercion in Agda, the 
-definition ``just works''. 
-Besides, We believe hypercoercion is about as easy to understand as coercion 
-because their syntax definitions are similar. For instance, the 
-coercion approach represents $ 
-\cOOcast{\TOOdyn}{l}{\cOOcast{\POOunit}{l'}{\TOOdyn}} $ as $ \POOunit 
-?^{l} ; \POOunit\! $, while the hypercoercion approach gives $ 
-\hyperCoercionC{?^l}{\POOunit}{!} $. In Section~\ref{sec:background}, we review 
-coercion together with cast calculus 
-\citep{siek2009exploring}\citep{kuhlenschmidt2018efficient}. And we 
-present hypercoerion in Section~\ref{sec:hypercoercion-definition}.
-
-Another strength of hypercoercion over coercion is that hypercoercion might 
-have a more compact memory representations. In Grift 
-\citep{kuhlenschmidt2018efficient}, the longest coercions are represented with
-two cons boxes. But for hypercoercion, we are optimistic that one cons box 
-suffices. Using less cons boxes saves memory as well as running time.
-\todo[inline]{
-	Could Jeremy help explain explaining why hypercoercion is more compact in 
-	memory?
-	Cons boxes seem to be non-standard, but I don't know a better name.
- -KC}
-
-Many of the existing research on coercions or threesomes include proof(s) of 
-correctness, that is, the evaluation (partial) function of cast calculus $ eval 
-$ is equal to their space-efficient evaluation ($ eval_{*} $).
-Despite the striking similarity of these proofs, they are all built from ground 
-up.
-
-We present a framework for proving correctness of cast reprensentation 
-(Section~\ref{sec:framework}), and use it to prove the correctness of 
-hypercoercion (Section~\ref{sec:hypercoercion-correctness}). We are optimistic 
-that this framework is general enough to include coercion and threesome.
-
-%Some readers might know that there are four blame strategies: $ \{Lazy, 
-%Eager\} 
-%\times \{D, UD\} $ \citep{siek2009exploring}. Eager strategies detect more 
-%potential type errors, but 
-%blame more programs. $ D $ and $ UD $ assign blame labels differently.
-
-We focus on lazy cast strategies because we suspect that they are more
-efficient that eager strategies, which is why lazy was chosen in the
-Grift compiler \citep{Kuhlenschmidt:2019aa}, and because
-\citet{new2019gradual} show that eager strategies are incompatible
-with $\eta$-equivalence of functions. We are interested in the D blame
-tracking strategy because it has a more straightforward notion safe
-cast compared to UD \citep{siek2009exploring}, which is why D was
-chosen Grift compiler. However, we are also intersted in UD because it
-plays a prominent role in the gradual typing literature
-\citep{wadler2009well}.
-
-
-The primary contributions of this paper are:
+To summarize, the primary contributions of this paper are:
 \begin{itemize}
 \item hypercoercions, a new space-efficient cast representation, which
   has a structurally recursive composition and a more compact memory
   representation.
-\item a framework in Agda for proving correctness of cast
-  represantations.  We conjecture that both coercion and
-  threesome can fit into this framework.
+\item a framework in Agda for proving the correctness of cast
+  represantations.
 \item a formal proof that hypercoercion respects the semantics
   of the \lazyD{} cast calculus.
 \end{itemize}
 
-%Around 2006, many work on integrating dynamic typing and static typing emerge, 
-%notably gradual types \citep{siek2006gradual} and hybrid types 
-%\citep{flanagan2006hybrid}. 
-%Later \citet{wadler2009well} introduces Blame Calculus, an intermediate 
-%language for gradual types and hybrid types. 
-%Blame Calculus throws a blame label when a runtime type-check fails.
-%Labels provide useful debugging information, therefore are necessary for 
-%practical use of gradually typed languages.
-%
-%Implementing gradually typed languages naively on top of blame calculus, 
-%however, suffices sever space leak.
-%For example, translation to Blame Calculus can wrap some expressions with code 
-%that performs runtime type-checking (casts), including expressions at 
-%tail positions. Thus, mutually tail-recursive functions in source language can 
-%consume unbounded space at runtime. There are more examples of space leaking 
-%in 
-%\citet{herman2010space}.
-%
-%In 2007, \citet{herman2010space} proposes a solution to this problem by 
-%representing casts with coercion \citep{henglein1994dynamic}, 
-%which can be composed and normalized. Every coercion looks like a list of 
-%trees. For normal coercion, the length of the list is bounded by a small 
-%constant. And the depths of trees do not grow during composition and
-%normalization. These two facts implies that coercion is a space-efficient cast 
-%representation. This coercion, however, does not support blame 
-%tracking. 
-%
-%After that, many efforts have been made to combine blame tracking and 
-%space efficiency. 
-%
-%\citet{siek2009exploring} present another intermediate langauge for gradually 
-%typed language, cast calculus \castCalculus\ and achieve both blame-tracking 
-%and space-efficiency for this language by decorating \citet{herman2010space}'s 
-%coercions with labels. \castCalculus\ is simply typed lambda calculus extended 
-%with the dynamic type and cast expressions. The labels in \castCalculus{}, 
-%unlike their counterparts in the Blame Calculus, have no polarity. 
-%They also propose that there are four blame strategies for \castCalculus{}:
-%$ \{Lazy, Eager\} \times \{D, UD\} $. Eager strategies detect more potential 
-%type errors, but blame more programs. $ D $ and $ UD $ assign blame labels 
-%differently. They claim that their \lazyUD\ cast calculus is the same as the 
-%Blame Calculus, modulo label polarity, and prove that their their \lazyUD\ 
-%coercion calculus simulates their \lazyUD{} cast calculus. It is unknown, 
-%however, whether the simulation in the other direction also works.
-%\todo[inline]{Is it important to this paper whether there is a
-%simulation in the other direction? -JS
-%\\ --- \\
-%I guessed to say coercion is correct the other direction is 
-%necessary. -KC}
-%
-%\citet{siek2010threesomes} proposes another approach to combine blame 
-%tracking and space efficiency. Their solution represents casts with 
-%threesomes, 
-%a novel cast representation. Threesome is proved space-efficient as well.
-%They prove that their calculus bisimulates the \lazyUD{} coercion 
-%calculus in \citet{siek2009exploring} and the Blame Calculus in 
-%\citet{wadler2009well}.
-%
-%\citet{siek2012interpretations} present a revised coercion calculi.
-%They simplify the coercion calculi by only 
-%working with normal coercions (i.e. coercions in normal form). 
-%They conjecture that their revised coercion calculi bisimulate the 
-%corresponding cast calculi.
-%
-%\citet{garcia2013calculating} develops
-%threesome for other blame strategies. After studying in depth the connection 
-%between coercion and threesome,
-%he claims that normal coercion with labels is easy to understand but hard to 
-%implement and hard to reason about, and that 
-%threesome with labels, however, is easy to implement and easy to reason about 
-%but hard to understand. 
-%His claim is mostly affirmed by the group of people who develop threesome 
-%(\citet{siek2015blame}).
-%His threesome calculi are equivalent to the coercion calculi of
-%\citet{siek2009exploring} because the former ones are derived from the latter 
-%ones.
-%
-%\citet{siek2015blame} revisit the coercion-based approach. They revise
-%the \lazyUD{} coercion in \citet{siek2012interpretations} and prove
-%that their revised coercion calculus bisimulates the \lazyUD{} Blame
-%Calculus \citet{wadler2009well}.
-%
-%Last year, \citet{kuhlenschmidt2018efficient} present Grift, a compiler for a 
-%gradually typed language of the same name. 
-%This implementation is based on the \lazyD{} coercion in 
-%\citet{siek2012interpretations}.
-%Their result suggests that normal coercion is easy enough to implement in a 
-%compiler. 
-%
-%So far, it seems that normal coercion is the best way to combine 
-%space-efficiency and blame-tracking: normal coercion is claimed easy to 
-%understand \citep{garcia2013calculating}\citep{siek2015blame} and is shown 
-%easy enough to implement in a compiler \citep{kuhlenschmidt2018efficient}.
-%Normal coercion is still not satisfactory, however, in at least two aspects.
-%Firstly, as we mentioned above, it is hard to reason about normal coercion. 
-%The 
-%major difficulty is from its non-structurally recursive composition.
-%For instance, the developers of Grift report it is tricky to convince
-%their proof assistants that the composition terminates.
-%
-%Secondly, the definition of normal coercion lies unnecessarily on top 
-%of coercion: all coercions are normal when they are initially constructed, and 
-%\citet{siek2012interpretations} have shown an function that 
-%composes and produces normal coercions.
-%%
-%\todo[inline]{Many researchers would view this as a positive thing,
-%  not a negative. For example, the notion of normal forms comes up
-%  over and over again in mathematics and logic. -JS
-%\\ --- \\
-%I guess having a notion of normal forms is more convenient when a 
-%notion of normalization is convenient. But we don't even need a notion of 
-%normalization for cast representations. -KC
-%\\ --- \\
-%FWIW, I agree with you. But the point is that the argument is not
-%likely to be convincing to the reader, so we're probably better off
-%not wasting space on it. -JS
-%}
-%
-%Perhaps unsurprisingly, threesome has a structurally recursive compose and a 
-%self-standing definition. Together with \citet{garcia2013calculating}'s 
-%work, they suggest that there might be a cast representation whose definition 
-%is self-standing, and whose composition is structurally recursive. 
-%supercoercion introduced in \citet{garcia2013calculating} could be a promising 
-%candidate. It is believed even more complicated than threesome 
-%\citep{siek2015blame}. In fact, it uses 10 constructors to deal with an 
-%elementary type system with only base types and 
-%function types. And four constructors are directly related to function types. 
-%Thus, supercoercion might not scale very well to more sophisticated type 
-%systems. 
-%
-%We present hypercoercion, a cast representation whose composition is 
-%structurally recursive, and whose definition is self-standing. What's more, it 
-%should be at 
-%least as easy to implement and understand as normal coercions, because there 
-%is 
-%a clear connection between them, as we will show in Section 
-%\ref{sec:hypercoercion}.
-%Our hypercoercion considers sum types and product types, which are not 
-%considered in all proofs above. Adding each of them requires us to add only 
-%one 
-%new constructor to a component of hypercoercion. This suggests that 
-%hypercoercion might scale better than supercoercion.
-%
-%We prove formally that the \lazyD{} (resp. \lazyUD{}) hypercoercion calculus 
-%bisimulates the \lazyD{} (resp. \lazyUD{}) cast calculus. This is 
-%the first bisimulation proof for the \lazyD{} cast calculus as far as we know.
-%We care more about lazy strategies because recently, \citet{new2019gradual} 
-%show that \eager{} strategies are incompatible with $\eta$-equivalence of 
-%functions, which suggest that these strategies are not very ideal. 
-%\todo[inline]{Explain why we care about \lazyD{} and \lazyUD{}. -JS
-%  \\ --- \\ Explained, not sure if it suffice. -KC
-%  \\ --- \\
-%  That's good that you explained why lazy instead of eager.
-%  (Also, you should add that we are interested in lazy because
-%  that's what Grift does.)\\
-%  But you haven't explained why we are interested in both D and UD. -JS
-%}
-%
-%The structure of this paper is as follows. 
-%Section \ref{sec:blame-calculus} reviews the state-of-art of $Lazy$ cast 
-%calculi. 
-%Section \ref{sec:coercion-calculus} reviews the state-of-art of $Lazy$ 
-%Coercion 
-%Calculi. 
-%In section \ref{sec:hypercoercion} we present hypercoercion.
-%Section \ref{sec:conclude} concludes.
-%\todo[inline]{Lots of missing sections. -JS}
+In Section~\ref{sec:background} we review cast calculi and coercions.
+We present hypercoercions in
+Section~\ref{sec:hypercoercion-definition}.  We present a framework
+for proving correctness of cast reprensentations in
+Section~\ref{sec:framework} and use it to prove the correctness of
+\lazyD{} hypercoercions in
+Section~\ref{sec:hypercoercion-correctness}.
 
 \section{Background} \label{sec:background}
 
-In this section, we review lazy cast calculi (\ref{sec:cast-calculi}) and
-normal coercion (\ref{sec:coercion-calculus}). 
+In this section, we review lazy cast calculi
+(Section~\ref{sec:cast-calculi}) and coercion in normal form
+(Section~\ref{sec:coercion-calculus}).
 
 \subsection{Cast Calculi}
 \label{sec:cast-calculi}
+
 \begin{figure}
 	Syntax
 	\[
@@ -652,6 +437,186 @@ normal coercion (\ref{sec:coercion-calculus}).
 		\eOOcast{e}{T_1}{l}{T_2} \mid
 		\eOOblame{l}
 	}
+	\end{array}
+	\]
+	
+	Consistency
+	\fbox{$ T_1 \sim T_2 $}
+	\begin{gather*}
+	\inference{}{
+		\star \sim \star
+	} \quad
+	\inference{}{
+		\star \sim P
+	} \quad
+	\inference{}{
+		P \sim \star
+	} \\[1ex]
+	\inference{}{
+		\iota \sim \iota
+	} \quad
+	\inference{
+		S_1 \sim S_2 &
+		T_1 \sim T_2
+	}{
+		S_1 \rightarrow T_1 \sim S_2 \rightarrow T_2
+	} \quad
+	\inference{
+		S_1 \sim S_2 &
+		T_1 \sim T_2
+	}{
+		S_1 \times T_1 \sim S_2 \times T_2
+	} \quad
+	\inference{
+		S_1 \sim S_2 &
+		T_1 \sim T_2
+	}{
+		S_1 \plus T_1 \sim S_2 \plus T_2
+	}
+	\end{gather*}
+	
+	Term typing
+	\fbox{$ \judgetype{\Gamma}{e}{T} $}
+	\begin{gather*}
+          \dots \qquad
+		\inference{
+			\Gamma \vdash e : T_1 & T_1 \sim T_2
+		}{
+			\judgetype{\Gamma}{\eOOcast{e}{T_1}{l}{T_2}}{T_2}
+		} \quad
+		\inference{
+		}{
+			\judgetype{\Gamma}{\eOOblame{l}}{T}
+		}
+	\end{gather*}
+	
+	\caption{Syntax and static semantics of the cast calculi.}
+	\label{fig:blame-static}
+\end{figure}
+
+
+\paragraph{Syntax and Static Semantics}
+
+The syntax and static semantics is the same for the \lazyD{} and
+\lazyUD{} cast calculi, and is reviewed in \figref{fig:blame-static}.
+As usual, the important features are the cast expressions,
+$\eOOcast{e}{T_1}{l}{T_2}$, which are responsible for runtime type
+checking, and blame expressions, $\eOOblame{l}$, that raise errors.
+The syntax and static semantics is the same that of
+\citet{siek2009exploring} except for a few minor exceptions:
+\begin{itemize}
+\item We add sum, product, and unit types.
+\item We separate types into those with a type constructor at the top,
+  the \emph{pretypes} ($\POOunit$, functions, products, and sums),
+  versus the dynamic type $\star$ (a.k.a. $ \mathtt{Dyn} $ or
+  $\mathbb{?}$).
+\item We annotate the codomain of a lambda abstraction explicitly
+  because we refer to it in the dynamic semantics. 
+\end{itemize}
+As usual, the source $T_1$ and target types $T_2$ of a cast
+$\eOOcast{e}{T_1}{l}{T_2}$ are required to be consistent, written $T_1
+\sim T_2$. The consistency relation is standard and defined in
+\figref{fig:blame-static}.
+
+%% defines the syntax of the cast calculus and
+%% its static semantics. We extend the syntax of
+%%  with sum and product types.  Let $ T $ range
+%% over types. A type is either the dynamic type $ \star $ (a.k.a. $
+%% \mathtt{Dyn} $, $ \mathbb{?} $, or $ \mathtt{Unknown} $), or a type
+
+%% As usual we write $ T_1 \sim T_2 $ when $ T_1 $ and $ T_2 $ are
+%% consistent. The intuition of $ T_1 \sim T_2 $ is that $ T_1 $ and $
+%% T_2 $ have no conflicting type information. Two types are consistent
+%% if one of them is $ \star $, or they have the same top-most type
+%% constructor and the corresponding sub-parts are
+%% consistent. Consistency is reflexive and symmetric, but not
+%% transitive.
+
+%% We write $ T_1 \smile T_2 $ when $ T_1 $ and $ T_2 $ are
+%% shallowly-consistent, that is, if one of them is $ \star $, or they
+%% have the same type constructor at the top. Shallow-inconsistency is
+%% the root of all blame in lazy cast strategies -- casting a value to a
+%% shallowly inconsistent type leads to a blame. Shallow-consistency is
+%% reflexive, symmetric, but not transitive.
+
+%% Let $ e $ range over terms. Most terms are standard for a simply-typed
+%% lambda calculus. We annotate the codomain of a lambda abstraction
+%% explicitly because we refer to it in the dynamic semantics. Becuase
+%% this is a cast calculus, we have two additional terms: cast
+%% expressions and blame expressions. Cast expressions perform runtime
+%% type checks and blame expressions raise an error.
+
+
+\paragraph{Dynamic Semantics}
+
+The dynamic semantics of a cast calculus is typically defined with a
+reduction semantics. Here we use a CEK machine
+\citep{felleisen1986control} instead because the first author is more
+familiar with CEK machines and believes that a CEK machine is more
+convenient to use for the space-efficient semantics in
+Section~\ref{sec:framework:cek} (space-efficiency is about compressing
+continuations). So using an abstract machine for the cast calculi in
+this section makes it easier prove correctness of the space-efficient
+machines. Of course, one should prove that the abstract machine
+presented here is equivalent to the standard reduction semantics for
+cast calculi, but we have not yet done so.
+
+Fig.~\ref{fig:machine-cekc} defines the transition relation of the CEK
+machine and Fig.~\ref{fig:state} gives a grammar for machine states
+$s$, including a definition of values and value typing. The
+transitions involving casts are highlighted in red and described in
+more detail below. The other transitions are standard for a CEK
+machine for an extended simply typed lambda calculus.
+%
+Recall that CEK machine involves two kinds of transitions, (1) those
+that dive further into an expression (looking for a redex) and push an
+entry onto the continuation, and (2) those that return a value to the
+current continuation and possibly perform a computation.
+Corresponding to (1) and (2), the machine state is either in an
+$\mathtt{Eval}$ or $\mathtt{Cont}$ configuration, respectively.
+Additionally, there is the $\mathtt{Halt}$ configuration.
+
+The transition relation $\judgeCreduce{s}{s}$ is parameterized over
+$applyCast$ to allow for the differences between D and UD.
+%
+When evaluating a cast expression, the machine moves the cast to the
+continuation and evaluates the inner expression.
+%% Other
+%% transition rules starting from $ Eval $ states are standard.
+To apply a casted function, the machine first casts $ v_1 $, the
+operand, then applies the casted operand to $ v_2 $, the underlying
+function, and finally cast the result of the function application.
+%
+To take out the first (resp. second) part of a casted pair, the
+machine firstly take out the first (resp. second) part of $ v $, the
+underlying pair, and cast the result.
+%
+In case splitting, if the target value is a left injection, the
+machine moves to a state that will apply the first continuation
+function to the value inside the left injection. The case for right
+injection is similar.
+%
+When the target value is a casted sum, the machine moves the cast from
+the target value to continuations functions.
+%
+To cast a value, the machine invokes $applyCast$ on the value.  If the
+cast succeeds, the machine returns the result to the next
+continuation.  If the cast fails, the machine halts with the blame
+label.
+%
+%% When the continuation is $ stop $, the machine enters a halting
+%% state. The When the machine is in a halting state, it stays in the
+%% same state.
+
+The reflexive transitive closure of reduction ($
+\judgeCreduceTrans{s}{s} $) and evaluation ($ eval_\mathcal{C}(e) $)
+are standard~\citep{felleisen03:_pllc}.
+
+
+\begin{figure}
+  Machine state and other runtime data structures
+  \[
+  \begin{array}{rclr}
 	\stxrule{v}{values}{
 		\vOOtt{} \mid
 		\vOOfun{\rho}{x}{e} \mid
@@ -681,45 +646,38 @@ normal coercion (\ref{sec:coercion-calculus}).
 		\oOOinr \mid
 		\oOOblame{l}
 	}
-	\end{array}
-	\]
-	
-	Consistency
-	\fbox{$ T_1 \sim T_2 $}
-	\begin{gather*}
-	\inference{}{
-		\star \sim \star
-	} \quad
-	\inference{}{
-		\star \sim P
-	} \quad
-	\inference{}{
-		P \sim \star
-	} \\
-	\inference{}{
-		\iota \sim \iota
-	} \quad
-	\inference{
-		S_1 \sim S_2 &
-		T_1 \sim T_2
-	}{
-		S_1 \rightarrow T_1 \sim S_2 \rightarrow T_2
-	} \quad
-	\inference{
-		S_1 \sim S_2 &
-		T_1 \sim T_2
-	}{
-		S_1 \times T_1 \sim S_2 \times T_2
-	} \quad
-	\inference{
-		S_1 \sim S_2 &
-		T_1 \sim T_2
-	}{
-		S_1 \plus T_1 \sim S_2 \plus T_2
+	\stxrule{r}{cast results}{
+		\rOOsucc{v} \mid
+		\rOOfail{l}
 	}
-	\end{gather*}
-	
-	Shallow-consistency
+	\stxrule{s}{states}{
+		\sOOinspect{e}{\rho}{\kappa} \mid{}
+		\sOOreturn{v}{\kappa} \mid{}
+		\sOOhalt{o}
+	}
+	\stxrule{\kappa}{continuations}{
+		\kOOmt \mid
+		\kOOconsI{e}{\rho}{\kappa} \mid
+		\kOOconsII{v}{\kappa} \mid
+		\kOOinl{\kappa} \mid
+		\kOOinr{\kappa}
+	}
+	\stxrulecont{
+		\kOOappI{e}{\rho}{\kappa} \mid
+		\kOOappII{v}{\kappa} \mid
+		\kOOcar{\kappa} \mid
+		\kOOcdr{\kappa} \mid
+		\kOOcaseI{e_1}{e_2}{\rho}{\kappa}
+	}
+	\stxrulecont{	
+		\kOOcaseII{v}{e}{\rho}{\kappa} \mid
+		\kOOcaseIII{v_1}{v_2}{\kappa} \mid
+		\kOOcast{c}{\kappa}
+	}
+  \end{array}
+  \]
+
+        Shallow-consistency
 	\fbox{$ T_1 \smile T_2 $}
 	\begin{gather*}
 	\inference{}{
@@ -745,23 +703,9 @@ normal coercion (\ref{sec:coercion-calculus}).
 	}
 	\end{gather*}
 	
-	Term typing
-	\fbox{$ \judgetype{\Gamma}{e}{T} $}
-	\begin{gather*}
-		\inference{
-			\Gamma \vdash e : T_1 & T_1 \sim T_2
-		}{
-			\judgetype{\Gamma}{\eOOcast{e}{T_1}{l}{T_2}}{T_2}
-		} \quad
-		\inference{
-		}{
-			\judgetype{\Gamma}{\eOOblame{l}}{T}
-		}
-	\end{gather*}
-	
 	Value typing \fbox{$ v : T $}
 	\begin{gather*}
-	\dots \quad
+	\dots \qquad
 	\inference{
 		v : I
 	}{
@@ -775,41 +719,10 @@ normal coercion (\ref{sec:coercion-calculus}).
 		\vOOcast{v}{\cOOcast{P_1}{l}{P_2}} : P_2
 	}
 	\end{gather*}
-
-	\caption{Syntax and static semantics of the cast calculi.}
-	\label{fig:blame-static}
+        \caption{Definition of machine state and auxilliary data
+          structures.}
+        \label{fig:state}
 \end{figure}
-
-\figref{fig:blame-static} defines the syntax of cast calculi and its
-static semantics. We extend the syntax of \citet{siek2009exploring}
-with sum and product types.  Let $ T $ range over types. A type is
-either the dynamic type $ \star $ (a.k.a. $ \mathtt{Dyn} $, $
-\mathbb{?} $, or $ \mathtt{Unknown} $), or a type with a type
-constructor at the top, that is, a pre-type, ranged over by $ P $. We
-include just one base type, $\POOunit$. The other pre-types are
-functions, products, and sums.
-
-As usual we write $ T_1 \sim T_2 $ when $ T_1 $ and $ T_2 $ are
-consistent. The intuition of $ T_1 \sim T_2 $ is that $ T_1 $ and $
-T_2 $ have no conflicting type information. Two types are consistent
-if one of them is $ \star $, or they have the same top-most type
-constructor and the corresponding sub-parts are
-consistent. Consistency is reflexive and symmetric, but not
-transitive.
-
-We write $ T_1 \smile T_2 $ when $ T_1 $ and $ T_2 $ are
-shallowly-consistent, that is, if one of them is $ \star $, or they
-have the same type constructor at the top. Shallow-inconsistency is
-the root of all blame in lazy cast strategies -- casting a value to a
-shallowly inconsistent type leads to a blame. Shallow-consistency is
-reflexive, symmetric, but not transitive.
-
-Let $ e $ range over terms. Most terms are standard for a simply-typed
-lambda calculus. We annotate the codomain of a lambda abstraction
-explicitly because we refer to it in the dynamic semantics. Becuase
-this is a cast calculus, we have two additional terms: cast
-expressions and blame expressions. Cast expressions perform runtime
-type checks and blame expressions raise an error.
 
 Let $ v $ range over values. A value is either the unit, a function (a
 closure), a pair, a left injection, a right injection, or a casted
@@ -841,45 +754,15 @@ o $) is defined in the natural way.
 	%	}
 	%	\end{gather*}
 	
-	Syntax
 	\[
 	\begin{array}{rclr}
-	\stxrule{r}{cast results}{
-		\rOOsucc{v} \mid
-		\rOOfail{l}
-	}
-	\stxrule{s}{states}{
-		\sOOinspect{e}{\rho}{\kappa} \mid{}
-		\sOOreturn{v}{\kappa} \mid{}
-		\sOOhalt{o}
-	}
-	
-	\stxrule{\kappa}{continuations}{
-		\kOOmt \mid
-		\kOOconsI{e}{\rho}{\kappa} \mid
-		\kOOconsII{v}{\kappa} \mid
-		\kOOinl{\kappa} \mid
-		\kOOinr{\kappa}
-	}
-	\stxrulecont{
-		\kOOappI{e}{\rho}{\kappa} \mid
-		\kOOappII{v}{\kappa} \mid
-		\kOOcar{\kappa} \mid
-		\kOOcdr{\kappa} \mid
-		\kOOcaseI{e_1}{e_2}{\rho}{\kappa}
-	}
-	\stxrulecont{	
-		\kOOcaseII{v}{e}{\rho}{\kappa} \mid
-		\kOOcaseIII{v_1}{v_2}{\kappa} \mid
-		\kOOcast{c}{\kappa}
-	}
 	\end{array}
 	\]
 	
 	Reduction \fbox{$ \judgeCreduce{s}{s} $}
 	\[
 	\begin{array}{rclr}
-		\redrule{
+		\hiredrule{
 		\sOOinspect{\eOOcast{e}{T_1}{l}{T_2}}{\rho}{\kappa}
 	}{
 		\sOOinspect{e}{\rho}{\langle\cOOcast{T_1}{l}{T_2}\rangle\kappa}
@@ -887,7 +770,7 @@ o $) is defined in the natural way.
 	\redrule{
 		\sOOinspect{\eOOvar{x}}{\rho}{\kappa}
 	}{	
-		\sOOreturn{\rho[x]}{\kappa}
+		\sOOreturn{\rho(x)}{\kappa}
 	}{}
 	\redrule{
 		\sOOinspect{\eOOsole}{\rho}{\kappa}
@@ -902,7 +785,7 @@ o $) is defined in the natural way.
 	\redrule{
 		\sOOinspect{(\eOOcons{e_1}{e_2})}{\rho}{\kappa}
 	}{
-		\sOOinspect{e_1}{E}{}
+		\sOOinspect{e_1}{\rho}{(\kOOconsI{e_2}{\rho}{\kappa})}
 	}{}
 	\redrule{
 		\sOOinspect{(\eOOinl{e})}{\rho}{\kappa}
@@ -954,7 +837,7 @@ o $) is defined in the natural way.
 \redrule{
 \sOOreturn{v_2}{(\kOOappII{(\vOOfun{\rho}{x}{e})}{\kappa})}}{
 \sOOinspect{e}{\rho[x:=v_2]}{\kappa}}{}
-	\redrule{
+	\hiredrule{
 		\sOOreturn{v_1}{(\mathtt{app_2} \; \vOOcast{v_2}{
 				\cOOcast{\POOfun{T_1}{T_2}}{l}{\POOfun{T_3}{T_4}}
 			} \; \kappa)}
@@ -965,6 +848,13 @@ o $) is defined in the natural way.
 			\langle\cOOcast{T_2}{l}{T_4}\rangle \kappa)}
 	}{}
 	\redrule{
+	\sOOreturn{
+		(\vOOcons{v_1}{v_2})
+	}{(\mathtt{fst} \; \kappa)}
+	}{
+	\sOOreturn{v_1}{\kappa}
+	}{}
+	\hiredrule{
 		\sOOreturn{
 			\vOOcast{v}{\cOOcast{\POOprod{T_1}{T_2}}{l}{
 					\POOprod{T_3}{T_4}}}
@@ -975,8 +865,15 @@ o $) is defined in the natural way.
 			\langle \cOOcast{T_1}{l}{T_3} \rangle \kappa
 			)}
 	}{}
-	
 	\redrule{
+	\sOOreturn{
+		(\vOOcons{v_1}{v_2})
+	}{(\mathtt{snd} \; \kappa)}
+	}{
+	\sOOreturn{v_2}{\kappa}
+	}{}
+	
+	\hiredrule{
 		\sOOreturn{
 			\vOOcast{v}{\cOOcast{\POOprod{T_1}{T_2}}{l}{
 					\POOprod{T_3}{T_4}}}
@@ -1011,63 +908,39 @@ o $) is defined in the natural way.
 }{}
 
 \redrule{
-	\sOOreturn{v_3}{(\mathtt{case_3}\;
+	\highlight{\sOOreturn{v_3}{(\mathtt{case_3}\;
 		(\vOOcast{v}{\cOOcast{\POOsum{T_1}{T_2}}{l}{\POOsum{T_3}{T_4}}})
-		\;v_2\;\kappa)}
+		\;v_2\;\kappa)}}
 }{
-	\sOOreturn{v_3'}{
+	\highlight{\sOOreturn{v_3'}{
 		(\mathtt{case_3}\;v
 		\;v_2'\;\kappa)
-	}
+	}}
 }{\\&&
-\text{where}\;
-v2' = \vOOcast{v_2}{\cOOcast{\POOfun{T_4}{T}}{l}{\POOfun{T_2}{T}}}
+\highlight{\text{where}\;
+v2' = \vOOcast{v_2}{\cOOcast{\POOfun{T_4}{T}}{l}{\POOfun{T_2}{T}}}}
 \\&&
-\text{and}\;
-v3' = \vOOcast{v_3}{\cOOcast{\POOfun{T_3}{T}}{l}{\POOfun{T_1}{T}}}
+\highlight{\text{and}\;
+v3' = \vOOcast{v_3}{\cOOcast{\POOfun{T_3}{T}}{l}{\POOfun{T_1}{T}}}}
 }
 	
 	\redrule{
-		\sOOreturn{v}{(
+		\highlight{\sOOreturn{v}{(
 			\mathtt{cast} \; c \; \kappa
-			)}
+			)}}
 	}{
+\highlight{          
 \begin{cases}
 	\sOOreturn{u}{\kappa} & \sidecond{applyCast(v,c) = \rOOsucc{u}}
 	\\
 	\sOOhalt{(\oOOblame{l})} & \sidecond{applyCast(v,c) = \rOOfail{l}}
-\end{cases}
+\end{cases}}
 	}{}
 \redrule{
 \sOOreturn{v}{\kOOmt}}{
 \sOOhalt{observe(v)}}{}
-
-%\redrule{
-%\sOOhalt{o}}{
-%\sOOhalt{o}}{}
 	\end{array}
 	\]	
-%	
-%	\fbox{$case(v, \kappa, \kappa) = s$}
-%	\[
-%	\begin{array}{rclr}
-%	\funrule{case(\vOOinl{v},\kappa_1,\kappa_2)}{
-%		\sOOreturn{v}{\kappa_1}
-%	}{}
-%	\funrule{case(\vOOinr{v},\kappa_1,\kappa_2)}{
-%		\sOOreturn{v}{\kappa_2}
-%	}{}
-%	
-%\funrule{case(\vOOcast{v}{\cOOcast{\POOsum{T_{11}}{T_{12}}}{l}{\POOsum{T_{21}}{T_{22}}}},\kappa_1,\kappa_2)}{
-%		case(v,
-%		\langle \cOOcast{T_{11}}{l}{T_{21}} \rangle \kappa_1,
-%		\langle \cOOcast{T_{12}}{l}{T_{22}} \rangle \kappa_2)
-%	}{}
-%	\end{array}
-%	\]
-		
-	%	Transitive closure of reduction \fbox{$ s \longrightarrow_{D,B}^{*} s 
-	%$}\\
 	
 	Evaluation \fbox{$\judgeCeval{e}{o}$}
 	\[
@@ -1079,21 +952,13 @@ v3' = \vOOcast{v_3}{\cOOcast{\POOfun{T_3}{T}}{l}{\POOfun{T_1}{T}}}
 	}
 	\]
 	
-	\caption{Dynamic semantics of the cast calculi as a CEK machine}
-	\label{machine-cekc}
+	\caption{Dynamic semantics of the cast calculi as a CEK
+          machine. The transitions that involve casts are highlighted
+          in red.}
+	\label{fig:machine-cekc}
 \end{figure}
 
-Fig.~\ref{machine-cekc} defines the dynamic semantics of cast calculi as a 
-CEK machine \citep{felleisen1986control}. CEK machines include continuation as 
-part of their states. They evaluate expressions with two interleaving 
-processes: 
-(1) dive into an expression and extend the continuation;
-(2) return a value to the current continuation.
-
-Most existing proofs about cast calculi defines the dynamic semantics with 
-reduction semantics. We use a CEK machine instead because the first author is 
-more familiar with CEK machines, and that he believes CEK machines are more 
-convenient because space-efficiency is about compressing continuations.
+\todo[inline]{There are missing transition rules for fst and snd. -JS}
 
 Let $ r $ range over cast results. A cast result is either a success, which 
 brings back a value, or a failure, which brings a blame label.
@@ -1109,31 +974,6 @@ we are waiting for the value of the first argument to a $ \mathtt{cons} $. And
 the last continuation, $ \langle c \rangle \kappa $ is to cast the value before 
 returning to $ \kappa $.
 
-The reduction relation $ \judgeCreduce{s}{s} $ is parameterized over $ 
-applyCast $. 
-When evaluating a cast expression, the machine moves the cast to the 
-continuation and evaluate the inner expression.
-Other transition rules starting from $ Eval $ states are standard.
-To apply a casted 
-function, the machine firstly cast $ v_1 $, the operand, then apply the casted 
-operand to $ v_2 $, the un-casted function, and finally cast the result of the 
-function application. To take out the first (resp. second) part of a casted 
-pair, the machine firstly take out the first (resp. second) part of $ v $, the 
-un-casted pair, and cast the result. In case spliting, if the target value is a 
-left injection, the machine moves to a state that will apply the first 
-continuation function to the value inside the left injection. The case for 
-right injection is similar. When the target value is a casted sum, the machine 
-moves the cast from the target value to continuations functions. 
-%Along the way, the machine accumulates the pending casts onto the 
-%continuations. 
-To cast a value, the machine try to apply the cast to the value. 
-If the cast succeeds, the machine returns the result to the next continuation. 
-If the cast fails, the machine halts with the blame label.
-When the continuation is $ stop $, the machine enters a halting state. The 
-When the machine is in a halting state, it stays in the same state.
-
-The reflexive transitive closure of reduction ($ \judgeCreduceTrans{s}{s} $) 
-and evaluation ($ eval_\mathcal{C}(e) $) are standard.
 
 \subsection{The \lazyD{} cast calculus}
 
@@ -1176,16 +1016,18 @@ and evaluation ($ eval_\mathcal{C}(e) $) are standard.
 
 \figref{fig:applyCast-D-C} defines the $ applyCast $ for \lazyD. 
 We conjecture that with this $ applyCast $, the CEK machine in 
-\figref{machine-cekc} would agree with the \lazyD{} cast calculus in 
+\figref{fig:machine-cekc} would agree with the \lazyD{} cast calculus in 
 \citet{siek2009exploring}. We denote this \lazyD{} machine by \ineffCEKD{},
 and the corresponding relations by $ \judgeDreduce{s}{s} $, $ 
 \judgeDreduceTrans{s}{s} $, and $ \judgeDeval{e}{o} $
 
 \subsection{The \lazyUD{} cast calculus [Jeremy]}
 
+\todo[inline]{I need to update this subsection. -JS}
+
 The dynamic semantics of the \lazyUD{} cast calculus, which we define here as a
 CEK machine, is similar to that of the \lazyD{} cast calculus
-(Fig. \ref{machine-cekc}). The only difference is in the definition of
+(Fig. \ref{fig:machine-cekc}). The only difference is in the definition of
 the $\mathit{applyCast}$ function, in which a cast whose source or
 target is the unknown type $\star$ is always split into two casts that
 go through an injectiable type, that is, a type in which all
@@ -1238,12 +1080,12 @@ Fig.~\ref{fig:apply-Cast-UD}.
 \subsection{Coercions in Normal Form} 
 \label{sec:coercion-calculus}
 
-In this section we review the normal coercions \citep{siek2012interpretations} 
-to motivate the design of hypercoercion. 
-We ignore sum types and product types in this 
-section, because they were not in the paper. We assume a basic 
-familiarity with coercion, and direct readers who do not know it to 
-\citet{siek2012interpretations}.
+In this section we review the coercions in normal form of
+\citet{siek2012interpretations} to motivate the design of
+hypercoercions.  We ignore sum types and product types in this
+section, because \citet{siek2012interpretations} did not discuss
+them. We assume a basic familiarity with coercions and direct readers
+who are not familiar with them to \citet{siek2012interpretations}.
 %We 
 %will highlight the similarity of normal coercion and hypercoercion, and hope 
 %this would convince you that hypercoercion should be as difficult to implement 
@@ -1953,7 +1795,7 @@ equivalent to \ineffCEKD\ (subsection~\ref{secc:framework:all-correct}), which
 depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 
 \subsection{A Space-efficient CEK machine}
-\label{ssec:framework:cek}
+\label{sec:framework:cek}
 
 \begin{figure}
 	Syntax
@@ -2211,11 +2053,10 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	\]
 	
 	\caption{Space-efficient CEK machine $ \mathcal{S}(C) $}
-	\label{machine-cekcc}
+	\label{fig:machine-cekcc}
 \end{figure}
-\figref{machine-cekcc} defines, \effCEK{C}, a space-efficient semantics as a 
-CEK machine.
-This machine is similar to \ineffCEK{}. 
+\figref{fig:machine-cekcc} defines, \effCEK{C}, a space-efficient
+semantics as a CEK machine.  This machine is similar to \ineffCEK{}.
 The most important differences are in values and continuations.
 
 Let $ v $ range over value. 
