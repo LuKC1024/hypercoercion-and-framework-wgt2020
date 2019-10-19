@@ -153,15 +153,15 @@
 \newcommand{\hckOOappII}[2]{\mathtt{app_2}\;#1\;#2}
 \newcommand{\sidecond}[1]{\text{if}\;#1}
 % Lazy D cast calculus on space-inefficient CEK
-\newcommand{\judgeCreduce}[2]{#1 \longrightarrow_{\mathcal{C}} #2}
-\newcommand{\judgeCreduceTrans}[2]{#1 \longrightarrow_{\mathcal{C}}^{*} #2}
+\newcommand{\judgeCreduce}[2]{#1 \longmapsto_{\mathcal{C}} #2}
+\newcommand{\judgeCreduceTrans}[2]{#1 \longmapsto_{\mathcal{C}}^{*} #2}
 \newcommand{\judgeCeval}[2]{#1 \Downarrow_{\mathcal{C}} #2}
-\newcommand{\redrule}[3]{#1 & \longrightarrow_\mathcal{C} & #2 & #3\\}
+\newcommand{\redrule}[3]{#1 & \longmapsto_\mathcal{C} & #2 & #3\\}
 % blame calculus on space-efficient CEK
-\newcommand{\judgeSreduce}[3]{#2 \longrightarrow_{\mathcal{S}(#1)} #3}
-\newcommand{\judgeSreduceTrans}[3]{#2 \longrightarrow_{\mathcal{S}(#1)}^{*} #3}
+\newcommand{\judgeSreduce}[3]{#2 \longmapsto_{\mathcal{S}(#1)} #3}
+\newcommand{\judgeSreduceTrans}[3]{#2 \longmapsto_{\mathcal{S}(#1)}^{*} #3}
 \newcommand{\judgeSeval}[3]{#2 \Downarrow_{\mathcal{S}(#1)} #3}
-\newcommand{\redruleS}[3]{#1 & \longrightarrow_{\mathcal{S}(C)} & #2 & #3\\}
+\newcommand{\redruleS}[3]{#1 & \longmapsto_{\mathcal{S}(C)} & #2 & #3\\}
 % Normal Coercion
 \newcommand{\ncProj}[2]{#1?^{#2}}
 \newcommand{\ncInj}[1]{#1!}
@@ -186,8 +186,8 @@
 \newcommand{\ineffCEK}{$ \mathcal{C} $}
 \newcommand{\ineffCEKD}{$ \mathcal{D} $}
 \newcommand{\ineffCEKUD}{$ \mathcal{UD} $}
-\newcommand{\judgeDreduce}[2]{#1 \longrightarrow_{\mathcal{D}} #2}
-\newcommand{\judgeDreduceTrans}[2]{#1 \longrightarrow_{\mathcal{D}}^{*} #2}
+\newcommand{\judgeDreduce}[2]{#1 \longmapsto_{\mathcal{D}} #2}
+\newcommand{\judgeDreduceTrans}[2]{#1 \longmapsto_{\mathcal{D}}^{*} #2}
 \newcommand{\judgeDeval}[2]{#1 \Downarrow_{\mathcal{D}} #2}
 \newcommand{\effCEK}[1]{$ \mathcal{S}(#1) $}
 
