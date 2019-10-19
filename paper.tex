@@ -314,10 +314,6 @@ languages</concept_desc>
   some words don't have a plural form, like ``blame''. -JS
   \\---\\
   Will fix grammar after fixing all other problems -KC}
-\todo[inline]{The first paragraph of the introduction should summarize
-  the entire introduction, and in some sense, the entire paper. -JS
-\\---\\
-Fixed -KC}
 
 Around 2006, several groups of researchers proposed ways to integrate
 dynamic typing and static typing, notably gradual typing
@@ -430,26 +426,29 @@ that this framework is general enough to include coercion and threesome.
 %\times \{D, UD\} $ \citep{siek2009exploring}. Eager strategies detect more 
 %potential type errors, but 
 %blame more programs. $ D $ and $ UD $ assign blame labels differently.
-We focus on lazy strategies because recently \citet{new2019gradual} 
-show that eager strategies are incompatible with $\eta$-equivalence of 
-functions, which suggest that they are not very ideal. We are unaware of any 
-strong argument favoring D or UD, so we study both \lazyD\ and \lazyUD.
-\todo[inline]{Why do we need to explain why both LD and LUD? -KC
-  \\---\\
-Because the paper includes both. -JS
-\\---\\
-Fixed. -KC}
+
+We focus on lazy cast strategies because we suspect that they are more
+efficient that eager strategies, which is why lazy was chosen in the
+Grift compiler \citep{Kuhlenschmidt:2019aa}, and because
+\citet{new2019gradual} show that eager strategies are incompatible
+with $\eta$-equivalence of functions. We are interested in the D blame
+tracking strategy because it has a more straightforward notion safe
+cast compared to UD \citep{siek2009exploring}, which is why D was
+chosen Grift compiler. However, we are also intersted in UD because it
+plays a prominent role in the gradual typing literature
+\citep{wadler2009well}.
 
 
-Here are our major contribution:
+The primary contributions of this paper are:
 \begin{itemize}
-	\item hypercoercion, a new space-efficient cast representation, which has a 
-	structurally recursive composition and a more compact memory 	
-	representation.
-	\item a framework in Agda for proving correctness of cast represantations. 
-	We conjecture that both coercion and threesome can fit into this framework.
-	\item a formal proof that hypercoercion respects the semantics of cast 
-	calculus
+\item hypercoercions, a new space-efficient cast representation, which
+  has a structurally recursive composition and a more compact memory
+  representation.
+\item a framework in Agda for proving correctness of cast
+  represantations.  We conjecture that both coercion and
+  threesome can fit into this framework.
+\item a formal proof that hypercoercion respects the semantics
+  of the \lazyD{} cast calculus.
 \end{itemize}
 
 %Around 2006, many work on integrating dynamic typing and static typing emerge, 
@@ -1101,38 +1100,6 @@ reduction semantics. We use a CEK machine instead because the first author is
 more familiar with CEK machines, and that he believes CEK machines are more 
 convenient because space-efficiency is about compressing continuations.
 
-
-
-\todo[inline]{Change the order of parameters for applyCast to take
-	the value first and the cast second. -JS
-	\\---\\
-	Could you tell me why taking the value first is better?
-	I am always taking the target of induction first. -KC
-	\\---\\
-    It's better because it matches the postfix syntax we are using for
-    casts. Currently line 2 of applyCast for D is difficult to read,
-    compare it with line 4 of applyCast for UD. -JS
-    \\---\\
-    Does it mean changing the syntax for casts to a prefix syntax would work as 
-    well? 
-    If yes, I prefer this way, because of the reason in my first response 
-    and that function applications (apply) also takes arguments in this order.
-    I have fixed it with my idea so that we can see if it works. This change is 
-    easy to undo.
-    -KC
-    \\---\\
-    Postfix is better than prefix because then the casts read left to right,
-    which is the normal direction for English readers.
-    Please make it so. BTW, the way you keep choosing notation etc.
-    different from what I'm use to is making it more difficult than
-    necessary for me to collaborate with you. If this keeps up,
-    I may decide to stop. It's fine for you to ask why, it's not fine
-    for you to choose to make things difficult for me. -JS
-    \\---\\
-    Sorry, I don't indent to make things difficult for you. I have turned to 
-    postfix notation. -KC
-    }
-
 Let $ r $ range over cast results. A cast result is either a success, which 
 brings back a value, or a failure, which brings a blame label.
 
@@ -1162,9 +1129,6 @@ left injection, the machine moves to a state that will apply the first
 continuation function to the value inside the left injection. The case for 
 right injection is similar. When the target value is a casted sum, the machine 
 moves the cast from the target value to continuations functions. 
-\todo[inline]{Change the rules for case to be small step, i.e.,
-	the case function should not be recursive. -JS
-\\---\\ Fixed. -KC}
 %Along the way, the machine accumulates the pending casts onto the 
 %continuations. 
 To cast a value, the machine try to apply the cast to the value. 
@@ -1897,6 +1861,9 @@ Firstly, let us define what we mean by \emph{cast representations}
 interpreter to construct casts. We call them \textit{cast constructors}. 
 And the forth and last operator enable the interpreter to use casts.
 
+\todo[inline]{Change ``Cast Representation'' to
+  ``Cast Abstract Data Type''. -JS}
+
 \begin{definition}[Cast Representation]
 	\label{def:cast-rep}
 	A cast representation is a set indexed by two types and has four interface 
@@ -1908,6 +1875,8 @@ And the forth and last operator enable the interpreter to use casts.
 		\item[$ applyCast(v,c) $] applies a cast onto a value
 	\end{description}
 \end{definition}
+
+\todo[inline]{Change the name ``surely LazyD'' to ``LazyD Cast ADT''. -JS}
 
 To use the framework, users needs to prove that their cast representation is 
 \emph{surely LazyD} (Definition~\ref{def:surely-lazyd}).

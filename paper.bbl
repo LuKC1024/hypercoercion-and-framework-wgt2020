@@ -119,6 +119,19 @@
 \newblock
 
 
+\bibitem[\protect\citeauthoryear{Kuhlenschmidt, Almahallawi, and
+  Siek}{Kuhlenschmidt et~al\mbox{.}}{2019}]%
+        {Kuhlenschmidt:2019aa}
+\bibfield{author}{\bibinfo{person}{Andre Kuhlenschmidt},
+  \bibinfo{person}{Deyaaeldeen Almahallawi}, {and} \bibinfo{person}{Jeremy~G.
+  Siek}.} \bibinfo{year}{2019}\natexlab{}.
+\newblock \showarticletitle{Toward Efficient Gradual Typing for Structural
+  Types via Coercions}. In \bibinfo{booktitle}{{\em Conference on Programming
+  Language Design and Implementation}} {\em (\bibinfo{series}{PLDI})}.
+  \bibinfo{publisher}{ACM}.
+\newblock
+
+
 \bibitem[\protect\citeauthoryear{Matthews and Findler}{Matthews and
   Findler}{2007}]%
         {Matthews:2007zr}
