@@ -75,6 +75,8 @@
 \newcommand{\stxrule}[3]{#1 & ::= & #3 & \text{#2}\\}
 \newcommand{\stxrulecont}[1]{& | & #1 & \\}
 \newcommand{\funrule}[3]{#1 &=& #2 & #3\\}
+\newcommand{\hifunrule}[3]{\highlight{#1} &\highlight{=}& \highlight{#2} & 
+\highlight{#3}\\}
 \newcommand{\comprule}[4]{#1 & \fatsemi^\ell & #2 & = & #3 & #4 \\}
 \newcommand{\plus}[0]{+}
 \newcommand{\judgetype}[3]{#1 \vdash #2 : #3}
@@ -165,6 +167,8 @@
 \newcommand{\judgeSreduceTrans}[3]{#2 \longmapsto_{\mathcal{S}(#1)}^{*} #3}
 \newcommand{\judgeSeval}[3]{eval_{\mathcal{S}(#1)}(#2) = #3}
 \newcommand{\redruleS}[3]{#1 & \longmapsto_{\mathcal{S}(C)} & #2 & #3\\}
+\newcommand{\hiredruleS}[3]{\highlight{#1} & 
+\highlight{\longmapsto_{\mathcal{S}(C)}} & \highlight{#2} & \highlight{#3} \\}
 % Normal Coercion
 \newcommand{\ncProj}[2]{#1?^{#2}}
 \newcommand{\ncInj}[1]{#1!}
@@ -1865,7 +1869,7 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	Reduction \fbox{$ \judgeSreduce{C}{s}{s} $}
 	\[
 	\begin{array}{rclr}
-	\redruleS{
+	\hiredruleS{
 		\sOOinspect{\eOOcast{e}{T_1}{l}{T_2}}{\rho}{\kappa}
 	}{
 		\sOOinspect{e}{\rho}{ext(cast(T_1,l,T_2),\kappa)}
@@ -1880,7 +1884,7 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	}{
 		\sOOreturn{\hcvOOtt}{\kappa}
 	}{}
-	\redruleS{
+	\hiredruleS{
 		\sOOinspect{\eOOlam{T_1}{T_2}{x}{e}}{\rho}{\kappa}
 	}{
 		\sOOreturn{(\hcvOOfun{id(T_1)}{\rho}{x}{e}{id(T_2)})}{\kappa}
@@ -1916,11 +1920,11 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	\redruleS{
 		\sOOinspect{(\eOOcase{e_1}{e_2}{e_3})}{\rho}{\kappa}}{
 		\sOOinspect{e_1}{\rho}{cont(\kOOcaseI{E}{e_2}{e_3}{\kappa})}}{}
-	\redruleS{
+	\hiredruleS{
 		\sOOreturn{v}{\langle c \rangle k}
 	}{
 	\begin{cases}
-	continue(k,v) & \sidecond{applyCast(v,c) = \rOOsucc{v'}} 
+	continue(k,v') & \sidecond{applyCast(v,c) = \rOOsucc{v'}} 
 	\\
 	\sOOhalt{(\oOOblame{l})} & \sidecond{applyCast(v,c) = \rOOfail{l}}
 	\end{cases}
@@ -1994,15 +1998,15 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	\continue{v_1}{(\kOOconsI{e_2}{\rho}{\kappa})}}{
 	\sOOinspect{e_2}{\rho}{cont(\kOOconsII{v_1}{\kappa})}}{}
 
-\funrule{
+\hifunrule{
 	\continue{v_2}{(\kOOconsII{v_1}{\kappa})}}{
 	\sOOreturn{(\hcvOOcons{v_1}{id(T_1)}{v_2}{id(T_2)})}{\kappa}}{}
 
-\funrule{
+\hifunrule{
 	\continue{v}{(\kOOinl{\kappa})}}{
 	\sOOreturn{(\hcvOOinl{v}{id(T)})}{\kappa}}{}
 
-\funrule{
+\hifunrule{
 	\continue{v}{(\kOOinr{\kappa})}}{
 	\sOOreturn{(\hcvOOinr{v}{id(T)})}{\kappa}}{}
 
@@ -2015,7 +2019,7 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 %applyCast(v_2,c_1) >>= \lambda v. \sOOinspect{e}{\rho[x:=v]}{ext(c,\kappa)}
 %}{}
 
-\funrule{
+\hifunrule{
 	\continue{v_2}{(\kOOappII{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{\kappa})}}{
 \begin{cases}
 	\sOOinspect{e}{\rho[x:=v']}{ext(c_2,\kappa)} \\
@@ -2025,7 +2029,7 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 \;\;\;\;\;\sidecond{applyCast(v_2,c_1) = \rOOfail{l}}
 \end{cases}
 }{}
-\funrule{
+\hifunrule{
 	\continue{v_3}{(\mathtt{case_3}\;(\hcvOOinl{v}{c})\;
 		(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})
 		\;\kappa)}
@@ -2033,7 +2037,7 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	\sOOreturn{v}{cont(\kOOappII{(\hcvOOfun{seq(c,c_1)}{\rho}{x}{e}{c_2})}{\kappa})}
 }{}
 
-\funrule{
+\hifunrule{
 	\continue{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}
 	{(\mathtt{case_3}\;(\hcvOOinr{v}{c})\;v_2\;\kappa)}
 }{
