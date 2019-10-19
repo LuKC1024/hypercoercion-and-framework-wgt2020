@@ -117,8 +117,10 @@
 \newcommand{\vOOcons}[2]{\mathtt{cons}\;#1\;#2}
 \newcommand{\vOOinl}[1]{\mathtt{inl}\;#1}
 \newcommand{\vOOinr}[1]{\mathtt{inr}\;#1}
-\newcommand{\rOOsucc}[1]{\mathtt{succ}\;#1}
-\newcommand{\rOOfail}[1]{\mathtt{fail}\;#1}
+\newcommand{\rOOsucc}[1]{#1}
+\newcommand{\rOOfail}[1]{#1}
+%\newcommand{\rOOsucc}[1]{\mathtt{succ}\;#1}
+%\newcommand{\rOOfail}[1]{\mathtt{fail}\;#1}
 \newcommand{\kOOmt}[0]{\mathtt{stop}}
 \newcommand{\kOOconsI}[3]{\mathtt{cons_1} \; #1 \; #2 \; #3}
 \newcommand{\kOOconsII}[2]{\mathtt{cons_2} \; #1 \; #2}
@@ -931,7 +933,7 @@ v3' = \vOOcast{v_3}{\cOOcast{\POOfun{T_3}{T}}{l}{\POOfun{T_1}{T}}}}
 	}{
 \highlight{          
 \begin{cases}
-	\sOOreturn{u}{\kappa} & \sidecond{applyCast(v,c) = \rOOsucc{u}}
+	\sOOreturn{v'}{\kappa} & \sidecond{applyCast(v,c) = \rOOsucc{v'}}
 	\\
 	\sOOhalt{(\oOOblame{l})} & \sidecond{applyCast(v,c) = \rOOfail{l}}
 \end{cases}}
