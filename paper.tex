@@ -1152,16 +1152,21 @@ function, the machine firstly cast $ v_1 $, the operand, then apply the casted
 operand to $ v_2 $, the un-casted function, and finally cast the result of the 
 function application. To take out the first (resp. second) part of a casted 
 pair, the machine firstly take out the first (resp. second) part of $ v $, the 
-un-casted pair, and cast the result. To case-split a sum, the machine looks 
-deep inside the value to find out whether it is a left injection or a right 
-one.
+un-casted pair, and cast the result. In case spliting, if the target value is a 
+left injection, the machine moves to a state that will apply the first 
+continuation function to the value inside the left injection. The case for 
+right injection is similar. When the target value is a casted sum, the machine 
+moves the cast from the target value to continuations functions. 
 \todo[inline]{Change the rules for case to be small step, i.e.,
 	the case function should not be recursive. -JS
 \\---\\ Fixed. -KC}
-Along the way, the machine accumulates the pending casts onto the 
-continuations. To cast a value, the machine try to apply the cast to the value. 
+%Along the way, the machine accumulates the pending casts onto the 
+%continuations. 
+To cast a value, the machine try to apply the cast to the value. 
 If the cast succeeds, the machine returns the result to the next continuation. 
 If the cast fails, the machine halts with the blame label.
+When the continuation is $ stop $, the machine enters a halting state. The 
+When the machine is in a halting state, it stays in the same state.
 
 The reflexive transitive closure of reduction ($ \judgeCreduceTrans{s}{s} $) 
 and evaluation ($ \judgeCeval{e}{o} $) are standard.
