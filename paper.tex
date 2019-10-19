@@ -255,15 +255,12 @@
 %% Note: \begin{abstract}...\end{abstract} environment must come
 %% before \maketitle command
 \begin{abstract}
-\todoKC{rewrite this abstract based on the comparision table.}
-  Gradual Typing is great. Implementing gradually typed with blame
-  tracking and space efficiency is tricky. There exist two technique
-  to do this: coercion and threesome. Coercion is easy to understand,
-  and easy enough to implement, but difficult to reason about
-  formally. Threesome is hard to understand, easy to implement, and
-  easy to reason about formally. We propose hypercoercion, which is
-  easy to understand, as easy to implement as coercion, and easy to
-  reason about formally.
+	Designing a space-efficient cast representation that is good for both 
+	mechanized metatheory and implementation is challenging. Existing solution 
+	solutions have various strengths and weaknesses. We presents a new cast 
+	representation, named hypercoercions, that is good for both. On our way to 
+	prove the correctness of hypercoercions, we also step toward a framework 
+	for proving correctness of cast representations.
 \end{abstract}
 
 
@@ -1444,15 +1441,17 @@ Three observations on this definition leads to hypercoercion:
  in this section? -KC
  \\---\\
  three parts -JS
+ \\---\\
+ Fixed -KC
 }
 
 This section presents our first contribution, the definition of hypercoercion. 
-The functions that construct hypercoercions are deferred to subsections because 
-they depend on blame strategies.
-And the functions that apply hypercoercions to values are deferred to 
-Section~\ref{sec:hypercoercion-correctness} because 
-they depends on a new definition of values, which is part of the framework in
-Section~\ref{sec:framework}.
+The design of hypercoercion is motivated by observations on coercion normal 
+forms: a normal coercion has at most three parts; projections are always at the 
+beginning; injections and failures are always at the end. Hypercoercions have 
+similar shape: a hypercion has either one part or three parts; for three-part 
+hypercoercions, the first part is either a projection or a no-op, while the 
+last part is either an injection, a failure, or a no-op.
 
 \figref{fig:hypercoercion} defines the syntax of hypercoercion. Types, 
 pre-types, and blame labels are as before.
@@ -1466,8 +1465,12 @@ correspondence between middles and type constructors.
 We generalize shallow-consistency to middles $ m \smile m $ in the natural way.
 Let $ t $ range over tails. A tail is either a no-op, an injection, or a 
 failure. 
-Let $ \ell $ range over no-op and labels. It is useful when we introduce 
-composition of hypercoercions.
+
+We define hypercoercion constructs in the following subsections.
+But functions that apply hypercoercions to values are deferred to 
+Section~\ref{sec:hypercoercion-correctness} because 
+they depends on a new definition of values, which is part of the framework in
+Section~\ref{sec:framework}.
 
 \subsection{\lazyD{} hypercoercion}
 
@@ -1631,6 +1634,7 @@ composition of hypercoercions.
 
 \figref{fig:HC-D} defines the constructors of \lazyD{} hypercoercion.
 
+Let $ \ell $ range over $ \epsilon $ and labels.
 $ c_1 \fatsemi^\ell c_2 = c' $ composes two hypercoercions. The target of $ 
 c_1 $ and the source of $ c_2 $ might be different, in which case $ \ell $ must 
 be a label.
@@ -1656,13 +1660,7 @@ target type.
 	\end{enumerate}
 \end{proposition}
 
-The correctness proof of \lazyD\ hypercoercion is deferred to 
-\secref{sec:LDHC-correct} 
-because it relies on the space-efficient CEK abstract machine in 
-\secref{sec:CEKS}.
-
 \subsection{\lazyUD{} hypercoercion [Jeremy]}
-
 
 Figure~\ref{fig:HC-UD}
 
@@ -2092,16 +2090,25 @@ a Lazy D Cast ADT, \evalEqv{\ineffCEKD}{\effCEK{C}}.
 	\caption{Space-efficient CEK machine $ \mathcal{S}(C) $}
 	\label{machine-cekcc}
 \end{figure}
-\figref{machine-cekcc} defines, \effCEK{C}, a space-efficient semantics of cast 
-calculus in the style of CEK machines.
+\figref{machine-cekcc} defines, \effCEK{C}, a space-efficient semantics as a 
+CEK machine.
 This machine is similar to \ineffCEK{}. 
 The most important differences are in values and continuations.
+
+Let $ v $ range over value. 
 In \ineffCEK\, we have one value constructor for all casted value.
 In \effCEK{C}, however, we do not have this generic value constructor, 
 instead we push those casts into the value constructors most of the time and 
 use $ \hcvOOinj{P}{v} $ to construct values casted to $ \TOOdyn $.
 Non-casted values in \ineffCEK\ correspond to values in \effCEK{C} where the 
 casts are identity (i.e. constructed by $ id(T) $).
+
+Cast results ($ r $) and machine states ($ s $) are as before. 
+
+Let $ \kappa $ range over continuations and let $ k $ range over 
+pre-continuations. 
+A continuation is now a pre-continuation prefixed with a cast.
+Pre-continuation are like the continuations in \ineffCEK.
 In \ineffCEK\, a continuation have zero or more casts at the top.
 In \effCEK{C}, however, every continuation has exactly one cast at the top.
 Continuations in \ineffCEK\ that have no casts at the top correspond to 
@@ -2109,15 +2116,6 @@ continuations in \effCEK{C}\ whose casts are identity.
 And continuations in \ineffCEK\ that have many casts at the top correspond to 
 continuations in \effCEK{C}\ where those casts are composed by $ 
 seq(c,c) $.
-
-
-Let $ v $ range over value. A value is either the unit value, function, pair, 
-left injection of sum, right injection of sum, and injection to $ \TOOdyn $.
-Cast results ($ r $) and machine states ($ s $) are as before. 
-Let $ \kappa $ range over continuations and let $ k $ range over 
-pre-continuations. 
-A continuation is now a pre-continuation prefixed with a cast.
-Pre-continuation are like the continuations in \ineffCEK.
 
 \todo[inline]{KC needs to add missing rules in and describe them. -KC}
 We list a fraction of reduction rules due to space limitation.
@@ -2256,6 +2254,7 @@ introduce one more definition: $ s_1 \approx^{*} s_2 $ if and only if there
 exists $ s_2' \in \text{\ineffCEKD} $ 
 such that $ \judgeCreduceTrans{s_2}{s_2'}$ and $ s_1 \approx s_2' $.
 
+\todo[inline]{Standardize theorem statement -KC}
 \begin{lemma}[Weak Bisimulation between \effCEK{C} and \ineffCEKD]
 	\label{thm:surely-monoidic-reduce}
 	For all instance of Cast ADT $ C $, 
@@ -2348,6 +2347,7 @@ except the relaton for casts, which is by cast constructors:
 }
 \end{gather*}
 
+\todo[inline]{Standardize theorem statement -KC}
 \begin{lemma}[Strong Bi-simulation among $ \mathcal{S}(\cdot) $]
 	\label{thm:CEKS-bisim}
 	If 
