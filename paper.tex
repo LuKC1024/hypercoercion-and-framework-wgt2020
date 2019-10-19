@@ -1852,9 +1852,12 @@ Figure~\ref{fig:HC-UD-cast}
 This section presents our second contribution, a framework for proving 
 correctness of cast representations. The framework is a theorem saying that for 
 all cast representation $ C $, if $ C $ satisfies a collection of properties, 
-then instantiating our parameterized space-efficient interpreter with $ C $ 
-gives an interpter that is extensionally equal to the standard interpreter for 
-\lazyD\ cast calculus. We are working on a similar theorem for \lazyUD{}.
+then it would respect the Lazy D semantics of cast calculi. We are working on a 
+similar theorem for \lazyUD{}.
+
+%then instantiating our parameterized space-efficient interpreter with $ C $ 
+%gives an interpter that is extensionally equal to the standard interpreter for 
+%\lazyD\ cast calculus. 
 
 We captures the set of operators that every cast representation must provide 
 with \emph{cast abstract data type} (Definition~\ref{def:cast-rep}). 
@@ -1884,18 +1887,10 @@ Fixed -KC}
 Fixed -KC}
 
 To use our framework, users needs to prove that their cast representation 
-implements Lazy D Cast ADT (Definition~\ref{def:surely-lazyd}).
-The definition confines the behavior of $ applyCast(v,c) $ so narrowly that it 
-allows the framework to apply casts without referring to the actual definition 
-of $ applyCast(v,c) $. This 
-is because every casts at runtime is constructed by one of 
-the three cast constructors. 
-Property (1) handles casts constructed by $ id(T) $. 
-And property (2) handles $ seq(c,c) $, which says applying the 
-composition of $ c_1 $ and $ c_2 $ is the same as applying $ c_1 $ then $ c_2 $.
-All remaining properties handles $ cast(T,l,T) $. They are effectively a 
-duplication of the $ applyCast(v,c) $ in \ineffCEKD\ 
-(Fig.~\ref{fig:applyCast-D-C}).
+implements Lazy D Cast ADT (Definition~\ref{def:surely-lazyd}). To be a Lazy D 
+Cast ADT, $ id(T) $ must acts like the identity function. And $ seq(c,c) $ 
+must acts like a sequence of casts. What's more, $ cast(T_1,l,T_2) $ must act 
+like the Lazy D $ applyCast $ (Fig.~\ref{fig:applyCast-D-C}).
 
 \begin{definition}[Lazy D Cast ADT]
 	\label{def:surely-lazyd}
@@ -1948,11 +1943,15 @@ duplication of the $ applyCast(v,c) $ in \ineffCEKD\
 	\end{enumerate}
 \end{definition}
 
+%Lazy D Cast ADT confines the behavior of operators so narrowly that it 
+%effectively allows us to ``run'' programs without referring to an actual 
+%representation of cast.
+
 If a cast representation is a Lazy D Cast ADT, people can apply our theorems 
 and be confident that this cast representation is valid.
 
-Some cast representations are also \textit{monoids}. They are useful in the 
-proof of our framework, and might be interesting elsewhere.
+Some cast representations are also \textit{monoids}. This definition is useful 
+in the proof of our framework, and might be interesting for other people.
 
 \begin{definition}[Monoid]
 	A Cast ADT is a monoid if 
@@ -1968,13 +1967,14 @@ proof of our framework, and might be interesting elsewhere.
 \end{definition}
 
 In subsection~\ref{ssec:framework:cek}, we introduce \effCEK{C}, a family 
-of space-efficient semantics indexed by Cast ADTs ($ C $). 
+of space-efficient semantics indexed by Cast ADT ($ C $). When $ C $ is a Lazy 
+D Cast ADT, \effCEK{C} repects \ineffCEKD.
 In subsection~\ref{secc:framework:monoid-correct}, we prove when $ C $ is
 a Lazy D Cast ADT and a monoid as well, $ \judgeDeval{e}{o} $ if 
 and only if $ \judgeSeval{C}{e}{o} $. In 
-subsection~\ref{secc:framework:all-correct}, we strengthen the theorem to drop 
-the requirement that $ C $ must be a monoid, that is, every instance of Lazy D 
-Cast ADT is correct.
+subsection~\ref{secc:framework:all-correct}, we further prove that when $ C $ is
+a Lazy D Cast ADT, $ \judgeDeval{e}{o} $ if and only if $ \judgeSeval{C}{e}{o} 
+$.
 
 \subsection{A Space-efficient CEK machine}
 \label{ssec:framework:cek}
