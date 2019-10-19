@@ -155,12 +155,12 @@
 % Lazy D cast calculus on space-inefficient CEK
 \newcommand{\judgeCreduce}[2]{#1 \longmapsto_{\mathcal{C}} #2}
 \newcommand{\judgeCreduceTrans}[2]{#1 \longmapsto_{\mathcal{C}}^{*} #2}
-\newcommand{\judgeCeval}[2]{#1 \Downarrow_{\mathcal{C}} #2}
+\newcommand{\judgeCeval}[2]{eval_{\mathcal{C}}(#1) = #2}
 \newcommand{\redrule}[3]{#1 & \longmapsto_\mathcal{C} & #2 & #3\\}
 % blame calculus on space-efficient CEK
 \newcommand{\judgeSreduce}[3]{#2 \longmapsto_{\mathcal{S}(#1)} #3}
 \newcommand{\judgeSreduceTrans}[3]{#2 \longmapsto_{\mathcal{S}(#1)}^{*} #3}
-\newcommand{\judgeSeval}[3]{#2 \Downarrow_{\mathcal{S}(#1)} #3}
+\newcommand{\judgeSeval}[3]{eval_{\mathcal{S}(#1)}(#2) = #3}
 \newcommand{\redruleS}[3]{#1 & \longmapsto_{\mathcal{S}(C)} & #2 & #3\\}
 % Normal Coercion
 \newcommand{\ncProj}[2]{#1?^{#2}}
@@ -188,8 +188,9 @@
 \newcommand{\ineffCEKUD}{$ \mathcal{UD} $}
 \newcommand{\judgeDreduce}[2]{#1 \longmapsto_{\mathcal{D}} #2}
 \newcommand{\judgeDreduceTrans}[2]{#1 \longmapsto_{\mathcal{D}}^{*} #2}
-\newcommand{\judgeDeval}[2]{#1 \Downarrow_{\mathcal{D}} #2}
+\newcommand{\judgeDeval}[2]{eval_{\mathcal{D}}(#1) #2}
 \newcommand{\effCEK}[1]{$ \mathcal{S}(#1) $}
+\newcommand{\evalEqv}[2]{$ eval_{\text{#1}} = eval_{\text{#2}} $}
 
 \begin{document}
 
@@ -408,11 +409,8 @@ suffices. Using less cons boxes saves memory as well as running time.
  -KC}
 
 Many of the existing research on coercions or threesomes include proof(s) of 
-correctness, that is, the cast calculus reduces to an observation ($ e 
-\Downarrow o $) if and only if their space-efficient calcului reduce to the 
-same observation ($ e \Downarrow_{*} o $), where an observation is either a 
-value constructor or 
-blame. 
+correctness, that is, the evaluation (partial) function of cast calculus $ eval 
+$ is equal to their space-efficient evaluation ($ eval_{*} $).
 Despite the striking similarity of these proofs, they are all built from ground 
 up.
 
@@ -1047,9 +1045,9 @@ v3' = \vOOcast{v_3}{\cOOcast{\POOfun{T_3}{T}}{l}{\POOfun{T_1}{T}}}
 \sOOreturn{v}{\kOOmt}}{
 \sOOhalt{observe(v)}}{}
 
-\redrule{
-\sOOhalt{o}}{
-\sOOhalt{o}}{}
+%\redrule{
+%\sOOhalt{o}}{
+%\sOOhalt{o}}{}
 	\end{array}
 	\]	
 %	
@@ -1138,7 +1136,7 @@ When the continuation is $ stop $, the machine enters a halting state. The
 When the machine is in a halting state, it stays in the same state.
 
 The reflexive transitive closure of reduction ($ \judgeCreduceTrans{s}{s} $) 
-and evaluation ($ \judgeCeval{e}{o} $) are standard.
+and evaluation ($ eval_\mathcal{C}(e) $) are standard.
 
 \subsection{The \lazyD{} cast calculus}
 
@@ -1973,8 +1971,7 @@ In subsection~\ref{secc:framework:monoid-correct}, we prove when $ C $ is
 a Lazy D Cast ADT and a monoid as well, $ \judgeDeval{e}{o} $ if 
 and only if $ \judgeSeval{C}{e}{o} $. In 
 subsection~\ref{secc:framework:all-correct}, we further prove that when $ C $ is
-a Lazy D Cast ADT, $ \judgeDeval{e}{o} $ if and only if $ \judgeSeval{C}{e}{o} 
-$.
+a Lazy D Cast ADT, \evalEqv{\ineffCEKD}{\effCEK{C}}.
 
 \subsection{A Space-efficient CEK machine}
 \label{ssec:framework:cek}
@@ -2149,8 +2146,8 @@ Monoids}
 \label{secc:framework:monoid-correct}
 
 In this subsection, we prove that if a instance of Cast ADT $ C $ is Lazy D and 
-is a monoid, then $ \judgeDeval{e}{o} $ if and only if $ \judgeSeval{C}{e}{o} 
-$. We proof this theorem with a weak bisimulation between \ineffCEKD\ and 
+is a monoid, then $ eval_\mathcal{D} = eval_{\mathcal{S}(C)} $. We proof this 
+theorem with a weak bisimulation between \ineffCEKD\ and 
 \effCEK{C}. 
 
 The bisimulation relation between states ($\eqvSD{C}{s}{s}$) is mostly derived 
@@ -2311,9 +2308,7 @@ s_{2} &
 	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is a 
 	\lazyD{} Cast ADT and a monoid,
 	\[
-	\judgeSeval{C}{e}{o}
-	 \; \text{if and only if} \; 
-	\judgeDeval{e}{o}
+	\text{\evalEqv{\effCEK{C}}{\ineffCEKD}}
 	\]
 \end{lemma}
 \begin{proof}Proving left implies right is trivial.
@@ -2327,7 +2322,7 @@ steps, we are closer to the halting state.
 \label{secc:framework:all-correct}
 
 In this subsection, we prove that for all $ C $, if $ C $ is a Lazy D Cast ADT, 
-then $ \judgeDeval{e}{o} $ if and only if $\judgeSeval{C}{e}{o}$. We first 
+then \evalEqv{\ineffCEKD}{\effCEK{C}}. We first 
 prove that all $ S(C) $ where $ C $ is a Lazy D Cast ADT are equivalent, then 
 connect this theorem to Lemma~\ref{thm:surely-monoidic-eval}.
 
@@ -2385,8 +2380,7 @@ except the relaton for casts, which is by cast constructors:
 	If $ \judgetype{\emptyset}{e}{T} $, $ o : T $, and $ C_1 $ and $ C_2 $ 
 	are \lazyD\ Cast ADTs,
 	\[
-	e \Downarrow_{S(C_1)} o \; \text{if and only if} \; 
-	e \Downarrow_{S(C_2)} o
+	eval_{S(C_1)} = eval_{S(C_2)}
 	\]
 \end{proposition}
 \begin{proof}
@@ -2398,16 +2392,15 @@ except the relaton for casts, which is by cast constructors:
 	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is a 
 	\lazyD{} Cast ADT.
 	\[
-	\judgeCeval{e}{o} \; \text{if and only if} \; 
-	\judgeSeval{C}{e}{o}
+	\text{\evalEqv{\ineffCEKD}{\effCEK{C}}}
 	\]
 \end{theorem}
 \begin{proof}
-	If we have a surely LazyD Cast ADT and it is a monoid, this 
+	If we have a Lazy D Cast ADT and it is a monoid, this 
 	proof is immediately from Lemma~\ref{thm:surely-monoidic-eval} and 
 	Proposition~\ref{thm:surely-lazyD-eqv}. One such representation is to 
 	represent casts as a list of triples of type, label, and type, where $ 
-	id(T) $ is the empty list and $ seq(c,c,) $ is list append. Another such 
+	id(T) $ is the empty list and $ seq(c,c) $ is the list append. Another such 
 	representation is the \lazyD\ hypercoercion!
 \end{proof}
 
@@ -2492,8 +2485,7 @@ natural way.
 \begin{theorem}[\lazyD{} hypercoercion Respect \ineffCEKD]
 	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ 
 	\[
-	\judgeCeval{e}{o} \; \text{if and only if} \; 
-	\judgeSeval{H}{e}{o}
+	\text{\evalEqv{\ineffCEKD}{\effCEK{H}}}
 	\]
 \end{theorem}
 \begin{proof}
