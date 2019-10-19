@@ -37,6 +37,16 @@
 \providecommand\natexlab[1]{#1}
 \providecommand\showeprint[2][]{arXiv:#2}
 
+\bibitem[\protect\citeauthoryear{Felleisen and Flatt}{Felleisen and
+  Flatt}{2007}]%
+        {felleisen03:_pllc}
+\bibfield{author}{\bibinfo{person}{Matthias Felleisen} {and}
+  \bibinfo{person}{Matthew Flatt}.} \bibinfo{year}{2007}\natexlab{}.
+\newblock \bibinfo{title}{Programming Languages and Lambda Calculi}.
+  (\bibinfo{date}{July} \bibinfo{year}{2007}).
+\newblock
+
+
 \bibitem[\protect\citeauthoryear{Felleisen and Friedman}{Felleisen and
   Friedman}{1986}]%
         {felleisen1986control}
@@ -116,19 +126,6 @@
 \newblock \showarticletitle{An efficient compiler for the gradually typed
   lambda calculus}. In \bibinfo{booktitle}{{\em Scheme and Functional
   Programming Workshop}}, Vol.~\bibinfo{volume}{18}.
-\newblock
-
-
-\bibitem[\protect\citeauthoryear{Kuhlenschmidt, Almahallawi, and
-  Siek}{Kuhlenschmidt et~al\mbox{.}}{2019}]%
-        {Kuhlenschmidt:2019aa}
-\bibfield{author}{\bibinfo{person}{Andre Kuhlenschmidt},
-  \bibinfo{person}{Deyaaeldeen Almahallawi}, {and} \bibinfo{person}{Jeremy~G.
-  Siek}.} \bibinfo{year}{2019}\natexlab{}.
-\newblock \showarticletitle{Toward Efficient Gradual Typing for Structural
-  Types via Coercions}. In \bibinfo{booktitle}{{\em Conference on Programming
-  Language Design and Implementation}} {\em (\bibinfo{series}{PLDI})}.
-  \bibinfo{publisher}{ACM}.
 \newblock
 
 

@@ -19,8 +19,6 @@ Warning--empty address in garcia2014deriving
 Warning--empty publisher in kuhlenschmidt2018efficient
 Warning--empty address in kuhlenschmidt2018efficient
 Warning--page numbers missing in both pages and numpages fields in kuhlenschmidt2018efficient
-Warning--empty address in Kuhlenschmidt:2019aa
-Warning--page numbers missing in both pages and numpages fields in Kuhlenschmidt:2019aa
 Warning--empty publisher in Matthews:2007zr
 Warning--empty address in Matthews:2007zr
 Warning--page numbers missing in both pages and numpages fields in Matthews:2007zr
@@ -43,43 +41,43 @@ Warning--empty publisher in wadler2009well
 Warning--empty address in wadler2009well
 You've used 17 entries,
             5706 wiz_defined-function locations,
-            1409 strings with 17971 characters,
-and the built_in function-call counts, 18198 in all, are:
-= -- 2012
-> -- 634
+            1406 strings with 17828 characters,
+and the built_in function-call counts, 18031 in all, are:
+= -- 2010
+> -- 631
 < -- 0
 + -- 190
-- -- 224
-* -- 1219
+- -- 228
+* -- 1201
 := -- 1872
-add.period$ -- 83
+add.period$ -- 84
 call.type$ -- 17
-change.case$ -- 108
+change.case$ -- 107
 chr.to.int$ -- 17
-cite$ -- 51
-duplicate$ -- 1647
-empty$ -- 1186
-format.name$ -- 284
-if$ -- 4356
+cite$ -- 49
+duplicate$ -- 1613
+empty$ -- 1164
+format.name$ -- 288
+if$ -- 4301
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 80
+missing$ -- 75
 newline$ -- 162
 num.names$ -- 136
-pop$ -- 810
+pop$ -- 784
 preamble$ -- 1
-purify$ -- 193
+purify$ -- 192
 quote$ -- 0
-skip$ -- 619
+skip$ -- 618
 stack$ -- 0
-substring$ -- 1192
-swap$ -- 139
+substring$ -- 1187
+swap$ -- 137
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 467
-warning$ -- 34
-while$ -- 136
+warning$ -- 32
+while$ -- 140
 width$ -- 0
-write$ -- 328
-(There were 34 warnings)
+write$ -- 327
+(There were 32 warnings)
