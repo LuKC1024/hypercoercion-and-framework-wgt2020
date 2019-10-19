@@ -1856,30 +1856,35 @@ then instantiating our parameterized space-efficient interpreter with $ C $
 gives an interpter that is extensionally equal to the standard interpreter for 
 \lazyD\ cast calculus. We are working on a similar theorem for \lazyUD{}.
 
-Firstly, let us define what we mean by \emph{cast representations} 
-(Definition~\ref{def:cast-rep}). The first three operators allow the 
-interpreter to construct casts. We call them \textit{cast constructors}. 
-And the forth and last operator enable the interpreter to use casts.
+We captures the set of operators that every cast representation must provide 
+with \emph{cast abstract data type} (Definition~\ref{def:cast-rep}). 
+The first three operators allow a language implementation to construct casts. 
+So we call them \textit{cast constructors}. And the forth and last operator 
+enable the implementation to use apply casts.
 
 \todo[inline]{Change ``Cast Representation'' to
-  ``Cast Abstract Data Type''. -JS}
+  ``Cast Abstract Data Type''. -JS
+\\---\\
+Fixed -KC}
 
-\begin{definition}[Cast Representation]
+\begin{definition}[Cast Abstract Data Type (Cast ADT)]
 	\label{def:cast-rep}
-	A cast representation is a set indexed by two types and has four interface 
-	functions:
+	A cast abstract data type is a set $ Cast $ indexed by two types with
+	four operators:
 	\begin{description}
-		\item[$ id(T) $] constructs an identity cast
-		\item[$ seq(c_1,c_2) $] composes two casts
-		\item[$ cast(T_1,l,T_2) $] constructs a cast from $ T_1 $ to $ T_2 $
-		\item[$ applyCast(v,c) $] applies a cast onto a value
+		\item[$ id(T) = c $] constructs an identity cast
+		\item[$ seq(c_1,c_2)=c $] composes two casts
+		\item[$ cast(T_1,l,T_2)=c $] constructs a cast from $ T_1 $ to $ T_2 $
+		\item[$ applyCast(v,c)=r $] applies a cast onto a value
 	\end{description}
 \end{definition}
 
-\todo[inline]{Change the name ``surely LazyD'' to ``LazyD Cast ADT''. -JS}
+\todo[inline]{Change the name ``surely LazyD'' to ``LazyD Cast ADT''. -JS
+\\---\\
+Fixed -KC}
 
-To use the framework, users needs to prove that their cast representation is 
-\emph{surely LazyD} (Definition~\ref{def:surely-lazyd}).
+To use our framework, users needs to prove that their cast representation 
+implements Lazy D Cast ADT (Definition~\ref{def:surely-lazyd}).
 The definition confines the behavior of $ applyCast(v,c) $ so narrowly that it 
 allows the framework to apply casts without referring to the actual definition 
 of $ applyCast(v,c) $. This 
@@ -1892,9 +1897,9 @@ All remaining properties handles $ cast(T,l,T) $. They are effectively a
 duplication of the $ applyCast(v,c) $ in \ineffCEKD\ 
 (Fig.~\ref{fig:applyCast-D-C}).
 
-\begin{definition}[Surely \lazyD\ Cast Representation]
+\begin{definition}[Lazy D Cast ADT]
 	\label{def:surely-lazyd}
-	A cast representation is surely \lazyD\ if
+	A  Cast ADT is a Lazy D Cast ADT if:
 	\begin{enumerate}
 		\item If $ v : T $, then $ applyCast(v,id(T)) = \mathtt{succ} \; v $
 		\item If $ \judgeType{v}{T_1} $,
@@ -1943,14 +1948,14 @@ duplication of the $ applyCast(v,c) $ in \ineffCEKD\
 	\end{enumerate}
 \end{definition}
 
-If a cast representation is surely LazyD, proving this should be easier than 
-proving equivalence to the standard semantics of cast calculus.
+If a cast representation is a Lazy D Cast ADT, people can apply our theorems 
+and be confident that this cast representation is valid.
 
 Some cast representations are also \textit{monoids}. They are useful in the 
 proof of our framework, and might be interesting elsewhere.
 
 \begin{definition}[Monoid]
-	A cast representation is a monoid if 
+	A Cast ADT is a monoid if 
 	for all
 	$c_1 : T_1 \Longrightarrow T_2$,
 	$c_2 : T_2 \Longrightarrow T_3$, and
@@ -1963,13 +1968,13 @@ proof of our framework, and might be interesting elsewhere.
 \end{definition}
 
 In subsection~\ref{ssec:framework:cek}, we introduce \effCEK{C}, a family 
-of space-efficient semantics indexed by cast representations ($ C $). 
-In subsection~\ref{secc:framework:monoid-correct}, we prove when $ C $ is 
-$ surely \; \text{\lazyD} $ and is a monoid as well, $ \judgeDeval{e}{o} $ if 
+of space-efficient semantics indexed by Cast ADTs ($ C $). 
+In subsection~\ref{secc:framework:monoid-correct}, we prove when $ C $ is
+a Lazy D Cast ADT and a monoid as well, $ \judgeDeval{e}{o} $ if 
 and only if $ \judgeSeval{C}{e}{o} $. In 
 subsection~\ref{secc:framework:all-correct}, we strengthen the theorem to drop 
-the requirement that $ C $ must be a monoid, that is, every surely \lazyD\ cast 
-representation is correct.
+the requirement that $ C $ must be a monoid, that is, every instance of Lazy D 
+Cast ADT is correct.
 
 \subsection{A Space-efficient CEK machine}
 \label{ssec:framework:cek}
@@ -2139,11 +2144,11 @@ then halts with the blame label.
 Transitive closure of reduction ($ \judgeSreduceTrans{C}{s}{s} $) and 
 evaluation are standard. Value typing ($ \judgeType{v}{T} $) is straightforward.
 
-\subsection{Surely \lazyD\ Cast Representations Respect \ineffCEKD\ if They are 
+\subsection{\lazyD\ Cast ADTs Respect \ineffCEKD\ if They are 
 Monoids}
 \label{secc:framework:monoid-correct}
 
-In this subsection, we prove that for all $ C $, if $ C $ is surely LazyD and 
+In this subsection, we prove that if a instance of Cast ADT $ C $ is Lazy D and 
 is a monoid, then $ \judgeDeval{e}{o} $ if and only if $ \judgeSeval{C}{e}{o} 
 $. We proof this theorem with a weak bisimulation between \ineffCEKD\ and 
 \effCEK{C}. 
@@ -2256,8 +2261,8 @@ such that $ \judgeCreduceTrans{s_2}{s_2'}$ and $ s_1 \approx s_2' $.
 
 \begin{lemma}[Weak Bisimulation between \effCEK{C} and \ineffCEKD]
 	\label{thm:surely-monoidic-reduce}
-	For all cast representations $ C $, 
-	if $ C $ is surely \lazyD{} and is a monoid, 
+	For all instance of Cast ADT $ C $, 
+	if $ C $ is \lazyD{} and is a monoid, 
 	$ s_{1}, s_{1}' \in \text{\effCEK{C}} $,
 	$ s_{2}, s_{2}' \in \text{\ineffCEKD} $,
 	$ s_{1} \approx s_{2} $,
@@ -2300,11 +2305,11 @@ s_{2} &
 	materials for details.
 \end{proof}
 
-\begin{lemma}[Surely \lazyD\ and Monoidic Cast Representations Respect 
+\begin{lemma}[$ \text{Lazy D Cast ADT} \cap \text{Monoid} $ Respects 
 	$ \mathcal{C} $]
 	\label{thm:surely-monoidic-eval}
-	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is surely 
-	\lazyD{} and is a monoid,
+	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is a 
+	\lazyD{} Cast ADT and a monoid,
 	\[
 	\judgeSeval{C}{e}{o}
 	 \; \text{if and only if} \; 
@@ -2318,13 +2323,13 @@ taking one or more steps in \ineffCEKD. As we just took a positive number of
 steps, we are closer to the halting state.
 \end{proof}
 
-\subsection{Surely \lazyD\ Cast Representations Respect \ineffCEKD}
+\subsection{\lazyD\ Cast ADT Respect \ineffCEKD}
 \label{secc:framework:all-correct}
 
-In this subsection, we prove that for all $ C $, if $ C $ is surely LazyD, then 
-$ \judgeDeval{e}{o} $ if and only if $\judgeSeval{C}{e}{o}$. We first prove 
-that all $ S(C) $ where $ C $ is surely lazyD are equivalent, then connect this 
-theorem to Lemma~\ref{thm:surely-monoidic-eval}.
+In this subsection, we prove that for all $ C $, if $ C $ is a Lazy D Cast ADT, 
+then $ \judgeDeval{e}{o} $ if and only if $\judgeSeval{C}{e}{o}$. We first 
+prove that all $ S(C) $ where $ C $ is a Lazy D Cast ADT are equivalent, then 
+connect this theorem to Lemma~\ref{thm:surely-monoidic-eval}.
 
 We prove the equivalence among \effCEK{S(C)} with strong bisimulation. This 
 time almost all the bisimulation relations are all derived from definitions 
@@ -2351,7 +2356,7 @@ except the relaton for casts, which is by cast constructors:
 \begin{lemma}[Strong Bi-simulation among $ \mathcal{S}(\cdot) $]
 	\label{thm:CEKS-bisim}
 	If 
-	$ C_1 $ and $ C_2 $ are surely \lazyD,
+	$ C_1 $ and $ C_2 $ are instances of Lazy D Cast ADT,
 	$ s_1, s_1' \in S(C_1) $ and $ s_2,s_2' \in S(C_2) $,
 	$ s_1 \approx s_2 $,
 	$ \judgeSreduce{C_1}{s_1}{s_1'} $, and
@@ -2371,14 +2376,14 @@ except the relaton for casts, which is by cast constructors:
 	This proof is effectively a duplication of the transition rule of 
 	\effCEK{S(C)}.
 	The key ideas of this proof are undoing sequencing with the property (2) of 
-	surely \lazyD{} cast representation, and handling all possibly uses of $ 
+	Lazy D Cast ADT, and handling all possibly uses of $ 
 	cast(T,l,T) $ with property (3)-(11).
 \end{proof}
 
-\begin{proposition}[Equivalence of Surely \lazyD{} Cast Representations]
+\begin{proposition}[Equivalence of \lazyD{} Cast ADT]
 	\label{thm:surely-lazyD-eqv}
 	If $ \judgetype{\emptyset}{e}{T} $, $ o : T $, and $ C_1 $ and $ C_2 $ 
-	are surely \lazyD\ cast representations,
+	are \lazyD\ Cast ADTs,
 	\[
 	e \Downarrow_{S(C_1)} o \; \text{if and only if} \; 
 	e \Downarrow_{S(C_2)} o
@@ -2388,17 +2393,17 @@ except the relaton for casts, which is by cast constructors:
 	By induction with the help of Lemma~\ref{thm:CEKS-bisim}.
 \end{proof}
 
-\begin{theorem}[Surely \lazyD\ Cast Representations Respect \ineffCEKD]
+\begin{theorem}[\lazyD\ Cast ADT Respects \ineffCEKD]
 	\label{thm:surely-lazyD-correct}
-	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is surely 
-	\lazyD{}
+	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is a 
+	\lazyD{} Cast ADT.
 	\[
 	\judgeCeval{e}{o} \; \text{if and only if} \; 
 	\judgeSeval{C}{e}{o}
 	\]
 \end{theorem}
 \begin{proof}
-	If we have a surely LazyD cast representation and it is a monoid, this 
+	If we have a surely LazyD Cast ADT and it is a monoid, this 
 	proof is immediately from Lemma~\ref{thm:surely-monoidic-eval} and 
 	Proposition~\ref{thm:surely-lazyD-eqv}. One such representation is to 
 	represent casts as a list of triples of type, label, and type, where $ 
@@ -2410,17 +2415,10 @@ except the relaton for casts, which is by cast constructors:
 \section{Correctness Proof of \lazyD{} hypercoercions}
 \label{sec:hypercoercion-correctness}
 
-In this section we prove \lazyD\ hypercoercion, as a cast representation, is 
-correct. First we define $ applyCast(v,c) $ to make it a cast representation, 
-then prove that it is surely lazyD, and finally apply 
+In this section we prove \lazyD\ hypercoercion is 
+correct. First we define $ applyCast(v,c) $ to make it an instance of Cast ADT, 
+then prove that it is also Lazy D, and finally apply 
 Theorem~\ref{thm:surely-lazyD-correct} to finish the proof.
-
-%To use hypercoercion as a 
-%cast representation in our framework, we need to defined four functions: $ 
-%cast(T,l,T) $, $ id(T) $, $ seq(c,c) $, and . We have defined 
-%the first three functions in Section~\ref{sec:hypercoercion-definition}. Now 
-%we 
-%define the $ applyCast(v,c) $  in 
 
 \figref{hc-applyCast} defines $ applyCast(v,c) $ for \lazyD\ hypercoercion. 
 Applying the identity cast for the 
@@ -2486,7 +2484,7 @@ natural way.
 \end{figure}
 
 
-\begin{lemma}[\lazyD{} hypercoercion is Surely \lazyD]
+\begin{lemma}[\lazyD{} hypercoercion is a \lazyD Cast ADT]
 	\label{thm:hc-surely-lazyD}
 \end{lemma}
 \begin{proof} See the supplementary material. \end{proof}
