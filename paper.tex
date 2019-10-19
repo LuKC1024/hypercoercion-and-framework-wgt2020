@@ -192,6 +192,8 @@
 \newcommand{\effCEK}[1]{$ \mathcal{S}(#1) $}
 \newcommand{\evalEqv}[2]{$ eval_{\text{#1}} = eval_{\text{#2}} $}
 
+\newcommand{\continue}[2]{continue(#2,#1)}
+
 \begin{document}
 
 %% Title information
@@ -2019,36 +2021,178 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	Reduction \fbox{$ \judgeSreduce{C}{s}{s} $}
 	\[
 	\begin{array}{rclr}
-	& \vdots \\
-	\redruleS{
-		\sOOinspect{(\eOOlam{T_1}{T_2}{x}{e})}{\rho}{\kappa}
-	}{
-		\sOOreturn{(\hcvOOfun{id(T_1)}{\rho}{x}{e}{id(T_2)})}{\kappa}
-	}{}
 	\redruleS{
 		\sOOinspect{\eOOcast{e}{T_1}{l}{T_2}}{\rho}{\kappa}
 	}{
 		\sOOinspect{e}{\rho}{ext(cast(T_1,l,T_2),\kappa)}
 	}{}
 	\redruleS{
-		\sOOinspect{(\eOOcons{e_1}{e_2})}{\rho}{\kappa}
-	}{
-		\sOOinspect{e_1}{\rho}{cont(\hckOOconsI{e_2}{\rho}{\kappa})}
+		\sOOinspect{\eOOvar{x}}{\rho}{\kappa}
+	}{	
+		\sOOreturn{\rho[x]}{\kappa}
 	}{}
 	\redruleS{
-		\sOOreturn{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{(c,\hckOOappII{v}{\kappa})}
+		\sOOinspect{\eOOsole}{\rho}{\kappa}
 	}{
-		\begin{cases}
-		\sOOinspect{e}{\rho[x:=v']}{ext(c_2,\kappa)} \\
-		\;\;\;\;\;\;\;\;\;\sidecond{applyCast(v,c_1) = \rOOsucc{v'}} 
-		\\
-		\sOOhalt{(\oOOblame{l})} \\
-		\;\;\;\;\;\;\;\;\;\sidecond{applyCast(v,c_1) = \rOOfail{l}}
-		\end{cases}
-		
+		\sOOreturn{\hcvOOtt}{\kappa}
 	}{}
+	\redruleS{
+		\sOOinspect{\eOOlam{T_1}{T_2}{x}{e}}{\rho}{\kappa}
+	}{
+		\sOOreturn{(\hcvOOfun{id(T_1)}{\rho}{x}{e}{id(T_2)})}{\kappa}
+	}{}
+	\redruleS{
+		\sOOinspect{(\eOOcons{e_1}{e_2})}{\rho}{\kappa}
+	}{
+		\sOOinspect{e_1}{E}{}
+	}{}
+	\redruleS{
+		\sOOinspect{(\eOOinl{e})}{\rho}{\kappa}
+	}{
+		\sOOinspect{e}{\rho}{cont(\kOOinl{\kappa})}
+	}{}
+	\redruleS{
+		\sOOinspect{(\eOOinr{e})}{\rho}{\kappa}
+	}{
+		\sOOinspect{e}{\rho}{cont(\kOOinr{\kappa})}
+	}{}
+	\redruleS{
+		\sOOinspect{(\eOOapp{e_1}{e_2})}{\rho}{\kappa}
+	}{
+		\sOOinspect{e_1}{\rho}{cont(\kOOappI{E}{e_2}{\kappa})}}{}
+	
+	\redruleS{
+		\sOOinspect{(\eOOcar{e})}{\rho}{\kappa}}{
+		\sOOinspect{e}{\rho}{cont(\kOOcar{\kappa})}}{}
+	
+	\redruleS{
+		\sOOinspect{(\eOOcdr{e})}{\rho}{\kappa}}{
+		\sOOinspect{e}{\rho}{cont(\kOOcdr{\kappa})}}{}
+	
+	\redruleS{
+		\sOOinspect{(\eOOcase{e_1}{e_2}{e_3})}{\rho}{\kappa}}{
+		\sOOinspect{e_1}{\rho}{cont(\kOOcaseI{E}{e_2}{e_3}{\kappa})}}{}
+	\redruleS{
+		\sOOreturn{v}{\langle c \rangle k}
+	}{
+	\begin{cases}
+	continue(k,v) & \sidecond{applyCast(v,c) = \rOOsucc{v'}} 
+	\\
+	\sOOhalt{(\oOOblame{l})} & \sidecond{applyCast(v,c) = \rOOfail{l}}
+	\end{cases}
+	}{}
+%\redruleS{
+%	\sOOreturn{v_1}{(\kOOconsI{e_2}{\rho}{\kappa})}}{
+%	\sOOinspect{e_2}{\rho}{cont(\kOOconsII{v_1}{\kappa})}}{}
+%
+%\redrule{
+%\sOOreturn{v_2}{(\kOOconsII{v_1}{\kappa})}}{
+%\sOOreturn{(\hcvOOcons{v_1}{id(T_1)}{v_2}{id(T_2)})}{\kappa}}{
+%\\&&
+%\sidecond{v_1 : T_1 \wedge v_2 : T_2}}
+%
+%\redrule{
+%\sOOreturn{v}{(\kOOinl{\kappa})}}{
+%\sOOreturn{(\hcvOOinl{v}{id(T)})}{\kappa}}{
+%\\&&
+%\sidecond{v : T}}
+%
+%\redrule{
+%\sOOreturn{v}{(\kOOinr{\kappa})}}{
+%\sOOreturn{(\hcvOOinr{v}{id(T)})}{\kappa}}{
+%\\&&
+%\sidecond{v : T}}
+%
+%\redrule{
+%\sOOreturn{v_1}{(\kOOappI{e_2}{\rho}{\kappa})}}{
+%\sOOinspect{e_2}{\rho}{cont(\kOOappII{v_1}{\kappa})}}{}
+%
+%	
+%	& \vdots \\
+%	\redruleS{
+%		\sOOinspect{(\eOOlam{T_1}{T_2}{x}{e})}{\rho}{\kappa}
+%	}{
+%		\sOOreturn{(\hcvOOfun{id(T_1)}{\rho}{x}{e}{id(T_2)})}{\kappa}
+%	}{}
+%	\redruleS{
+%		\sOOinspect{\eOOcast{e}{T_1}{l}{T_2}}{\rho}{\kappa}
+%	}{
+%		\sOOinspect{e}{\rho}{ext(cast(T_1,l,T_2),\kappa)}
+%	}{}
+%	\redruleS{
+%		\sOOinspect{(\eOOcons{e_1}{e_2})}{\rho}{\kappa}
+%	}{
+%		\sOOinspect{e_1}{\rho}{cont(\hckOOconsI{e_2}{\rho}{\kappa})}
+%	}{}
+%	\redruleS{
+%		
+%\sOOreturn{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{(c,\hckOOappII{v}{\kappa})}
+%	}{
+%		\begin{cases}
+%		\sOOinspect{e}{\rho[x:=v']}{ext(c_2,\kappa)} \\
+%		\;\;\;\;\;\;\;\;\;\sidecond{applyCast(v,c_1) = \rOOsucc{v'}} 
+%		\\
+%		\sOOhalt{(\oOOblame{l})} \\
+%		\;\;\;\;\;\;\;\;\;\sidecond{applyCast(v,c_1) = \rOOfail{l}}
+%		\end{cases}
+%		
+%	}{}
 	\end{array}
 	\]
+	
+	Apply continuation
+	\fbox{$ continue(k,v) = s $}
+	\[
+	\begin{array}{rclr}
+	
+
+\funrule{
+	\continue{v_1}{(\kOOconsI{e_2}{\rho}{\kappa})}}{
+	\sOOinspect{e_2}{\rho}{(\kOOconsII{v_1}{\kappa})}}{}
+
+\funrule{
+	\continue{v_2}{(\kOOconsII{v_1}{\kappa})}}{
+	\sOOreturn{(\hcvOOcons{v_1}{id(T_1)}{v_2}{id(T_2)})}{\kappa}}{}
+
+\funrule{
+	\continue{v}{(\kOOinl{\kappa})}}{
+	\sOOreturn{(\hcvOOinl{v}{id(T)})}{\kappa}}{}
+
+\funrule{
+	\continue{v}{(\kOOinr{\kappa})}}{
+	\sOOreturn{(\hcvOOinr{v}{id(T)})}{\kappa}}{}
+
+\funrule{
+	\continue{v_1}{(\kOOappI{e_2}{\rho}{\kappa})}}{
+	\sOOinspect{e_2}{\rho}{(\kOOappII{v_1}{\kappa})}}{}
+
+\funrule{
+	\continue{v_2}{(\kOOappII{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{\kappa})}}{
+\begin{cases}
+	\sOOinspect{e}{\rho[x:=v_2]}{ext(c_2,\kappa)} &
+	\sidecond{applyCast(v,c) = \rOOsucc{v'}}
+\\
+\sOOhalt{l} &
+\sidecond{applyCast(v,c) = \rOOfail{l}}
+\end{cases}
+}{}
+\funrule{
+	\continue{v_3}{(\mathtt{case_3}\;(\vOOinl{v})\;v_2\;\kappa)}
+}{
+	\sOOreturn{v}{(\kOOappII{v_2}{\kappa})}
+}{}
+
+\funrule{
+	\continue{v_3}{(\mathtt{case_3}\;(\vOOinr{v})\;v_2\;\kappa)}
+}{
+	\sOOreturn{v}{(\kOOappII{v_3}{\kappa})}
+}{}
+
+\funrule{
+	\continue{v}{\kOOmt}}{
+	\sOOhalt{observe(v)}}{}
+	
+	\end{array}\]
 	
 %	Transitive closure of reduction \fbox{$ s \longrightarrow_{S(C)}^{*} s $}
 %	\[\dots\]
