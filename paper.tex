@@ -882,8 +882,6 @@ o $) is defined in the natural way.
 	}{
 		\sOOinspect{e}{\rho}{\langle\cOOcast{T_1}{l}{T_2}\rangle\kappa}
 	}{}
-	
-	
 	\redrule{
 		\sOOinspect{\eOOvar{x}}{\rho}{\kappa}
 	}{	
@@ -1949,7 +1947,7 @@ defined in Fig.~\ref{fig:applyCast-D-C}.
 After showing their cast representation is a Lazy D Cast, users of our 
 frameworks can plug-in this cast representation to our space-efficient abstract 
 machine in subsection~\ref{ssec:framework:cek}, and prove that this machine is 
-equivalent to \ineffCEKD subsection~\ref{secc:framework:all-correct}, which 
+equivalent to \ineffCEKD\ (subsection~\ref{secc:framework:all-correct}), which 
 depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 
 \subsection{A Space-efficient CEK machine}
@@ -2079,18 +2077,19 @@ The most important differences are in values and continuations.
 Let $ v $ range over value. 
 In \ineffCEK\, we have one value constructor for all casted value.
 In \effCEK{C}, however, we do not have this generic value constructor, 
-instead we push those casts into the value constructors most of the time and 
-use $ \hcvOOinj{P}{v} $ to construct values casted to $ \TOOdyn $.
-Non-casted values in \ineffCEK\ correspond to values in \effCEK{C} where the 
-casts are identity (i.e. constructed by $ id(T) $).
+instead we push those casts into the ordinary values. For instance, $ 
+(\vOOcons{v_1}{v_2}) $ corresponds to $ 
+(\hcvOOcons{v_1'}{id(T_1)}{v_2'}{id(T_2)}) $. To construct values of the 
+dynamic type, we use $ (\hcvOOinj{P}{v}) $.
 
 Cast results ($ r $) and machine states ($ s $) are as before. 
 
 Let $ \kappa $ range over continuations and let $ k $ range over 
 pre-continuations. 
 A continuation is now a pre-continuation prefixed with a cast.
-Pre-continuation are like the continuations in \ineffCEK.
-In \ineffCEK\, a continuation have zero or more casts at the top.
+Pre-continuation are like the continuations in \ineffCEK, but there is no 
+constructor for casts.
+Continuations in \ineffCEKD\ have zero or more casts at the top.
 In \effCEK{C}, however, every continuation has exactly one cast at the top.
 Continuations in \ineffCEK\ that have no casts at the top correspond to 
 continuations in \effCEK{C}\ whose casts are identity.
@@ -2118,7 +2117,8 @@ environment and the extended continuation. If the casting fails, the machine
 then halts with the blame label.
 
 Transitive closure of reduction ($ \judgeSreduceTrans{C}{s}{s} $) and 
-evaluation are standard. Value typing ($ \judgeType{v}{T} $) is straightforward.
+evaluation ($ \judgeSeval{C}{e}{o} $) are standard. Value typing ($ 
+\judgeType{v}{T} $) is straightforward.
 
 \subsection{\lazyD\ Cast ADTs Respect \ineffCEKD\ if They are 
 Monoids}
