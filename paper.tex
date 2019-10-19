@@ -1434,17 +1434,6 @@ Three observations on this definition leads to hypercoercion:
 	\label{fig:hypercoercion}
 \end{figure}
 
-\todo[inline]{What is the main idea behind the organization of
- hypercoercions? -JS
- \\---\\
- Are you asking why hc has three parts? Or why these subsections 
- in this section? -KC
- \\---\\
- three parts -JS
- \\---\\
- Fixed -KC
-}
-
 This section presents our first contribution, the definition of hypercoercion. 
 The design of hypercoercion is motivated by observations on coercion normal 
 forms: a normal coercion has at most three parts; projections are always at the 
@@ -1861,11 +1850,6 @@ The first three operators allow a language implementation to construct casts.
 So we call them \textit{cast constructors}. And the forth and last operator 
 enable the implementation to use apply casts.
 
-\todo[inline]{Change ``Cast Representation'' to
-  ``Cast Abstract Data Type''. -JS
-\\---\\
-Fixed -KC}
-
 \begin{definition}[Cast Abstract Data Type (Cast ADT)]
 	\label{def:cast-rep}
 	A cast abstract data type is a set $ Cast $ indexed by two types with
@@ -1877,10 +1861,6 @@ Fixed -KC}
 		\item[$ applyCast(v,c)=r $] applies a cast onto a value
 	\end{description}
 \end{definition}
-
-\todo[inline]{Change the name ``surely LazyD'' to ``LazyD Cast ADT''. -JS
-\\---\\
-Fixed -KC}
 
 To use our framework, users needs to prove that their cast representation 
 implements Lazy D Cast ADT (Definition~\ref{def:surely-lazyd}). To be a Lazy D 
