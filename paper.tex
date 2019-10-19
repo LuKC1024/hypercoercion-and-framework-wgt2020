@@ -1124,9 +1124,6 @@ left injection, the machine moves to a state that will apply the first
 continuation function to the value inside the left injection. The case for 
 right injection is similar. When the target value is a casted sum, the machine 
 moves the cast from the target value to continuations functions. 
-\todo[inline]{Change the rules for case to be small step, i.e.,
-	the case function should not be recursive. -JS
-\\---\\ Fixed. -KC}
 %Along the way, the machine accumulates the pending casts onto the 
 %continuations. 
 To cast a value, the machine try to apply the cast to the value. 
@@ -1859,6 +1856,9 @@ Firstly, let us define what we mean by \emph{cast representations}
 interpreter to construct casts. We call them \textit{cast constructors}. 
 And the forth and last operator enable the interpreter to use casts.
 
+\todo[inline]{Change ``Cast Representation'' to
+  ``Cast Abstract Data Type''. -JS}
+
 \begin{definition}[Cast Representation]
 	\label{def:cast-rep}
 	A cast representation is a set indexed by two types and has four interface 
@@ -1870,6 +1870,8 @@ And the forth and last operator enable the interpreter to use casts.
 		\item[$ applyCast(v,c) $] applies a cast onto a value
 	\end{description}
 \end{definition}
+
+\todo[inline]{Change the name ``surely LazyD'' to ``LazyD Cast ADT''. -JS}
 
 To use the framework, users needs to prove that their cast representation is 
 \emph{surely LazyD} (Definition~\ref{def:surely-lazyd}).
