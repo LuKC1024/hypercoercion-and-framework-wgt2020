@@ -78,6 +78,7 @@
 \newcommand{\hifunrule}[3]{\highlight{#1} &\highlight{=}& \highlight{#2} & 
 \highlight{#3}\\}
 \newcommand{\comprule}[4]{#1 & \fatsemi^\ell & #2 & = & #3 & #4 \\}
+\newcommand{\comprulel}[4]{#1 & \fatsemi^l & #2 & = & #3 & #4 \\}
 \newcommand{\plus}[0]{+}
 \newcommand{\judgetype}[3]{#1 \vdash #2 : #3}
 \newcommand{\judgeType}[2]{#1 : #2}
@@ -1340,13 +1341,13 @@ Section~\ref{sec:framework}.
 		\hyperCoercionC{?^{l'}}{m}{t}
 	}{}
 	
-	\comprule{
+	\comprulel{
 		\hyperCoercionI
 	}{
 		\hyperCoercionC{\epsilon}{m}{t}
 	}{
 		\hyperCoercionC{?^{l}}{m}{t}
-	}{\sidecond{\ell = l}}
+	}{}
 	
 	\comprule{
 		\hyperCoercionC{h}{m}{\bot^{l'}}
@@ -1367,58 +1368,90 @@ Section~\ref{sec:framework}.
 	}
 	
 	\comprule{
-		\hyperCoercionC{h}{m_1}{t_1}
+		\hyperCoercionC{h_1}{m_1}{t_1}
 	}{
 		\hyperCoercionC{\epsilon}{m_2}{t_2}
 	}{
-		\hyperCoercionC{h}{m'}{t'}
+		\hyperCoercionC{h_1}{m_1 \fatsemi^{\ell} m_2}{t_2}
 	}{
 		\sidecond{
-			m_1 \fatsemi^{\ell} (m_2, t_2) = (m', t')
-			 \; \text{and} \;
-			 \forall l. t \neq \bot^{l}
-		}
-	}
-	
-	\comprule{
-		\hyperCoercionC{h}{m_1}{t_1}
-	}{
-		\hyperCoercionC{?^{l'}}{m_2}{t_2}
-	}{
-		\hyperCoercionC{h}{m'}{t'}
-	}{
-		\sidecond{
-			m_1 \fatsemi^{l'} (m_2, t_2) = (m', t')
+			m_1 \smile m_2
 			\; \text{and} \;
-			\forall l. t \neq \bot^{l} 
+			\forall l. t \neq \bot^{l}
 		}
 	}
+	\comprule{
+		\hyperCoercionC{h_1}{m_1}{t_1}
+	}{
+		\hyperCoercionC{?^l}{m_2}{t_2}
+	}{
+		\hyperCoercionC{h_1}{m_1 \fatsemi^{l} m_2}{t_2}
+	}{
+	\sidecond{
+		m_1 \smile m_2
+		\; \text{and} \;
+		\forall l. t \neq \bot^{l}
+	}
+	}
+	\comprulel{
+	\hyperCoercionC{h_1}{m_1}{t_1}
+	}{
+	\hyperCoercionC{h_2}{m_2}{t_2}
+	}{
+	\hyperCoercionC{h_1}{m_1}{\bot^l}
+	}{
+	\sidecond{
+		\neg \; m_1 \smile m_2
+		\; \text{and} \;
+		\forall l. t \neq \bot^{l}
+	}
+	}
+%
+%	\comprule{
+%		\hyperCoercionC{h}{m_1}{t_1}
+%	}{
+%		\hyperCoercionC{\epsilon}{m_2}{t_2}
+%	}{
+%		\hyperCoercionC{h}{m'}{t'}
+%	}{
+%		\sidecond{
+%			m_1 \fatsemi^{\ell} (m_2, t_2) = (m', t')
+%			 \; \text{and} \;
+%			 \forall l. t \neq \bot^{l}
+%		}
+%	}
+%	
+%	\comprule{
+%		\hyperCoercionC{h}{m_1}{t_1}
+%	}{
+%		\hyperCoercionC{?^{l'}}{m_2}{t_2}
+%	}{
+%		\hyperCoercionC{h}{m'}{t'}
+%	}{
+%		\sidecond{
+%			m_1 \fatsemi^{l'} (m_2, t_2) = (m', t')
+%			\; \text{and} \;
+%			\forall l. t \neq \bot^{l} 
+%		}
+%	}
 	\end{array}
 	\]
 	
-	Composition of middles \fbox{$ m \fatsemi^\ell (m,t) = (m,t) $}
+	Composition of middles \fbox{$ m \fatsemi^\ell m = m $}
 	\[ 
 	\begin{array}{rclclr}
-	\comprule{\POOunit}{(\POOunit,t)}{
-		(\POOunit,t)
+	\comprule{\POOunit}{\POOunit}{
+		\POOunit
 	}{}
-	\comprule{\POOfun{c_1}{c_2}}{(\POOfun{c_3}{c_4},t)}{
-		(\POOfun{c_3 \fatsemi^{\ell} c_1}{c_2 \fatsemi^\ell c_4},t)
+	\comprule{\POOfun{c_1}{c_2}}{\POOfun{c_3}{c_4}}{
+		\POOfun{c_3 \fatsemi^{\ell} c_1}{c_2 \fatsemi^\ell c_4}
 	}{}
-	\comprule{\POOprod{c_1}{c_2}}{(\POOprod{c_3}{c_4},t)}{
-		(\POOprod{c_1 \fatsemi^\ell c_3}{c_2 \fatsemi^\ell c_4},t)
+	\comprule{\POOprod{c_1}{c_2}}{\POOprod{c_3}{c_4}}{
+		\POOprod{c_1 \fatsemi^\ell c_3}{c_2 \fatsemi^\ell c_4}
 	}{}
-	\comprule{\POOsum{c_1}{c_2}}{(\POOsum{c_3}{c_4},t)}{
-		(\POOsum{c_1 \fatsemi^\ell c_3}{c_2 \fatsemi^\ell c_4},t)
+	\comprule{\POOsum{c_1}{c_2}}{\POOsum{c_3}{c_4}}{
+		\POOsum{c_1 \fatsemi^\ell c_3}{c_2 \fatsemi^\ell c_4}
 	}{}
-	\comprule{m_1}{(m_2,t)}{
-		(m_1,\bot^l)
-	}{
-		\sidecond{
-			\ell = l \; \text{and} \;
-			\neg m_1 \smile m_2 
-		}
-	}
 	\end{array}
 	\]
 	
@@ -1467,16 +1500,24 @@ Section~\ref{sec:framework}.
 	}{}
 	\end{array}
 	\]
-	\caption{\lazyD{} hypercoercion}
+	\caption{\lazyD{} Hypercoercions}
 	\label{fig:HC-D}
 \end{figure}
 
-\figref{fig:HC-D} defines the constructors of \lazyD{} hypercoercion.
+\figref{fig:HC-D} defines functions that construct \lazyD{} hypercoercions. We 
+expect language implementations to call $ id(T) $, which constructs an 
+identity, $ seq(c,c) $, which composes two hypercoercions, and $ 
+cast(T_1,l,T_2) $, which translate a cast to a hypercoercion. Other functions 
+in the figure are their helpers.
 
-Let $ \ell $ range over $ \epsilon $ and labels.
 $ c_1 \fatsemi^\ell c_2 = c' $ composes two hypercoercions. The target of $ 
 c_1 $ and the source of $ c_2 $ might be different, in which case $ \ell $ must 
-be a label.
+be a label. The last two lines are the most interesting. When the head of the 
+second hypercoercion is a no-op, we use the same $ \ell $ to compose the 
+middles. Otherwise, the head must be a projection, where we use the label in 
+the projection to compose middles.
+
+Let $ \ell $ range over $ \epsilon $ and labels.
 $ m_1 \fatsemi^\ell (m_2,t) = (m',t') $ composes a middle with a 
 pair of a middle and a tail. Similarly, the target of $ m_1 $ and the source of 
 $ m_2 $ might be different, in which case $ \ell $ must be a label.
