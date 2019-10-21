@@ -226,6 +226,9 @@
 \newcommand{\judgeDreduce}[2]{#1 \longmapsto_{\mathcal{D}} #2}
 \newcommand{\judgeDreduceTrans}[2]{#1 \longmapsto_{\mathcal{D}}^{*} #2}
 \newcommand{\judgeDeval}[2]{eval_{\mathcal{D}}(#1) = #2}
+\newcommand{\judgeUDreduce}[2]{#1 \longmapsto_{\mathcal{UD}} #2}
+\newcommand{\judgeUDreduceTrans}[2]{#1 \longmapsto_{\mathcal{UD}}^{*} #2}
+\newcommand{\judgeUDeval}[2]{eval_{\mathcal{UD}}(#1) = #2}
 \newcommand{\effCEK}[1]{$ \mathcal{S}(#1) $}
 \newcommand{\evalEqv}[2]{$ eval_{\text{#1}} = eval_{\text{#2}} $}
 \newcommand{\continue}[2]{continue(#2,#1)}
@@ -1015,10 +1018,6 @@ v3' = \vOOcast{v_3}{\cOOcast{\POOfun{T_3}{T}}{l}{\POOfun{T_1}{T}}}}
 	\label{fig:machine-cekc}
 \end{figure}
 
-\todo[inline]{There are missing transition rules for fst and snd. -JS
-\\---\\
-Fixed. -KC}
-
 Let $ r $ range over cast results. A cast result is either a success, which 
 brings back a value, or a failure, which brings a blame label.
 
@@ -1032,9 +1031,6 @@ example, $ (\mathtt{cons_1} \; e \; \rho \; \kappa) $ is the continuation where
 we are waiting for the value of the first argument to a $ \mathtt{cons} $. And 
 the last continuation, $ \langle c \rangle \kappa $ is to cast the value before 
 returning to $ \kappa $.
-
-
-\subsection{The \lazyD{} cast calculus}
 
 \begin{figure}
 	
@@ -1073,40 +1069,35 @@ returning to $ \kappa $.
 	\label{fig:applyCast-D-C}
 \end{figure}
 
-\figref{fig:applyCast-D-C} defines the $ applyCast $ for \lazyD. 
-We conjecture that with this $ applyCast $, the CEK machine in 
-\figref{fig:machine-cekc} would agree with the \lazyD{} cast calculus in 
-\citet{siek2009exploring}. We denote this \lazyD{} machine by \ineffCEKD{},
-and the corresponding relations by $ \judgeDreduce{s}{s} $, $ 
-\judgeDreduceTrans{s}{s} $, and $ \judgeDeval{e}{o} $
+\begin{definition}[\lazyD{} CEK Machine]
+  The \lazyD{} CEK machine, written \ineffCEKD{}, is the CEK machine of
+  \figref{fig:machine-cekc} using the $applyCast$ for \lazyD{} defined
+  in \figref{fig:applyCast-D-C}.  We write the transition relations of
+  this machine as $\judgeUDreduce{s}{s}$ and $\judgeUDreduceTrans{s}{s}$
+  and write the evaluation function as $\judgeUDeval{e}{o}$.
+\end{definition}
 
-\subsection{The \lazyUD{} cast calculus [Jeremy]}
+We conjecture that \ineffCEKD{} agrees with the \lazyD{} cast calculus
+of \citet{siek2009exploring}.
 
-\todo[inline]{I need to update this subsection. -JS}
+Next we define the CEK Machine for \lazyUD{}. The only difference with
+respect to \lazyD{} is in the definition of the $\mathit{applyCast}$
+function, in which a cast whose source or target is the unknown type
+$\star$ is always split into two casts that go through an injectiable
+type, that is, a type in which all sub-components are the unknown
+type, such as $\star \to \star$.
 
-The dynamic semantics of the \lazyUD{} cast calculus, which we define here as a
-CEK machine, is similar to that of the \lazyD{} cast calculus
-(Fig. \ref{fig:machine-cekc}). The only difference is in the definition of
-the $\mathit{applyCast}$ function, in which a cast whose source or
-target is the unknown type $\star$ is always split into two casts that
-go through an injectiable type, that is, a type in which all
-sub-components are the unknown type, such as $\star \to \star$. The
-definition of $\mathit{applyCast}$ for the \lazyUD{} cast calculus is given in
-Fig.~\ref{fig:apply-Cast-UD}.
+
+\begin{definition}[\lazyUD{} CEK Machine]
+  The \lazyUD{} CEK machine, written \ineffCEKUD{}, is the CEK machine of
+  \figref{fig:machine-cekc} using the $applyCast$ for \lazyUD{} defined
+  in \figref{fig:apply-Cast-UD}.  We write the transition relations of
+  this machine as $\judgeDreduce{s}{s}$ and $\judgeDreduceTrans{s}{s}$
+  and write the evaluation function as $\judgeDeval{e}{o}$.
+\end{definition}
+
 
 \begin{figure}
-%
-%  Syntax
-%  \[
-%  \begin{array}{rclr}
-%    \stxrule{v}{values}{
-%      \cdots \mid 
-%      \vOOcast{v}{ \cOOcast{I}{l}{\star} } \mid
-%      \vOOcast{v}{ \cOOcast{P}{l}{P} }
-%    }
-%  \end{array}
-%  \]
-%  
   \fbox{$\mathit{applyCast}(v,c) = r$}
   \[
   \begin{array}{rclr}
@@ -1126,11 +1117,12 @@ Fig.~\ref{fig:apply-Cast-UD}.
   \end{array}
   \]
 
-
   \caption{Definition of \textit{applyCast} for \lazyUD{}.}
   \label{fig:apply-Cast-UD}
 \end{figure}
 
+We conjecture that \ineffCEKUD{} agrees with the \lazyUD{} cast
+calculus of \citet{siek2009exploring}.
 
 % the following are temporary -JS
 \clearpage
@@ -1818,13 +1810,19 @@ Figure~\ref{fig:HC-UD-cast}
 \end{proposition}
 
 
-\section{a framework for proving correctness of cast representations}
+\section{A framework for proving correctness of cast representations}
 \label{sec:framework}
 
-This section presents our second contribution, a framework for proving 
-correctness of cast representations. The framework is a theorem saying that for 
-all cast representation $ C $, if $ C $ satisfies a collection of properties, 
-then it would respect the Lazy D semantics of cast calculi. We are working on a 
+This section presents our second contribution, a framework for proving
+correctness of cast representations. The next section will apply this
+framework to prove the correctness of the \lazyD{} hypercoercions.
+
+
+
+
+The framework is a theorem saying that for all cast representation $ C
+$, if $ C $ satisfies a collection of properties, then it would
+respect the Lazy D semantics of cast calculi. We are working on a
 similar theorem for \lazyUD{}.
 
 %then instantiating our parameterized space-efficient interpreter with $ C $ 
@@ -2247,6 +2245,7 @@ seq(c,c) $.
 
 \todoKC{describe transition rules}
 We list a fraction of reduction rules due to space limitation.
+\todo[inline]{Don't omit reduction rules, instead put some in the appendix. -JS}
 When values are constructed, their hypercoercion parts are filled with outputs 
 of $ id $. For instance, when a function value is constructed, its first part 
 and last part are initialized to $ id(T_1) $ and $ id(T_2) $ respectively.
@@ -2479,7 +2478,7 @@ except the relaton for casts, which is by cast constructors:
 \end{gather*}
 
 \todo[inline]{Standardize theorem statement -KC}
-\begin{lemma}[Strong Bi-simulation among $ \mathcal{S}(\cdot) $]
+\begin{lemma}[Strong Bisimulation among $ \mathcal{S}(\cdot) $]
 	\label{thm:CEKS-bisim}
 	If 
 	$ C_1 $ and $ C_2 $ are instances of Lazy D Cast ADT,
