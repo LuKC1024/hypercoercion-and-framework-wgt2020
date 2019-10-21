@@ -2066,7 +2066,7 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	\redruleS{
 		\sOOinspect{(\eOOcons{e_1}{e_2})}{\rho}{\kappa}
 	}{
-		\sOOinspect{e_1}{E}{}
+		\sOOinspect{e_1}{\rho}{}
 	}{}
 	\redruleS{
 		\sOOinspect{(\eOOinl{e})}{\rho}{\kappa}
@@ -2081,7 +2081,7 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	\redruleS{
 		\sOOinspect{(\eOOapp{e_1}{e_2})}{\rho}{\kappa}
 	}{
-		\sOOinspect{e_1}{\rho}{wrap(\kOOappI{E}{e_2}{\kappa})}}{}
+		\sOOinspect{e_1}{\rho}{wrap(\kOOappI{e_2}{\rho}{\kappa})}}{}
 	
 	\redruleS{
 		\sOOinspect{(\eOOcar{e})}{\rho}{\kappa}}{
@@ -2093,7 +2093,7 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	
 	\redruleS{
 		\sOOinspect{(\eOOcase{e_1}{e_2}{e_3})}{\rho}{\kappa}}{
-		\sOOinspect{e_1}{\rho}{wrap(\kOOcaseI{\rho}{e_2}{e_3}{\kappa})}}{}
+		\sOOinspect{e_1}{\rho}{wrap(\kOOcaseI{e_2}{e_3}{\rho}{\kappa})}}{}
 	\hiredruleS{
 		\sOOreturn{v}{\kOOcast{c}{k}}
 	}{
@@ -2417,7 +2417,8 @@ To relate to a non-casted function in \ineffCEKD, the casts in the \effCEK{C}
 function must be identity.
 %
 If functions are related, we can apply the same cast on both side.
-
+%
+Rules for products and sums are similar.
 
 \todo[inline]{In Fig.~\ref{fig:bisim-SC-D}, how to suppress rule numbers like 
 (1), (2), etc.? -KC}
