@@ -2066,7 +2066,9 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	\redruleS{
 		\sOOinspect{(\eOOcons{e_1}{e_2})}{\rho}{\kappa}
 	}{
-		\sOOinspect{e_1}{\rho}{}
+		\sOOinspect{e_1}{\rho}{
+			wrap(\kOOconsI{e_2}{\rho}{\kappa})
+		}
 	}{}
 	\redruleS{
 		\sOOinspect{(\eOOinl{e})}{\rho}{\kappa}
@@ -2103,62 +2105,6 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	\sOOhalt{(\oOOblame{l})} & \sidecond{applyCast(v,c) = \rOOfail{l}}
 	\end{cases}
 	}{}
-%\redruleS{
-%	\sOOreturn{v_1}{(\kOOconsI{e_2}{\rho}{\kappa})}}{
-%	\sOOinspect{e_2}{\rho}{wrap(\kOOconsII{v_1}{\kappa})}}{}
-%
-%\redrule{
-%\sOOreturn{v_2}{(\kOOconsII{v_1}{\kappa})}}{
-%\sOOreturn{(\hcvOOcons{v_1}{id(T_1)}{v_2}{id(T_2)})}{\kappa}}{
-%\\&&
-%\sidecond{v_1 : T_1 \wedge v_2 : T_2}}
-%
-%\redrule{
-%\sOOreturn{v}{(\kOOinl{\kappa})}}{
-%\sOOreturn{(\hcvOOinl{v}{id(T)})}{\kappa}}{
-%\\&&
-%\sidecond{v : T}}
-%
-%\redrule{
-%\sOOreturn{v}{(\kOOinr{\kappa})}}{
-%\sOOreturn{(\hcvOOinr{v}{id(T)})}{\kappa}}{
-%\\&&
-%\sidecond{v : T}}
-%
-%\redrule{
-%\sOOreturn{v_1}{(\kOOappI{e_2}{\rho}{\kappa})}}{
-%\sOOinspect{e_2}{\rho}{wrap(\kOOappII{v_1}{\kappa})}}{}
-%
-%	
-%	& \vdots \\
-%	\redruleS{
-%		\sOOinspect{(\eOOlam{T_1}{T_2}{x}{e})}{\rho}{\kappa}
-%	}{
-%		\sOOreturn{(\hcvOOfun{id(T_1)}{\rho}{x}{e}{id(T_2)})}{\kappa}
-%	}{}
-%	\redruleS{
-%		\sOOinspect{\eOOcast{e}{T_1}{l}{T_2}}{\rho}{\kappa}
-%	}{
-%		\sOOinspect{e}{\rho}{ext(cast(T_1,l,T_2),\kappa)}
-%	}{}
-%	\redruleS{
-%		\sOOinspect{(\eOOcons{e_1}{e_2})}{\rho}{\kappa}
-%	}{
-%		\sOOinspect{e_1}{\rho}{wrap(\hckOOconsI{e_2}{\rho}{\kappa})}
-%	}{}
-%	\redruleS{
-%		
-%\sOOreturn{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{(c,\hckOOappII{v}{\kappa})}
-%	}{
-%		\begin{cases}
-%		\sOOinspect{e}{\rho[x:=v']}{ext(c_2,\kappa)} \\
-%		\;\;\;\;\;\;\;\;\;\sidecond{applyCast(v,c_1) = \rOOsucc{v'}} 
-%		\\
-%		\sOOhalt{(\oOOblame{l})} \\
-%		\;\;\;\;\;\;\;\;\;\sidecond{applyCast(v,c_1) = \rOOfail{l}}
-%		\end{cases}
-%		
-%	}{}
 	\end{array}
 	\]
 	
