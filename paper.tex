@@ -86,8 +86,8 @@
 \newcommand{\lazyUD}{Lazy\;UD}
 \newcommand{\lazyD}{Lazy\;D}
 
-\newcommand{\sOOinspect}[3]{\mathtt{Eval} \; #3 \; \langle#2, #1\rangle}
-\newcommand{\sOOreturn}[2]{\mathtt{Cont} \; #2 \; #1}
+\newcommand{\sOOinspect}[3]{\langle\langle#1,#2\rangle,#3\rangle}
+\newcommand{\sOOreturn}[2]{\langle#1,#2\rangle}
 \newcommand{\sOOhalt}[1]{\mathtt{Halt} \; #1}
 
 %\newcommand{\sOOinspect}[3]{\mathtt{Eval} \; #1 \; #2 \; #3}
@@ -132,21 +132,21 @@
 \newcommand{\rOOfail}[1]{\mathtt{fail}\;#1}
 
 \newcommand{\kOOmt}[0]{\square}
-\newcommand{\kOOconsI}[3]{#3[\mathtt{cons} \; \square \; \langle#2,#1\rangle ]}
+\newcommand{\kOOconsI}[3]{#3[\mathtt{cons} \; \square \; \langle#1,#2\rangle ]}
 \newcommand{\kOOconsII}[2]{#2[\mathtt{cons} \; #1 \; \square]}
 \newcommand{\kOOinl}[1]{#1[\mathtt{inl} \; \square]}
 \newcommand{\kOOinr}[1]{#1[\mathtt{inr} \; \square]}
 \newcommand{\kOOappI}[3]{
-	#3[\square \; \langle#2,#1\rangle ]
+	#3[\square \; \langle#1,#2\rangle ]
 }
 \newcommand{\kOOappII}[2]{
 	#2[#1 \; \square]}
 \newcommand{\kOOcar}[1]{#1[\mathtt{fst} \; \square]}
 \newcommand{\kOOcdr}[1]{#1[\mathtt{snd} \; \square]}
 \newcommand{\kOOcaseI}[4]{
-	#4[\mathtt{case} \; \square \; #3(#1) \; \langle#3,#2\rangle ]}
+	#4[\mathtt{case} \; \square \; \langle#1,#3\rangle \; \langle#2,#3\rangle ]}
 \newcommand{\kOOcaseII}[4]{
-	#4[\mathtt{case} \; #1 \; \square \; \langle#3,#2\rangle ]}
+	#4[\mathtt{case} \; #1 \; \square \; \langle#2,#3\rangle ]}
 \newcommand{\kOOcaseIII}[3]{
 	#3[\mathtt{case} \; #1 \; #2 \; \square]}
 \newcommand{\kOOcast}[2]{
@@ -177,11 +177,15 @@
 
 \newcommand{\typingHC}[3]{#1 : #2 \Longrightarrow #3}
 \newcommand{\hcvOOinj}[2]{\mathtt{inj} \; #2}
-\newcommand{\hcvOOfun}[5]{\mathtt{fun} \; #1 \; #2 \; #3 \; #4 \; #5}
+%\newcommand{\hcvOOfun}[5]{\mathtt{fun} \; #1 \; #2 \; #3 \; #4 \; #5}
+\newcommand{\hcvOOfun}[5]{\mathtt{fun}^{\POOfun{#1}{#5}} \; #2 \; #3 \; #4}
 \newcommand{\hcvOOtt}[0]{\mathtt{unit}}
-\newcommand{\hcvOOcons}[4]{\mathtt{cons}\;#1\;#2\;#3\;#4}
-\newcommand{\hcvOOinl}[2]{\mathtt{inl}\;#1\;#2}
-\newcommand{\hcvOOinr}[2]{\mathtt{inr}\;#1\;#2}
+%\newcommand{\hcvOOcons}[4]{\mathtt{cons}\;#1\;#2\;#3\;#4}
+\newcommand{\hcvOOcons}[4]{\mathtt{cons}^{\POOprod{#2}{#4}}\;#1\;#3}
+%\newcommand{\hcvOOinl}[2]{\mathtt{inl}\;#1\;#2}
+%\newcommand{\hcvOOinr}[2]{\mathtt{inr}\;#1\;#2}
+\newcommand{\hcvOOinl}[2]{\mathtt{inl}^{#2}\;#1}
+\newcommand{\hcvOOinr}[2]{\mathtt{inr}^{#2}\;#1}
 \newcommand{\hckOOmt}[0]{\mathtt{stop}}
 \newcommand{\hckOOconsI}[3]{\mathtt{cons_1}\;#1\;#2\;#3}
 \newcommand{\hckOOappII}[2]{\mathtt{app_2}\;#1\;#2}
@@ -631,10 +635,10 @@ To take out the first (resp. second) part of a casted pair, the
 machine firstly take out the first (resp. second) part of $v$, the
 underlying pair, and cast the result.
 %
-In case splitting, if the target value is a left injection, the
-machine moves to a state that will apply the first continuation
-function to the value inside the left injection. The case for right
-injection is similar.
+%In case splitting, if the target value is a left injection, the
+%machine moves to a state that will apply the first continuation
+%function to the value inside the left injection. The case for right
+%injection is similar.
 %
 When the target value is a casted sum, the machine moves the cast from
 the target value to continuations functions.
@@ -968,9 +972,15 @@ o$) is defined in the natural way.
 }{}
 
 \redrule{
-	\highlight{\sOOreturn{v_3}{(\mathtt{case_3}\;
-		(\vOOcast{v}{\cOOcast{\POOsum{T_1}{T_2}}{l}{\POOsum{T_3}{T_4}}})
-		\;v_2\;\kappa)}}
+	\highlight{\sOOreturn{v_3}{
+		(	\kOOcaseIII{
+				\vOOcast{v}{\cOOcast{\POOsum{T_1}{T_2}}{l}{\POOsum{T_3}{T_4}}}
+			}{v_2}{\kappa})
+%		
+%			(\mathtt{case_3}\;
+%		(\vOOcast{v}{\cOOcast{\POOsum{T_1}{T_2}}{l}{\POOsum{T_3}{T_4}}})
+%		\;v_2\;\kappa)
+	}}
 }{
 	\highlight{\sOOreturn{v_3'}{
 			(\kOOcaseIII{v}{v_2'}{\kappa})
@@ -1882,7 +1892,7 @@ implements Lazy D Cast ADT (Definition~\ref{def:surely-lazyd}), a subset of
 Cast ADT. Property (1) 
 states that $id(T)$acts like the identity function. Property (2) states 
 that $seq(c,c)$acts like a sequence of casts. Properties (3) through 
-(11) state that $cast(T_1,l,T_2)$act like the Lazy D$applyCast$
+(11) state that $cast(T_1,l,T_2)$act like the Lazy D $applyCast$
 defined in Fig.~\ref{fig:applyCast-D-C}.
 
 \todoKC{define values before Lazy D Cast ADT}
@@ -2030,7 +2040,7 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	\redruleS{
 		\sOOinspect{\eOOvar{x}}{\rho}{\kappa}
 	}{	
-		\sOOreturn{\rho[x]}{\kappa}
+		\sOOreturn{\rho(x)}{\kappa}
 	}{}
 	\redruleS{
 		\sOOinspect{\eOOsole}{\rho}{\kappa}
@@ -2182,6 +2192,40 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 \;\;\;\;\;\sidecond{applyCast(v_2,c_1) = \rOOfail{l}}
 \end{cases}
 }{}
+
+\hifunrule{
+	\continue{\hcvOOcons{v_1}{c_1}{v_2}{c_2}}{
+		\kOOcar{\kappa}
+	}
+}{
+	\sOOreturn{v_1}{ext(c_1,k)}
+}{}
+\hifunrule{
+	\continue{\hcvOOcons{v_1}{c_1}{v_2}{c_2}}{
+		\kOOcdr{\kappa}
+	}
+}{
+	\sOOreturn{v_2}{ext(c_2,k)}
+}{}
+
+\funrule{
+	\continue{v_1}{\kOOcaseI{e_2}{e_3}{\rho}{\kappa}}
+}{
+	\sOOinspect{e_2}{\rho}{
+		cont(\kOOcaseII{v_1}{e_3}{\rho}{\kappa})
+	}
+}{}
+
+\funrule{
+	\continue{v_2}{
+		\kOOcaseII{v_1}{e_3}{\rho}{\kappa}
+	}
+}{
+	\sOOinspect{e_3}{\rho}{
+	\kOOcaseIII{v_1}{v_2}{\kappa}
+	}
+}{}
+
 \hifunrule{
 	\continue{v_3}{(\mathtt{case_3}\;(\hcvOOinl{v}{c})\;
 		(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})
@@ -2253,22 +2297,79 @@ We list a fraction of reduction rules due to space limitation.
 \todo[inline]{Don't omit reduction rules, instead put some in the appendix. -JS
 \\---\\They are all in the figure. I haven't updated this paragraph 
 accordingly. -KC}
-When values are constructed, their hypercoercion parts are filled with outputs 
-of $id$. For instance, when a function value is constructed, its first part 
-and last part are initialized to $id(T_1)$ and $id(T_2)$respectively.
-When evaluating a cast expression, the current continuation is extended with a 
-hypercoercion constructed by $cast$. $ext$ composes the new hypercoercion 
-with the hypercoercion on the top of the continuation.
-When evaluating a compound expression, the machine firstly construct the new 
-pre-continuation, then turn it to a continuation by adding an identity 
-hypercoercion at the top. For instance, when evaluating a \texttt{cons} 
-expression, the machine firstly construct $\hckOOconsI{e_2}{\rho}{\kappa}$, 
-the new pre-continuation, then call $cont$, which adds an identity cast to 
-form a continuation. 
-When a function call happens, the machine firstly cast the operand. If the 
-casting succeeds, the machine then evaluate the body in the extended 
-environment and the extended continuation. If the casting fails, the machine 
-then halts with the blame label.
+
+
+%When evaluating a cast expression, the machine moves the cast to the
+%continuation and evaluates the inner expression.
+%To apply a casted function, the machine first casts $v_1$, the
+%operand, then applies the casted operand to $v_2$, the underlying
+%function, and finally cast the result of the function application.
+%%
+%To take out the first (resp. second) part of a casted pair, the
+%machine firstly take out the first (resp. second) part of $v$, the
+%underlying pair, and cast the result.
+%%
+%%In case splitting, if the target value is a left injection, the
+%%machine moves to a state that will apply the first continuation
+%%function to the value inside the left injection. The case for right
+%%injection is similar.
+%%
+%When the target value is a casted sum, the machine moves the cast from
+%the target value to continuations functions.
+%%
+%To cast a value, the machine invokes $applyCast$ on the value.  If the
+%cast succeeds, the machine returns the result to the next
+%continuation.  If the cast fails, the machine halts with the blame
+%label.
+
+The transition relation $\judgeSreduce{C}{s}{s}$ uses functions provides by $C$ 
+to represent cases and to apply casts.
+%
+When evaluating a cast expression, the machine extends the continuation with 
+cast $cast(T_1,l,T_2)$. The function $ext(c,\kappa)$ composes $c$ with the cast 
+at the top of $k$ by calling $seq$.
+%
+To construct a function, the machine fills the casts $id$.
+%
+To return a value to a continuation, the machine first applies the top cast to 
+the value. If the application fails, the machine halts with the blame label 
+from the failure. Otherwise, the machine handles the pre-continuation with 
+$continue$.
+%
+When the machine constructs a pair, a left injection, or a right injection, it 
+fills the casts with $id$ as well, just like how it did for functions. 
+%
+To apply a function, the machine applies the domain cast $c_1$ to the 
+operand $v_2$, extends the continuation with the codomain cast $c_2$, and 
+evaluate the function body.
+%
+To take out the first (resp. second) part of a pair ...
+%
+%%In case splitting, if the target value is a left injection, the
+%%machine moves to a state that will apply the first continuation
+%%function to the value inside the left injection. The case for right
+%%injection is similar.
+%%
+%When the target value is a casted sum, the machine moves the cast from
+%the target value to continuations functions.
+To case spliting a variant, ...
+
+%When values are constructed, their hypercoercion parts are filled with outputs 
+%of $id$. For instance, when a function value is constructed, its first part 
+%and last part are initialized to $id(T_1)$ and $id(T_2)$respectively.
+%When evaluating a cast expression, the current continuation is extended with a 
+%hypercoercion constructed by $cast$. $ext$ composes the new hypercoercion 
+%with the hypercoercion on the top of the continuation.
+%When evaluating a compound expression, the machine firstly construct the new 
+%pre-continuation, then turn it to a continuation by adding an identity 
+%hypercoercion at the top. For instance, when evaluating a \texttt{cons} 
+%expression, the machine firstly construct $\hckOOconsI{e_2}{\rho}{\kappa}$, 
+%the new pre-continuation, then call $cont$, which adds an identity cast to 
+%form a continuation. 
+%When a function call happens, the machine firstly cast the operand. If the 
+%casting succeeds, the machine then evaluate the body in the extended 
+%environment and the extended continuation. If the casting fails, the machine 
+%then halts with the blame label.
 
 Transitive closure of reduction ($\judgeSreduceTrans{C}{s}{s}$) and 
 evaluation ($\judgeSeval{C}{e}{o}$) are standard. Value typing 
