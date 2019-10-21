@@ -120,10 +120,10 @@
 \newcommand{\vOOcons}[2]{\mathtt{cons}\;#1\;#2}
 \newcommand{\vOOinl}[1]{\mathtt{inl}\;#1}
 \newcommand{\vOOinr}[1]{\mathtt{inr}\;#1}
-\newcommand{\rOOsucc}[1]{#1}
-\newcommand{\rOOfail}[1]{#1}
-%\newcommand{\rOOsucc}[1]{\mathtt{succ}\;#1}
-%\newcommand{\rOOfail}[1]{\mathtt{fail}\;#1}
+%\newcommand{\rOOsucc}[1]{#1}
+%\newcommand{\rOOfail}[1]{#1}
+\newcommand{\rOOsucc}[1]{\mathtt{succ}\;#1}
+\newcommand{\rOOfail}[1]{\mathtt{fail}\;#1}
 \newcommand{\kOOmt}[0]{\mathtt{stop}}
 \newcommand{\kOOconsI}[3]{\mathtt{cons_1} \; #1 \; #2 \; #3}
 \newcommand{\kOOconsII}[2]{\mathtt{cons_2} \; #1 \; #2}
@@ -1290,30 +1290,32 @@ This section presents our first contribution, the definition of hypercoercion.
 The design of hypercoercion is motivated by observations on coercion normal 
 forms: a normal coercion has at most three parts; projections are always at the 
 beginning; injections and failures are always at the end. Hypercoercions have 
-similar shape: a hypercion has either one part or three parts; for three-part 
-hypercoercions, the first part is either a projection or a no-op, while the 
-last part is either an injection, a failure, or a no-op.
+similar shape: a hypercion either is $ \hyperCoercionI $, the identity cast for 
+$ \TOOdyn $, or contains three parts, where the first part is either a 
+projection or a no-op while last part is either an injection, a failure, or a 
+no-op.
 
-\figref{fig:hypercoercion} defines the syntax of hypercoercion. Types, 
+\figref{fig:hypercoercion} defines the syntax of hypercoercions. Types, 
 pre-types, and blame labels are as before.
 
-Let $ c $ range over hypercoercions. A hypercoercion is either 
-an identity cast between the dynamic types, or a complex including a head, a 
-middle, and a tail. 
+Let $ c $ range over hypercoercions. A hypercoercion either is the identity 
+cast between the dynamic types, or includes a head, a middle, and a tail. 
 Let $ h $ range over heads. A head is either a no-op, or a projection.
 Let $ m $ range over middles. There is a one-to-one 
 correspondence between middles and type constructors. 
-We generalize shallow-consistency to middles $ m \smile m $ in the natural way.
+We generalize shallow-consistency to middles $ m \smile m $ in the obvious way.
 Let $ t $ range over tails. A tail is either a no-op, an injection, or a 
-failure. 
+failure.
 
-We define hypercoercion constructs in the following subsections.
-But functions that apply hypercoercions to values are deferred to 
-Section~\ref{sec:hypercoercion-correctness} because 
-they depends on a new definition of values, which is part of the framework in
+Subsection~\ref{sec:ld-hc} defines functions that construct \lazyD\ 
+hypercoercions. Subsection~\ref{sec:lud-hc} defines the \lazyUD\ counterparts. 
+Functions that apply hypercoercions to values are deferred to 
+Section~\ref{sec:hypercoercion-correctness} because they depends on a new 
+definition of values, which is part of the framework in
 Section~\ref{sec:framework}.
 
 \subsection{\lazyD{} hypercoercion}
+\label{sec:ld-hc}
 
 \begin{figure}
 	\[
@@ -1371,6 +1373,46 @@ Section~\ref{sec:framework}.
 	\comprule{
 		\hyperCoercionC{h_1}{m_1}{t_1}
 	}{
+		\hyperCoercionC{?^l}{m_2}{t_2}
+	}{
+		\hyperCoercionC{h_1}{m_1}{\bot^l}
+	}{
+		\sidecond{
+			\neg \; m_1 \smile m_2
+			\; \text{and} \;
+			\forall l. t \neq \bot^{l}
+		}
+	}
+
+\comprulel{
+\hyperCoercionC{h_1}{m_1}{t_1}
+}{
+\hyperCoercionC{\epsilon}{m_2}{t_2}
+}{
+\hyperCoercionC{h_1}{m_1}{\bot^l}
+}{
+\sidecond{
+	\neg \; m_1 \smile m_2
+	\; \text{and} \;
+	\forall l. t \neq \bot^{l}
+}
+}
+\comprule{
+\hyperCoercionC{h_1}{m_1}{t_1}
+}{
+\hyperCoercionC{?^l}{m_2}{t_2}
+}{
+\hyperCoercionC{h_1}{m_1 \fatsemi^{l} m_2}{t_2}
+}{
+\sidecond{
+	m_1 \smile m_2
+	\; \text{and} \;
+	\forall l. t \neq \bot^{l}
+}
+}
+	\comprule{
+		\hyperCoercionC{h_1}{m_1}{t_1}
+	}{
 		\hyperCoercionC{\epsilon}{m_2}{t_2}
 	}{
 		\hyperCoercionC{h_1}{m_1 \fatsemi^{\ell} m_2}{t_2}
@@ -1380,32 +1422,6 @@ Section~\ref{sec:framework}.
 			\; \text{and} \;
 			\forall l. t \neq \bot^{l}
 		}
-	}
-	\comprule{
-		\hyperCoercionC{h_1}{m_1}{t_1}
-	}{
-		\hyperCoercionC{?^l}{m_2}{t_2}
-	}{
-		\hyperCoercionC{h_1}{m_1 \fatsemi^{l} m_2}{t_2}
-	}{
-	\sidecond{
-		m_1 \smile m_2
-		\; \text{and} \;
-		\forall l. t \neq \bot^{l}
-	}
-	}
-	\comprulel{
-	\hyperCoercionC{h_1}{m_1}{t_1}
-	}{
-	\hyperCoercionC{h_2}{m_2}{t_2}
-	}{
-	\hyperCoercionC{h_1}{m_1}{\bot^l}
-	}{
-	\sidecond{
-		\neg \; m_1 \smile m_2
-		\; \text{and} \;
-		\forall l. t \neq \bot^{l}
-	}
 	}
 %
 %	\comprule{
@@ -1511,23 +1527,41 @@ identity, $ seq(c,c) $, which composes two hypercoercions, and $
 cast(T_1,l,T_2) $, which translate a cast to a hypercoercion. Other functions 
 in the figure are their helpers.
 
-\todo[inline]{KC needs to update the description here -KC}
-$ c_1 \fatsemi^\ell c_2 = c' $ composes two hypercoercions. The target of $ 
-c_1 $ and the source of $ c_2 $ might be different, in which case $ \ell $ must 
-be a label. The last two lines are the most interesting. When the head of the 
-second hypercoercion is a no-op, we use the same $ \ell $ to compose the 
-middles. Otherwise, the head must be a projection, where we use the label in 
-the projection to compose middles.
-
 Let $ \ell $ range over $ \epsilon $ and labels.
-$ m_1 \fatsemi^\ell (m_2,t) = (m',t') $ composes a middle with a 
-pair of a middle and a tail. Similarly, the target of $ m_1 $ and the source of 
-$ m_2 $ might be different, in which case $ \ell $ must be a label.
-$ seq(c_1,c_2) $ composes two coercions where the target type of $ c_1 $ is 
-equal to the source type of $ T_2 $.
-$ id(T) $ constructs an identity coercion of $ T $ with the help of $ id(P) $.
+$ c_1 \fatsemi^\ell c_2 $ composes hypercoercion $ c_1 $ and hypercoercion $ 
+c_2 $.
+When both $ c_1 $ and $ c_2 $ are $ \hyperCoercionI $, their 
+composition is also $ \hyperCoercionI $.
+When $ c_1 $ is $ \hyperCoercionI $ but $ c_2 $ is not, the head of the 
+composition must be a projection. In this 
+case, if the head of $ c_2 $ is a projection, we reuse it. Otherwise, we need a 
+label to build the projection. Since the head of $ c_2 $ is $ \epsilon $, its 
+source type must be a pretype. Thus we know $ \ell $ must be a label and put it 
+in the projection. 
+When $ c_1 $ ends with a failure, the composition is $ c_1 $ itself. In all 
+remaining cases, we shall assume that $ c_1 $ does not end with 
+a failure.
+When $ m_1 $ and $ m_2 $ have different top constructors ($ \neg\;m_1 \smile 
+m_2 $), proceeding to $ m_2 $ can not make sense. So we end the composition 
+with a failure. To do so we need a label. When $ c_2 $ starts with a 
+projection, we shall accuse it of casting a value to a shallowly inconsistent 
+type. When $ c_2 $ starts with a no-op, $ \ell $ must be a label. And we accuse 
+it of composing shallowly inconsistent hypercoercions. The last two cases 
+compose $ m_1 $ and $ m_2 $ with a helper function $ m \fatsemi^\ell m $, which 
+assumes its inputs have the same top constructor. The definition of $ m 
+\fatsemi^\ell m $ is straightforward. Going back to the last two cases of $ c_1 
+\fatsemi^\ell c_2 $. When $ c_2 $ starts with a projection, we have no clue 
+whether the target type of $ m_1 $ is the same as the source of $ m_2 $, 
+although we know they are shallowly consistent. So we give the $ l $ in the 
+projection to $ m \fatsemi^\ell m $. When $ c_2 $ starts with a no-op, we reuse 
+the $ \ell $.
+
+$ seq(c_1,c_2) $ requires that the target type of $ c_1 $ is the same as the 
+source of $ c_2 $. $ c \fatsemi^\ell c $ does the job for it.
+$ id(T) $ constructs an identity coercion of $ T $ with the help of $ id(P) $. 
+Their definitions are straightforward.
 $ cast(T_1,l,T_2) $ constructs a coercion from a source type, a label, and a 
-target type. 
+target type. $ c \fatsemi^\ell c $ does the most job.
 
 \begin{proposition}[\lazyD\ hypercoercion is a monoid]
 	\label{thm:hc-monoid}
@@ -1541,8 +1575,19 @@ target type.
 		\item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
 	\end{enumerate}
 \end{proposition}
+\begin{proof}
+	By induction on hypercoercion(s).
+\end{proof}
+
+\begin{proposition}[]
+	For all $ T $ and $ l $, $ cast(T,l,T) = id(T) $
+\end{proposition}
+\begin{proof}
+	By induction on T.
+\end{proof}
 
 \subsection{\lazyUD{} hypercoercion [Jeremy]}
+\label{sec:lud-hc}
 
 Figure~\ref{fig:HC-UD}
 
