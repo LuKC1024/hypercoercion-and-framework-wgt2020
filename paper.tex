@@ -1822,7 +1822,8 @@ Figure~\ref{fig:HC-UD-cast}
 \label{sec:framework}
 
 This section presents our second contribution, a framework for proving
-correctness of cast representations. The next section will apply this
+correctness of cast representations, especially space efficient
+ones. Section~\ref{sec:hypercoercion-correctness} will apply this
 framework to prove the correctness of the \lazyD{} hypercoercions.
 
 We start by defining a CEK machine \effCEK{C} that is parameterized
@@ -1830,28 +1831,17 @@ over the cast representation $C$. This machine is space efficient
 provided that the cast representation performs compression.  The
 interface between the machine and the cast representation is defined
 by an abstract data type, named Cast ADT, that we define shortly.
-%
 
-\todo[inline]{UNDER CONSTRUCTION. -JS}
+When then prove that, for any instance $C$ of the Cast ADT, \effCEK{C}
+is equivelent to \ineffCEKD{] provided that $C$ satisfies a collection
+of properties that we call the Lazy D Cast abstract data type.
+In Section~\ref{sec:hypercoercion-correctness} we show that
+the \lazyD{} hypercoercions $H$ are an instance of the Lazy D ADT,
+and therefore \effCEK{H} is equivalent to \ineffCEKD{}.
 
-If $C$, an implementation of the Cast ADT inteface, satisifies a collection of 
-properties that we defined as Lazy D Cast ADT. We can instantiate our framework 
-theorem that we define shortly to prove that evaluating an program in 
-\effCEK{C} gives the same result as \ineffCEKD. We are working on a
-similar theorem for \lazyUD{}. 
+We are working on a similar theorem for \lazyUD{}.
 
-\todo[inline]{UNDER CONSTRUCTION. -KC}
-
-
-
-The framework is a theorem saying that for all cast representation $C
-$, if $C$ satisfies a collection of properties, then it would
-respect the Lazy D semantics of cast calculi. We are working on a
-similar theorem for \lazyUD{}.
-
-%then instantiating our parameterized space-efficient interpreter with$C$
-%gives an interpter that is extensionally equal to the standard interpreter for 
-%\lazyD\ cast calculus. 
+\todo[inline]{UNDER CONSTRUCTION -JS}
 
 We captures the set of operators that every cast representation must provide 
 with \emph{cast abstract data type} (Definition~\ref{def:cast-rep}). 
