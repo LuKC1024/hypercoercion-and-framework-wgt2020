@@ -220,17 +220,17 @@
 % abbrev
 \newcommand{\castCalculus}[0]{$\lambda_{\rightarrow}^{\langle\cdot\rangle}$}
 % names
-\newcommand{\ineffCEK}{$ \mathcal{C} $}
-\newcommand{\ineffCEKD}{$ \mathcal{D} $}
-\newcommand{\ineffCEKUD}{$ \mathcal{UD} $}
+\newcommand{\ineffCEK}{$\mathcal{C}$}
+\newcommand{\ineffCEKD}{$\mathcal{D}$}
+\newcommand{\ineffCEKUD}{$\mathcal{UD}$}
 \newcommand{\judgeDreduce}[2]{#1 \longmapsto_{\mathcal{D}} #2}
 \newcommand{\judgeDreduceTrans}[2]{#1 \longmapsto_{\mathcal{D}}^{*} #2}
 \newcommand{\judgeDeval}[2]{eval_{\mathcal{D}}(#1) = #2}
 \newcommand{\judgeUDreduce}[2]{#1 \longmapsto_{\mathcal{UD}} #2}
 \newcommand{\judgeUDreduceTrans}[2]{#1 \longmapsto_{\mathcal{UD}}^{*} #2}
 \newcommand{\judgeUDeval}[2]{eval_{\mathcal{UD}}(#1) = #2}
-\newcommand{\effCEK}[1]{$ \mathcal{S}(#1) $}
-\newcommand{\evalEqv}[2]{$ eval_{\text{#1}} = eval_{\text{#2}} $}
+\newcommand{\effCEK}[1]{$\mathcal{S}(#1)$}
+\newcommand{\evalEqv}[2]{$eval_{\text{#1}} = eval_{\text{#2}}$}
 \newcommand{\continue}[2]{continue(#2,#1)}
 \newcommand{\highlight}[1]{{\color{red} #1}}
 
@@ -481,7 +481,7 @@ In this section, we review lazy cast calculi
 	\]
 	
 	Consistency
-	\fbox{$ T_1 \sim T_2 $}
+	\fbox{$T_1 \sim T_2$}
 	\begin{gather*}
 	\inference{}{
 		\star \sim \star
@@ -516,7 +516,7 @@ In this section, we review lazy cast calculi
 	\end{gather*}
 	
 	Term typing
-	\fbox{$ \judgetype{\Gamma}{e}{T} $}
+	\fbox{$\judgetype{\Gamma}{e}{T}$}
 	\begin{gather*}
           \dots \qquad
 		\inference{
@@ -548,7 +548,7 @@ The syntax and static semantics is the same that of
 \item We add sum, product, and unit types.
 \item We separate types into those with a type constructor at the top,
   the \emph{pretypes} ($\POOunit$, functions, products, and sums),
-  versus the dynamic type $\star$ (a.k.a. $ \mathtt{Dyn} $ or
+  versus the dynamic type $\star$ (a.k.a. $\mathtt{Dyn}$ or
   $\mathbb{?}$).
 \item We annotate the codomain of a lambda abstraction explicitly
   because we refer to it in the dynamic semantics. 
@@ -560,26 +560,26 @@ $\eOOcast{e}{T_1}{l}{T_2}$ are required to be consistent, written $T_1
 
 %% defines the syntax of the cast calculus and
 %% its static semantics. We extend the syntax of
-%%  with sum and product types.  Let $ T $ range
-%% over types. A type is either the dynamic type $ \star $ (a.k.a. $
-%% \mathtt{Dyn} $, $ \mathbb{?} $, or $ \mathtt{Unknown} $), or a type
+%%  with sum and product types.  Let $T$ range
+%% over types. A type is either the dynamic type$\star$(a.k.a. $
+%% \mathtt{Dyn}$, $\mathbb{?}$, or$\mathtt{Unknown}$), or a type
 
-%% As usual we write $ T_1 \sim T_2 $ when $ T_1 $ and $ T_2 $ are
-%% consistent. The intuition of $ T_1 \sim T_2 $ is that $ T_1 $ and $
-%% T_2 $ have no conflicting type information. Two types are consistent
-%% if one of them is $ \star $, or they have the same top-most type
+%% As usual we write$T_1 \sim T_2$when$T_1$ and $T_2$ are
+%% consistent. The intuition of $T_1 \sim T_2$ is that $T_1$and $
+%% T_2$have no conflicting type information. Two types are consistent
+%% if one of them is $\star$, or they have the same top-most type
 %% constructor and the corresponding sub-parts are
 %% consistent. Consistency is reflexive and symmetric, but not
 %% transitive.
 
-%% We write $ T_1 \smile T_2 $ when $ T_1 $ and $ T_2 $ are
-%% shallowly-consistent, that is, if one of them is $ \star $, or they
+%% We write$T_1 \smile T_2$when$T_1$ and $T_2$ are
+%% shallowly-consistent, that is, if one of them is $\star$, or they
 %% have the same type constructor at the top. Shallow-inconsistency is
 %% the root of all blame in lazy cast strategies -- casting a value to a
 %% shallowly inconsistent type leads to a blame. Shallow-consistency is
 %% reflexive, symmetric, but not transitive.
 
-%% Let $ e $ range over terms. Most terms are standard for a simply-typed
+%% Let $e$ range over terms. Most terms are standard for a simply-typed
 %% lambda calculus. We annotate the codomain of a lambda abstraction
 %% explicitly because we refer to it in the dynamic semantics. Becuase
 %% this is a cast calculus, we have two additional terms: cast
@@ -622,13 +622,13 @@ $applyCast$ to allow for the differences between D and UD.
 When evaluating a cast expression, the machine moves the cast to the
 continuation and evaluates the inner expression.
 %% Other
-%% transition rules starting from $ Eval $ states are standard.
-To apply a casted function, the machine first casts $ v_1 $, the
-operand, then applies the casted operand to $ v_2 $, the underlying
+%% transition rules starting from$Eval$states are standard.
+To apply a casted function, the machine first casts $v_1$, the
+operand, then applies the casted operand to $v_2$, the underlying
 function, and finally cast the result of the function application.
 %
 To take out the first (resp. second) part of a casted pair, the
-machine firstly take out the first (resp. second) part of $ v $, the
+machine firstly take out the first (resp. second) part of $v$, the
 underlying pair, and cast the result.
 %
 In case splitting, if the target value is a left injection, the
@@ -644,12 +644,12 @@ cast succeeds, the machine returns the result to the next
 continuation.  If the cast fails, the machine halts with the blame
 label.
 %
-%% When the continuation is $ stop $, the machine enters a halting
+%% When the continuation is $stop$, the machine enters a halting
 %% state. The When the machine is in a halting state, it stays in the
 %% same state.
 
-The reflexive transitive closure of reduction ($
-\judgeCreduceTrans{s}{s} $) and evaluation ($ eval_\mathcal{C}(e) $)
+The reflexive transitive closure of reduction ($\judgeCreduceTrans{s}{s}$) and 
+evaluation ($eval_\mathcal{C}(e)$)
 are standard~\citep{felleisen03:_pllc}.
 
 
@@ -720,7 +720,7 @@ are standard~\citep{felleisen03:_pllc}.
   \]
 
         Shallow-consistency
-	\fbox{$ T \smile T $}
+	\fbox{$T \smile T$}
 	\begin{gather*}
 	\inference{}{
 		\star \smile \star
@@ -745,7 +745,7 @@ are standard~\citep{felleisen03:_pllc}.
 	}
 	\end{gather*}
 	
-	Value typing \fbox{$ v : T $}
+	Value typing \fbox{$v : T$}
 	\begin{gather*}
 	\dots \qquad
 	\inference{
@@ -766,7 +766,7 @@ are standard~\citep{felleisen03:_pllc}.
         \label{fig:state}
 \end{figure}
 
-Let $ v $ range over values. A value is either the unit, a function (a
+Let $v$ range over values. A value is either the unit, a function (a
 closure), a pair, a left injection, a right injection, or a casted
 value. As shown by the value typing rules, if the target type of a
 casted value is the dynamic type, the underlying value must be of an
@@ -777,15 +777,15 @@ all its sub-parts are the dynamic type. If the target type of a casted
 value is a pre-type, the type of the underlying value must have the
 same type constructor.
 
-Let $ c $ range over casts. A cast is a triple of a type, a label, and a type.
+Let $c$ range over casts. A cast is a triple of a type, a label, and a type.
 
-Let $ o $ range over observations. They are what would be observed if
+Let $o$ range over observations. They are what would be observed if
 a program terminates. Observations include all value constructors and
-blame.  The function converting values to observations ($ observe(v) =
-o $) is defined in the natural way.
+blame.  The function converting values to observations ($observe(v) =
+o$) is defined in the natural way.
 
 \begin{figure}
-	%	Continuation typing \fbox{$ \kappa : T_1 \Longrightarrow T_2 $}
+	%	Continuation typing \fbox{$\kappa : T_1 \Longrightarrow T_2$}
 	%	\begin{gather*}
 	%	\dots \quad
 	%	\inference{
@@ -801,7 +801,7 @@ o $) is defined in the natural way.
 	\end{array}
 	\]
 	
-	Reduction \fbox{$ \judgeCreduce{s}{s} $}
+	Reduction \fbox{$\judgeCreduce{s}{s}$}
 	\[
 	\begin{array}{rclr}
 		\hiredrule{
@@ -1018,19 +1018,19 @@ v3' = \vOOcast{v_3}{\cOOcast{\POOfun{T_3}{T}}{l}{\POOfun{T_1}{T}}}}
 	\label{fig:machine-cekc}
 \end{figure}
 
-Let $ r $ range over cast results. A cast result is either a success, which 
+Let $r$ range over cast results. A cast result is either a success, which 
 brings back a value, or a failure, which brings a blame label.
 
-Let $ s $ range over machine states. A state is either looking at an 
+Let $s$ range over machine states. A state is either looking at an 
 expression to decide what to do next, returning a value to a continuation, or 
 halting with an observation.
 
-Let $ \kappa $ range over continuations. $ \mathtt{stop} $ is the top 
+Let $\kappa$ range over continuations. $\mathtt{stop}$ is the top 
 continuation. The remaining continuations correspond to expressions. For 
-example, $ (\mathtt{cons_1} \; e \; \rho \; \kappa) $ is the continuation where 
-we are waiting for the value of the first argument to a $ \mathtt{cons} $. And 
-the last continuation, $ \langle c \rangle \kappa $ is to cast the value before 
-returning to $ \kappa $.
+example, $(\mathtt{cons_1} \; e \; \rho \; \kappa)$ is the continuation where 
+we are waiting for the value of the first argument to a $\mathtt{cons}$. And 
+the last continuation, $\langle c \rangle \kappa$ is to cast the value before 
+returning to $\kappa$.
 
 \begin{figure}
 	
@@ -1065,7 +1065,7 @@ returning to $ \kappa $.
 	
 	\end{array}
 	\]
-	\caption{Definition of $ applyCast $ for \lazyD}
+	\caption{Definition of $applyCast$for \lazyD}
 	\label{fig:applyCast-D-C}
 \end{figure}
 
@@ -1197,17 +1197,17 @@ the end of the next paragraph. So the summary is given after that. -KC}
 
 \figref{fig:normal-coercion} defines the normal coercion.
 Types, pre-types, and blame labels are as before.
-Let $ I $ range over injectable types. An injectable type is a type that can 
-be cast directly to (injection) and from (projection) $ \TOOdyn $. The 
+Let $I$ range over injectable types. An injectable type is a type that can 
+be cast directly to (injection) and from (projection) $\TOOdyn$. The 
 definition of injectable type depends on blame strategy. With \lazyD, all 
-pre-types are injectable. With \lazyUD, only $ \POOfun{\TOOdyn}{\TOOdyn} $ 
+pre-types are injectable. With \lazyUD, only $\POOfun{\TOOdyn}{\TOOdyn}$
 is injectable. 
-Let $ c $ range over coercions, a coercion is either injection, projection, 
+Let $c$ range over coercions, a coercion is either injection, projection, 
 identity, failure, sequencing, or function coercion.
-Let $ \bar{c} $ range over wrapper coercions, which represent casts in $ 
-\vOOcast{v}{c} $.
-Let $ \hat{c} $ range over normal coercions. If we inline $ \bar{c} $ and 
-re-order the cases, the definition of $ \hat{c} $ becomes:
+Let $\bar{c}$ range over wrapper coercions, which represent casts in $
+\vOOcast{v}{c}$.
+Let $\hat{c}$ range over normal coercions. If we inline $\bar{c}$ and 
+re-order the cases, the definition of $\hat{c}$ becomes:
 \[
 \begin{array}{rclr}
 \stxrule{\hat{c}}{normal coercions}{
@@ -1270,7 +1270,7 @@ Three observations on this definition leads to hypercoercion:
 	\end{array}
 	\]
 		
-	hypercoercion typing \fbox{$ c : T \Longrightarrow T $}
+	hypercoercion typing \fbox{$c : T \Longrightarrow T$}
 	\begin{gather*}
 	\inference{}{\typingHC{\hyperCoercionI}{\TOOdyn}{\TOOdyn}}
 	\quad
@@ -1283,14 +1283,14 @@ Three observations on this definition leads to hypercoercion:
 	}
 	\end{gather*}
 	
-	Head typing \fbox{$ \typingHC{h}{T}{P} $}
+	Head typing \fbox{$\typingHC{h}{T}{P}$}
 	\begin{gather*}
 	\inference{}{\typingHC{\epsilon}{P}{P}}
 	\quad
 	\inference{}{\typingHC{?^l}{\TOOdyn}{I}}
 	\end{gather*}
 	
-	Middle typing \fbox{$ \typingHC{m}{T}{T} $}
+	Middle typing \fbox{$\typingHC{m}{T}{T}$}
 	\begin{gather*}
 	\inference{}{\typingHC{\POOunit}{\POOunit}{\POOunit}}
 	\quad
@@ -1316,7 +1316,7 @@ Three observations on this definition leads to hypercoercion:
 	}
 		\end{gather*}
 		
-		Tail typing \fbox{$ \typingHC{t}{P}{T} $}
+		Tail typing \fbox{$\typingHC{t}{P}{T}$}
 		\begin{gather*}
 		\inference{}{\typingHC{\epsilon}{P}{P}} \quad
 		\inference{}{\typingHC{!}{I}{\TOOdyn}} \quad
@@ -1331,21 +1331,21 @@ This section presents our first contribution, the definition of hypercoercion.
 The design of hypercoercion is motivated by observations on coercion normal 
 forms: a normal coercion has at most three parts; projections are always at the 
 beginning; injections and failures are always at the end. Hypercoercions have 
-similar shape: a hypercion either is $ \hyperCoercionI $, the identity cast for 
-$ \TOOdyn $, or contains three parts, where the first part is either a 
+similar shape: a hypercion either is $\hyperCoercionI$, the identity cast for 
+$\TOOdyn$, or contains three parts, where the first part is either a 
 projection or a no-op while last part is either an injection, a failure, or a 
 no-op.
 
 \figref{fig:hypercoercion} defines the syntax of hypercoercions. Types, 
 pre-types, and blame labels are as before.
 
-Let $ c $ range over hypercoercions. A hypercoercion either is the identity 
+Let $c$ range over hypercoercions. A hypercoercion either is the identity 
 cast between the dynamic types, or includes a head, a middle, and a tail. 
-Let $ h $ range over heads. A head is either a no-op, or a projection.
-Let $ m $ range over middles. There is a one-to-one 
+Let $h$ range over heads. A head is either a no-op, or a projection.
+Let $m$ range over middles. There is a one-to-one 
 correspondence between middles and type constructors. 
-We generalize shallow-consistency to middles $ m \smile m $ in the obvious way.
-Let $ t $ range over tails. A tail is either a no-op, an injection, or a 
+We generalize shallow-consistency to middles $m \smile m$ in the obvious way.
+Let $t$ range over tails. A tail is either a no-op, an injection, or a 
 failure.
 
 Subsection~\ref{sec:ld-hc} defines functions that construct \lazyD\ 
@@ -1361,11 +1361,11 @@ Section~\ref{sec:framework}.
 \begin{figure}
 	\[
 	\begin{array}{rclr}
-	\stxrule{\ell}{Maybe $ l $}{\epsilon \mid l}
+	\stxrule{\ell}{Maybe$l$}{\epsilon \mid l}
 	\end{array}
 	\]
 	
-	Composition of hypercoercions \fbox{$ c \fatsemi^\ell c = c $}
+	Composition of hypercoercions \fbox{$c \fatsemi^\ell c = c$}
 	\[ 
 	\begin{array}{rclclr}
 	
@@ -1495,7 +1495,7 @@ Section~\ref{sec:framework}.
 	\end{array}
 	\]
 	
-	Composition of middles \fbox{$ m \fatsemi^\ell m = m $}
+	Composition of middles \fbox{$m \fatsemi^\ell m = m$}
 	\[ 
 	\begin{array}{rclclr}
 	\comprule{\POOunit}{\POOunit}{
@@ -1513,7 +1513,7 @@ Section~\ref{sec:framework}.
 	\end{array}
 	\]
 	
-	\fbox{$ seq(c,c) = c $}
+	\fbox{$seq(c,c) = c$}
 	\[
 	\begin{array}{rclr}
 	\funrule{seq(c_1,c_2)}{
@@ -1522,7 +1522,7 @@ Section~\ref{sec:framework}.
 	\end{array}
 	\]
 	
-	\fbox{$ id( P ) = m $}
+	\fbox{$id( P ) = m$}
 	\[
 	\begin{array}{rclr}
 	\funrule{id(\POOunit)}{\POOunit}{}
@@ -1538,7 +1538,7 @@ Section~\ref{sec:framework}.
 	\end{array}
 	\]
 	
-	\fbox{$ id( T ) = c $}
+	\fbox{$id( T ) = c$}
 	\[
 	\begin{array}{rclr}
 	\funrule{id(\star)}{
@@ -1550,7 +1550,7 @@ Section~\ref{sec:framework}.
 	\end{array}
 	\]
 	
-	\fbox{$ cast(T,l,T) = c$}
+	\fbox{$cast(T,l,T) = c$}
 	\[
 	\begin{array}{rclr}
 	\funrule{cast(T_1,l,T_2)}{
@@ -1563,46 +1563,45 @@ Section~\ref{sec:framework}.
 \end{figure}
 
 \figref{fig:HC-D} defines functions that construct \lazyD{} hypercoercions. We 
-expect language implementations to call $ id(T) $, which constructs an 
-identity, $ seq(c,c) $, which composes two hypercoercions, and $ 
-cast(T_1,l,T_2) $, which translate a cast to a hypercoercion. Other functions 
+expect language implementations to call $id(T)$, which constructs an 
+identity, $seq(c,c)$, which composes two hypercoercions, and $
+cast(T_1,l,T_2)$, which translate a cast to a hypercoercion. Other functions 
 in the figure are their helpers.
 
-Let $ \ell $ range over $ \epsilon $ and labels.
-$ c_1 \fatsemi^\ell c_2 $ composes hypercoercion $ c_1 $ and hypercoercion $ 
-c_2 $.
-When both $ c_1 $ and $ c_2 $ are $ \hyperCoercionI $, their 
-composition is also $ \hyperCoercionI $.
-When $ c_1 $ is $ \hyperCoercionI $ but $ c_2 $ is not, the head of the 
+Let $\ell$ range over $\epsilon$ and labels.
+$ c_1 \fatsemi^\ell c_2$ composes hypercoercion $c_1$ and hypercoercion $c_2$.
+When both $c_1$ and $c_2$ are $\hyperCoercionI$, their 
+composition is also $\hyperCoercionI$.
+When $c_1$ is $\hyperCoercionI$ but $c_2$ is not, the head of the 
 composition must be a projection. In this 
-case, if the head of $ c_2 $ is a projection, we reuse it. Otherwise, we need a 
-label to build the projection. Since the head of $ c_2 $ is $ \epsilon $, its 
-source type must be a pretype. Thus we know $ \ell $ must be a label and put it 
+case, if the head of $c_2$ is a projection, we reuse it. Otherwise, we need a 
+label to build the projection. Since the head of $c_2$ is $\epsilon$, its 
+source type must be a pretype. Thus we know $\ell$ must be a label and put it 
 in the projection. 
-When $ c_1 $ ends with a failure, the composition is $ c_1 $ itself. In all 
-remaining cases, we shall assume that $ c_1 $ does not end with 
+When $c_1$ ends with a failure, the composition is $c_1$ itself. In all 
+remaining cases, we shall assume that $c_1$ does not end with 
 a failure.
-When $ m_1 $ and $ m_2 $ have different top constructors ($ \neg\;m_1 \smile 
-m_2 $), proceeding to $ m_2 $ can not make sense. So we end the composition 
-with a failure. To do so we need a label. When $ c_2 $ starts with a 
+When $m_1$ and $m_2$ have different top constructors ($\neg\;m_1 \smile 
+m_2$), proceeding to $m_2$ can not make sense. So we end the composition 
+with a failure. To do so we need a label. When $c_2$ starts with a 
 projection, we shall accuse it of casting a value to a shallowly inconsistent 
-type. When $ c_2 $ starts with a no-op, $ \ell $ must be a label. And we accuse 
+type. When $c_2$ starts with a no-op, $\ell$ must be a label. And we accuse 
 it of composing shallowly inconsistent hypercoercions. The last two cases 
-compose $ m_1 $ and $ m_2 $ with a helper function $ m \fatsemi^\ell m $, which 
-assumes its inputs have the same top constructor. The definition of $ m 
-\fatsemi^\ell m $ is straightforward. Going back to the last two cases of $ c_1 
-\fatsemi^\ell c_2 $. When $ c_2 $ starts with a projection, we have no clue 
-whether the target type of $ m_1 $ is the same as the source of $ m_2 $, 
-although we know they are shallowly consistent. So we give the $ l $ in the 
-projection to $ m \fatsemi^\ell m $. When $ c_2 $ starts with a no-op, we reuse 
-the $ \ell $.
+compose $m_1$ and $m_2$ with a helper function $m \fatsemi^\ell m$, which 
+assumes its inputs have the same top constructor. The definition of $m 
+\fatsemi^\ell m$ is straightforward. Going back to the last two cases of $c_1 
+\fatsemi^\ell c_2$. When $c_2$ starts with a projection, we have no clue 
+whether the target type of $m_1$ is the same as the source of $m_2$, 
+although we know they are shallowly consistent. So we give the $l$ in the 
+projection to $m \fatsemi^\ell m$. When $c_2$ starts with a no-op, we reuse 
+the $\ell$.
 
-$ seq(c_1,c_2) $ requires that the target type of $ c_1 $ is the same as the 
-source of $ c_2 $. $ c \fatsemi^\ell c $ does the job for it.
-$ id(T) $ constructs an identity coercion of $ T $ with the help of $ id(P) $. 
+$seq(c_1,c_2)$ requires that the target type of $c_1$ is the same as the 
+source of $c_2$. $c \fatsemi^\ell c$ does the job for it.
+$id(T)$ constructs an identity coercion of $T$ with the help of $id(P)$. 
 Their definitions are straightforward.
-$ cast(T_1,l,T_2) $ constructs a coercion from a source type, a label, and a 
-target type. $ c \fatsemi^\ell c $ does the most job.
+$cast(T_1,l,T_2)$ constructs a coercion from a source type, a label, and a 
+target type. $c \fatsemi^\ell c$ does the most job.
 
 \begin{proposition}[\lazyD\ hypercoercion is a monoid]
 	\label{thm:hc-monoid}
@@ -1621,7 +1620,7 @@ target type. $ c \fatsemi^\ell c $ does the most job.
 \end{proof}
 
 \begin{proposition}[]
-	For all $ T $ and $ l $, $ cast(T,l,T) = id(T) $
+	For all $T$ and $l$, $cast(T,l,T) = id(T) $
 \end{proposition}
 \begin{proof}
 	By induction on T.
@@ -1633,7 +1632,7 @@ target type. $ c \fatsemi^\ell c $ does the most job.
 Figure~\ref{fig:HC-UD}
 
 \begin{figure}
-  Composition of hypercoercions \fbox{$ c \fatsemi c = c $}
+  Composition of hypercoercions \fbox{$c \fatsemi c = c$}
   \[
   \begin{array}{rclclr}
   c &\fatsemi& \hyperCoercionI{} &=& c\\
@@ -1676,7 +1675,7 @@ Figure~\ref{fig:HC-UD}
   \end{array}
   \]
   
-  \fbox{$ id( P ) = m $}
+  \fbox{$id( P ) = m$}
   \[
   \begin{array}{rclr}
     \funrule{id(\POOunit)}{\POOunit}{}
@@ -1692,7 +1691,7 @@ Figure~\ref{fig:HC-UD}
   \end{array}
   \]
   
-  \fbox{$ id( T ) = c $}
+  \fbox{$id( T ) = c$}
   \[
   \begin{array}{rclr}
     \funrule{id(\star)}{
@@ -1714,7 +1713,7 @@ Figure~\ref{fig:HC-UD-cast}
 
 
 \begin{figure}
-  \fbox{$ \mathit{castToDyn}(P,l) = c$}
+  \fbox{$\mathit{castToDyn}(P,l) = c$}
   \[
   \begin{array}{rclr}
     \mathit{castToDyn}(\star,l) &=& \hyperCoercionI{} \\
@@ -1723,7 +1722,7 @@ Figure~\ref{fig:HC-UD-cast}
     && \text{where } m = \mathit{castToInj}(P,l,\mathit{ground}(P)) 
   \end{array}
   \]
-  \fbox{$ \mathit{castFromDyn}(P,l) = c$}
+  \fbox{$\mathit{castFromDyn}(P,l) = c$}
   \[
   \begin{array}{rclr}
     \mathit{castFromDyn}(\star,l) &=& \hyperCoercionI{} \\
@@ -1731,7 +1730,7 @@ Figure~\ref{fig:HC-UD-cast}
     && \text{where } m = \mathit{castFromInj}(\mathit{ground}(P),l,P) 
   \end{array}
   \]
-  \fbox{$ \mathit{castToInj}(P,l,I) = m$}
+  \fbox{$\mathit{castToInj}(P,l,I) = m$}
   \[
   \begin{array}{rclr}
     \mathit{castToInj}(\POOunit,l,\POOunit) &=& \POOunit \\
@@ -1744,7 +1743,7 @@ Figure~\ref{fig:HC-UD-cast}
   \end{array}
   \]
   
-  \fbox{$ \mathit{castFromInj}(I,l,P) = m$}
+  \fbox{$\mathit{castFromInj}(I,l,P) = m$}
   \[
   \begin{array}{rclr}
     \mathit{castFromInj}(\POOunit,l,\POOunit) &=& \POOunit \\
@@ -1758,7 +1757,7 @@ Figure~\ref{fig:HC-UD-cast}
   \]
 
   
-  \fbox{$ cast(T,l,T) = c$}
+  \fbox{$cast(T,l,T) = c$}
   \[
   \begin{array}{rclr}
     \funrule{cast(\star,l,T_2)}{ castFromDyn(T_2, l) }{} 
@@ -1828,12 +1827,12 @@ by an abstract data type, named Cast ADT, that we define shortly.
 
 
 
-The framework is a theorem saying that for all cast representation $ C
-$, if $ C $ satisfies a collection of properties, then it would
+The framework is a theorem saying that for all cast representation $C
+$, if $C$ satisfies a collection of properties, then it would
 respect the Lazy D semantics of cast calculi. We are working on a
 similar theorem for \lazyUD{}.
 
-%then instantiating our parameterized space-efficient interpreter with $ C $ 
+%then instantiating our parameterized space-efficient interpreter with$C$
 %gives an interpter that is extensionally equal to the standard interpreter for 
 %\lazyD\ cast calculus. 
 
@@ -1845,21 +1844,21 @@ allows the implementation to apply casts onto values.
 
 \begin{definition}[Cast Abstract Data Type (Cast ADT)]
 	\label{def:cast-rep}
-	A cast abstract data type is a set $Cast $, which is indexed by two types, 
+	A cast abstract data type is a set $Cast$, which is indexed by two types, 
 	with four operators:
 	\begin{description}
-		\item[$id(T) $] constructs an cast from a type
+		\item[$id(T)$] constructs an cast from a type
 %		, where $c : T 
 %		\Longrightarrow T $
-		\item[$seq(c_1,c_2) $] composes two casts
+		\item[$seq(c_1,c_2)$] composes two casts
 %		, where $
-%		\judgeTypeFT{c_1}{T_1}{T_2} $, $\judgeTypeFT{c_2}{T_2}{T_3} $, and $
+%		\judgeTypeFT{c_1}{T_1}{T_2}$, $\judgeTypeFT{c_2}{T_2}{T_3}$, and $
 %		\judgeTypeFT{c}{T_1}{T_3} $
-		\item[$cast(T_1,l,T_2) $] constructs a cast from $T_1$ to $T_2$
-		\item[$ applyCast(v,c)=r $] applies a cast onto a value
+		\item[$cast(T_1,l,T_2)$] constructs a cast from $T_1$ to $T_2$
+		\item[$ applyCast(v,c)=r$] applies a cast onto a value
 	\end{description}
-	We denote by $c : T_1 \Longrightarrow T_2 $ to mean $ c $ is in $ Cast \; 
-	T_1 \; T_2 $. And we say ``$ c $ is from $ T_1 $ to $ T_2 $''.
+	We denote by $c : T_1 \Longrightarrow T_2$ to mean $c$ is in $Cast \; 
+	T_1 \; T_2$. And we say ``$c$ is from $T_1$ to $T_2$''.
 \end{definition}
 
 Some instances of Cast ADT (or "some Cast" for short) are also 
@@ -1882,9 +1881,9 @@ our framework.
 To use our framework, users needs to prove that their cast representation
 implements Lazy D Cast ADT (Definition~\ref{def:surely-lazyd}), a subset of 
 Cast ADT. Property (1) 
-states that $ id(T) $ acts like the identity function. Property (2) states 
-that $ seq(c,c) $ acts like a sequence of casts. Properties (3) through 
-(11) state that $ cast(T_1,l,T_2) $ act like the Lazy D $ applyCast $ 
+states that $id(T)$acts like the identity function. Property (2) states 
+that $seq(c,c)$acts like a sequence of casts. Properties (3) through 
+(11) state that $cast(T_1,l,T_2)$act like the Lazy D$applyCast$
 defined in Fig.~\ref{fig:applyCast-D-C}.
 
 \todoKC{define values before Lazy D Cast ADT}
@@ -1893,12 +1892,12 @@ defined in Fig.~\ref{fig:applyCast-D-C}.
 	\label{def:surely-lazyd}
 	A  Cast is a Lazy D Cast if:
 	\begin{enumerate}
-		\item If $ v : T $, then $ applyCast(v,id(T)) = \mathtt{succ} \; v $
-		\item If $ \judgeType{v}{T_1} $,
-		$ \judgeTypeFT{c_1}{T_1}{T_2} $, and
-		$ \judgeTypeFT{c_2}{T_2}{T_3} $,\\
-		then $ applyCast(v,seq(c_1,c_2)) = 
-		applyCast(v,c_1) >>= \lambda v.applyCast(v,c_2) $ \\
+		\item if $v : T$, then$applyCast(v,id(T)) = \mathtt{succ} \; v $
+		\item if $\judgeType{v}{T_1}$,
+		$ \judgeTypeFT{c_1}{T_1}{T_2}$, and
+		$ \judgeTypeFT{c_2}{T_2}{T_3}$,\\
+		then$applyCast(v,seq(c_1,c_2)) = 
+		applyCast(v,c_1) >>= \lambda v.applyCast(v,c_2)$\\
 		where 
 		\[
 		\begin{array}{rcl}
@@ -1906,40 +1905,40 @@ defined in Fig.~\ref{fig:applyCast-D-C}.
 		\rOOfail{l} >>= f & = & \rOOfail{l}
 		\end{array}
 		\]
-		\item If $ v : T_1 $ and $ \neg T_1 \smile T_2 $,
-		then $ applyCast(v,cast(T_1, l, T_2)) = \rOOfail{l} $
-		\item If $ v : \star $, 
-		then $ applyCast(v,cast(\TOOdyn,l,\TOOdyn)) = \rOOsucc{v} $
-		\item If $ v : P_1 $,
-		then $ applyCast(\hcvOOinj{P_1}{v},cast(\star,l,P_2)) 
+		\item if $v : T_1$ and $\neg T_1 \smile T_2$,
+		then$applyCast(v,cast(T_1, l, T_2)) = \rOOfail{l} $
+		\item if $v : \star$, 
+		then$applyCast(v,cast(\TOOdyn,l,\TOOdyn)) = \rOOsucc{v} $
+		\item if $v : P_1$,
+		then$applyCast(\hcvOOinj{P_1}{v},cast(\star,l,P_2)) 
 		= applyCast(v,cast(P_1,l,P_2)) $
-		\item If $ v : P $,
-		then $ applyCast(v,cast(P,l,\star)) = \rOOsucc{(\hcvOOinj{P}{v})} $
-		\item If $ v : \POOunit $,
-		then $ applyCast(v,cast(\POOunit,l,\POOunit)) = \rOOsucc{v} $
-		\item If $ (\hcvOOfun{c_1}{\rho}{x}{e}{c_2}) : \POOfun{T_1}{T_2} $,
+		\item if $v : P$,
+		then$applyCast(v,cast(P,l,\star)) = \rOOsucc{(\hcvOOinj{P}{v})} $
+		\item if $v : \POOunit$,
+		then$applyCast(v,cast(\POOunit,l,\POOunit)) = \rOOsucc{v} $
+		\item if $(\hcvOOfun{c_1}{\rho}{x}{e}{c_2}) : \POOfun{T_1}{T_2}$,
 		then\\
 		$ 
 		applyCast(\hcvOOfun{c_1}{\rho}{x}{e}{c_2}, 
 		cast(\POOfun{T_1}{T_2},l,\POOfun{T_3}{T_4})) \\
 		= 
 		\rOOsucc{(\hcvOOfun{seq(cast(T_3,l,T_1),c_1)}{\rho}{x}{b}{seq(c_2,cast(T_2,l,T_4))})}$
-		\item If $ (\hcvOOcons{v_1}{c_1}{v_2}{c_2}) : \POOprod{T_1}{T_2} $,
+		\item if $(\hcvOOcons{v_1}{c_1}{v_2}{c_2}) : \POOprod{T_1}{T_2}$,
 		then \\
 		$ 
 		applyCast(\hcvOOcons{v_1}{c_1}{v_2}{c_2},cast(\POOprod{T_1}{T_2},l,T_3 
 		\times 
-		T_4)) $ \\
+		T_4))$\\
 		$ = 
 		\rOOsucc{(\hcvOOcons{v_1}{seq(c_1,cast(T_1,l,T_3))}{v_2}{seq(c_2,cast(T_2,l,T_4))})}
 		$ 
-		\item If $ (\hcvOOinl{v}{c}) : \POOsum{T_1}{T_2} $ ,
+		\item if $(\hcvOOinl{v}{c}) : \POOsum{T_1}{T_2}$,
 		then \\
 		$ 
 		applyCast(\hcvOOinl{v}{c},cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}))
 		= \rOOsucc{(\hcvOOinl{v}{seq(c,cast(T_1,l,T_3))})} $
-		\item If $ (\hcvOOinr{v}{c}) : \POOsum{T_1}{T_2} $ ,
-		then \\ $ 
+		\item if $(\hcvOOinr{v}{c}) : \POOsum{T_1}{T_2}$,
+		then \\$
 		applyCast(\hcvOOinr{v}{c},cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}))
 		= \rOOsucc{(\hcvOOinr{v}{seq(c,cast(T_2,l,T_4))})} $
 	\end{enumerate}
@@ -2006,7 +2005,7 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	\end{array}
 	\]
 	
-	Build continuation \fbox{$ cont(k) = \kappa $}
+	Build continuation \fbox{$cont(k) = \kappa$}
 	\[
 	\begin{array}{rclc}
 	\funrule{cont(k)}{\langle id(T_1) \rangle k}{
@@ -2014,14 +2013,14 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	\end{array}
 	\]
 	
-	Extend continuation \fbox{$ ext(c,\kappa) = \kappa $}
+	Extend continuation \fbox{$ext(c,\kappa) = \kappa$}
 	\[
 	\begin{array}{rclc}
 	\funrule{ext(c_1,\langle c_2 \rangle k)}{\langle seq(c_1,c_2) \rangle k}{}
 	\end{array}
 	\]
 	
-	Reduction \fbox{$ \judgeSreduce{C}{s}{s} $}
+	Reduction \fbox{$\judgeSreduce{C}{s}{s}$}
 	\[
 	\begin{array}{rclr}
 	\hiredruleS{
@@ -2144,7 +2143,7 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	\]
 	
 	Apply continuation
-	\fbox{$ continue(k,v) = s $}
+	\fbox{$continue(k,v) = s$}
 	\[
 	\begin{array}{rclr}
 	
@@ -2205,10 +2204,10 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	
 	\end{array}\]
 	
-%	Transitive closure of reduction \fbox{$ s \longrightarrow_{S(C)}^{*} s $}
+%	Transitive closure of reduction \fbox{$s \longrightarrow_{S(C)}^{*} s$}
 %	\[\dots\]
 	
-%	Evaluation \fbox{$ \judgeSeval{C}{e}{o} $}
+%	Evaluation \fbox{$\judgeSeval{C}{e}{o}$}
 %	\[
 %	\inference{
 %		\judgeSreduceTrans{C}{
@@ -2221,24 +2220,24 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 %	}
 %	\]
 	
-	\caption{Space-efficient CEK machine $ \mathcal{S}(C) $}
+	\caption{Space-efficient CEK machine$\mathcal{S}(C)$}
 	\label{fig:machine-cekcc}
 \end{figure}
 \figref{fig:machine-cekcc} defines \effCEK{C}, a space-efficient
 CEK machine.  This machine is similar to \ineffCEK{}.
 The keys differences are in values and continuations.
 
-Let $ v $ range over value. 
+Let $v$ range over value. 
 In \ineffCEK\, we have one value constructor for all casted value.
 In \effCEK{C}, however, we do not have this generic value constructor, 
-instead we push those casts into the ordinary values. For instance, $ 
-(\vOOcons{v_1}{v_2}) $ corresponds to $ 
-(\hcvOOcons{v_1'}{id(T_1)}{v_2'}{id(T_2)}) $. To construct values of the 
-dynamic type, we use $ (\hcvOOinj{P}{v}) $.
+instead we push those casts into the ordinary values. For 
+instance, $(\vOOcons{v_1}{v_2})$ corresponds to 
+$(\hcvOOcons{v_1'}{id(T_1)}{v_2'}{id(T_2)})$. To construct values of the 
+dynamic type, we use $(\hcvOOinj{P}{v})$.
 
-Cast results ($ r $) and machine states ($ s $) are as before. 
+Cast results ($r$) and machine states ($s$) are as before. 
 
-Let $ \kappa $ range over continuations and let $ k $ range over 
+Let $\kappa$ range over continuations and Let $k$ range over 
 pre-continuations. 
 A continuation is now a pre-continuation prefixed with a cast.
 Pre-continuation are like the continuations in \ineffCEK, but there is no 
@@ -2248,39 +2247,38 @@ In \effCEK{C}, however, every continuation has exactly one cast at the top.
 Continuations in \ineffCEK\ that have no casts at the top correspond to 
 continuations in \effCEK{C}\ whose casts are identity.
 And continuations in \ineffCEK\ that have many casts at the top correspond to 
-continuations in \effCEK{C}\ where those casts are composed by $ 
-seq(c,c) $.
+continuations in \effCEK{C}\ where those casts are composed by $seq(c,c)$.
 
 \todoKC{describe transition rules}
 We list a fraction of reduction rules due to space limitation.
 \todo[inline]{Don't omit reduction rules, instead put some in the appendix. -JS}
 When values are constructed, their hypercoercion parts are filled with outputs 
-of $ id $. For instance, when a function value is constructed, its first part 
-and last part are initialized to $ id(T_1) $ and $ id(T_2) $ respectively.
+of $id$. For instance, when a function value is constructed, its first part 
+and last part are initialized to $id(T_1)$ and $id(T_2)$respectively.
 When evaluating a cast expression, the current continuation is extended with a 
-hypercoercion constructed by $ cast $. $ ext $ composes the new hypercoercion 
+hypercoercion constructed by $cast$. $ext$ composes the new hypercoercion 
 with the hypercoercion on the top of the continuation.
 When evaluating a compound expression, the machine firstly construct the new 
 pre-continuation, then turn it to a continuation by adding an identity 
 hypercoercion at the top. For instance, when evaluating a \texttt{cons} 
-expression, the machine firstly construct $ \hckOOconsI{e_2}{\rho}{\kappa} $, 
-the new pre-continuation, then call $ cont $, which adds an identity cast to 
+expression, the machine firstly construct $\hckOOconsI{e_2}{\rho}{\kappa}$, 
+the new pre-continuation, then call $cont$, which adds an identity cast to 
 form a continuation. 
 When a function call happens, the machine firstly cast the operand. If the 
 casting succeeds, the machine then evaluate the body in the extended 
 environment and the extended continuation. If the casting fails, the machine 
 then halts with the blame label.
 
-Transitive closure of reduction ($ \judgeSreduceTrans{C}{s}{s} $) and 
-evaluation ($ \judgeSeval{C}{e}{o} $) are standard. Value typing ($ 
-\judgeType{v}{T} $) is straightforward.
+Transitive closure of reduction ($\judgeSreduceTrans{C}{s}{s}$) and 
+evaluation ($\judgeSeval{C}{e}{o}$) are standard. Value typing 
+($\judgeType{v}{T}$) is straightforward.
 
 \subsection{\lazyD\ Cast ADTs Respect \ineffCEKD\ if They are 
 Monoids}
 \label{secc:framework:monoid-correct}
 
-In this subsection, we prove that if a instance of Cast ADT $ C $ is Lazy D and 
-is a monoid, then $ eval_\mathcal{D} = eval_{\mathcal{S}(C)} $. We proof this 
+In this subsection, we prove that if a instance of Cast ADT $C$ is Lazy D and 
+is a monoid, then $eval_\mathcal{D} = eval_{\mathcal{S}(C)}$. We proof this 
 theorem with a weak bisimulation between \ineffCEKD\ and 
 \effCEK{C}. 
 
@@ -2318,8 +2316,8 @@ example: \begin{gather*}
 }
 \end{gather*}
 
-And the relation between continuations is defined in terms of $ cont(k) $ and $ 
-ext(c,k) $: \begin{gather*}
+And the relation between continuations is defined in terms of $cont(k)$ and 
+$ext(c,k) $: \begin{gather*}
 \inference{
 	k \approx \kappa
 }{
@@ -2386,38 +2384,38 @@ the cast into the value constructors, except injections. For examples:
 \end{gather*}
 
 Before proving the weak bisimulation between \effCEK{C} and \ineffCEKD, we 
-introduce one more definition: $ s_1 \approx^{*} s_2 $ if and only if there 
-exists $ s_2' \in \text{\ineffCEKD} $ 
-such that $ \judgeCreduceTrans{s_2}{s_2'}$ and $ s_1 \approx s_2' $.
+introduce one more definition: $s_1 \approx^{*} s_2$ if and only if there 
+exists $s_2' \in \text{\ineffCEKD}$
+such that $\judgeCreduceTrans{s_2}{s_2'}$ and $s_1 \approx s_2'$.
 
 \todo[inline]{Standardize theorem statement -KC}
 \begin{lemma}[Weak Bisimulation between \effCEK{C} and \ineffCEKD]
 	\label{thm:surely-monoidic-reduce}
-	For all instance of Cast ADT $ C $, 
-	if $ C $ is \lazyD{} and is a monoid, 
-	$ s_{1}, s_{1}' \in \text{\effCEK{C}} $,
-	$ s_{2}, s_{2}' \in \text{\ineffCEKD} $,
-	$ s_{1} \approx s_{2} $,
-	$ \judgeSreduce{C}{s_{1}}{s_{1}'} $, and
-	$ \judgeDreduce{s_{2}}{s_{2}'} $, then
-%	then there exist $ s_2'' \in \text{\ineffCEKD} $ such that
+	For all instance of Cast ADT$C$, 
+	if $C$ is \lazyD{} and is a monoid, 
+	$ s_{1}, s_{1}' \in \text{\effCEK{C}}$,
+	$ s_{2}, s_{2}' \in \text{\ineffCEKD}$,
+	$ s_{1} \approx s_{2}$,
+	$ \judgeSreduce{C}{s_{1}}{s_{1}'}$, and
+	$ \judgeDreduce{s_{2}}{s_{2}'}$, then
+%	then there exist$s_2'' \in \text{\ineffCEKD}$such that
 	\[ \exists s_2'' \in \text{\ineffCEKD}: \;
 	\judgeDreduceTrans{s_{2}'}{s_{2}''} \;\text{and}\; s_1' \approx s_2'' \]
 %	\begin{enumerate}
-%		\item If $ \judgeDreduce{s_1}{s_3} $,
+%		\item if $\judgeDreduce{s_1}{s_3}$,
 %		then
-%		there exist $ s_5 \in \text{\ineffCEKD} $, $ s_4 \in \mathcal{S}(C) $,
+%		there exist$s_5 \in \text{\ineffCEKD}$, $s_4 \in \mathcal{S}(C)$,
 %		such that \begin{itemize}
-%			\item $ s_5 \approx s_4 $, and
-%			\item $ \judgeSreduce{C}{s_2}{s_4} $,
-%			\item $ \judgeDreduceTrans{s_3}{s_5} $
+%			\item$s_5 \approx s_4$, and
+%			\item$\judgeSreduce{C}{s_2}{s_4}$,
+%			\item$\judgeDreduceTrans{s_3}{s_5} $
 %		\end{itemize}
-%		\item If $ \judgeSreduce{C}{s_2}{s_4} $,
+%		\item if $\judgeSreduce{C}{s_2}{s_4}$,
 %		then
-%		there exist $ s_3 \in \mathcal{C} $,
+%		there exist$s_3 \in \mathcal{C}$,
 %		such that \begin{itemize}
-%			\item $ s_3 \approx s_4 $
-%			\item $ \judgeDreduceTrans{s_1}{s_3} $
+%			\item$s_3 \approx s_4 $
+%			\item$\judgeDreduceTrans{s_1}{s_3} $
 %		\end{itemize}
 %	\end{enumerate}
 
@@ -2441,14 +2439,14 @@ s_{2} &
 -KC}
 \begin{proposition}[Correctness of \effCEK{C}]
 	\label{thm:surely-monoidic-eval}
-	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is a 
+	if $\judgetype{\emptyset}{e}{T}$ and $o : T$ and $C$ is a 
 	\lazyD{} Cast ADT and a monoid,
 	\[
 	\text{\evalEqv{\effCEK{C}}{\ineffCEKD}}
 	\]
 \end{proposition}
 \begin{proof}Proving left implies right is trivial.
-To prove $ \judgeDeval{e}{o} $ implies $ \judgeSeval{C}{e}{o} $, 
+To prove $\judgeDeval{e}{o}$ implies $\judgeSeval{C}{e}{o}$, 
 we firstly take one steps in \effCEK{C}, and catch it up in \ineffCEKD\ by 
 taking one or more steps in \ineffCEKD. As we just took a positive number of 
 steps, we are closer to the halting state.
@@ -2457,9 +2455,9 @@ steps, we are closer to the halting state.
 \subsection{\lazyD\ Cast ADT Respect \ineffCEKD}
 \label{secc:framework:all-correct}
 
-In this subsection, we prove that for all $ C $, if $ C $ is a Lazy D Cast ADT, 
+In this subsection, we prove that for all $C$, if $C$ is a Lazy D Cast ADT, 
 then \evalEqv{\ineffCEKD}{\effCEK{C}}. We first 
-prove that all $ S(C) $ where $ C $ is a Lazy D Cast ADT are equivalent, then 
+prove that all $S(C)$ where $C$ is a Lazy D Cast ADT are equivalent, then 
 connect this theorem to Lemma~\ref{thm:surely-monoidic-eval}.
 
 We prove the equivalence among \effCEK{S(C)} with strong bisimulation. This 
@@ -2485,15 +2483,15 @@ except the relaton for casts, which is by cast constructors:
 \end{gather*}
 
 \todo[inline]{Standardize theorem statement -KC}
-\begin{lemma}[Strong Bisimulation among $ \mathcal{S}(\cdot) $]
+\begin{lemma}[Strong Bisimulation among $\mathcal{S}(\cdot)$]
 	\label{thm:CEKS-bisim}
 	If 
-	$ C_1 $ and $ C_2 $ are instances of Lazy D Cast ADT,
-	$ s_1, s_1' \in S(C_1) $ and $ s_2,s_2' \in S(C_2) $,
-	$ s_1 \approx s_2 $,
-	$ \judgeSreduce{C_1}{s_1}{s_1'} $, and
-	$ \judgeSreduce{C_2}{s_2}{s_2'} $, then 
-	$ s_1' \approx s_2' $
+	$C_1$ and $C_2$ are instances of Lazy D Cast ADT,
+	$s_1, s_1' \in S(C_1)$ and $s_2,s_2' \in S(C_2)$,
+	$s_1 \approx s_2$,
+	$\judgeSreduce{C_1}{s_1}{s_1'}$, and
+	$\judgeSreduce{C_2}{s_2}{s_2'}$, then 
+	$s_1' \approx s_2'$
 	
 	Or diagrammatically, 
 	\[\begin{array}{clc}
@@ -2508,13 +2506,13 @@ except the relaton for casts, which is by cast constructors:
 	This proof is effectively a duplication of the transition rule of 
 	\effCEK{S(C)}.
 	The key ideas of this proof are undoing sequencing with the property (2) of 
-	Lazy D Cast ADT, and handling all possibly uses of $ 
-	cast(T,l,T) $ with property (3)-(11).
+	Lazy D Cast ADT, and handling all possibly uses of $
+	cast(T,l,T)$ with property (3)-(11).
 \end{proof}
 
 \begin{proposition}[Equivalence of \lazyD{} Cast ADT]
 	\label{thm:surely-lazyD-eqv}
-	If $ \judgetype{\emptyset}{e}{T} $, $ o : T $, and $ C_1 $ and $ C_2 $ 
+	if $\judgetype{\emptyset}{e}{T}$, $o : T$, and $C_1$ and $C_2$
 	are \lazyD\ Cast ADTs,
 	\[
 	eval_{S(C_1)} = eval_{S(C_2)}
@@ -2526,7 +2524,7 @@ except the relaton for casts, which is by cast constructors:
 
 \begin{theorem}[\lazyD\ Cast ADT Respects \ineffCEKD]
 	\label{thm:surely-lazyD-correct}
-	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ and $ C $ is a 
+	if $\judgetype{\emptyset}{e}{T}$ and $o : T$ and $C$ is a 
 	\lazyD{} Cast ADT.
 	\[
 	\text{\evalEqv{\ineffCEKD}{\effCEK{C}}}
@@ -2536,8 +2534,8 @@ except the relaton for casts, which is by cast constructors:
 	If we have a Lazy D Cast ADT and it is a monoid, this 
 	proof is immediately from Lemma~\ref{thm:surely-monoidic-eval} and 
 	Proposition~\ref{thm:surely-lazyD-eqv}. One such representation is to 
-	represent casts as a list of triples of type, label, and type, where $ 
-	id(T) $ is the empty list and $ seq(c,c) $ is the list append. Another such 
+	represent casts as a list of triples of type, label, and type, where 
+	$id(T)$ is the empty list and $seq(c,c)$ is the list append. Another such 
 	representation is the \lazyD\ hypercoercion!
 \end{proof}
 
@@ -2546,23 +2544,23 @@ except the relaton for casts, which is by cast constructors:
 \label{sec:hypercoercion-correctness}
 
 In this section we prove \lazyD\ hypercoercion is 
-correct. First we define $ applyCast(v,c) $ to make it an instance of Cast ADT, 
+correct. First we define$applyCast(v,c)$ to make it an instance of Cast ADT, 
 then prove that it is also Lazy D, and finally apply 
 Theorem~\ref{thm:surely-lazyD-correct} to finish the proof.
 
-\figref{hc-applyCast} defines $ applyCast(v,c) $ for \lazyD\ hypercoercion. 
+\figref{hc-applyCast} defines$applyCast(v,c)$for \lazyD\ hypercoercion. 
 Applying the identity cast for the 
 dynamic type succeeds immediately. When applying a compound cast, we firstly 
-apply the middle, then apply the tail. We denote by $ r \; >>= \; f $ to mean 
-that if $ r $ is $ \rOOsucc{v} $, the result is $ f(v) $, otherwise the result 
+apply the middle, then apply the tail. We denote by $r \; >>= \; f$ to mean 
+that if $r$ is $\rOOsucc{v}$, the result is $f(v)$, otherwise the result 
 is the failure.
-$ applyMiddle(v,\ell,m) $ and $ applyTail(v,t) $ are straightforward.
-In the definition of $ applyMiddle(v,\ell,m) $, we generalize 
-shallow-consistency to compare middles and values ($ v \smile m $) in the 
+$ applyMiddle(v,\ell,m)$ and $applyTail(v,t)$ are straightforward.
+In the definition of $applyMiddle(v,\ell,m)$, we generalize 
+shallow-consistency to compare middles and values ($v \smile m$) in the 
 natural way.
 
 \begin{figure}
-	\fbox{$ applyCast(v,c) = r $}
+	\fbox{$applyCast(v,c) = r$}
 	\[
 	\begin{array}{rclr}
 	\funrule{applyCast(v,\hyperCoercionI,)}{\rOOsucc{v}}{}
@@ -2575,7 +2573,7 @@ natural way.
 	\end{array}
 	\]
 	
-	\fbox{$ applyMiddle(v,\ell,m) = r $}
+	\fbox{$applyMiddle(v,\ell,m) = r$}
 	\[
 	\begin{array}{rclr}
 	\funrule{applyMiddle(\hcvOOtt,\ell,\POOunit)}{\rOOsucc{\hcvOOtt}}{}
@@ -2601,7 +2599,7 @@ natural way.
 	\end{array}
 	\]
 	
-	\fbox{$ applyTail(v,t) = r $}
+	\fbox{$applyTail(v,t) = r$}
 	\[
 	\begin{array}{rclr}
 	\funrule{applyTail(v,\bot^l)}{\rOOfail{l}}{}
@@ -2609,7 +2607,7 @@ natural way.
 	\funrule{applyTail(v,!)}{\rOOsucc{(\hcvOOinj{P}{v})}}{}
 	\end{array}
 	\]
-	\caption{\lazyD\ hypercoercion's $ applyCast $}
+	\caption{\lazyD\ hypercoercion's $applyCast$}
 	\label{hc-applyCast}
 \end{figure}
 
@@ -2620,7 +2618,7 @@ natural way.
 \begin{proof} See the supplementary material. \end{proof}
 
 \begin{theorem}[\lazyD{} hypercoercion Respect \ineffCEKD]
-	If $ \judgetype{\emptyset}{e}{T} $ and $ o : T $ 
+	if $\judgetype{\emptyset}{e}{T}$ and $o : T$
 	\[
 	\text{\evalEqv{\ineffCEKD}{\effCEK{H}}}
 	\]
