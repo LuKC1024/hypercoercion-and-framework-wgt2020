@@ -1,0 +1,22 @@
+
+
+
+
+* Framework
+
+  * space efficient machine over Cast ADT
+  * Lemma [Bisimulation between S(C) and D]
+    If C is lazy D, monoid, cast(T,T) = id, then S(C) ~ D.
+
+  We can remove the monoid and cast(T,T) = id
+  requirements, which might be useful in future:
+  * L is lazy D monoid, and cast(T,T) = id.
+  * S(L) ~ D.
+  * If C1 and C2 are lazy D,
+    then S(C1) ~ S(C2).
+  * Theorem [S(C) Correctness] If C is lazy D, then eval_S(C) = eval_D.
+
+* Hypercoercions are correct
+
+  * H is lazy D.
+  * eval_S(H) = eval_d   by Thm. S(C) correct
