@@ -2339,6 +2339,8 @@ In this subsection, we prove that if a instance of Cast ADT $C$ is Lazy D and
 is a monoid, then $eval_\mathcal{D} = eval_{\mathcal{S}(C)}$. We proof this 
 theorem with a weak bisimulation between \effCEK{C} and \ineffCEKD.
 
+\todo[inline]{In Fig.~\ref{fig:bisim-SC-D}, how to suppress rule numbers like 
+	(1), (2), etc.? -KC}
 Fig.~\ref{fig:bisim-SC-D} defines the bisimulation relation. Here we omit rules 
 that make the relation a congruence.
 %
@@ -2359,17 +2361,32 @@ related values.
 %
 Unit values are of course related.
 %
-To relate to a non-casted function in \ineffCEKD, the casts in the \effCEK{C} 
-function must be identity.
+To relate to a non-casted function in \ineffCEKD, the function in \effCEK{C} 
+must use identities as its casts.
 %
 If functions are related, we can apply the same cast on both side.
 %
 Rules for products and sums are similar.
 
-\todo[inline]{In Fig.~\ref{fig:bisim-SC-D}, how to suppress rule numbers like 
-(1), (2), etc.? -KC}
+\begin{lemma}[SoAndSo]
+	Assume $C$ implements Lazy D Cast ADT
+	and $v_1$ is a value in \effCEK{C}
+	and $v_2$ is a value in \ineffCEKD\
+	and $v_1 \approx v_2 : T_1$,
+	\[
+	applyCast_{\text{\effCEK{C}}}(v,cast(T_1,l,T_2)) 
+	\approx 
+	applyCast_{\text{\ineffCEKD}}(v,\cOOcast{T_1}{l}{T_2})
+	\]
+\end{lemma}
+\begin{proof}
+	Case splitting whether $T_1$ is shallowly consistent with $T_2$.
+	If yes, case splitting how they are shallowly consistent.
+	Then apply properties (3) - (11) of Lazy D Cast when applicable.
+\end{proof}
+
 \begin{figure}
-%	\fbox{$\text{\effCEK{C}} \approx \text{\ineffCEKD}$}
+	$\text{\effCEK{C}} \approx \text{\ineffCEKD}$
 	\[\dots\]
 	
 	\fbox{$\kappa \approx \kappa$}
@@ -2451,10 +2468,10 @@ c_2' = seq(c_2,cast(T_2,l,T_4))
 	}
 \\ \\
 	\inference{
-		v_1 \approx v_2 : T
+		v_1 \approx v_2 : T_1
 	}{
-		\hcvOOinl{v_1}{id(T)} \approx \vOOinl{v_2}
-		: \POOsum{T}{T'}
+		\hcvOOinl{v_1}{id(T_1)} \approx \vOOinl{v_2}
+		: \POOsum{T_1}{T_2}
 	}
 	\quad
 	\inference{
@@ -2464,14 +2481,14 @@ c_2' = seq(c_2,cast(T_2,l,T_4))
 	}{
 		\hcvOOinl{v_1}{c'} \approx
 		\vOOcast{v}{\cOOcast{\POOsum{T_1}{T_2}}{l}{\POOsum{T_3}{T_4}}}
-		: \POOsum{T}{T'}	
+		: \POOsum{T_3}{T_4}	
 	}
 	\\
 	\inference{
-	v_1 \approx v_2 : T
+	v_1 \approx v_2 : T_2
 	}{
-	\hcvOOinr{v_1}{id(T)} \approx \vOOinr{v_2}
-	: \POOsum{T'}{T}
+	\hcvOOinr{v_1}{id(T_2)} \approx \vOOinr{v_2}
+	: \POOsum{T_1}{T_2}
 	}
 	\quad
 	\inference{
@@ -2481,7 +2498,7 @@ c_2' = seq(c_2,cast(T_2,l,T_4))
 	}{
 	\hcvOOinr{v_1}{c'} \approx
 	\vOOcast{v}{\cOOcast{\POOsum{T_1}{T_2}}{l}{\POOsum{T_3}{T_4}}}
-	: \POOsum{T'}{T}
+	: \POOsum{T_3}{T_4}
 	}
 	\end{gather}
 	\caption{Bisimulation between \effCEK{C} and \ineffCEKD}
