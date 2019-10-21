@@ -137,10 +137,10 @@
 \newcommand{\kOOinl}[1]{[\mathtt{inl} \; \square]#1}
 \newcommand{\kOOinr}[1]{[\mathtt{inr} \; \square]#1}
 \newcommand{\kOOappI}[3]{
-	[\square \; \langle#1,#2\rangle ]#3
+	[\mathtt{app} \; \square \; \langle#1,#2\rangle ]#3
 }
 \newcommand{\kOOappII}[2]{
-	[#1 \; \square]#2}
+	[\mathtt{app} \; #1 \; \square]#2}
 \newcommand{\kOOcar}[1]{[\mathtt{fst} \; \square]#1}
 \newcommand{\kOOcdr}[1]{[\mathtt{snd} \; \square]#1}
 \newcommand{\kOOcaseI}[4]{
@@ -235,7 +235,7 @@
 \newcommand{\judgeUDeval}[2]{eval_{\mathcal{UD}}(#1) = #2}
 \newcommand{\effCEK}[1]{$\mathcal{S}(#1)$}
 \newcommand{\evalEqv}[2]{$eval_{\text{#1}} = eval_{\text{#2}}$}
-\newcommand{\continue}[2]{continue(#2,#1)}
+\newcommand{\continue}[2]{cont(#2,#1)}
 \newcommand{\highlight}[1]{{\color{red} #1}}
 
 \begin{document}
@@ -1014,7 +1014,7 @@ v3' = \vOOcast{v_3}{\cOOcast{\POOfun{T_3}{T}}{l}{\POOfun{T_1}{T}}}}
 	Evaluation \fbox{$\judgeCeval{e}{o}$}
 	\[
 	\inference{
-		\sOOinspect{e}{\emptyset}{cont(\hckOOmt)} \longrightarrow_{B}^{*} 
+		\sOOinspect{e}{\emptyset}{wrap(\hckOOmt)} \longrightarrow_{B}^{*} 
 		\sOOhalt{o}
 	}{
 		\judgeCeval{e}{o}
@@ -1903,7 +1903,8 @@ that $seq(c,c)$ acts like a sequence of casts. Properties (3) through
 (11) state that $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
 (Fig.~\ref{fig:applyCast-D-C}).
 
-\todo[inline]{We might need to values before Lazy D Cast ADT.}
+\todo[inline]{We might need to values before Lazy D Cast ADT. This will reduce 
+the extreme height of Fig.~\ref{fig:machine-cekcc} as well. -KC}
 
 \begin{definition}[Lazy D Cast ADT]
 	\label{def:surely-lazyd}
@@ -2022,10 +2023,10 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	\end{array}
 	\]
 	
-	Build continuation \fbox{$cont(k) = \kappa$}
+	Build continuation \fbox{$wrap(k) = \kappa$}
 	\[
 	\begin{array}{rclc}
-	\funrule{cont(k)}{\kOOcast{id(T_1)}{k}}{
+	\funrule{wrap(k)}{\kOOcast{id(T_1)}{k}}{
 		\sidecond{k : T_1 \Longrightarrow T_2}}
 	\end{array}
 	\]
@@ -2070,41 +2071,41 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	\redruleS{
 		\sOOinspect{(\eOOinl{e})}{\rho}{\kappa}
 	}{
-		\sOOinspect{e}{\rho}{cont(\kOOinl{\kappa})}
+		\sOOinspect{e}{\rho}{wrap(\kOOinl{\kappa})}
 	}{}
 	\redruleS{
 		\sOOinspect{(\eOOinr{e})}{\rho}{\kappa}
 	}{
-		\sOOinspect{e}{\rho}{cont(\kOOinr{\kappa})}
+		\sOOinspect{e}{\rho}{wrap(\kOOinr{\kappa})}
 	}{}
 	\redruleS{
 		\sOOinspect{(\eOOapp{e_1}{e_2})}{\rho}{\kappa}
 	}{
-		\sOOinspect{e_1}{\rho}{cont(\kOOappI{E}{e_2}{\kappa})}}{}
+		\sOOinspect{e_1}{\rho}{wrap(\kOOappI{E}{e_2}{\kappa})}}{}
 	
 	\redruleS{
 		\sOOinspect{(\eOOcar{e})}{\rho}{\kappa}}{
-		\sOOinspect{e}{\rho}{cont(\kOOcar{\kappa})}}{}
+		\sOOinspect{e}{\rho}{wrap(\kOOcar{\kappa})}}{}
 	
 	\redruleS{
 		\sOOinspect{(\eOOcdr{e})}{\rho}{\kappa}}{
-		\sOOinspect{e}{\rho}{cont(\kOOcdr{\kappa})}}{}
+		\sOOinspect{e}{\rho}{wrap(\kOOcdr{\kappa})}}{}
 	
 	\redruleS{
 		\sOOinspect{(\eOOcase{e_1}{e_2}{e_3})}{\rho}{\kappa}}{
-		\sOOinspect{e_1}{\rho}{cont(\kOOcaseI{\rho}{e_2}{e_3}{\kappa})}}{}
+		\sOOinspect{e_1}{\rho}{wrap(\kOOcaseI{\rho}{e_2}{e_3}{\kappa})}}{}
 	\hiredruleS{
 		\sOOreturn{v}{\kOOcast{c}{k}}
 	}{
 	\begin{cases}
-	continue(k,v') & \sidecond{applyCast(v,c) = \rOOsucc{v'}} 
+	\continue{k}{v'} & \sidecond{applyCast(v,c) = \rOOsucc{v'}} 
 	\\
 	\sOOhalt{(\oOOblame{l})} & \sidecond{applyCast(v,c) = \rOOfail{l}}
 	\end{cases}
 	}{}
 %\redruleS{
 %	\sOOreturn{v_1}{(\kOOconsI{e_2}{\rho}{\kappa})}}{
-%	\sOOinspect{e_2}{\rho}{cont(\kOOconsII{v_1}{\kappa})}}{}
+%	\sOOinspect{e_2}{\rho}{wrap(\kOOconsII{v_1}{\kappa})}}{}
 %
 %\redrule{
 %\sOOreturn{v_2}{(\kOOconsII{v_1}{\kappa})}}{
@@ -2126,7 +2127,7 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 %
 %\redrule{
 %\sOOreturn{v_1}{(\kOOappI{e_2}{\rho}{\kappa})}}{
-%\sOOinspect{e_2}{\rho}{cont(\kOOappII{v_1}{\kappa})}}{}
+%\sOOinspect{e_2}{\rho}{wrap(\kOOappII{v_1}{\kappa})}}{}
 %
 %	
 %	& \vdots \\
@@ -2143,7 +2144,7 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 %	\redruleS{
 %		\sOOinspect{(\eOOcons{e_1}{e_2})}{\rho}{\kappa}
 %	}{
-%		\sOOinspect{e_1}{\rho}{cont(\hckOOconsI{e_2}{\rho}{\kappa})}
+%		\sOOinspect{e_1}{\rho}{wrap(\hckOOconsI{e_2}{\rho}{\kappa})}
 %	}{}
 %	\redruleS{
 %		
@@ -2169,7 +2170,7 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 
 \funrule{
 	\continue{v_1}{(\kOOconsI{e_2}{\rho}{\kappa})}}{
-	\sOOinspect{e_2}{\rho}{cont(\kOOconsII{v_1}{\kappa})}}{}
+	\sOOinspect{e_2}{\rho}{wrap(\kOOconsII{v_1}{\kappa})}}{}
 
 \hifunrule{
 	\continue{v_2}{(\kOOconsII{v_1}{\kappa})}}{
@@ -2222,7 +2223,7 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	\continue{v_1}{\kOOcaseI{e_2}{e_3}{\rho}{\kappa}}
 }{
 	\sOOinspect{e_2}{\rho}{
-		cont(\kOOcaseII{v_1}{e_3}{\rho}{\kappa})
+		wrap(\kOOcaseII{v_1}{e_3}{\rho}{\kappa})
 	}
 }{}
 
@@ -2241,14 +2242,14 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 		(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})
 		\;\kappa)}
 }{
-	\sOOreturn{v}{cont(\kOOappII{(\hcvOOfun{seq(c,c_1)}{\rho}{x}{e}{c_2})}{\kappa})}
+	\sOOreturn{v}{wrap(\kOOappII{(\hcvOOfun{seq(c,c_1)}{\rho}{x}{e}{c_2})}{\kappa})}
 }{}
 
 \hifunrule{
 	\continue{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}
 	{(\mathtt{case_3}\;(\hcvOOinr{v}{c})\;v_2\;\kappa)}
 }{
-	\sOOreturn{v}{cont(\kOOappII{(\hcvOOfun{seq(c,c_1)}{\rho}{x}{e}{c_2})}{\kappa})}
+	\sOOreturn{v}{wrap(\kOOappII{(\hcvOOfun{seq(c,c_1)}{\rho}{x}{e}{c_2})}{\kappa})}
 }{}
 
 \funrule{
@@ -2264,7 +2265,7 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 %	\[
 %	\inference{
 %		\judgeSreduceTrans{C}{
-%			\sOOinspect{e}{\emptyset}{cont(\hckOOmt)}
+%			\sOOinspect{e}{\emptyset}{wrap(\hckOOmt)}
 %		}{
 %			\sOOhalt{o}
 %		}		
@@ -2393,7 +2394,18 @@ is a monoid, then $eval_\mathcal{D} = eval_{\mathcal{S}(C)}$. We proof this
 theorem with a weak bisimulation between \effCEK{C} and \ineffCEKD.
 
 Fig.~\ref{fig:bisim-SC-D} defines the bisimulation relation. Here we omit rules 
-that make the relation a congruence. 
+that make the relation a congruence.
+%
+There are two cases where a continuation in \effCEK{C} relates to a 
+continuation in \ineffCEKD. When $k \approx \kappa$, adding an identity cast on 
+top of $k$ gives a related continuation. When $\kappa_1 \approx \kappa_2$, 
+extending $\kappa_1$ and $\kappa_2$ with the same cast gives related results.
+%
+As for $v \approx v$, there is one rule for the dynamic type, and two rules for 
+each ordinary value constructor. 
+
+And continuations in \ineffCEK\ that have many casts at the top correspond to 
+continuations in \effCEK{C}\ where those casts are composed by $seq(c,c)$.
 
 \begin{figure}
 	\fbox{$\text{\effCEK{C}} \approx \text{\ineffCEKD}$}
@@ -2404,7 +2416,7 @@ that make the relation a congruence.
 	\inference{
 		k \approx \kappa
 	}{
-		cont(k) \approx \kappa
+		wrap(k) \approx \kappa
 	}
 	\quad
 	\inference{
@@ -2542,12 +2554,12 @@ example: \begin{gather*}
 }
 \end{gather*}
 
-And the relation between continuations is defined in terms of $cont(k)$ and 
+And the relation between continuations is defined in terms of $wrap(k)$ and 
 $ext(c,k) $: \begin{gather*}
 \inference{
 	k \approx \kappa
 }{
-	cont(k) \approx \kappa
+	wrap(k) \approx \kappa
 }
 \quad
 \inference{
