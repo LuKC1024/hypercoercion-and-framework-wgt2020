@@ -86,7 +86,7 @@
 \newcommand{\lazyUD}{Lazy\;UD}
 \newcommand{\lazyD}{Lazy\;D}
 
-\newcommand{\sOOinspect}[3]{\mathtt{Eval} \; #2(#1) \; #3}
+\newcommand{\sOOinspect}[3]{\mathtt{Eval} \; #3 \; \langle#2, #1\rangle}
 \newcommand{\sOOreturn}[2]{\mathtt{Cont} \; #2 \; #1}
 \newcommand{\sOOhalt}[1]{\mathtt{Halt} \; #1}
 
@@ -132,21 +132,21 @@
 \newcommand{\rOOfail}[1]{\mathtt{fail}\;#1}
 
 \newcommand{\kOOmt}[0]{\square}
-\newcommand{\kOOconsI}[3]{#3[\mathtt{cons} \; \square \; #2(#1) ]}
+\newcommand{\kOOconsI}[3]{#3[\mathtt{cons} \; \square \; \langle#2,#1\rangle ]}
 \newcommand{\kOOconsII}[2]{#2[\mathtt{cons} \; #1 \; \square]}
 \newcommand{\kOOinl}[1]{#1[\mathtt{inl} \; \square]}
 \newcommand{\kOOinr}[1]{#1[\mathtt{inr} \; \square]}
 \newcommand{\kOOappI}[3]{
-	#3[\square \; #2(#1) ]
+	#3[\square \; \langle#2,#1\rangle ]
 }
 \newcommand{\kOOappII}[2]{
 	#2[#1 \; \square]}
 \newcommand{\kOOcar}[1]{#1[\mathtt{fst} \; \square]}
 \newcommand{\kOOcdr}[1]{#1[\mathtt{snd} \; \square]}
 \newcommand{\kOOcaseI}[4]{
-	#4[\mathtt{case} \; \square \; #3(#1) \; #3(#2) ]}
+	#4[\mathtt{case} \; \square \; #3(#1) \; \langle#3,#2\rangle ]}
 \newcommand{\kOOcaseII}[4]{
-	#4[\mathtt{case} \; #1 \; \square \; #3(#2) ]}
+	#4[\mathtt{case} \; #1 \; \square \; \langle#3,#2\rangle ]}
 \newcommand{\kOOcaseIII}[3]{
 	#3[\mathtt{case} \; #1 \; #2 \; \square]}
 \newcommand{\kOOcast}[2]{
