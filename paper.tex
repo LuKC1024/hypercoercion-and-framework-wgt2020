@@ -1834,6 +1834,14 @@ by an abstract data type, named Cast ADT, that we define shortly.
 
 \todo[inline]{UNDER CONSTRUCTION. -JS}
 
+If $C$, an implementation of the Cast ADT inteface, satisifies a collection of 
+properties that we defined as Lazy D Cast ADT. We can instantiate our framework 
+theorem that we define shortly to prove that evaluating an program in 
+\effCEK{C} gives the same result as \ineffCEKD. We are working on a
+similar theorem for \lazyUD{}. 
+
+\todo[inline]{UNDER CONSTRUCTION. -KC}
+
 
 
 The framework is a theorem saying that for all cast representation $C
@@ -1847,9 +1855,9 @@ similar theorem for \lazyUD{}.
 
 We captures the set of operators that every cast representation must provide 
 with \emph{cast abstract data type} (Definition~\ref{def:cast-rep}). 
-The first three operators allow a language implementation to construct casts. 
+The first three operators allow \effCEK{C} to construct casts. 
 So we call them \textit{cast constructors}. And the forth and last operator 
-allows the implementation to apply casts onto values. 
+allows \effCEK{C} to apply casts onto values. 
 
 \begin{definition}[Cast Abstract Data Type (Cast ADT)]
 	\label{def:cast-rep}
