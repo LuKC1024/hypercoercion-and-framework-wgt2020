@@ -973,8 +973,7 @@ o$) is defined in the natural way.
 		\;v_2\;\kappa)}}
 }{
 	\highlight{\sOOreturn{v_3'}{
-		(\mathtt{case_3}\;v
-		\;v_2'\;\kappa)
+			(\kOOcaseIII{v}{v_2'}{\kappa})
 	}}
 }{\\&&
 \highlight{\text{where}\;
@@ -2251,7 +2250,9 @@ continuations in \effCEK{C}\ where those casts are composed by $seq(c,c)$.
 
 \todoKC{describe transition rules}
 We list a fraction of reduction rules due to space limitation.
-\todo[inline]{Don't omit reduction rules, instead put some in the appendix. -JS}
+\todo[inline]{Don't omit reduction rules, instead put some in the appendix. -JS
+\\---\\They are all in the figure. I haven't updated this paragraph 
+accordingly. -KC}
 When values are constructed, their hypercoercion parts are filled with outputs 
 of $id$. For instance, when a function value is constructed, its first part 
 and last part are initialized to $id(T_1)$ and $id(T_2)$respectively.
