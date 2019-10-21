@@ -178,7 +178,7 @@
 \newcommand{\typingHC}[3]{#1 : #2 \Longrightarrow #3}
 \newcommand{\hcvOOinj}[2]{\mathtt{inj} \; #2}
 %\newcommand{\hcvOOfun}[5]{\mathtt{fun} \; #1 \; #2 \; #3 \; #4 \; #5}
-\newcommand{\hcvOOfun}[5]{\mathtt{fun}^{\POOfun{#1}{#5}} \; #2 \; #3 \; #4}
+\newcommand{\hcvOOfun}[5]{\mathtt{fun} \; #2 \; #1 \; #3 \; #4 \; #5}
 \newcommand{\hcvOOtt}[0]{\mathtt{unit}}
 %\newcommand{\hcvOOcons}[4]{\mathtt{cons}\;#1\;#2\;#3\;#4}
 \newcommand{\hcvOOcons}[4]{\mathtt{cons}\;#1\langle#2\rangle\;#3\langle#4\rangle}
@@ -2385,14 +2385,128 @@ Transitive closure of reduction ($\judgeSreduceTrans{C}{s}{s}$) and
 evaluation ($\judgeSeval{C}{e}{o}$) are standard. Value typing 
 ($\judgeType{v}{T}$) is straightforward.
 
-\subsection{\lazyD\ Cast ADTs Respect \ineffCEKD\ if They are 
-Monoids}
+\subsection{Relating Some \effCEK{C} to \ineffCEKD}
 \label{secc:framework:monoid-correct}
 
 In this subsection, we prove that if a instance of Cast ADT $C$ is Lazy D and 
 is a monoid, then $eval_\mathcal{D} = eval_{\mathcal{S}(C)}$. We proof this 
-theorem with a weak bisimulation between \ineffCEKD\ and 
-\effCEK{C}. 
+theorem with a weak bisimulation between \effCEK{C} and \ineffCEKD.
+
+Fig.~\ref{fig:bisim-SC-D} defines the bisimulation relation. Here we omit rules 
+that make the relation a congruence. 
+
+\begin{figure}
+	\fbox{$\text{\effCEK{C}} \approx \text{\ineffCEKD}$}
+	\[\dots\]
+	
+	\fbox{$\kappa \approx \kappa$}
+	\begin{gather*}
+	\inference{
+		k \approx \kappa
+	}{
+		cont(k) \approx \kappa
+	}
+	\quad
+	\inference{
+		\kappa_1 \approx \kappa_2
+	}{
+		ext(cast(T_1,l,T_2),\kappa_1) \approx 
+		\kOOcast{\cOOcast{T_1}{l}{T_2}}{\kappa_2}
+	}
+	\end{gather*}
+	
+	\fbox{$v \approx v$}
+	\begin{gather}
+	\inference{
+		v_1 \approx v_2 &
+		v_2 : P
+	}{
+		\hcvOOinj{P}{v_1} \approx \vOOcast{v_2}{\cOOcast{P}{l}{\TOOdyn}}
+	}
+	\quad
+	\inference{}{
+		\hcvOOtt \approx \vOOtt
+	}
+	\quad
+	\inference{}{
+		\hcvOOtt \approx \vOOcast{\vOOtt}{\cOOcast{\POOunit}{l}{\POOunit}}
+	}
+	\\
+	\inference{
+		\rho_1 \approx \rho_2 &
+		dom(\rho_1) = dom(\rho_2) = \Gamma \\
+		\Gamma , x : T_1 \vdash e : T_2
+	}{
+		\hcvOOfun{id(T_1)}{\rho_1}{x}{e}{id(T_2)}
+		\approx
+		\vOOfun{\rho_2}{x}{e}
+	}
+	\quad
+	\inference{
+		v_1 \approx v_2 & v_3 \approx v_4 &
+		\judgeType{v_1}{T_1} &
+		\judgeType{v_3}{T_2}
+	}{
+		\hcvOOcons{v_1}{id(T_1)}{v_3}{id(T_2)}
+		\approx
+		\vOOcons{v_2}{v_3}
+	}
+	\\
+	\inference{
+		\hcvOOfun{c_1}{\rho}{x}{e}{c_2} \approx v_2 \\
+%		\judgeType{\hcvOOfun{c_1}{\rho}{x}{e}{c_2}}{\POOfun{T_1}{T_2}} \\
+		\judgeType{v_2}{\POOfun{T_1}{T_2}} \\
+		c_1' = seq(cast(T_3,l,T1),c_1) \\
+		c_2' = seq(c_2,cast(T_2,l,T_4))
+	}{
+		\hcvOOfun{c_1'}{\rho}{x}{e}{c_2'}
+		\approx
+		\vOOcast{v}{\cOOcast{\POOfun{T_1}{T_2}}{l}{\POOfun{T_3}{T_4}}}
+	}
+	\quad
+	\inference{
+		\hcvOOcons{v_1}{c_1}{v_3}{c_2} \approx v_2 \\
+		\judgeType{v_2}{\POOprod{T_1}{T_2}} \\
+		c_1' = seq(c_1,cast(T_1,l,T_3)) \\
+		c_2' = seq(c_2,cast(T_2,l,T_4))
+	}{
+		\hcvOOcons{v_1}{c_1'}{v_3}{c_2'} \approx
+		\vOOcast{v}{\cOOcast{\POOprod{T_1}{T_2}}{l}{\POOprod{T_3}{T_4}}}
+	}
+	\\
+	\inference{
+		v_1 \approx v_2 & v_1 : T
+	}{
+		\hcvOOinl{v_1}{id(T)} \approx \vOOinl{v_2}
+	}
+	\quad
+	\inference{
+		\hcvOOinl{v_1}{c} \approx v_2 &
+		v_2 : \POOsum{T_1}{T_2} &
+		c' = seq(c,cast(T_1,l,T_3))
+	}{
+		\hcvOOinl{v_1}{c'} \approx
+		\vOOcast{v}{\cOOcast{\POOsum{T_1}{T_2}}{l}{\POOsum{T_3}{T_4}}}
+	}
+	\\
+	\inference{
+	v_1 \approx v_2 & v_1 : T
+	}{
+	\hcvOOinr{v_1}{id(T)} \approx \vOOinr{v_2}
+	}
+	\quad
+	\inference{
+	\hcvOOinr{v_1}{c} \approx v_2 &
+	v_2 : \POOsum{T_1}{T_2} &
+	c' = seq(c,cast(T_2,l,T_4))
+	}{
+	\hcvOOinr{v_1}{c'} \approx
+	\vOOcast{v}{\cOOcast{\POOsum{T_1}{T_2}}{l}{\POOsum{T_3}{T_4}}}
+	}
+	\end{gather}
+	\caption{Bisimulation between \effCEK{C} and \ineffCEKD}
+	\label{fig:bisim-SC-D}
+\end{figure}
 
 The bisimulation relation between states ($\eqvSD{C}{s}{s}$) is mostly derived 
 from the state definition: \begin{gather*}
@@ -2462,7 +2576,7 @@ the cast into the value constructors, except injections. For examples:
 }{
 	\hcvOOinl{v_1}{id(T)} \approx \vOOinl{v_2}
 }
-\quad
+\\
 \inference{
 	(\hcvOOinl{v}{c}, v_2) : \POOsum{T_1}{T_2}
 }{
@@ -2503,8 +2617,8 @@ such that $\judgeCreduceTrans{s_2}{s_2'}$ and $s_1 \approx s_2'$.
 \todo[inline]{Standardize theorem statement -KC}
 \begin{lemma}[Weak Bisimulation between \effCEK{C} and \ineffCEKD]
 	\label{thm:surely-monoidic-reduce}
-	For all instance of Cast ADT$C$, 
-	if $C$ is \lazyD{} and is a monoid, 
+	For all instance of Cast ADT $C$, 
+	if $C$ is \lazyD{} and is a monoid and $cast(T,l,T)=id(T)$,
 	$ s_{1}, s_{1}' \in \text{\effCEK{C}}$,
 	$ s_{2}, s_{2}' \in \text{\ineffCEKD}$,
 	$ s_{1} \approx s_{2}$,
