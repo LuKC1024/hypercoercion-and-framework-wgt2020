@@ -105,6 +105,17 @@
 \newblock
 
 
+\bibitem[\protect\citeauthoryear{Henglein}{Henglein}{1994}]%
+        {henglein1994dynamic}
+\bibfield{author}{\bibinfo{person}{Fritz Henglein}.}
+  \bibinfo{year}{1994}\natexlab{}.
+\newblock \showarticletitle{Dynamic typing: Syntax and proof theory}.
+\newblock \bibinfo{journal}{{\em Science of Computer Programming\/}}
+  \bibinfo{volume}{22}, \bibinfo{number}{3} (\bibinfo{year}{1994}),
+  \bibinfo{pages}{197--230}.
+\newblock
+
+
 \bibitem[\protect\citeauthoryear{Herman, Tomb, and Flanagan}{Herman
   et~al\mbox{.}}{2010}]%
         {herman2010space}

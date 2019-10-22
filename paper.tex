@@ -430,9 +430,9 @@ To summarize, the primary contributions of this paper are:
 \item hypercoercions, a new space-efficient cast representation, which
   has a structurally recursive composition and a more compact memory
   representation.
-\item a framework in Agda for proving the correctness of cast
+\item a framework in Agda for proving the correctness of \lazyD{} cast
   represantations.
-\item a formal proof that hypercoercion respects the semantics
+\item a formal proof that hypercoercions respect the semantics
   of the \lazyD{} cast calculus.
 \end{itemize}
 
@@ -1142,27 +1142,21 @@ calculus of \citet{siek2009exploring}.
 \subsection{Coercions in Normal Form} 
 \label{sec:coercion-calculus}
 
-In this section we review the coercions in normal form of
-\citet{siek2012interpretations} to motivate the design of
+In this section we review the
+coercions~\citep{henglein1994dynamic,herman2010space} and the normal
+form of \citet{siek2012interpretations} to motivate the design of
 hypercoercions.  We ignore sum types and product types in this
 section, because \citet{siek2012interpretations} did not discuss
 them. We assume a basic familiarity with coercions and direct readers
 who are not familiar with them to \citet{siek2012interpretations}.
-%We 
-%will highlight the similarity of normal coercion and hypercoercion, and hope 
-%this would convince you that hypercoercion should be as difficult to implement 
-%as normal coercions.
-%\todo[inline]{I don't think we should try to convince the reader that
-%  hypercoercions are easier to implement. We don't have real evidence
-%  for that.}
 
 \begin{figure}
 	\[
 	\begin{array}{rclr}
 	\stxrule{I}{injectable types (\lazyD)}{
-		\POOfun{T}{T}}
+		\POOfun{T}{T} \mid \POOunit}
 	\stxrule{I}{injectable types (\lazyUD)}{
-		\POOfun{\TOOdyn}{\TOOdyn}
+		\POOfun{\TOOdyn}{\TOOdyn} \mid \POOunit
 	}
 	\stxrule{c}{coercions}{
 		\ncInj{I} \mid
@@ -1197,28 +1191,50 @@ who are not familiar with them to \citet{siek2012interpretations}.
 	}
 	\end{array}
 	\]
-	\caption{Syntax of Normal Coercion}
+	\caption{Syntax of coercions and normal forms}
 	\label{fig:normal-coercion}
 \end{figure}
 
-\todo[inline]{Give a summary statement about the shape of the normal form. 
--JS
-\\---\\The three-part shape is not obvious before the transformation at 
-the end of the next paragraph. So the summary is given after that. -KC}
+\figref{fig:normal-coercion} gives the grammar for coercions, written
+$c$ and also coercions in normal form, written $\hat{c}$.
+%
+To review, an injection $I!$ takes a value from an injectiable type
+$I$ to type $\TOOdyn$. An injectable type is simply a type that can be
+cast directly to (injection) and from (projection) $\TOOdyn$. The
+definition of injectable type depends on blame strategy. With \lazyD,
+all pre-types are injectable. With \lazyUD, only
+$\POOfun{\TOOdyn}{\TOOdyn}$ is injectable.
+%
+A projection $I?^l$ takes a value from type $\TOOdyn$ to type $I$, or
+halts the program and blames $l$ if the value is of a different type.
+The coercion $\iota$ is the identity, $\bot^{l}$ is the coercion that
+always fails and blames $l$, and $\ncSeq{c_1}{c_2}$ applies $c_1$ and
+then $c_2$ in sequence. The function coercion $\ncFun{c_1}{c_2}$
+applies $c_1$ to the argument of a function and $c_2$ to the return
+value.
 
-\figref{fig:normal-coercion} defines the normal coercion.
-Types, pre-types, and blame labels are as before.
-Let $I$ range over injectable types. An injectable type is a type that can 
-be cast directly to (injection) and from (projection) $\TOOdyn$. The 
-definition of injectable type depends on blame strategy. With \lazyD, all 
-pre-types are injectable. With \lazyUD, only $\POOfun{\TOOdyn}{\TOOdyn}$
-is injectable. 
-Let $c$ range over coercions, a coercion is either injection, projection, 
-identity, failure, sequencing, or function coercion.
+Coercions come with a reduction relation so it is natural to ask what
+are their normal forms. The most important of the reduction rules are
+the ones that handle when an injection is followed by a projection,
+which for \lazyUD{} are:
+\begin{align*}
+  I! ; I?^l &\longmapsto \iota \\
+  I_1! ; I_2?^l & \longmapsto \bot^l & \text{if } I_1 \neq I_2
+\end{align*}
+and the rule for pushing sequences below function coercions:
+\begin{align*}
+  (c_1 \to c_2) ; (c_3 \to c_4) & \longmapsto
+  (c_3 ; c_1) \to (c_2 ; c_4)
+\end{align*}
+Of course there are also rules that remove identity coercions.
+
+\todo[inline]{UNDER CONSTRUCTION -Jeremy}
+
+
 Let $\bar{c}$ range over wrapper coercions, which represent casts in $
-\vOOcast{v}{c}$.
-Let $\hat{c}$ range over normal coercions. If we inline $\bar{c}$ and 
-re-order the cases, the definition of $\hat{c}$ becomes:
+\vOOcast{v}{c}$.  Let $\hat{c}$ range over normal coercions. If we
+inline $\bar{c}$ and re-order the cases, the definition of $\hat{c}$
+becomes:
 \[
 \begin{array}{rclr}
 \stxrule{\hat{c}}{normal coercions}{
@@ -1246,7 +1262,7 @@ Three observations on this definition leads to hypercoercion:
 \end{enumerate}
 
 
-\section{Definition of Hypercoercion} \label{sec:hypercoercion-definition}
+\section{Definition of Hypercoercions} \label{sec:hypercoercion-definition}
 
 \begin{figure}
 	Syntax
@@ -1334,18 +1350,19 @@ Three observations on this definition leads to hypercoercion:
 		\inference{}{\typingHC{\bot^l}{P}{T}} \quad
 		\end{gather*}
 	
-	\caption{Definition of hypercoercion (HC)}
+	\caption{Definition of hypercoercions (HC)}
 	\label{fig:hypercoercion}
 \end{figure}
 
-This section presents our first contribution, the definition of hypercoercion. 
-The design of hypercoercion is motivated by observations on coercion normal 
-forms: a normal coercion has at most three parts; projections are always at the 
-beginning; injections and failures are always at the end. Hypercoercions have 
-similar shape: a hypercion either is $\hyperCoercionI$, the identity cast for 
-$\TOOdyn$, or contains three parts, where the first part is either a 
-projection or a no-op while last part is either an injection, a failure, or a 
-no-op.
+This section presents our first contribution, the definition of
+hypercoercions.  The design of hypercoercions is motivated by
+observations on coercion normal forms: a normal coercion has at most
+three parts; projections are always at the beginning; injections and
+failures are always at the end. Hypercoercions have similar shape: a
+hypercion either is $\hyperCoercionI$, the identity cast for
+$\TOOdyn$, or contains three parts, where the first part is either a
+projection or a no-op while last part is either an injection, a
+failure, or a no-op.
 
 \figref{fig:hypercoercion} defines the syntax of hypercoercions. Types, 
 pre-types, and blame labels are as before.
@@ -1366,7 +1383,7 @@ Section~\ref{sec:hypercoercion-correctness} because they depends on a new
 definition of values, which is part of the framework in
 Section~\ref{sec:framework}.
 
-\subsection{\lazyD{} hypercoercion}
+\subsection{\lazyD{} hypercoercions}
 \label{sec:ld-hc}
 
 \begin{figure}
@@ -1820,6 +1837,12 @@ Figure~\ref{fig:HC-UD-cast}
 		\item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
 	\end{enumerate}
 \end{proposition}
+
+
+\subsection{Compact Memory Representation for Hypercoercions}
+
+
+\todo[inline]{UNDER CONSTRUCTION (a couple paragraphs) -Jeremy}
 
 
 % the following are temporary -JS
@@ -2550,6 +2573,11 @@ s_1 \approx s_2'
 \judgeDreduceTrans{s_2}{s_2'}
 \]
 \end{definition}
+
+\todo[inline]{Explain that this is an unusual formulation of a weak
+  bisimulation.  We promise it will all be OK regarding how it is used
+  in the correctness proof for S(C). -JS}
+
 
 \begin{lemma}[Weak Bisimulation between \effCEK{C} and \ineffCEKD]
 	\label{thm:surely-monoidic-reduce}

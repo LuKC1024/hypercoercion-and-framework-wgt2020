@@ -39,45 +39,45 @@ Warning--empty address in Tobin-Hochstadt:2006fk
 Warning--page numbers missing in both pages and numpages fields in Tobin-Hochstadt:2006fk
 Warning--empty publisher in wadler2009well
 Warning--empty address in wadler2009well
-You've used 17 entries,
+You've used 18 entries,
             5706 wiz_defined-function locations,
-            1406 strings with 17828 characters,
-and the built_in function-call counts, 18031 in all, are:
-= -- 2010
-> -- 631
+            1414 strings with 17954 characters,
+and the built_in function-call counts, 19117 in all, are:
+= -- 2195
+> -- 651
 < -- 0
-+ -- 190
-- -- 228
-* -- 1201
-:= -- 1872
-add.period$ -- 84
-call.type$ -- 17
-change.case$ -- 107
-chr.to.int$ -- 17
-cite$ -- 49
-duplicate$ -- 1613
-empty$ -- 1164
-format.name$ -- 288
-if$ -- 4301
++ -- 194
+- -- 236
+* -- 1258
+:= -- 1970
+add.period$ -- 89
+call.type$ -- 18
+change.case$ -- 112
+chr.to.int$ -- 18
+cite$ -- 50
+duplicate$ -- 1702
+empty$ -- 1230
+format.name$ -- 296
+if$ -- 4598
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 75
-newline$ -- 162
-num.names$ -- 136
-pop$ -- 784
+missing$ -- 79
+newline$ -- 170
+num.names$ -- 144
+pop$ -- 817
 preamble$ -- 1
-purify$ -- 192
+purify$ -- 202
 quote$ -- 0
-skip$ -- 618
+skip$ -- 649
 stack$ -- 0
-substring$ -- 1187
-swap$ -- 137
+substring$ -- 1279
+swap$ -- 148
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 467
+type$ -- 483
 warning$ -- 32
-while$ -- 140
+while$ -- 151
 width$ -- 0
-write$ -- 327
+write$ -- 344
 (There were 32 warnings)
