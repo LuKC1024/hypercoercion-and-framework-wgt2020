@@ -103,10 +103,12 @@
 \newcommand{\eOOvar}[1]{#1}
 \newcommand{\eOOsole}[0]{\mathtt{unit}}
 \newcommand{\eOOlam}[4]{\lambda^{#1\rightarrow{}#2}#3.#4}
-\newcommand{\eOOapp}[2]{#1 \; #2}
+\newcommand{\eOOapp}[2]{(#1 \; #2)}
 \newcommand{\eOOcons}[2]{\mathtt{cons} \; #1 \; #2}
 \newcommand{\eOOcar}[1]{\mathtt{fst} \; #1}
 \newcommand{\eOOcdr}[1]{\mathtt{snd} \; #1}
+%\newcommand{\eOOinl}[1]{\mathtt{inl} \; #1}
+%\newcommand{\eOOinr}[1]{\mathtt{inr} \; #1}
 \newcommand{\eOOinl}[1]{\mathtt{inl} \; #1}
 \newcommand{\eOOinr}[1]{\mathtt{inr} \; #1}
 \newcommand{\eOOcase}[3]{\mathtt{case} \; #1 \; #2 \; #3}
@@ -134,13 +136,13 @@
 \newcommand{\kOOmt}[0]{\mathtt{stop}}
 \newcommand{\kOOconsI}[3]{[\mathtt{cons} \; \square \; \langle#1,#2\rangle ]#3}
 \newcommand{\kOOconsII}[2]{[\mathtt{cons} \; #1 \; \square]#2}
-\newcommand{\kOOinl}[1]{[\mathtt{inl} \; \square]#1}
-\newcommand{\kOOinr}[1]{[\mathtt{inr} \; \square]#1}
+\newcommand{\kOOinl}[1]{[\mathtt{inl}\; \square]#1}
+\newcommand{\kOOinr}[1]{[\mathtt{inr}\; \square]#1}
 \newcommand{\kOOappI}[3]{
-	[\mathtt{app} \; \square \; \langle#1,#2\rangle ]#3
+	[\square \; \langle#1,#2\rangle]#3
 }
 \newcommand{\kOOappII}[2]{
-	[\mathtt{app} \; #1 \; \square]#2}
+	[#1 \; \square]#2}
 \newcommand{\kOOcar}[1]{[\mathtt{fst} \; \square]#1}
 \newcommand{\kOOcdr}[1]{[\mathtt{snd} \; \square]#1}
 \newcommand{\kOOcaseI}[4]{
@@ -2139,16 +2141,18 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
 	\sOOinspect{e_2}{\rho}{
 		wrap(\kOOappII{v_1}{\kappa})
 	}}{}
+
 \hifunrule{
 	\continue{v_2}{(\kOOappII{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{\kappa})}}{
 \begin{cases}
-	\sOOinspect{e}{\rho[x:=v']}{ext(c_2,\kappa)} \\
-\;\;\;\;\;\sidecond{applyCast(v_2,c_1) = \rOOsucc{v'}}
+\sOOinspect{e}{\rho[x:=v']}{ext(c_2,\kappa)} \\
+\sidecond{applyCast(v_2,c_1) = \rOOsucc{v'}}
 \\
 \sOOhalt{l} \\
-\;\;\;\;\;\sidecond{applyCast(v_2,c_1) = \rOOfail{l}}
+\sidecond{applyCast(v_2,c_1) = \rOOfail{l}}
 \end{cases}
 }{}
+
 
 \hifunrule{
 	\continue{\hcvOOcons{v_1}{c_1}{v_2}{c_2}}{
