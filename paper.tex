@@ -2333,8 +2333,12 @@ ADT, then
   \evalEqv{\effCEK{C}}{\ineffCEKD}
 \]
 
-The meat of the proof is in a lemma that establishes a weak
-bisimulation between \ineffCEKD{} and \effCEK{C}.
+The main work of proof is in a lemma that establishes a weak
+bisimulation between \ineffCEKD{} and \effCEK{C}.  The bisimulation
+goes more smoothly if we require two more properties of the cast
+representation: that the casts form a monoid (the $id$ and $seq$
+operators) and that the cast constructor is equivalent to the identity
+operator when applied to an identical source and target type.
 
 
 \todo[inline]{UNDER CONSTRUCTION -JS}
