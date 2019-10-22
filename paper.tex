@@ -1862,6 +1862,9 @@ Before turning to the definition of the abstract data types, we first
 give the definition of values used by the \effCEK{C}, as they are
 mentioned in the definition of the ADTs.
 
+\todo[inline]{The notation $\hcvOOinj{P}{v}$ is non-standard
+   and should be explained. -JS}
+
 \begin{definition}[Values for the \effCEK{C} machine] \label{def:values-effCEK}
   \[
   \begin{array}{rclr}
@@ -2324,7 +2327,7 @@ Transitive closure of reduction ($\judgeSreduceTrans{C}{s}{s}$) and
 evaluation ($\judgeSeval{C}{e}{o}$) are standard. Value typing 
 ($\judgeType{v}{T}$) is straightforward.
 
-\subsection{\effCEK{C} is equivalent to \ineffCEKD, provided $C$ is an instance of the Lazy D ADT}
+\subsection{\effCEK{C} is equivalent to \ineffCEKD{}, provided $C$ is an instance of the Lazy D ADT}
 \label{secc:framework:monoid-correct}
 
 In this subsection, we prove that for all $C$, if $C$ is a Lazy D Cast
@@ -2332,32 +2335,30 @@ ADT, then
 \[
   \evalEqv{\effCEK{C}}{\ineffCEKD}
 \]
-
-The main work of proof is in a lemma that establishes a weak
-bisimulation between \ineffCEKD{} and \effCEK{C}.  The bisimulation
+The main work of the proof is in a lemma that establishes a weak
+bisimulation between \effCEK{C} and \ineffCEKD{}.  The bisimulation
 goes more smoothly if we require two more properties of the cast
 representation: that the casts form a monoid (the $id$ and $seq$
 operators) and that the cast constructor is equivalent to the identity
 operator when applied to an identical source and target type.
+However, the final theorem does not require these two properties
+because we can prove 1) that \effCEK{C_1} and \effCEK{C_2} are
+equivalent for any two Lazy D Cast ADTs $C_1$ and $C_2$, and 2) there
+is an instance of the Lazy D Cast ADT, named $L$, that is a monoid and
+satisfies the two extra properties, and is therefore equivalent to
+\ineffCEKD{}. So by transitivity, for any Lazy D Cast ADT $C$ we have
+\evalEqv{\effCEK{C}}{\ineffCEKD}.
 
+\subsubsection{Weak Bisimulation between \effCEK{C} and \ineffCEKD{}}
 
-\todo[inline]{UNDER CONSTRUCTION -JS}
-
-
-
-
-
-We prove that if a instance of Cast ADT $C$ is
-Lazy D and is a monoid, then $eval_\mathcal{D} =
-eval_{\mathcal{S}(C)}$. We proof this theorem with a weak bisimulation
-between \effCEK{C} and \ineffCEKD.
-
-Some instances of Cast ADT (or "some Cast" for short) are also 
-\textit{monoids}. This definition is useful in the proof of 
-our framework.
+We shall prove that if a instance of Cast ADT $C$ is Lazy D, is a
+monoid, and if $cast(T,l,T) = id(T)$, then there is
+%% $eval_\mathcal{D} = eval_{\mathcal{S}(C)}$. We proof this lemma with
+a weak bisimulation between \effCEK{C} and \ineffCEKD{}.
+We define monoid as follows.
 
 \begin{definition}[Monoid]
-	A Cast is a monoid if 
+	A Cast ADT is a monoid if 
 	for all
 	$c_1 : T_1 \Longrightarrow T_2$,
 	$c_2 : T_2 \Longrightarrow T_3$, and
@@ -2373,28 +2374,33 @@ our framework.
 %effectively allows us to ``run'' programs without referring to an actual 
 %representation of cast.
 
+\todo[inline]{How does the following bisimulation relation
+  compare to the one used in the Blame and Coercion paper?
+  Are there any guiding principles to how this bisimulation
+  relation was constructed? -JS}
 
-\todo[inline]{In Fig.~\ref{fig:bisim-SC-D}, how to suppress rule numbers like 
-	(1), (2), etc.? -KC}
-Fig.~\ref{fig:bisim-SC-D} defines the bisimulation relation. Here we omit rules 
-that make the relation a congruence.
+Fig.~\ref{fig:bisim-SC-D} defines the bisimulation relation.  It is
+the smallest congruence relation that also includes the pairs induced
+by the rules in Fig.~\ref{fig:bisim-SC-D}.
 %
-The relation $\kappa \approx \kappa$ relates two continuations. 
+The relation is mutually defined on continuations, written $\kappa
+\approx \kappa$, and values, written $v \approx v : T$, where $T$ is
+their type.
 %
 If $k \approx \kappa$, adding an identity cast on top of $k$ gives a related 
-continuation. 
+continuation.
+%
+\todo[inline]{The use of ``wrap'' obscures this explanation.
+  Consider getting rid of wrap by inlining it. -JS}
 %
 If $\kappa_1 \approx \kappa_2$, extending $\kappa_1$ and $\kappa_2$ with the 
 same cast gives related results.
 %
-%
-The relation $v \approx v : T$ relates two value and also report their type. We 
-will see shortly why reporting the type. 
-%
 If two values of type $P$ are related, injecting them to $\TOOdyn$ gives 
 related values.
 %
-Unit values are of course related.
+% The following is part of being a congruence. -JS
+%Unit values are of course related. 
 %
 To relate to a non-casted function in \ineffCEKD, the function in \effCEK{C} 
 must use identities as its casts.
@@ -2402,6 +2408,10 @@ must use identities as its casts.
 If functions are related, we can apply the same cast on both side.
 %
 Rules for products and sums are similar.
+
+
+\todo[inline]{Give the motivation for the following lemma. Where
+  does it get used? As in, which case of which other lemma or theorem? -JS}
 
 \begin{lemma}[SoAndSo]
 	Assume $C$ implements Lazy D Cast ADT
@@ -2422,7 +2432,7 @@ Rules for products and sums are similar.
 
 \begin{figure}
 	$\text{\effCEK{C}} \approx \text{\ineffCEKD}$
-	\[\dots\]
+%	\[\dots\]
 	
 	\fbox{$\kappa \approx \kappa$}
 	\begin{gather*}
@@ -2442,7 +2452,7 @@ Rules for products and sums are similar.
 	\end{gather*}
 \\	
 	\fbox{$v \approx v : T$}
-	\begin{gather}
+	\begin{gather*}
 	\inference{
 		v_1 \approx v_2 : P
 	}{
@@ -2450,10 +2460,10 @@ Rules for products and sums are similar.
 		: \TOOdyn
 	}
 \\ \\
-	\inference{}{
-		\hcvOOtt \approx \vOOtt : \POOunit
-	}
-	\quad
+	%% \inference{}{
+	%% 	\hcvOOtt \approx \vOOtt : \POOunit
+	%% }
+	%% \quad
 	\inference{}{
 		\hcvOOtt \approx \vOOcast{\vOOtt}{\cOOcast{\POOunit}{l}{\POOunit}}
 		: \POOunit
@@ -2535,91 +2545,102 @@ c_2' = seq(c_2,cast(T_2,l,T_4))
 	\vOOcast{v}{\cOOcast{\POOsum{T_1}{T_2}}{l}{\POOsum{T_3}{T_4}}}
 	: \POOsum{T_3}{T_4}
 	}
-	\end{gather}
+	\end{gather*}
 	\caption{Bisimulation between \effCEK{C} and \ineffCEKD}
 	\label{fig:bisim-SC-D}
 \end{figure}
 
 Before proving the weak bisimulation between \effCEK{C} and \ineffCEKD, we 
-introduce one more definition: $s_1 \approx^{*} s_2$ if and only if there 
-exists $s_2' \in \text{\ineffCEKD}$
-such that $\judgeCreduceTrans{s_2}{s_2'}$ and $s_1 \approx s_2'$.
+introduce one more definition.
+
+\begin{definition}[$s \approx^{*} s$]
+Given any two states $s_1$ and $s_2$, we write $s_1 \approx^{*} s_2$
+if and only if there exists a state $s_2' \in \text{\ineffCEKD}$ such
+that $\judgeDreduceTrans{s_2}{s_2'}$ and $s_1 \approx s_2'$.
+\end{definition}
 
 \todo[inline]{Standardize theorem statement -KC}
+
 \begin{lemma}[Weak Bisimulation between \effCEK{C} and \ineffCEKD]
-	\label{thm:surely-monoidic-reduce}
-	For all instance of Cast ADT $C$, 
-	if $C$ is \lazyD{} and is a monoid and $cast(T,l,T)=id(T)$,
-	$ s_{1}, s_{1}' \in \text{\effCEK{C}}$,
-	$ s_{2}, s_{2}' \in \text{\ineffCEKD}$,
-	$ s_{1} \approx s_{2}$,
-	$ \judgeSreduce{C}{s_{1}}{s_{1}'}$, and
-	$ \judgeDreduce{s_{2}}{s_{2}'}$, then
-%	then there exist$s_2'' \in \text{\ineffCEKD}$such that
-	\[ \exists s_2'' \in \text{\ineffCEKD}: \;
-	\judgeDreduceTrans{s_{2}'}{s_{2}''} \;\text{and}\; s_1' \approx s_2'' \]
-%	\begin{enumerate}
-%		\item if $\judgeDreduce{s_1}{s_3}$,
-%		then
-%		there exist$s_5 \in \text{\ineffCEKD}$, $s_4 \in \mathcal{S}(C)$,
-%		such that \begin{itemize}
-%			\item$s_5 \approx s_4$, and
-%			\item$\judgeSreduce{C}{s_2}{s_4}$,
-%			\item$\judgeDreduceTrans{s_3}{s_5} $
-%		\end{itemize}
-%		\item if $\judgeSreduce{C}{s_2}{s_4}$,
-%		then
-%		there exist$s_3 \in \mathcal{C}$,
-%		such that \begin{itemize}
-%			\item$s_3 \approx s_4 $
-%			\item$\judgeDreduceTrans{s_1}{s_3} $
-%		\end{itemize}
-%	\end{enumerate}
-
-Or diagrammatically, 
-\[\begin{array}{clclc}
-s_{1} & \longrightarrow_{\text{\effCEK{C}}} & s_1'\\
-\rotatebox[origin=c]{90}{$\approx$} 
-& & & \;\;\;\rotatebox[origin=c]{-20}{$\approx$} \\
-s_{2} & 
-\longrightarrow_{\text{\ineffCEKD}} & s_2' &
-\longrightarrow^{*}_{\text{\ineffCEKD}} & s_2'' \\
-\end{array}\]
-
+  \label{thm:surely-monoidic-reduce}
+  Suppose $C$ is an instance of the Cast ADT
+  and the \lazyD{} ADT, $C$ is a monoid,
+  and $cast(T,l,T)=id(T)$.
+  If
+  $s_{1}, s_{1}' \in \text{\effCEK{C}}$,
+  $s_{2}, s_{2}' \in \text{\ineffCEKD}$,
+  $s_{1} \approx s_{2}$,
+  $\judgeSreduce{C}{s_{1}}{s_{1}'}$, and
+  $\judgeDreduce{s_{2}}{s_{2}'}$, then
+  \todo[inline]{The premise $\judgeDreduce{s_{2}}{s_{2}'}$ is
+    unusual for a weak bisimulation. Makes me suspicious.
+    That is usually in the conclusion. If this is indeed correct,
+    then you'll need to justify/explain it. -JS}
+  \[
+    \exists s_2'' \in \text{\ineffCEKD}: \;
+    \judgeDreduceTrans{s_{2}'}{s_{2}''} \;\text{and}\; s_1' \approx s_2''
+  \]
+  Or diagrammatically, 
+  \[
+  \begin{array}{clclc}
+    s_{1} & \longrightarrow_{\text{\effCEK{C}}} & s_1'\\
+    \rotatebox[origin=c]{90}{$\approx$} 
+    & & & \;\;\;\rotatebox[origin=c]{-20}{$\approx$} \\
+    s_{2} & 
+    \longrightarrow_{\text{\ineffCEKD}} & s_2' &
+    \longrightarrow^{*}_{\text{\ineffCEKD}} & s_2'' \\
+  \end{array}
+  \]
 \end{lemma}
 \begin{proof}
-	By following the transition rule of \ineffCEKD. See the supplementary 
-	materials for details.
+  By following the transition rule of \ineffCEKD.
+  \todo[inline]{What does ``following the transition rules'' mean?
+    That's not normal proof jargon. Do you mean case analysis
+    on $\judgeSreduce{C}{s_{1}}{s_{1}'}$?
+    -JS}
+  See the supplementary materials for details.
 \end{proof}
 
 \todo[inline]{An extra property is required after changing case to small-step 
--KC}
-\begin{proposition}[Correctness of \effCEK{C}]
-	\label{thm:surely-monoidic-eval}
-	if $\judgetype{\emptyset}{e}{T}$ and $o : T$ and $C$ is a 
-	\lazyD{} Cast ADT and a monoid,
-	\[
-	\text{\evalEqv{\effCEK{C}}{\ineffCEKD}}
-	\]
-\end{proposition}
-\begin{proof}Proving left implies right is trivial.
-To prove $\judgeDeval{e}{o}$ implies $\judgeSeval{C}{e}{o}$, 
-we firstly take one steps in \effCEK{C}, and catch it up in \ineffCEKD\ by 
-taking one or more steps in \ineffCEKD. As we just took a positive number of 
-steps, we are closer to the halting state.
+  -KC}
+
+
+\begin{corollary}[Correctness of \effCEK{C}]
+  \label{thm:surely-monoidic-eval}
+  Suppose $C$ is an instance of the Cast ADT
+  and the \lazyD{} ADT, $C$ is a monoid,
+  and $cast(T,l,T)=id(T)$.
+  If $\judgetype{\emptyset}{e}{T}$ and $o : T$, then
+  \[
+    \text{\evalEqv{\effCEK{C}}{\ineffCEKD}}
+  \]
+\end{corollary}
+\begin{proof}
+  Proving that the left-hand side implies the right-hand side is
+  trivial.  To prove $\judgeDeval{e}{o}$ implies
+  $\judgeSeval{C}{e}{o}$, we first take one step in \effCEK{C}, and
+  catch it up in \ineffCEKD\ by taking one or more steps in
+  \ineffCEKD. As we just took a positive number of steps, we are
+  closer to the halting state.
 \end{proof}
 
 %% \subsection{\lazyD\ Cast ADT Respect \ineffCEKD}
 %% \label{secc:framework:all-correct}
 
-In this subsection, we prove that for all $C$, if $C$ is a Lazy D Cast ADT, 
-then \evalEqv{\ineffCEKD}{\effCEK{C}}. We first 
-prove that all $S(C)$ where $C$ is a Lazy D Cast ADT are equivalent, then 
-connect this theorem to Lemma~\ref{thm:surely-monoidic-eval}.
+%% In this subsection, we prove that for all $C$, if $C$ is a Lazy D Cast ADT, 
+%% then \evalEqv{\ineffCEKD}{\effCEK{C}}. We first 
+%% prove that all $S(C)$ where $C$ is a Lazy D Cast ADT are equivalent, then 
+%% connect this theorem to Lemma~\ref{thm:surely-monoidic-eval}.
 
-We prove the equivalence among \effCEK{S(C)} with strong bisimulation. This 
-time almost all the bisimulation relations are all derived from definitions 
-except the relaton for casts, which is by cast constructors:
+\subsubsection{\effCEK{C_1} and \effCEK{C_2} are equivalence if $C_1$ and $C_2$ are Lazy D}
+
+We prove the equivalence among two \effCEK{C} machines with a strong
+bisimulation. This time almost all the bisimulation relations are all
+derived from definitions except the relaton for casts, which is by
+cast constructors:
+\todo[inline]{By ``derived from the definitions'' do you mean
+ that it is a congruence? -JS}
+
 \begin{gather*}
 \inference{
 }{
@@ -2660,32 +2681,38 @@ except the relaton for casts, which is by cast constructors:
 	\end{array}\]
 \end{lemma}
 \begin{proof} 
-	This proof is effectively a duplication of the transition rule of 
-	\effCEK{S(C)}.
-	The key ideas of this proof are undoing sequencing with the property (2) of 
-	Lazy D Cast ADT, and handling all possibly uses of $
-	cast(T,l,T)$ with property (3)-(11).
+  This proof is effectively a duplication of the transition rule of
+  \effCEK{S(C)}.
+%
+  \todo[inline]{The above sentence is not normal proof jargon.  Are
+    you doing a proof by cases on $s_{1}
+    \longrightarrow_{\text{\effCEK{C}}} s_1'$? -JS}
+%
+  The key ideas of this proof are undoing sequencing with the property
+  (2) of Lazy D Cast ADT, and handling all possibly uses of
+  $cast(T,l,T)$ with property (3)-(11).
 \end{proof}
 
-\begin{proposition}[Equivalence of \lazyD{} Cast ADT]
-	\label{thm:surely-lazyD-eqv}
-	if $\judgetype{\emptyset}{e}{T}$, $o : T$, and $C_1$ and $C_2$
-	are \lazyD\ Cast ADTs,
-	\[
-	eval_{S(C_1)} = eval_{S(C_2)}
-	\]
+\begin{proposition}[Equivalence of two \lazyD{} Cast ADTs]
+  \label{thm:surely-lazyD-eqv}
+  Suppose $C_1$ and $C_2$ are \lazyD\ Cast ADTs.
+  If $\judgetype{\emptyset}{e}{T}$, $o : T$, then
+  \[
+  eval_{S(C_1)} = eval_{S(C_2)}.
+  \]
 \end{proposition}
 \begin{proof}
-	By induction with the help of Lemma~\ref{thm:CEKS-bisim}.
+  By induction with the help of Lemma~\ref{thm:CEKS-bisim}.
+  \todo[inline]{Induction on what? -JS}
 \end{proof}
 
 \begin{theorem}[\lazyD\ Cast ADT Respects \ineffCEKD]
-	\label{thm:surely-lazyD-correct}
-	if $\judgetype{\emptyset}{e}{T}$ and $o : T$ and $C$ is a 
-	\lazyD{} Cast ADT.
-	\[
-	\text{\evalEqv{\ineffCEKD}{\effCEK{C}}}
-	\]
+  \label{thm:surely-lazyD-correct}
+  Suppose $C$ is a \lazyD{} Cast ADT.  If
+  $\judgetype{\emptyset}{e}{T}$ and $o : T$, then
+  \[
+  \text{\evalEqv{\ineffCEKD}{\effCEK{C}}}
+  \]
 \end{theorem}
 \begin{proof}
 	If we have a Lazy D Cast ADT and it is a monoid, this 
