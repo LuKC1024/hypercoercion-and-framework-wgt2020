@@ -86,7 +86,7 @@
 \newcommand{\lazyUD}{Lazy\;UD}
 \newcommand{\lazyD}{Lazy\;D}
 
-\newcommand{\sOOinspect}[3]{\langle\langle#1,#2\rangle,#3\rangle}
+\newcommand{\sOOinspect}[3]{\langle#1,#2,#3\rangle}
 \newcommand{\sOOreturn}[2]{\langle#1,#2\rangle}
 \newcommand{\sOOhalt}[1]{\mathtt{Halt} \; #1}
 
@@ -178,7 +178,7 @@
 %	\langle #1 \rangle #2}
 
 \newcommand{\typingHC}[3]{#1 : #2 \Longrightarrow #3}
-\newcommand{\hcvOOinj}[2]{\mathtt{inj} \; #2}
+\newcommand{\hcvOOinj}[2]{\mathtt{Dyn}_{#1}(#2)}
 %\newcommand{\hcvOOfun}[5]{\mathtt{fun} \; #1 \; #2 \; #3 \; #4 \; #5}
 \newcommand{\hcvOOfun}[5]{\mathtt{fun} \; #2 \; #1 \; #3 \; #4 \; #5}
 \newcommand{\hcvOOtt}[0]{\mathtt{unit}}
@@ -629,11 +629,11 @@ When evaluating a cast expression, the machine moves the cast to the
 continuation and evaluates the inner expression.
 %% Other
 %% transition rules starting from$Eval$states are standard.
-To apply a casted function, the machine first casts $v_1$, the
-operand, then applies the casted operand to $v_2$, the underlying
+To apply a function in cast, the machine first casts $v_1$, the
+operand, then applies the operand in cast to $v_2$, the underlying
 function, and finally cast the result of the function application.
 %
-To take out the first (resp. second) part of a casted pair, the
+To take out the first (resp. second) part of a pair in cast, the
 machine firstly take out the first (resp. second) part of $v$, the
 underlying pair, and cast the result.
 %
@@ -642,7 +642,7 @@ underlying pair, and cast the result.
 %function to the value inside the left injection. The case for right
 %injection is similar.
 %
-When the target value is a casted sum, the machine moves the cast from
+When the target value is a sum in cast, the machine moves the cast from
 the target value to continuations functions.
 %
 To cast a value, the machine invokes $applyCast$ on the value.  If the
@@ -773,14 +773,14 @@ are standard~\citep{felleisen03:_pllc}.
 \end{figure}
 
 Let $v$ range over values. A value is either the unit, a function (a
-closure), a pair, a left injection, a right injection, or a casted
-value. As shown by the value typing rules, if the target type of a
-casted value is the dynamic type, the underlying value must be of an
+closure), a pair, a left injection, a right injection, or a value in cast. As 
+shown by the value typing rules, if the target type of a
+value in cast is the dynamic type, the underlying value must be of an
 injectable type. The definition of injectable types depends on blame
 strategies: for the \lazyD\ strategy, every pre-type is injectable;
 for the \lazyUD\ strategy, a pre-types is injectable if and only if
-all its sub-parts are the dynamic type. If the target type of a casted
-value is a pre-type, the type of the underlying value must have the
+all its sub-parts are the dynamic type. If the target type of a value in cast 
+is a pre-type, the type of the underlying value must have the
 same type constructor.
 
 Let $c$ range over casts. A cast is a triple of a type, a label, and a type.
@@ -1887,12 +1887,13 @@ is an instance of the Lazy D Cast ADT, and therefore
 
 Before turning to the definition of the abstract data types, we first
 give the definition of values and cast results used by the \effCEK{C}, as they 
-are mentioned in the definition of the ADTs.
+are mentioned in the definition of the ADTs. The notation \hcvOOinj{P}{v} 
+stands for values that are cast to the dynamic type.
 
 \todo[inline]{The notation $\hcvOOinj{P}{v}$ is non-standard
    and should be explained. -JS
 \\---\\
-What is the standard way to display it? -KC}
+I switch to the standard notation because we have an observation $\oOOinj$ -KC}
 
 \begin{definition}[Values and cast results for the \effCEK{C} machine] 
 \label{def:values-effCEK}
@@ -2262,11 +2263,11 @@ machine.  This machine is similar to the \ineffCEK{} machine
 and continuations.
 
 Let $v$ range over values. In \ineffCEK{} we have one value
-constructor for all casted value.  In \effCEK{C}, however, we do not
+constructor for all values in casts.  In \effCEK{C}, however, we do not
 have this generic value constructor, instead we push those casts into
 the ordinary values. For instance, $(\vOOcons{v_1}{v_2})$ corresponds
 to $(\hcvOOcons{v_1'}{id(T_1)}{v_2'}{id(T_2)})$. To construct values
-of the dynamic type, we use $(\hcvOOinj{P}{v})$.
+of the dynamic type, we use $\hcvOOinj{P}{v}$.
 
 Cast results ($r$) and machine states ($s$) are the same as for
 \ineffCEK{}.
@@ -2408,7 +2409,7 @@ related values.
 % The following is part of being a congruence. -JS
 %Unit values are of course related. 
 %
-To relate to a non-casted function in \ineffCEKD, the function in \effCEK{C} 
+To relate to a naked function in \ineffCEKD, the function in \effCEK{C} 
 must use identities as its casts.
 %
 If functions are related, we can apply the same cast on both side.
