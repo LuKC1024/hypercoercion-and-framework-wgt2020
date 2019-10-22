@@ -2377,7 +2377,12 @@ We define monoid as follows.
 \todo[inline]{How does the following bisimulation relation
   compare to the one used in the Blame and Coercion paper?
   Are there any guiding principles to how this bisimulation
-  relation was constructed? -JS}
+  relation was constructed? -JS
+\\---\\
+The guiding principle is to keep the change in D side atomic. \\
+In the blame and coercion paper,
+the bisimulation relation between $ \lambda{}C $ and $ \lambda{}S $ seems to be 
+related, but its (iii) rules in Figure 6 looks wired to me. -KC}
 
 Fig.~\ref{fig:bisim-SC-D} defines the bisimulation relation.  It is
 the smallest congruence relation that also includes the pairs induced
@@ -2530,7 +2535,11 @@ c_2' = seq(c_2,cast(T_2,l,T_4))
 \end{figure}
 
 \todo[inline]{Give the motivation for the following lemma. Where
-  does it get used? As in, which case of which other lemma or theorem? -JS}
+  does it get used? As in, which case of which other lemma or theorem? -JS
+\\---\\
+Partially fixed. Will say in which cases after finishing the bisim proof. -KC}
+
+We use the following lemma in our bisimulation proof.
 
 \begin{lemma}[SoAndSo]
 	Assume $C$ implements Lazy D Cast ADT
@@ -2624,10 +2633,6 @@ s_1 \approx s_2'
 \todo[inline]{UNDER CONSTRUCTION -KC}
 
 
-\todo[inline]{An extra property is required after changing case to small-step 
-  -KC}
-
-
 \begin{corollary}[Correctness of \effCEK{C}]
   \label{thm:surely-monoidic-eval}
   Suppose $C$ is an instance of the Cast ADT
@@ -2658,11 +2663,12 @@ s_1 \approx s_2'
 \subsubsection{\effCEK{C_1} and \effCEK{C_2} are equivalence if $C_1$ and $C_2$ are Lazy D}
 
 We prove the equivalence among two \effCEK{C} machines with a strong
-bisimulation. This time almost all the bisimulation relations are all
-derived from definitions except the relaton for casts, which is by
-cast constructors:
+bisimulation. The bisimulation relation is the smallest congruence relation 
+that also includes the pairs induced by the rules below.
 \todo[inline]{By ``derived from the definitions'' do you mean
- that it is a congruence? -JS}
+ that it is a congruence? -JS
+\\---\\
+Exactly, fixed. -KC}
 
 \begin{gather*}
 \inference{
@@ -2686,14 +2692,26 @@ cast constructors:
 \todo[inline]{Standardize theorem statement -KC}
 \begin{lemma}[Strong Bisimulation among $\mathcal{S}(\cdot)$]
 	\label{thm:CEKS-bisim}
-	If 
-	$C_1$ and $C_2$ are instances of Lazy D Cast ADT,
-	$s_1, s_1' \in S(C_1)$ and $s_2,s_2' \in S(C_2)$,
-	$s_1 \approx s_2$,
-	$\judgeSreduce{C_1}{s_1}{s_1'}$, and
-	$\judgeSreduce{C_2}{s_2}{s_2'}$, then 
-	$s_1' \approx s_2'$
-	
+	Assume $C_1$ and $C_2$ implements Lazy D Cast ADT
+	$s_{1} \in \text{\effCEK{C_1}}$,
+	$s_{2} \in \text{\effCEK{C_2}}$,
+	$s_{1} \approx s_{2}$,
+	\begin{enumerate}
+		\item If $s_1 = \sOOhalt{o}$ then $s_2 = \sOOhalt{o}$
+		\item If $s_2 = \sOOhalt{o}$ then $s_1 = \sOOhalt{o}$
+		\item If $\judgeSreduce{C}{s_1}{s_3}$ 
+		then $\judgeDreduce{s_2}{s_4}$ and $s_3 \approx s_4$ for some $s_4$
+		\item If $\judgeSreduce{C}{s_2}{s_4}$ 
+		then $\judgeDreduce{s_1}{s_3}$ and $s_3 \approx s_4$ for some $s_3$
+	\end{enumerate}
+%	If 
+%	$C_1$ and $C_2$ are instances of Lazy D Cast ADT,
+%	$s_1, s_1' \in S(C_1)$ and $s_2,s_2' \in S(C_2)$,
+%	$s_1 \approx s_2$,
+%	$\judgeSreduce{C_1}{s_1}{s_1'}$, and
+%	$\judgeSreduce{C_2}{s_2}{s_2'}$, then 
+%	$s_1' \approx s_2'$
+%	
 	Or diagrammatically, 
 	\[\begin{array}{clc}
 	s_{1} & \longrightarrow_{\text{\effCEK{C}}} & s_1'\\
@@ -2703,13 +2721,13 @@ cast constructors:
 	\longrightarrow_{\text{\ineffCEKD}} & s_2' \\
 	\end{array}\]
 \end{lemma}
-\begin{proof} 
-  This proof is effectively a duplication of the transition rule of
-  \effCEK{S(C)}.
+\begin{proof} By casing on $s_{1} \approx s_{2}$.
 %
   \todo[inline]{The above sentence is not normal proof jargon.  Are
     you doing a proof by cases on $s_{1}
-    \longrightarrow_{\text{\effCEK{C}}} s_1'$? -JS}
+    \longrightarrow_{\text{\effCEK{C}}} s_1'$? -JS
+\\---\\
+By casing on the bisimulation relation. -KC}
 %
   The key ideas of this proof are undoing sequencing with the property
   (2) of Lazy D Cast ADT, and handling all possibly uses of
@@ -2718,15 +2736,27 @@ cast constructors:
 
 \begin{proposition}[Equivalence of two \lazyD{} Cast ADTs]
   \label{thm:surely-lazyD-eqv}
-  Suppose $C_1$ and $C_2$ are \lazyD\ Cast ADTs.
-  If $\judgetype{\emptyset}{e}{T}$, $o : T$, then
+  Assume $C_1$ and $C_2$ implements Lazy D Cast ADT,
   \[
-  eval_{S(C_1)} = eval_{S(C_2)}.
+  eval_{\mathcal{S}(C_1)} = eval_{\mathcal{S}(C_2)}.
   \]
 \end{proposition}
 \begin{proof}
-  By induction with the help of Lemma~\ref{thm:CEKS-bisim}.
-  \todo[inline]{Induction on what? -JS}
+	Without lost of generality, assume $\judgeSreduce{C_1}{e}{o}$, prove 
+	$\judgeSreduce{C_2}{e}{o}$.\\
+	By the definition of $eval_{\mathcal{S}(C)}$, we know 
+	\[
+	\judgeSreduceTrans{C_2}{load_{\mathcal{S}(C_1)}(e)}{\sOOhalt{o}}
+	\]
+	By induction on this reduction sequence and Lemma~\ref{thm:CEKS-bisim}, we 
+	have 
+	\[\judgeSreduceTrans{C_2}{load_{\mathcal{S}(C_2)}(e)}{\sOOhalt{o}}\]
+	that is, $\judgeSreduce{C_2}{e}{o}$
+\todo[inline]{Induction on what? -JS
+\\---\\
+Fixed. -KC
+\\---\\
+Need to define load. -KC}
 \end{proof}
 
 
