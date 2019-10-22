@@ -1162,37 +1162,51 @@ who are not familiar with them to \citet{siek2012interpretations}.
 		\ncSeq{c}{c} \mid
 		\ncFun{c}{c}
 	}
-	\stxrule{\bar{c}}{wrapper coercions}{	
-		\ncInj{I} \mid
-		\ncFun{\hat{c}}{\hat{c}} \mid
-		\ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}}
-	}
+	%% \stxrule{\bar{c}}{wrapper coercions}{	
+	%% 	\ncInj{I} \mid
+	%% 	\ncFun{\hat{c}}{\hat{c}} \mid
+	%% 	\ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}}
+	%% }
 %	\stxrulecont{
 %		\ncProd{\hat{c}}{\hat{c}} \mid
 %		\ncSeq{\ncProd{\hat{c}}{\hat{c}}}{\ncInj{I}} \mid
 %		\ncSum{\hat{c}}{\hat{c}} \mid
 %		\ncSeq{\ncSum{\hat{c}}{\hat{c}}}{\ncInj{I}} \mid	
 %	}
-	\stxrule{\hat{c}}{normal coercions}{
-		\bar{c} \mid
-		\ncId \mid
-		\ncFail{l} \mid
-		\ncProj{I}{l} \mid
-		\ncSeq{\ncProj{I}{l}}{\ncFail{l}} \mid
-		\ncSeq{\ncProj{I}{l}}{\ncInj{I}}
-	}
-	\stxrulecont{
-		\ncSeq{\ncProj{I}{l}}{\ncFun{\hat{c}}{\hat{c}}} \mid
-		\ncSeq{\ncProj{I}{l}}{\ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}}}
-	}
+\stxrule{\hat{c}}{normal coercions}{
+	\ncFun{\hat{c}}{\hat{c}} \mid
+	\ncSeq{\ncProj{I}{l}}{\ncFun{\hat{c}}{\hat{c}}} \mid
+	\ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}} \mid
+	\ncSeq{\ncProj{I}{l}}{\ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}}} \mid
+	\ncSeq{\ncProj{I}{l}}{\ncFail{l}}
+}
+\stxrulecont{
+	\ncId \mid
+	\ncProj{I}{l} \mid
+	\ncInj{I} \mid
+	\ncSeq{\ncProj{I}{l}}{\ncInj{I}} \mid
+	\ncFail{l} 
+}
+	%% \stxrule{\hat{c}}{normal coercions}{
+	%% 	\bar{c} \mid
+	%% 	\ncId \mid
+	%% 	\ncFail{l} \mid
+	%% 	\ncProj{I}{l} \mid
+	%% 	\ncSeq{\ncProj{I}{l}}{\ncFail{l}} \mid
+	%% 	\ncSeq{\ncProj{I}{l}}{\ncInj{I}}
+	%% }
+	%% \stxrulecont{
+	%% 	\ncSeq{\ncProj{I}{l}}{\ncFun{\hat{c}}{\hat{c}}} \mid
+	%% 	\ncSeq{\ncProj{I}{l}}{\ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}}}
+	%% }
 	\end{array}
 	\]
 	\caption{Syntax of coercions and normal forms}
 	\label{fig:normal-coercion}
 \end{figure}
 
-\figref{fig:normal-coercion} gives the grammar for coercions, written
-$c$ and also coercions in normal form, written $\hat{c}$.
+\figref{fig:normal-coercion} reviews the grammar for coercions,
+written $c$.
 %
 To review, an injection $I!$ takes a value from an injectiable type
 $I$ to type $\TOOdyn$. An injectable type is simply a type that can be
@@ -1207,55 +1221,32 @@ The coercion $\iota$ is the identity, $\bot^{l}$ is the coercion that
 always fails and blames $l$, and $\ncSeq{c_1}{c_2}$ applies $c_1$ and
 then $c_2$ in sequence. The function coercion $\ncFun{c_1}{c_2}$
 applies $c_1$ to the argument of a function and $c_2$ to the return
-value.
+pvalue.
 
 Coercions come with a reduction relation so it is natural to ask what
-are their normal forms. The most important of the reduction rules are
-the ones that handle when an injection is followed by a projection,
-which for \lazyUD{} are:
-\begin{align*}
-  I! ; I?^l &\longmapsto \iota \\
-  I_1! ; I_2?^l & \longmapsto \bot^l & \text{if } I_1 \neq I_2
-\end{align*}
-and the rule for pushing sequences below function coercions:
-\begin{align*}
-  (c_1 \to c_2) ; (c_3 \to c_4) & \longmapsto
-  (c_3 ; c_1) \to (c_2 ; c_4)
-\end{align*}
-Of course there are also rules that remove identity coercions.
+are their normal forms. \figref{fig:normal-coercion} defines the
+syntax of coercion in normal form, written $\hat{c}$. Conceptually, a
+coercion in normal form has three parts, all of which are optional.
+It may start with a projection $I?^l$, then it may be followed by a
+function coercion, and then it may be concluded with an injection $I!$
+or a failure $\bot^l$. While this is a simple idea, there are 10
+clauses in the definition for $\hat{c}$!
 
-\todo[inline]{UNDER CONSTRUCTION -Jeremy}
+%% Let $\bar{c}$ range over wrapper coercions, which represent casts in $
+%% \vOOcast{v}{c}$.  Let $\hat{c}$ range over normal coercions. If we
+%% inline $\bar{c}$ and re-order the cases, the definition of $\hat{c}$
+%% becomes:
+%% \[
+%% \begin{array}{rclr}
+%% \end{array}
+%% \]
 
-
-Let $\bar{c}$ range over wrapper coercions, which represent casts in $
-\vOOcast{v}{c}$.  Let $\hat{c}$ range over normal coercions. If we
-inline $\bar{c}$ and re-order the cases, the definition of $\hat{c}$
-becomes:
-\[
-\begin{array}{rclr}
-\stxrule{\hat{c}}{normal coercions}{
-	\ncFun{\hat{c}}{\hat{c}} \mid
-	\ncSeq{\ncProj{I}{l}}{\ncFun{\hat{c}}{\hat{c}}} \mid
-	\ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}} \mid
-	\ncSeq{\ncProj{I}{l}}{\ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}}} \mid
-	\ncSeq{\ncProj{I}{l}}{\ncFail{l}}
-}
-\stxrulecont{
-	\ncId \mid
-	\ncProj{I}{l} \mid
-	\ncInj{I} \mid
-	\ncSeq{\ncProj{I}{l}}{\ncInj{I}} \mid
-	\ncFail{l} \mid
-}
-\end{array}
-\]
-
-Three observations on this definition leads to hypercoercion: 
-\begin{enumerate}
-	\item The length of normal coercion is at most three.
-	\item Projections are always at the beginning when present.
-	\item Injections and failures are always at the end when present.
-\end{enumerate}
+%% Three observations on this definition leads to hypercoercion: 
+%% \begin{enumerate}
+%% 	\item The length of normal coercion is at most three.
+%% 	\item Projections are always at the beginning when present.
+%% 	\item Injections and failures are always at the end when present.
+%% \end{enumerate}
 
 
 \section{Definition of Hypercoercions} \label{sec:hypercoercion-definition}
@@ -1351,14 +1342,16 @@ Three observations on this definition leads to hypercoercion:
 \end{figure}
 
 This section presents our first contribution, the definition of
-hypercoercions.  The design of hypercoercions is motivated by
-observations on coercion normal forms: a normal coercion has at most
-three parts; projections are always at the beginning; injections and
-failures are always at the end. Hypercoercions have similar shape: a
+hypercoercions.  The design of hypercoercions is motivated by the
+observation that a normal coercion has at most three parts;
+projections are always at the beginning; injections and failures are
+always at the end. Hypercoercions make this structure explicit: a
 hypercion either is $\hyperCoercionI$, the identity cast for
 $\TOOdyn$, or contains three parts, where the first part is either a
-projection or a no-op while last part is either an injection, a
-failure, or a no-op.
+projection or the identity and the last part is either an injection, a
+failure, or the identity.
+
+\todo[inline]{What about the middlepart? -JS}
 
 \figref{fig:hypercoercion} defines the syntax of hypercoercions. Types, 
 pre-types, and blame labels are as before.
