@@ -2706,12 +2706,15 @@ cast constructors:
   \todo[inline]{Induction on what? -JS}
 \end{proof}
 
-\begin{theorem}[\lazyD\ Cast ADT Respects \ineffCEKD]
+
+\subsubsection{Correctness of \effCEK{C}}
+
+\begin{theorem}[\effCEK{C} is correct wrt. \ineffCEKD{}]
   \label{thm:surely-lazyD-correct}
   Suppose $C$ is a \lazyD{} Cast ADT.  If
   $\judgetype{\emptyset}{e}{T}$ and $o : T$, then
   \[
-  \text{\evalEqv{\ineffCEKD}{\effCEK{C}}}
+  \text{\evalEqv{\effCEK{C}}{\ineffCEKD}}
   \]
 \end{theorem}
 \begin{proof}
