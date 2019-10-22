@@ -1353,10 +1353,12 @@ projections are always at the beginning; injections and failures are
 always at the end. Hypercoercions make this structure explicit: a
 hypercion either is $\hyperCoercionI$, the identity cast for
 $\TOOdyn$, or contains three parts, where the first part is either a
-projection or the identity and the last part is either an injection, a
-failure, or the identity.
-
-\todo[inline]{What about the middlepart? -JS}
+projection or the identity, the last part is either an injection, a
+failure, or the identity, and each kind of middle part corresponds to a type 
+constructor and include hypercoercion(s) for subpart(s) of corresponding values.
+\todo[inline]{What about the middlepart? -JS
+\\---\\
+Fixed. -KC}
 
 \figref{fig:hypercoercion} defines the syntax of hypercoercions. Types, 
 pre-types, and blame labels are as before.
