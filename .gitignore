@@ -10,3 +10,5 @@ Design/**
 *.pdf
 *.synctex.gz
 *.tdo
+Proof/**/*.agdai
+Proof/**/*~
