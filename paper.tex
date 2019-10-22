@@ -2102,7 +2102,7 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
 	\]
 	
 	Apply continuation
-	\fbox{$continue(k,v) = s$}
+	\fbox{$\continue{k}{v} = s$}
 	\[
 	\begin{array}{rclr}
 	
@@ -2409,27 +2409,6 @@ If functions are related, we can apply the same cast on both side.
 %
 Rules for products and sums are similar.
 
-
-\todo[inline]{Give the motivation for the following lemma. Where
-  does it get used? As in, which case of which other lemma or theorem? -JS}
-
-\begin{lemma}[SoAndSo]
-	Assume $C$ implements Lazy D Cast ADT
-	and $v_1$ is a value in \effCEK{C}
-	and $v_2$ is a value in \ineffCEKD\
-	and $v_1 \approx v_2 : T_1$,
-	\[
-	applyCast_{\text{\effCEK{C}}}(v,cast(T_1,l,T_2)) 
-	\approx 
-	applyCast_{\text{\ineffCEKD}}(v,\cOOcast{T_1}{l}{T_2})
-	\]
-\end{lemma}
-\begin{proof}
-	Case splitting whether $T_1$ is shallowly consistent with $T_2$.
-	If yes, case splitting how they are shallowly consistent.
-	Then apply properties (3) - (11) of Lazy D Cast when applicable.
-\end{proof}
-
 \begin{figure}
 	$\text{\effCEK{C}} \approx \text{\ineffCEKD}$
 %	\[\dots\]
@@ -2550,56 +2529,100 @@ c_2' = seq(c_2,cast(T_2,l,T_4))
 	\label{fig:bisim-SC-D}
 \end{figure}
 
+\todo[inline]{Give the motivation for the following lemma. Where
+  does it get used? As in, which case of which other lemma or theorem? -JS}
+
+\begin{lemma}[SoAndSo]
+	Assume $C$ implements Lazy D Cast ADT
+	and $v_1$ is a value in \effCEK{C}
+	and $v_2$ is a value in \ineffCEKD\
+	and $v_1 \approx v_2 : T_1$,
+	\[
+	applyCast_{\text{\effCEK{C}}}(v,cast(T_1,l,T_2)) 
+	\approx 
+	applyCast_{\text{\ineffCEKD}}(v,\cOOcast{T_1}{l}{T_2})
+	\]
+\end{lemma}
+\begin{proof}
+	Case splitting whether $T_1$ is shallowly consistent with $T_2$.
+	If yes, case splitting how they are shallowly consistent.
+	Then apply properties (3) - (11) of Lazy D Cast when applicable.
+\end{proof}
+
 Before proving the weak bisimulation between \effCEK{C} and \ineffCEKD, we 
 introduce one more definition.
 
 \begin{definition}[$s \approx^{*} s$]
 Given any two states $s_1$ and $s_2$, we write $s_1 \approx^{*} s_2$
 if and only if there exists a state $s_2' \in \text{\ineffCEKD}$ such
-that $\judgeDreduceTrans{s_2}{s_2'}$ and $s_1 \approx s_2'$.
+that
+\[
+s_1 \approx s_2'
+\;\text{and}\;
+\judgeDreduceTrans{s_2}{s_2'}
+\]
 \end{definition}
 
-\todo[inline]{Standardize theorem statement -KC}
-
 \begin{lemma}[Weak Bisimulation between \effCEK{C} and \ineffCEKD]
-  \label{thm:surely-monoidic-reduce}
-  Suppose $C$ is an instance of the Cast ADT
-  and the \lazyD{} ADT, $C$ is a monoid,
-  and $cast(T,l,T)=id(T)$.
-  If
-  $s_{1}, s_{1}' \in \text{\effCEK{C}}$,
-  $s_{2}, s_{2}' \in \text{\ineffCEKD}$,
-  $s_{1} \approx s_{2}$,
-  $\judgeSreduce{C}{s_{1}}{s_{1}'}$, and
-  $\judgeDreduce{s_{2}}{s_{2}'}$, then
-  \todo[inline]{The premise $\judgeDreduce{s_{2}}{s_{2}'}$ is
-    unusual for a weak bisimulation. Makes me suspicious.
-    That is usually in the conclusion. If this is indeed correct,
-    then you'll need to justify/explain it. -JS}
-  \[
-    \exists s_2'' \in \text{\ineffCEKD}: \;
-    \judgeDreduceTrans{s_{2}'}{s_{2}''} \;\text{and}\; s_1' \approx s_2''
-  \]
-  Or diagrammatically, 
-  \[
-  \begin{array}{clclc}
-    s_{1} & \longrightarrow_{\text{\effCEK{C}}} & s_1'\\
-    \rotatebox[origin=c]{90}{$\approx$} 
-    & & & \;\;\;\rotatebox[origin=c]{-20}{$\approx$} \\
-    s_{2} & 
-    \longrightarrow_{\text{\ineffCEKD}} & s_2' &
-    \longrightarrow^{*}_{\text{\ineffCEKD}} & s_2'' \\
-  \end{array}
-  \]
+	\label{thm:surely-monoidic-reduce}
+	Assume $C$ implements Lazy D Cast ADT
+	and $C$ is a monoid
+	and $cast(T,l,T)=id(T)$,
+	$ s_{1} \in \text{\effCEK{C}}$,
+	$ s_{2} \in \text{\ineffCEKD}$,
+	$ s_{1} \approx s_{2}$,
+\begin{enumerate}
+	\item If $s_1 = \sOOhalt{o}$ then $s_2 = \sOOhalt{o}$
+	\item If $s_2 = \sOOhalt{o}$ then $s_1 = \sOOhalt{o}$
+	\item If $\judgeSreduce{C}{s_1}{s_3}$ 
+		then $\judgeDreduce{s_2}{s_4}$ for some $s_4$
+	\item If $\judgeDreduce{s_2}{s_4}$
+		then $\judgeSreduce{C}{s_1}{s_3}$ for some $s_3$
+	\item If $\judgeSreduce{C}{s_1}{s_3}$ and $\judgeDreduce{s_2}{s_4}$
+		then $s_3 \approx^{*} s_4$
+\end{enumerate}
+%	Or diagrammatically, 
+%	\[\begin{array}{clclc}
+%	s_{1} & \longrightarrow_{\text{\effCEK{C}}} & s_1'\\
+%	\rotatebox[origin=c]{90}{$\approx$} 
+%	& & & \;\;\;\rotatebox[origin=c]{-20}{$\approx$} \\
+%	s_{2} & 
+%	\longrightarrow_{\text{\ineffCEKD}} & s_2' &
+%	\longrightarrow^{*}_{\text{\ineffCEKD}} & s_2'' \\
+%	\end{array}\]
+
+%	$ s_{1}, s_{1}' \in \text{\effCEK{C}}$,
+%	$ s_{2}, s_{2}' \in \text{\ineffCEKD}$,
+%	$ s_{1} \approx s_{2}$,	
+%	$ \judgeSreduce{C}{s_{1}}{s_{1}'}$, and
+%	$ \judgeDreduce{s_{2}}{s_{2}'}$, then
+%	\[ \exists s_2'' \in \text{\ineffCEKD}: \;
+%	\judgeDreduceTrans{s_{2}'}{s_{2}''} \;\text{and}\; s_1' \approx s_2'' \]
+%	Or diagrammatically, 
+%	\[\begin{array}{clclc}
+%	s_{1} & \longrightarrow_{\text{\effCEK{C}}} & s_1'\\
+%	\rotatebox[origin=c]{90}{$\approx$} 
+%	& & & \;\;\;\rotatebox[origin=c]{-20}{$\approx$} \\
+%	s_{2} & 
+%	\longrightarrow_{\text{\ineffCEKD}} & s_2' &
+%	\longrightarrow^{*}_{\text{\ineffCEKD}} & s_2'' \\
+%	\end{array}\]
+	
 \end{lemma}
 \begin{proof}
-  By following the transition rule of \ineffCEKD.
-  \todo[inline]{What does ``following the transition rules'' mean?
-    That's not normal proof jargon. Do you mean case analysis
-    on $\judgeSreduce{C}{s_{1}}{s_{1}'}$?
-    -JS}
-  See the supplementary materials for details.
+	Part (1) and (2) follow from the definition of $s \approx s$.
+	Part (3) and (4) are true because we have transition rules for every 
+	non-halting state.
+	Part (5) is more interesting.
+	Consider
+	\[
+	\sOOreturn{\hcvOOcons{v_1}{c_1}{v_2}{c_2}}{\kOOcast{c}{\kOOcar{\kappa}}}
+	\approx
+	\]
 \end{proof}
+
+\todo[inline]{UNDER CONSTRUCTION -KC}
+
 
 \todo[inline]{An extra property is required after changing case to small-step 
   -KC}
