@@ -2054,7 +2054,7 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
 		\sOOreturn{\hcvOOtt}{\kappa}
 	}{}
 	\hiredruleS{
-		\sOOinspect{\eOOlam{T_1}{T_2}{x}{e}}{\rho}{\kappa}
+		\sOOinspect{(\eOOlam{T_1}{T_2}{x}{e})}{\rho}{\kappa}
 	}{
 		\sOOreturn{(\hcvOOfun{id(T_1)}{\rho}{x}{e}{id(T_2)})}{\kappa}
 	}{}
@@ -2110,30 +2110,26 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
 	
 
 \funrule{
-	\continue{v_1}{(\kOOconsI{e_2}{\rho}{\kappa})}}{
+	\continue{v_1}{\kOOconsI{e_2}{\rho}{\kappa}}}{
 	\sOOinspect{e_2}{\rho}{wrap(\kOOconsII{v_1}{\kappa})}}{}
 
 \hifunrule{
-	\continue{v_2}{(\kOOconsII{v_1}{\kappa})}}{
+	\continue{v_2}{\kOOconsII{v_1}{\kappa}}}{
 	\sOOreturn{(\hcvOOcons{v_1}{id(T_1)}{v_2}{id(T_2)})}{\kappa}}{}
 
 \hifunrule{
-	\continue{v}{(\kOOinl{\kappa})}}{
+	\continue{v}{\kOOinl{\kappa}}}{
 	\sOOreturn{(\hcvOOinl{v}{id(T)})}{\kappa}}{}
 
 \hifunrule{
-	\continue{v}{(\kOOinr{\kappa})}}{
+	\continue{v}{\kOOinr{\kappa}}}{
 	\sOOreturn{(\hcvOOinr{v}{id(T)})}{\kappa}}{}
 
 \funrule{
-	\continue{v_1}{(\kOOappI{e_2}{\rho}{\kappa})}}{
-	\sOOinspect{e_2}{\rho}{(\kOOappII{v_1}{\kappa})}}{}
-
-%\funrule{
-%	\continue{v_2}{(\kOOappII{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{\kappa})}}{
-%applyCast(v_2,c_1) >>= \lambda v. \sOOinspect{e}{\rho[x:=v]}{ext(c,\kappa)}
-%}{}
-
+	\continue{v_1}{\kOOappI{e_2}{\rho}{\kappa}}}{
+	\sOOinspect{e_2}{\rho}{
+		wrap(\kOOappII{v_1}{\kappa})
+	}}{}
 \hifunrule{
 	\continue{v_2}{(\kOOappII{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{\kappa})}}{
 \begin{cases}
@@ -2174,21 +2170,26 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
 	}
 }{
 	\sOOinspect{e_3}{\rho}{
-	\kOOcaseIII{v_1}{v_2}{\kappa}
+	wrap(\kOOcaseIII{v_1}{v_2}{\kappa})
 	}
 }{}
 
 \hifunrule{
-	\continue{v_3}{(\mathtt{case_3}\;(\hcvOOinl{v}{c})\;
-		(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})
-		\;\kappa)}
+	\continue{v_3}{
+		\kOOcaseIII{(\hcvOOinl{v}{c})}{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{\kappa}
+%		(\mathtt{case_3}\;()\;
+%		()
+%		\;)
+	}
 }{
 	\sOOreturn{v}{wrap(\kOOappII{(\hcvOOfun{seq(c,c_1)}{\rho}{x}{e}{c_2})}{\kappa})}
 }{}
 
 \hifunrule{
 	\continue{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}
-	{(\mathtt{case_3}\;(\hcvOOinr{v}{c})\;v_2\;\kappa)}
+	{
+		\kOOcaseIII{(\hcvOOinr{v}{c})}{v_2}{\kappa}
+	}
 }{
 	\sOOreturn{v}{wrap(\kOOappII{(\hcvOOfun{seq(c,c_1)}{\rho}{x}{e}{c_2})}{\kappa})}
 }{}
@@ -2246,36 +2247,6 @@ Continuations in \ineffCEK\ that have many casts at the top correspond
 to continuations in \effCEK{C}\ where those casts are composed by
 $seq(c,c)$.
 
-\todoKC{describe transition rules}
-We list a fraction of reduction rules due to space limitation.
-\todo[inline]{Don't omit reduction rules, instead put some in the appendix. -JS
-\\---\\They are all in the figure. I haven't updated this paragraph 
-accordingly. -KC}
-
-
-%When evaluating a cast expression, the machine moves the cast to the
-%continuation and evaluates the inner expression.
-%To apply a casted function, the machine first casts $v_1$, the
-%operand, then applies the casted operand to $v_2$, the underlying
-%function, and finally cast the result of the function application.
-%%
-%To take out the first (resp. second) part of a casted pair, the
-%machine firstly take out the first (resp. second) part of $v$, the
-%underlying pair, and cast the result.
-%%
-%%In case splitting, if the target value is a left injection, the
-%%machine moves to a state that will apply the first continuation
-%%function to the value inside the left injection. The case for right
-%%injection is similar.
-%%
-%When the target value is a casted sum, the machine moves the cast from
-%the target value to continuations functions.
-%%
-%To cast a value, the machine invokes $applyCast$ on the value.  If the
-%cast succeeds, the machine returns the result to the next
-%continuation.  If the cast fails, the machine halts with the blame
-%label.
-
 The transition relation $\judgeSreduce{C}{s}{s}$ uses functions provides by $C$ 
 to represent cases and to apply casts.
 %
@@ -2288,7 +2259,7 @@ To construct a function, the machine fills the casts $id$.
 To return a value to a continuation, the machine first applies the top cast to 
 the value. If the application fails, the machine halts with the blame label 
 from the failure. Otherwise, the machine handles the pre-continuation with 
-$continue$.
+$cont$.
 %
 When the machine constructs a pair, a left injection, or a right injection, it 
 fills the casts with $id$ as well, just like how it did for functions. 
@@ -2297,33 +2268,20 @@ To apply a function, the machine applies the domain cast $c_1$ to the
 operand $v_2$, extends the continuation with the codomain cast $c_2$, and 
 evaluate the function body.
 %
-To take out the first (resp. second) part of a pair ...
+To take out the first part of a pair, the machine returns the first value to a 
+continuation extended with the first cast. Taking out the second part of a pair 
+is similar.
 %
 %%In case splitting, if the target value is a left injection, the
 %%machine moves to a state that will apply the first continuation
 %%function to the value inside the left injection. The case for right
 %%injection is similar.
 %%
-%When the target value is a casted sum, the machine moves the cast from
-%the target value to continuations functions.
-To case spliting a variant, ...
-
-%When values are constructed, their hypercoercion parts are filled with outputs 
-%of $id$. For instance, when a function value is constructed, its first part 
-%and last part are initialized to $id(T_1)$ and $id(T_2)$respectively.
-%When evaluating a cast expression, the current continuation is extended with a 
-%hypercoercion constructed by $cast$. $ext$ composes the new hypercoercion 
-%with the hypercoercion on the top of the continuation.
-%When evaluating a compound expression, the machine firstly construct the new 
-%pre-continuation, then turn it to a continuation by adding an identity 
-%hypercoercion at the top. For instance, when evaluating a \texttt{cons} 
-%expression, the machine firstly construct $\hckOOconsI{e_2}{\rho}{\kappa}$, 
-%the new pre-continuation, then call $cont$, which adds an identity cast to 
-%form a continuation. 
-%When a function call happens, the machine firstly cast the operand. If the 
-%casting succeeds, the machine then evaluate the body in the extended 
-%environment and the extended continuation. If the casting fails, the machine 
-%then halts with the blame label.
+To case split a variant, the machine first look at the variant value. If the 
+variant is a left injection, the machine composes the cast in the left 
+injection with the domain casts of the first continuation function, then moves 
+to a state that will apply the new function to the value in the left injection.
+The case for right injections is similar.
 
 Transitive closure of reduction ($\judgeSreduceTrans{C}{s}{s}$) and 
 evaluation ($\judgeSeval{C}{e}{o}$) are standard. Value typing 
