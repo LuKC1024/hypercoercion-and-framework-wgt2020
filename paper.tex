@@ -241,6 +241,11 @@
 \newcommand{\continue}[2]{cont(#2,#1)}
 \newcommand{\highlight}[1]{{\color{red} #1}}
 
+% LCast
+\newcommand{\lsOOcast}[3]{\cOOcast{#1}{#2}{#3}}
+\newcommand{\lcOOnull}[0]{[]}
+\newcommand{\lcOOcons}[2]{#1 \; :: \; #2}
+
 \begin{document}
 
 %% Title information
@@ -2799,7 +2804,172 @@ Fixed. -KC}
 
 \subsubsection{The $L$ instance of the Lazy D Cast ADT}
 
-\todo[inline]{KC, please add the definition of $L$ -JS}
+\todo[inline]{KC, please add the definition of $L$ -JS
+\\---\\
+In progress. -KC}
+
+\begin{figure}
+Syntax
+\[
+\begin{array}{rclr}
+\stxrule{c}{casts}{\lcOOnull{} \mid \lcOOcons{s}{c}}
+\stxrule{s}{steps}{\lsOOcast{T}{l}{T}}
+\end{array}
+\]
+
+Steps Typing
+\fbox{$\judgeTypeFT{s}{T}{T}$}
+\begin{gather*}
+\inference{
+	T_1 \neq T_2
+}{
+	\judgeTypeFT{\lsOOcast{T_1}{l}{T_2}}{T_1}{T_2}
+}
+\end{gather*}
+
+Casts typing
+\fbox{$\judgeTypeFT{c}{T}{T}$}
+\begin{gather*}
+\inference{
+}{
+	\judgeTypeFT{\lcOOnull}{T}{T}
+}
+\quad
+\inference{
+	\judgeTypeFT{s}{T_1}{T_2} &
+	\judgeTypeFT{c}{T_2}{T_3}
+}{
+	\judgeTypeFT{\lcOOcons{s}{c}}{T_1}{T_3}
+}
+\end{gather*}
+
+\fbox{$seq(c,c)=c$}
+\[
+\begin{array}{rclr}
+\funrule{seq(\lcOOnull,c)}{c}{}
+\funrule{seq(\lcOOcons{s}{c'},c)}{\lcOOcons{s}{seq(c',c)}}{}
+\end{array}
+\]
+
+\fbox{$id(T)=c$}
+\[
+\begin{array}{rclr}
+\funrule{id(T)}{\lcOOnull}{}
+\end{array}
+\]
+
+\fbox{$cast(T,l,T)$}
+\[
+\begin{array}{rclc}
+\funrule{cast(T_1,l,T_2)}{
+	\lcOOnull
+}{
+	\sidecond{T_1 = T_2}
+}
+\funrule{cast(T_1,l,T_2)}{
+	\lcOOcons{\lsOOcast{T_1}{l}{T_2}}{\lcOOnull}
+}{
+	\sidecond{T_1 \neq T_2}
+}
+\end{array}
+\]
+
+	
+\fbox{$appS(v,s) = r$}
+\[
+\begin{array}{rclr}
+\funrule{
+	appS(v,\cOOcast{\star}{l}{\star})
+}{
+	\rOOsucc{v}
+}{}
+\funrule{
+	appS(\vOOcast{v}{\cOOcast{P_1}{l_1}{\star}},\cOOcast{\star}{l_2}{P_2})
+}{
+	\rOOsucc{v}
+}{\sidecond{P_1 = P_2}}
+\funrule{
+appS(\vOOcast{v}{\cOOcast{P_1}{l_1}{\star}},\cOOcast{\star}{l_2}{P_2})
+}{
+appS(v,\cOOcast{P_1}{l_2}{P_2})
+}{\sidecond{P_1 \neq P_2}}
+\funrule{
+	appS(v,\cOOcast{P}{l}{\star})
+}{
+	\rOOsucc{\hcvOOinj{P}{v}}
+}{}
+\funrule{
+	appS(v,\lsOOcast{\POOunit}{l}{\POOunit})
+}{
+	\rOOsucc{v}
+}{}
+\funrule{
+	appS(
+		\hcvOOfun{c_1}{\rho}{x}{e}{c_2},
+		\lsOOcast{\POOfun{T_1}{T_2}}{l}{\POOfun{T_3}{T_4}})
+}{
+	\rOOsucc{(\hcvOOfun{c_1'}{\rho}{x}{b}{c_2'})}
+}{
+	\\ &&
+	\text{where} \;
+	c_1' = seq(cast(T_3,l,T_1),c_1)
+	\\ &&
+	\text{and} \;
+	c_2' = seq(c_2,cast(T_2,l,T_4))
+}
+
+\funrule{
+	appS(
+		\hcvOOcons{v_1}{c_1}{v_2}{c_2},
+		\lsOOcast{\POOprod{T_1}{T_2}}{l}{\POOprod{T_3}{T_4}}
+}{
+	\rOOsucc{(\hcvOOcons{v_1}{c_1'}{v_2}{c_2'})}
+}{
+\\ &&
+\text{where} \;
+c_1' = seq(c_1,cast(T_1,l,T_3))
+\\ &&
+\text{and} \;
+c_2' = seq(c_2,cast(T_2,l,T_4))
+}
+\funrule{
+	appS(\hcvOOinl{v}{c},\lsOOcast{\POOsum{T_1}{T_2}}{l}{\POOsum{T_3}{T_4}})
+}{
+	\rOOsucc{(\hcvOOinl{v}{seq(c,cast(T_1,l,T_3))})}
+}{}
+\funrule{
+	appS(\hcvOOinr{v}{c},\lsOOcast{\POOsum{T_1}{T_2}}{l}{\POOsum{T_3}{T_4}})
+}{
+	\rOOsucc{(\hcvOOinr{v}{seq(c,cast(T_2,l,T_4))})}
+}{}
+\funrule{
+	appS(v,\cOOcast{P_1}{l}{P_2})
+}{
+	\rOOfail{l}
+}{\sidecond{\neg P_1 \smile P_2}}
+
+\end{array}
+\]
+
+
+\fbox{$applyCast(v,c) = r$}
+\[
+\begin{array}{rclr}
+\funrule{
+	applyCast(v,\lcOOnull)
+}{
+	\rOOsucc{v}
+}{}
+\funrule{
+	applyCast(v,\lcOOcons{s}{c})
+}{
+	applyStep(v,s) >>= \lambda v. applyCast(v,c)
+}{}
+\end{array}
+\]
+
+	\caption{The $L$ Lazy D Cast ADT}
+\end{figure}
 
 \begin{proposition}[$L$ properties]\ 
   \begin{enumerate}
