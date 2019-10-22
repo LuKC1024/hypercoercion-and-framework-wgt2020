@@ -2664,6 +2664,7 @@ standard format? -KC}
   catch it up in \ineffCEKD\ by taking one or more steps in
   \ineffCEKD. As we just took a positive number of steps, we are
   closer to the halting state.
+  \todo[inline]{I might want to revise this proof. -KC}
 \end{proof}
 
 %% \subsection{\lazyD\ Cast ADT Respect \ineffCEKD}
@@ -2703,7 +2704,6 @@ Exactly, fixed. -KC}
 }
 \end{gather*}
 
-\todo[inline]{Standardize theorem statement -KC}
 \begin{lemma}[Strong Bisimulation among $\mathcal{S}(\cdot)$]
 	\label{thm:CEKS-bisim}
 	Assume $C_1$ and $C_2$ implements Lazy D Cast ADT
@@ -2713,26 +2713,19 @@ Exactly, fixed. -KC}
 	\begin{enumerate}
 		\item If $s_1 = \sOOhalt{o}$ then $s_2 = \sOOhalt{o}$
 		\item If $s_2 = \sOOhalt{o}$ then $s_1 = \sOOhalt{o}$
-		\item If $\judgeSreduce{C}{s_1}{s_3}$ 
-		then $\judgeDreduce{s_2}{s_4}$ and $s_3 \approx s_4$ for some $s_4$
-		\item If $\judgeSreduce{C}{s_2}{s_4}$ 
-		then $\judgeDreduce{s_1}{s_3}$ and $s_3 \approx s_4$ for some $s_3$
+		\item If $\judgeSreduce{C_1}{s_1}{s_3}$ 
+		then $\judgeSreduce{C_2}{s_2}{s_4}$ and $s_3 \approx s_4$ for some $s_4$
+		\item If $\judgeSreduce{C_2}{s_2}{s_4}$ 
+		then $\judgeSreduce{C_1}{s_1}{s_3}$ and $s_3 \approx s_4$ for some $s_3$
 	\end{enumerate}
-%	If 
-%	$C_1$ and $C_2$ are instances of Lazy D Cast ADT,
-%	$s_1, s_1' \in S(C_1)$ and $s_2,s_2' \in S(C_2)$,
-%	$s_1 \approx s_2$,
-%	$\judgeSreduce{C_1}{s_1}{s_1'}$, and
-%	$\judgeSreduce{C_2}{s_2}{s_2'}$, then 
-%	$s_1' \approx s_2'$
 %	
 	Or diagrammatically, 
 	\[\begin{array}{clc}
-	s_{1} & \longrightarrow_{\text{\effCEK{C}}} & s_1'\\
+	s_{1} & \longrightarrow_{\text{\effCEK{C}}} & s_3\\
 	\rotatebox[origin=c]{90}{$\approx$} 
 	& & \rotatebox[origin=c]{90}{$\approx$} \\
 	s_{2} & 
-	\longrightarrow_{\text{\ineffCEKD}} & s_2' \\
+	\longrightarrow_{\text{\ineffCEKD}} & s_4 \\
 	\end{array}\]
 \end{lemma}
 \begin{proof} By casing on $s_{1} \approx s_{2}$.
@@ -2816,11 +2809,11 @@ Need to define load. -KC}
 \label{sec:hypercoercion-correctness}
 
 In this section we prove \lazyD\ hypercoercion is 
-correct. First we define$applyCast(v,c)$ to make it an instance of Cast ADT, 
+correct. First we define $applyCast(v,c)$ to make it an instance of Cast ADT, 
 then prove that it is also Lazy D, and finally apply 
 Theorem~\ref{thm:surely-lazyD-correct} to finish the proof.
 
-\figref{hc-applyCast} defines$applyCast(v,c)$for \lazyD\ hypercoercion. 
+\figref{hc-applyCast} defines $applyCast(v,c)$ for \lazyD\ hypercoercion. 
 Applying the identity cast for the 
 dynamic type succeeds immediately. When applying a compound cast, we firstly 
 apply the middle, then apply the tail. We denote by $r \; >>= \; f$ to mean 
