@@ -1352,24 +1352,20 @@ observation that a normal coercion has at most three parts;
 projections are always at the beginning; injections and failures are
 always at the end. Hypercoercions make this structure explicit: a
 hypercion either is $\hyperCoercionI$, the identity cast for
-$\TOOdyn$, or contains three parts, where the first part is either a
-projection or the identity, the last part is either an injection, a
-failure, or the identity, and each kind of middle part corresponds to a type 
-constructor and include hypercoercion(s) for subpart(s) of corresponding values.
-\todo[inline]{What about the middlepart? -JS
-\\---\\
-Fixed. -KC}
+$\TOOdyn$, or contains three parts: the head is either a projection or
+the identity, the tail is either an injection, a failure, or the
+identity, and the middle involves coercions underneath a type
+constructor, i.e., coercions between function, pair, and sum types.
 
-\figref{fig:hypercoercion} defines the syntax of hypercoercions. Types, 
-pre-types, and blame labels are as before.
-
-Let $c$ range over hypercoercions. A hypercoercion either is the identity 
-cast between the dynamic types, or includes a head, a middle, and a tail. 
-Let $h$ range over heads. A head is either a no-op, or a projection.
-Let $m$ range over middles. There is a one-to-one 
-correspondence between middles and type constructors. 
-We generalize shallow-consistency to middles $m \smile m$ in the obvious way.
-Let $t$ range over tails. A tail is either a no-op, an injection, or a 
+\figref{fig:hypercoercion} defines the syntax of
+hypercoercions. Types, pre-types, and blame labels are as before.  Let
+$c$ range over hypercoercions. A hypercoercion either is the identity
+cast between the dynamic types, or includes a head, a middle, and a
+tail.  Let $h$ range over heads. A head is either a no-op, or a
+projection.  Let $m$ range over middles. There is a one-to-one
+correspondence between middles and type constructors.  We generalize
+shallow-consistency to middles $m \smile m$ in the obvious way.  Let
+$t$ range over tails. A tail is either a no-op, an injection, or a
 failure.
 
 Subsection~\ref{sec:ld-hc} defines functions that construct \lazyD\ 
