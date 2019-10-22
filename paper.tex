@@ -1638,6 +1638,8 @@ target type. $c \fatsemi^\ell c$ does the most job.
 \subsection{\lazyUD{} hypercoercion [Jeremy]}
 \label{sec:lud-hc}
 
+\todo[inline]{Jeremy needs to add text. -JS}
+
 Figure~\ref{fig:HC-UD}
 
 \begin{figure}
@@ -2343,11 +2345,12 @@ operators) and that the cast constructor is equivalent to the identity
 operator when applied to an identical source and target type.
 However, the final theorem does not require these two properties
 because we can prove 1) that \effCEK{C_1} and \effCEK{C_2} are
-equivalent for any two Lazy D Cast ADTs $C_1$ and $C_2$, and 2) there
-is an instance of the Lazy D Cast ADT, named $L$, that is a monoid and
-satisfies the two extra properties, and is therefore equivalent to
-\ineffCEKD{}. So by transitivity, for any Lazy D Cast ADT $C$ we have
-\evalEqv{\effCEK{C}}{\ineffCEKD}.
+equivalent for any two Lazy D Cast ADTs $C_1$ and $C_2$
+(Proposition~\ref{thm:surely-lazyD-eqv}), and 2) there is an instance
+of the Lazy D Cast ADT, named $L$, that is a monoid and satisfies the
+two extra properties, and is therefore equivalent to \ineffCEKD{}
+(Lemma~\ref{lem:L-correct}). So by transitivity, for any Lazy D Cast
+ADT $C$ we have \evalEqv{\effCEK{C}}{\ineffCEKD}.
 
 \subsubsection{Weak Bisimulation between \effCEK{C} and \ineffCEKD{}}
 
@@ -2759,6 +2762,24 @@ Fixed. -KC
 Need to define load. -KC}
 \end{proof}
 
+\subsubsection{The $L$ instance of the Lazy D Cast ADT}
+
+\todo[inline]{KC, please add the definition of $L$ -JS}
+
+\begin{proposition}[$L$ properties]\ 
+  \begin{enumerate}
+  \item $L$ is an instance of the Lazy D ADT
+  \item $L$ is a monoid
+  \item $cast(T,l,T) = id(T)$
+  \end{enumerate}
+\end{proposition}
+
+\begin{lemma}[$L$ is correct wrt. \ineffCEKD]
+  \label{lem:L-correct}
+  \[
+  \text{\evalEqv{\effCEK{L}}{\ineffCEKD}}
+  \]
+\end{lemma}
 
 \subsubsection{Correctness of \effCEK{C}}
 
@@ -2858,10 +2879,10 @@ natural way.
 \begin{proof} See the supplementary material. \end{proof}
 
 \begin{theorem}[\lazyD{} hypercoercion Respect \ineffCEKD]
-	if $\judgetype{\emptyset}{e}{T}$ and $o : T$
-	\[
-	\text{\evalEqv{\ineffCEKD}{\effCEK{H}}}
-	\]
+  If $\judgetype{\emptyset}{e}{T}$ and $o : T$
+  \[
+  \text{\evalEqv{\effCEK{H}}{\ineffCEKD}}
+  \]
 \end{theorem}
 \begin{proof}
 	Immediately from Theorem~\ref{thm:surely-lazyD-correct} and 
