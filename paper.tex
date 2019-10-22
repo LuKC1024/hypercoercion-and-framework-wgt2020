@@ -2783,18 +2783,18 @@ By casing on the bisimulation relation. -KC}
 	Without lost of generality, assume $\judgeSreduce{C_1}{e}{o}$, prove 
 	$\judgeSreduce{C_2}{e}{o}$.\\
 	By the definition of $eval_{\mathcal{S}(C)}$, we know 
-	\[
-	\judgeSreduceTrans{C_2}{load_{\mathcal{S}(C_1)}(e)}{\sOOhalt{o}}
-	\]
+\[
+\judgeSreduceTrans{C_2}{\sOOinspect{e}{\emptyset}{wrap(\kOOmt)}}{\sOOhalt{o}}
+\]
 	By induction on this reduction sequence and Lemma~\ref{thm:CEKS-bisim}, we 
 	have 
-	\[\judgeSreduceTrans{C_2}{load_{\mathcal{S}(C_2)}(e)}{\sOOhalt{o}}\]
+\[
+\judgeSreduceTrans{C_2}{\sOOinspect{e}{\emptyset}{wrap(\kOOmt)}}{\sOOhalt{o}}
+\]
 	that is, $\judgeSreduce{C_2}{e}{o}$
 \todo[inline]{Induction on what? -JS
 \\---\\
-Fixed. -KC
-\\---\\
-Need to define load. -KC}
+Fixed. -KC}
 \end{proof}
 
 \subsubsection{The $L$ instance of the Lazy D Cast ADT}
