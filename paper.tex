@@ -234,7 +234,7 @@
 \newcommand{\judgeUDreduceTrans}[2]{#1 \longmapsto_{\mathcal{UD}}^{*} #2}
 \newcommand{\judgeUDeval}[2]{eval_{\mathcal{UD}}(#1) = #2}
 \newcommand{\effCEK}[1]{$\mathcal{S}(#1)$}
-\newcommand{\evalEqv}[2]{$eval_{\text{#1}} = eval_{\text{#2}}$}
+\newcommand{\evalEqv}[2]{\ensuremath{eval_{\text{#1}} = eval_{\text{#2}}}}
 \newcommand{\continue}[2]{cont(#2,#1)}
 \newcommand{\highlight}[1]{{\color{red} #1}}
 
@@ -1082,8 +1082,8 @@ returning to $\kappa$.
   The \lazyD{} CEK machine, written \ineffCEKD{}, is the CEK machine of
   \figref{fig:machine-cekc} using the $applyCast$ for \lazyD{} defined
   in \figref{fig:applyCast-D-C}.  We write the transition relations of
-  this machine as $\judgeUDreduce{s}{s}$ and $\judgeUDreduceTrans{s}{s}$
-  and write the evaluation function as $\judgeUDeval{e}{o}$.
+  this machine as $\judgeDreduce{s}{s}$ and $\judgeDreduceTrans{s}{s}$
+  and write the evaluation function as $\judgeDeval{e}{o}$.
 \end{definition}
 
 We conjecture that \ineffCEKD{} agrees with the \lazyD{} cast calculus
@@ -1101,8 +1101,8 @@ type, such as $\star \to \star$.
   The \lazyUD{} CEK machine, written \ineffCEKUD{}, is the CEK machine of
   \figref{fig:machine-cekc} using the $applyCast$ for \lazyUD{} defined
   in \figref{fig:apply-Cast-UD}.  We write the transition relations of
-  this machine as $\judgeDreduce{s}{s}$ and $\judgeDreduceTrans{s}{s}$
-  and write the evaluation function as $\judgeDeval{e}{o}$.
+  this machine as $\judgeUDreduce{s}{s}$ and $\judgeUDreduceTrans{s}{s}$
+  and write the evaluation function as $\judgeUDeval{e}{o}$.
 \end{definition}
 
 
@@ -1818,149 +1818,160 @@ Figure~\ref{fig:HC-UD-cast}
 \end{proposition}
 
 
+% the following are temporary -JS
+\clearpage
+\pagebreak
+
 \section{A framework for proving correctness of cast representations}
 \label{sec:framework}
 
 This section presents our second contribution, a framework for proving
-correctness of cast representations, especially space efficient
-ones. Section~\ref{sec:hypercoercion-correctness} will apply this
+the correctness of cast representations, especially space efficient
+ones. Section~\ref{sec:hypercoercion-correctness} applies this
 framework to prove the correctness of the \lazyD{} hypercoercions.
 
 We start by defining a CEK machine \effCEK{C} that is parameterized
-over the cast representation $C$. This machine is space efficient
+over the cast representation $C$
+(Section~\ref{sec:framework:cek}). This machine is space efficient
 provided that the cast representation performs compression.  The
 interface between the machine and the cast representation is defined
-by an abstract data type, named Cast ADT, that we define shortly.
+by an abstract data type, named Cast ADT, that we define shortly.  We
+conjecture that all cast representations defined in the literature
+are instances of this ADT.
 
-We prove that, for any instance $C$ of the Cast ADT, \effCEK{C} is
-equivelent to \ineffCEKD{] provided that $C$ satisfies a collection of
-properties that we call the Lazy D Cast abstract data type.  In
-Section~\ref{sec:hypercoercion-correctness} we show that the \lazyD{}
-hypercoercions $H$ are an instance of the Lazy D ADT, and therefore
-\effCEK{H} is equivalent to \ineffCEKD{}.
+In Section~\ref{secc:framework:monoid-correct} we prove that, for any
+instance $C$ of the Cast ADT, if $C$ satisfies a more refined abstract
+data type for Lazy D casts, then \effCEK{C} is equivelent to
+\ineffCEKD{}, that is,
+\[
+  \evalEqv{\effCEK{C}}{\ineffCEKD}
+\]
+We conjecture that all of the cast representations in the literature
+for \lazyD{} (supercoercions, coercions in normal form, threesomes)
+are instances of the Lazy D Cast ADT.  We are working on a similar
+theorem for \lazyUD{} cast representations.
 
-We are working on a similar theorem for \lazyUD{}.
+We then apply this framework to \lazyD{} hypercoercions
+(Section~\ref{sec:hypercoercion-correctness}), where we show that $H$
+is an instance of the Lazy D Cast ADT, and therefore
+\[
+  \evalEqv{\effCEK{H}}{\ineffCEKD}
+\]
 
-\todo[inline]{UNDER CONSTRUCTION -JS}
+Before turning to the definition of the abstract data types, we first
+give the definition of values used by the \effCEK{C}, as they are
+mentioned in the definition of the ADTs.
 
-We captures the set of operators that every cast representation must provide 
-with \emph{cast abstract data type} (Definition~\ref{def:cast-rep}). 
-The first three operators allow \effCEK{C} to construct casts. 
-So we call them \textit{cast constructors}. And the forth and last operator 
-allows \effCEK{C} to apply casts onto values. 
+\begin{definition}[Values for the \effCEK{C} machine] \label{def:values-effCEK}
+  \[
+  \begin{array}{rclr}
+	\stxrule{v}{}{
+		\hcvOOtt \mid
+		\hcvOOfun{c}{\rho}{x}{e}{c} \mid
+		\hcvOOcons{v}{c}{v}{c} \mid
+		\hcvOOinl{v}{c} \mid
+		\hcvOOinr{v}{c} \mid
+		\hcvOOinj{P}{v}
+	}
+  \end{array}
+  \]
+\end{definition}
+
+\todo[inline]{We also need to define results $r$ for \effCEK{C} -JS}
+
+\subsection{The Cast Abstract Data Types}
+
+The \emph{Cast Abstract Data Type}, defined below, captures the set of
+operators that a cast representation $C$ must provide for it to be
+used with the \effCEK{C} machine.  The first three operators enables
+\effCEK{C} to construct casts so we call them \textit{cast
+  constructors}. The forth and last operator enables \effCEK{C} to
+apply casts to values.
 
 \begin{definition}[Cast Abstract Data Type (Cast ADT)]
-	\label{def:cast-rep}
-	A cast abstract data type is a set $Cast$, which is indexed by two types, 
-	with four operators:
-	\begin{description}
-		\item[$id(T)$] constructs an cast from a type
-%		, where $c : T 
-%		\Longrightarrow T $
-		\item[$seq(c_1,c_2)$] composes two casts
-%		, where $
-%		\judgeTypeFT{c_1}{T_1}{T_2}$, $\judgeTypeFT{c_2}{T_2}{T_3}$, and $
-%		\judgeTypeFT{c}{T_1}{T_3} $
-		\item[$cast(T_1,l,T_2)$] constructs a cast from $T_1$ to $T_2$
-		\item[$ applyCast(v,c)=r$] applies a cast onto a value
-	\end{description}
-	We denote by $c : T_1 \Longrightarrow T_2$ to mean $c$ is in $Cast \; 
-	T_1 \; T_2$. And we say ``$c$ is from $T_1$ to $T_2$''.
+  \label{def:cast-rep}
+  A cast abstract data type is a set $Cast$, which is indexed by two types, 
+  with four operators:
+  \begin{description}
+  \item[$id(T)$] constructs an identity cast from a type
+  \item[$seq(c_1,c_2)$] composes two casts
+  \item[$cast(T_1,l,T_2)$] constructs a cast from $T_1$ to $T_2$
+  \item[$ applyCast(v,c)$] applies a cast to a value, producing a result
+  \end{description}
+  We denote by $c : T_1 \Longrightarrow T_2$ to mean $c$ is in $Cast \; T_1 \; T_2$
+  and we say ``$c$ is from $T_1$ to $T_2$''.
 \end{definition}
 
-Some instances of Cast ADT (or "some Cast" for short) are also 
-\textit{monoids}. This definition is useful in the proof of 
-our framework.
-
-\begin{definition}[Monoid]
-	A Cast is a monoid if 
-	for all
-	$c_1 : T_1 \Longrightarrow T_2$,
-	$c_2 : T_2 \Longrightarrow T_3$, and
-	$c_3 : T_3 \Longrightarrow T_4$,
-	\begin{enumerate}
-		\item $seq(id(T_1),c_1) = c_1$,
-		\item $seq(c_1,id(T_2)) = c_1$, and
-		\item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
-	\end{enumerate}
-\end{definition}
-
-To use our framework, users needs to prove that their cast representation
-implements Lazy D Cast ADT (Definition~\ref{def:surely-lazyd}), a subset of 
-Cast ADT. Property (1) 
-states that $id(T)$ acts like the identity function. Property (2) states 
-that $seq(c,c)$ acts like a sequence of casts. Properties (3) through 
-(11) state that $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
+Next we define the \emph{Lazy D Cast ADT}, which capture the further
+requirements that are needed for the theorem that establishes
+equivalence to \ineffCEKD{}. Property (1) below states that $id(T)$
+acts like the identity function. Property (2) states that $seq(c,c)$
+acts like a sequence of casts. Properties (3) through (11) state that
+$cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
 (Fig.~\ref{fig:applyCast-D-C}).
 
-\todo[inline]{We might need to values before Lazy D Cast ADT. This will reduce 
-the extreme height of Fig.~\ref{fig:machine-cekcc} as well. -KC}
-
 \begin{definition}[Lazy D Cast ADT]
-	\label{def:surely-lazyd}
-	A  Cast is a Lazy D Cast if:
-	\begin{enumerate}
-		\item if $v : T$, then $applyCast(v,id(T)) = \mathtt{succ} \; v $
-		\item if $\judgeType{v}{T_1}$,
-		$ \judgeTypeFT{c_1}{T_1}{T_2}$, and
-		$ \judgeTypeFT{c_2}{T_2}{T_3}$,\\
-		then $applyCast(v,seq(c_1,c_2)) = 
-		applyCast(v,c_1) >>= \lambda v.applyCast(v,c_2)$\\
-		where 
-		\[
-		\begin{array}{rcl}
-		\rOOsucc{v} >>= f & = & f(v) \\
-		\rOOfail{l} >>= f & = & \rOOfail{l}
-		\end{array}
-		\]
-		\item if $v : T_1$ and $\neg T_1 \smile T_2$,
-		then $applyCast(v,cast(T_1, l, T_2)) = \rOOfail{l} $
-		\item if $v : \star$, 
-		then $applyCast(v,cast(\TOOdyn,l,\TOOdyn)) = \rOOsucc{v} $
-		\item if $v : P$,
-		then $applyCast(\hcvOOinj{P}{v},cast(\star,l,P')) 
-		= applyCast(v,cast(P,l,P')) $
-		\item if $v : P$,
-		then $applyCast(v,cast(P,l,\star)) = \rOOsucc{(\hcvOOinj{P}{v})} $
-		\item if $v : \POOunit$,
-		then $applyCast(v,cast(\POOunit,l,\POOunit)) = \rOOsucc{v} $
-		\item if $(\hcvOOfun{c_1}{\rho}{x}{e}{c_2}) : \POOfun{T_1}{T_2}$,
-		then\\
-		$ 
-		applyCast(\hcvOOfun{c_1}{\rho}{x}{e}{c_2}, 
-		cast(\POOfun{T_1}{T_2},l,\POOfun{T_3}{T_4})) \\
-		= 
-		\rOOsucc{(\hcvOOfun{seq(cast(T_3,l,T_1),c_1)}{\rho}{x}{b}{seq(c_2,cast(T_2,l,T_4))})}$
-		\item if $(\hcvOOcons{v_1}{c_1}{v_2}{c_2}) : \POOprod{T_1}{T_2}$,
-		then \\
-		$ 
-		applyCast(\hcvOOcons{v_1}{c_1}{v_2}{c_2},cast(\POOprod{T_1}{T_2},l,T_3 
-		\times 
-		T_4))$\\
-		$ = 
-		\rOOsucc{(\hcvOOcons{v_1}{seq(c_1,cast(T_1,l,T_3))}{v_2}{seq(c_2,cast(T_2,l,T_4))})}
-		$ 
-		\item if $(\hcvOOinl{v}{c}) : \POOsum{T_1}{T_2}$,
-		then \\
-		$ 
-		applyCast(\hcvOOinl{v}{c},cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}))
-		= \rOOsucc{(\hcvOOinl{v}{seq(c,cast(T_1,l,T_3))})} $
-		\item if $(\hcvOOinr{v}{c}) : \POOsum{T_1}{T_2}$,
-		then \\$
-		applyCast(\hcvOOinr{v}{c},cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}))
-		= \rOOsucc{(\hcvOOinr{v}{seq(c,cast(T_2,l,T_4))})} $
-	\end{enumerate}
+  \label{def:surely-lazyd}
+  A  Cast is a Lazy D Cast if:
+  \begin{enumerate}
+  \item if $v : T$, then $applyCast(v,id(T)) = \mathtt{succ} \; v $
+  \item if $\judgeType{v}{T_1}$,
+    $ \judgeTypeFT{c_1}{T_1}{T_2}$, and
+    $ \judgeTypeFT{c_2}{T_2}{T_3}$,\\
+    then $applyCast(v,seq(c_1,c_2)) = 
+    applyCast(v,c_1) >>= \lambda v.applyCast(v,c_2)$\\
+    where 
+    \[
+    \begin{array}{rcl}
+      \rOOsucc{v} >>= f & = & f(v) \\
+      \rOOfail{l} >>= f & = & \rOOfail{l}
+    \end{array}
+    \]
+  \item if $v : T_1$ and $\neg T_1 \smile T_2$,
+    then $applyCast(v,cast(T_1, l, T_2)) = \rOOfail{l} $
+  \item if $v : \star$, 
+    then $applyCast(v,cast(\TOOdyn,l,\TOOdyn)) = \rOOsucc{v} $
+  \item if $v : P$,
+    then $applyCast(\hcvOOinj{P}{v},cast(\star,l,P')) 
+    = applyCast(v,cast(P,l,P')) $
+  \item if $v : P$,
+    then $applyCast(v,cast(P,l,\star)) = \rOOsucc{(\hcvOOinj{P}{v})} $
+  \item if $v : \POOunit$,
+    then $applyCast(v,cast(\POOunit,l,\POOunit)) = \rOOsucc{v} $
+  \item if $(\hcvOOfun{c_1}{\rho}{x}{e}{c_2}) : \POOfun{T_1}{T_2}$,
+    then\\
+    $ 
+    applyCast(\hcvOOfun{c_1}{\rho}{x}{e}{c_2}, 
+    cast(\POOfun{T_1}{T_2},l,\POOfun{T_3}{T_4})) \\
+    = 
+    \rOOsucc{(\hcvOOfun{seq(cast(T_3,l,T_1),c_1)}{\rho}{x}{b}{seq(c_2,cast(T_2,l,T_4))})}$
+  \item if $(\hcvOOcons{v_1}{c_1}{v_2}{c_2}) : \POOprod{T_1}{T_2}$,
+    then \\
+    $ 
+    applyCast(\hcvOOcons{v_1}{c_1}{v_2}{c_2},cast(\POOprod{T_1}{T_2},l,T_3 
+    \times 
+    T_4))$\\
+    $ = 
+    \rOOsucc{(\hcvOOcons{v_1}{seq(c_1,cast(T_1,l,T_3))}{v_2}{seq(c_2,cast(T_2,l,T_4))})}
+    $ 
+  \item if $(\hcvOOinl{v}{c}) : \POOsum{T_1}{T_2}$,
+    then \\
+    $ 
+    applyCast(\hcvOOinl{v}{c},cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}))
+    = \rOOsucc{(\hcvOOinl{v}{seq(c,cast(T_1,l,T_3))})} $
+  \item if $(\hcvOOinr{v}{c}) : \POOsum{T_1}{T_2}$,
+    then \\$
+    applyCast(\hcvOOinr{v}{c},cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}))
+    = \rOOsucc{(\hcvOOinr{v}{seq(c,cast(T_2,l,T_4))})} $
+  \end{enumerate}
 \end{definition}
 
-%Lazy D Cast ADT confines the behavior of operators so narrowly that it 
-%effectively allows us to ``run'' programs without referring to an actual 
-%representation of cast.
-
-After showing their cast representation is a Lazy D Cast, users of our 
-frameworks can plug-in this cast representation to our space-efficient abstract 
-machine in subsection~\ref{ssec:framework:cek}, and prove that this machine is 
-equivalent to \ineffCEKD\ (subsection~\ref{secc:framework:all-correct}), which 
-depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
+%% After showing their cast is an instance of Lazy D Cast, users of our
+%% frameworks can plug-in this cast representation to our space-efficient
+%% abstract machine in subsection~\ref{ssec:framework:cek}, and prove
+%% that this machine is equivalent to
+%% \ineffCEKD\ (subsection~\ref{secc:framework:all-correct}), which
+%% depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 
 \subsection{A Space-efficient CEK machine}
 \label{sec:framework:cek}
@@ -1969,17 +1980,6 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	Syntax
 	\[
 	\begin{array}{rclr}
-	
-	\stxrule{v}{values}{
-		\hcvOOtt \mid
-		\hcvOOfun{c}{\rho}{x}{e}{c} \mid
-		\hcvOOcons{v}{c}{v}{c}
-	}
-	\stxrulecont{
-		\hcvOOinl{v}{c} \mid
-		\hcvOOinr{v}{c} \mid
-		\hcvOOinj{P}{v}
-	}
 %	\stxrule{r}{cast results}{
 %		\rOOsucc{v} \mid
 %		\rOOfail{l}
@@ -2213,31 +2213,33 @@ depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 	\caption{Space-efficient CEK machine$\mathcal{S}(C)$}
 	\label{fig:machine-cekcc}
 \end{figure}
-\figref{fig:machine-cekcc} defines \effCEK{C}, a space-efficient
-CEK machine.  This machine is similar to \ineffCEK{}.
-The keys differences are in values and continuations.
 
-Let $v$ range over value. 
-In \ineffCEK\, we have one value constructor for all casted value.
-In \effCEK{C}, however, we do not have this generic value constructor, 
-instead we push those casts into the ordinary values. For 
-instance, $(\vOOcons{v_1}{v_2})$ corresponds to 
-$(\hcvOOcons{v_1'}{id(T_1)}{v_2'}{id(T_2)})$. To construct values of the 
-dynamic type, we use $(\hcvOOinj{P}{v})$.
+\figref{fig:machine-cekcc} defines \effCEK{C}, a space-efficient CEK
+machine.  This machine is similar to the \ineffCEK{} machine
+(Figure~\ref{fig:machine-cekc}).  The key differences are in values
+and continuations.
 
-Cast results ($r$) and machine states ($s$) are as before. 
+Let $v$ range over values. In \ineffCEK{} we have one value
+constructor for all casted value.  In \effCEK{C}, however, we do not
+have this generic value constructor, instead we push those casts into
+the ordinary values. For instance, $(\vOOcons{v_1}{v_2})$ corresponds
+to $(\hcvOOcons{v_1'}{id(T_1)}{v_2'}{id(T_2)})$. To construct values
+of the dynamic type, we use $(\hcvOOinj{P}{v})$.
 
-Let $\kappa$ range over continuations and Let $k$ range over 
-pre-continuations. 
-A continuation is now a pre-continuation prefixed with a cast.
-Pre-continuation are like the continuations in \ineffCEK, but there is no 
-constructor for casts.
-Continuations in \ineffCEKD\ have zero or more casts at the top.
-In \effCEK{C}, however, every continuation has exactly one cast at the top.
-Continuations in \ineffCEK\ that have no casts at the top correspond to 
-continuations in \effCEK{C}\ whose casts are identity.
-And continuations in \ineffCEK\ that have many casts at the top correspond to 
-continuations in \effCEK{C}\ where those casts are composed by $seq(c,c)$.
+Cast results ($r$) and machine states ($s$) are the same as for
+\ineffCEK{}.
+
+Let $\kappa$ range over continuations and let $k$ range over
+pre-continuations.  A continuation is now a pre-continuation prefixed
+with a cast.  Pre-continuation are like the continuations in
+\ineffCEK{}, but there is no constructor for casts.  Continuations in
+\ineffCEKD{} have zero or more casts at the top.  In \effCEK{C},
+however, every continuation has exactly one cast at the top.
+Continuations in \ineffCEK\ that have no casts at the top correspond
+to continuations in \effCEK{C}\ whose casts are identity.
+Continuations in \ineffCEK\ that have many casts at the top correspond
+to continuations in \effCEK{C}\ where those casts are composed by
+$seq(c,c)$.
 
 \todoKC{describe transition rules}
 We list a fraction of reduction rules due to space limitation.
@@ -2322,12 +2324,51 @@ Transitive closure of reduction ($\judgeSreduceTrans{C}{s}{s}$) and
 evaluation ($\judgeSeval{C}{e}{o}$) are standard. Value typing 
 ($\judgeType{v}{T}$) is straightforward.
 
-\subsection{Relating Some \effCEK{C} to \ineffCEKD}
+\subsection{\effCEK{C} is equivalent to \ineffCEKD, provided $C$ is an instance of the Lazy D ADT}
 \label{secc:framework:monoid-correct}
 
-In this subsection, we prove that if a instance of Cast ADT $C$ is Lazy D and 
-is a monoid, then $eval_\mathcal{D} = eval_{\mathcal{S}(C)}$. We proof this 
-theorem with a weak bisimulation between \effCEK{C} and \ineffCEKD.
+In this subsection, we prove that for all $C$, if $C$ is a Lazy D Cast
+ADT, then
+\[
+  \evalEqv{\effCEK{C}}{\ineffCEKD}
+\]
+
+The meat of the proof is in a lemma that establishes a weak
+bisimulation between \ineffCEKD{} and \effCEK{C}.
+
+
+\todo[inline]{UNDER CONSTRUCTION -JS}
+
+
+
+
+
+We prove that if a instance of Cast ADT $C$ is
+Lazy D and is a monoid, then $eval_\mathcal{D} =
+eval_{\mathcal{S}(C)}$. We proof this theorem with a weak bisimulation
+between \effCEK{C} and \ineffCEKD.
+
+Some instances of Cast ADT (or "some Cast" for short) are also 
+\textit{monoids}. This definition is useful in the proof of 
+our framework.
+
+\begin{definition}[Monoid]
+	A Cast is a monoid if 
+	for all
+	$c_1 : T_1 \Longrightarrow T_2$,
+	$c_2 : T_2 \Longrightarrow T_3$, and
+	$c_3 : T_3 \Longrightarrow T_4$,
+	\begin{enumerate}
+		\item $seq(id(T_1),c_1) = c_1$,
+		\item $seq(c_1,id(T_2)) = c_1$, and
+		\item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
+	\end{enumerate}
+\end{definition}
+
+%Lazy D Cast ADT confines the behavior of operators so narrowly that it 
+%effectively allows us to ``run'' programs without referring to an actual 
+%representation of cast.
+
 
 \todo[inline]{In Fig.~\ref{fig:bisim-SC-D}, how to suppress rule numbers like 
 	(1), (2), etc.? -KC}
@@ -2564,8 +2605,8 @@ taking one or more steps in \ineffCEKD. As we just took a positive number of
 steps, we are closer to the halting state.
 \end{proof}
 
-\subsection{\lazyD\ Cast ADT Respect \ineffCEKD}
-\label{secc:framework:all-correct}
+%% \subsection{\lazyD\ Cast ADT Respect \ineffCEKD}
+%% \label{secc:framework:all-correct}
 
 In this subsection, we prove that for all $C$, if $C$ is a Lazy D Cast ADT, 
 then \evalEqv{\ineffCEKD}{\effCEK{C}}. We first 
