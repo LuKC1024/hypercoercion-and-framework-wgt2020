@@ -1623,9 +1623,26 @@ two basic properties of hypercoercions.
 \subsection{\lazyUD{} hypercoercion [Jeremy]}
 \label{sec:lud-hc}
 
-\todo[inline]{Jeremy needs to add text. -JS}
+Hypercoercions for the UD blame tracking strategy have the same syntax
+as for D (\figref{fig:hypercoercion}), but the definitions of $id$,
+$cast$, and $seq$, given Figure~\ref{fig:HC-UD}, differ from D.
+Again, the $seq$ operator is defined in terms of composition, but here
+composition $c_1 \fatsemi c_2$ makes the usual assumption that the
+target type of $c_1$ matches the source type of $c_2$.  The definition
+of composition for UD is particularly straightfoward. The first two
+lines say that $\hyperCoercionI$ acts as the identity on both the left
+and right. The third line handles the case when both the tail of $c_1$
+and the head of $c_2$ are no-ops, in which case the middles types
+$m_1$ and $m_2$ are composed via an auxiliary composition
+operator. This compose operator for middle coercions assumes that its
+inputs are shallowly consistent.  The fourth line handles the
+important case when the tail of $c_1$ is an injection and the head of
+$c_2$ is a projection. If the two middle coercions are shallowly
+consistent, then they can be composed. If not, the tail of the result
+is a failure coercion with the projection's label.  The last line
+handles the case when the tail of $c_1$ is a failure, in which case
+the result of composition is $c_1$.
 
-Figure~\ref{fig:HC-UD}
 
 \begin{figure}
   Composition of hypercoercions \fbox{$c \fatsemi c = c$}
@@ -1803,6 +1820,11 @@ Figure~\ref{fig:HC-UD-cast}
     \item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
   \end{enumerate}
 \end{proposition}
+
+
+\todo[inline]{talk about $cast(T,l,T)$. -JS}
+
+\todo[inline]{I need to add $cast(T,l,T) = id(T)$. -JS}
 
 
 \subsection{Compact Memory Representation for Hypercoercions}
