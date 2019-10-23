@@ -1931,11 +1931,6 @@ give the definition of values and cast results used by the \effCEK{C}, as they
 are mentioned in the definition of the ADTs. The $\hcvOOinj{P}{v}$ stands for 
 values that are cast to the dynamic type, as in \citet{wadler2009well}.
 
-\todo[inline]{The notation $\hcvOOinj{P}{v}$ is non-standard
-   and should be explained. -JS
-\\---\\
-Fixed. -KC}
-
 \begin{definition}[Values and cast results for the \effCEK{C} machine] 
 \label{def:values-effCEK}
   \[
@@ -1946,7 +1941,7 @@ Fixed. -KC}
     \hcvOOcons{v}{c}{v}{c} \mid
     \hcvOOinl{v}{c} \mid
     \hcvOOinr{v}{c} \mid
-    \hcvOOinj{P}{v}
+    \hcvOOinj{I}{v}
   }
 \stxrule{r}{cast results}{
   \rOOsucc{v} \mid
@@ -1956,9 +1951,6 @@ Fixed. -KC}
   \]
 \end{definition}
 
-\todo[inline]{We also need to define results $r$ for \effCEK{C} -JS
-\\---\\
-Fixed. -KC}
 
 \subsection{The Cast Abstract Data Types}
 
@@ -2754,10 +2746,6 @@ standard format? -KC}
 We prove the equivalence among two \effCEK{C} machines with a strong
 bisimulation. The bisimulation relation is the smallest congruence relation 
 that also includes the pairs induced by the rules below.
-\todo[inline]{By ``derived from the definitions'' do you mean
- that it is a congruence? -JS
-\\---\\
-Exactly, fixed. -KC}
 
 \begin{gather*}
 \inference{
@@ -2802,13 +2790,7 @@ Exactly, fixed. -KC}
   \longrightarrow_{\text{\ineffCEKD}} & s_4 \\
   \end{array}\]
 \end{lemma}
-\begin{proof} By casing on $s_{1} \approx s_{2}$.
-%
-  \todo[inline]{The above sentence is not normal proof jargon.  Are
-    you doing a proof by cases on $s_{1}
-    \longrightarrow_{\text{\effCEK{C}}} s_1'$? -JS
-\\---\\
-By casing on the bisimulation relation. -KC}
+\begin{proof} By cases on $s_{1} \approx s_{2}$.
 %
   The key ideas of this proof are undoing sequencing with the property
   (2) of Lazy D Cast ADT, and handling all possibly uses of
@@ -2835,9 +2817,6 @@ By casing on the bisimulation relation. -KC}
 \judgeSreduceTrans{C_2}{\sOOinspect{e}{\emptyset}{wrap(\kOOmt)}}{\sOOhalt{o}}
 \]
   that is, $\judgeSreduce{C_2}{e}{o}$
-\todo[inline]{Induction on what? -JS
-\\---\\
-Fixed. -KC}
 \end{proof}
 
 \subsubsection{The $L$ instance of the Lazy D Cast ADT}
@@ -3002,8 +2981,16 @@ c_2' = seq(c_2,cast(T_2,l,T_4))
 \end{array}
 \]
 
-  \caption{The $L$ Lazy D Cast ADT}
+\caption{The $L$ Lazy D Cast ADT}
+\label{fig:L-instance-LazyD}
 \end{figure}
+
+The $L$ cast representation is defined in
+\figref{fig:L-instance-LazyD}.
+
+\todo[inline]{KC, please write a 2-3 sentence overview of
+  the $L$ cast representation. -JS}
+
 
 \begin{proposition}[$L$ properties]\label{thm:L-LazyD-monoid}\ 
   \begin{enumerate}
