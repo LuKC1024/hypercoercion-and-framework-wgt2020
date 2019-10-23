@@ -773,7 +773,7 @@ are standard~\citep{felleisen03:_pllc}.
     \vOOcast{v}{\cOOcast{P_1}{l}{P_2}} : P_2
   }
   \end{gather*}
-        \caption{Definition of machine state and auxilliary data
+        \caption{Definition of machine state and auxiliary data
           structures.}
         \label{fig:state}
 \end{figure}
@@ -1073,7 +1073,7 @@ returning to $\kappa$.
     applyCast(v,\cOOcast{P_1}{l}{P_2})
   }{
     \rOOfail{l}
-  }{\sidecond{\neg P_1 \smile P_2}}
+  }{\sidecond{P_1 \not\smile P_2}}
   
   \end{array}
   \]
@@ -1437,7 +1437,7 @@ Section~\ref{sec:framework}.
     \hyperCoercionC{h_1}{m_1}{\bot^l}
   }{
     \sidecond{
-      \neg \; m_1 \smile m_2
+       m_1 \not\smile m_2
       \; \text{and} \;
       \forall l. t \neq \bot^{l}
     }
@@ -1451,7 +1451,7 @@ Section~\ref{sec:framework}.
 \hyperCoercionC{h_1}{m_1}{\bot^l}
 }{
 \sidecond{
-  \neg \; m_1 \smile m_2
+  m_1 \not\smile m_2
   \; \text{and} \;
   \forall l. t \neq \bot^{l}
 }
@@ -1482,34 +1482,6 @@ Section~\ref{sec:framework}.
       \forall l. t \neq \bot^{l}
     }
   }
-%
-% \comprule{
-%   \hyperCoercionC{h}{m_1}{t_1}
-% }{
-%   \hyperCoercionC{\epsilon}{m_2}{t_2}
-% }{
-%   \hyperCoercionC{h}{m'}{t'}
-% }{
-%   \sidecond{
-%     m_1 \fatsemi^{\ell} (m_2, t_2) = (m', t')
-%      \; \text{and} \;
-%      \forall l. t \neq \bot^{l}
-%   }
-% }
-% 
-% \comprule{
-%   \hyperCoercionC{h}{m_1}{t_1}
-% }{
-%   \hyperCoercionC{?^{l'}}{m_2}{t_2}
-% }{
-%   \hyperCoercionC{h}{m'}{t'}
-% }{
-%   \sidecond{
-%     m_1 \fatsemi^{l'} (m_2, t_2) = (m', t')
-%     \; \text{and} \;
-%     \forall l. t \neq \bot^{l} 
-%   }
-% }
   \end{array}
   \]
   
@@ -1580,48 +1552,51 @@ Section~\ref{sec:framework}.
   \label{fig:HC-D}
 \end{figure}
 
-\figref{fig:HC-D} defines functions that construct \lazyD{} hypercoercions. We 
-expect language implementations to call $id(T)$, which constructs an 
-identity, $seq(c,c)$, which composes two hypercoercions, and $
-cast(T_1,l,T_2)$, which translate a cast to a hypercoercion. Other functions 
-in the figure are their helpers.
+\figref{fig:HC-D} defines the functions $id$, $seq$, and $cast$ that
+construct \lazyD{} hypercoercions, towards satisifying the Cast ADT.
+\figref{fig:HC-D} also defines some auxiliary functions.
 
-Let $\ell$ range over $\epsilon$ and labels.
-$ c_1 \fatsemi^\ell c_2$ composes hypercoercion $c_1$ and hypercoercion $c_2$.
-When both $c_1$ and $c_2$ are $\hyperCoercionI$, their 
-composition is also $\hyperCoercionI$.
-When $c_1$ is $\hyperCoercionI$ but $c_2$ is not, the head of the 
-composition must be a projection. In this 
-case, if the head of $c_2$ is a projection, we reuse it. Otherwise, we need a 
-label to build the projection. Since the head of $c_2$ is $\epsilon$, its 
-source type must be a pretype. Thus we know $\ell$ must be a label and put it 
-in the projection. 
-When $c_1$ ends with a failure, the composition is $c_1$ itself. In all 
-remaining cases, we shall assume that $c_1$ does not end with 
-a failure.
-When $m_1$ and $m_2$ have different top constructors ($\neg\;m_1 \smile 
-m_2$), proceeding to $m_2$ can not make sense. So we end the composition 
-with a failure. To do so we need a label. When $c_2$ starts with a 
-projection, we shall accuse it of casting a value to a shallowly inconsistent 
-type. When $c_2$ starts with a no-op, $\ell$ must be a label. And we accuse 
-it of composing shallowly inconsistent hypercoercions. The last two cases 
-compose $m_1$ and $m_2$ with a helper function $m \fatsemi^\ell m$, which 
-assumes its inputs have the same top constructor. The definition of $m 
-\fatsemi^\ell m$ is straightforward. Going back to the last two cases of $c_1 
-\fatsemi^\ell c_2$. When $c_2$ starts with a projection, we have no clue 
-whether the target type of $m_1$ is the same as the source of $m_2$, 
-although we know they are shallowly consistent. So we give the $l$ in the 
-projection to $m \fatsemi^\ell m$. When $c_2$ starts with a no-op, we reuse 
-the $\ell$.
+The $seq$ operator is defined in terms of coercion composition, which
+is the key to compressing coercions and maintaining space efficiency.
+A composition operator for coercions typically requires the target
+type of the first coercion to match the source type of the second.
+However, it is useful to relax this restriction for the D blame
+tracking strategy.
+%
+We shall need optional blame labels, written $\ell$ , that range over
+$\epsilon$ or $l$. Then we write composition of hypercoercions as $c_1
+\fatsemi^\ell c_2$.  When both $c_1$ and $c_2$ are $\hyperCoercionI$,
+their composition is also $\hyperCoercionI$.  If the head of $c_2$ is
+a projection, the result is $c_2$.  Otherwise, we need a label to
+build the projection. Since the head of $c_2$ is $\epsilon$, its
+source type must be a pretype. Thus we know $\ell$ must be a label and
+we put it in the projection. When $c_1$ ends with a failure, the
+composition is $c_1$ itself. In all the remaining cases, $c_1$ does
+not end with a failure.  When $m_1$ and $m_2$ have different top
+constructors ($m_1 \not\smile m_2$), the result is a failure coercion,
+which needs a label. When $c_2$ starts with a projection, it is to
+blame for casting a value to a shallowly inconsistent type. When $c_2$
+starts with a no-op, $\ell$ must be a label. And we blame it for
+composing shallowly inconsistent hypercoercions. The last two cases
+compose $m_1$ and $m_2$ with the auxilliary function $m \fatsemi^\ell
+m$, which assumes its inputs have the same top constructor. The
+definition of $m \fatsemi^\ell m$ is a straightforward structural
+recursion. Going back to the last two cases of $c_1 \fatsemi^\ell
+c_2$. When $c_2$ starts with a projection, we do not know whether the
+target type of $m_1$ matches the source of $m_2$, although we know
+they are shallowly consistent. So we use the $l$ in the projection to
+compose the middles $m_1 \fatsemi^l m_2$. When $c_2$ starts with a
+no-op, we compose the middles using $\ell$.
 
-$seq(c_1,c_2)$ requires that the target type of $c_1$ is the same as the 
-source of $c_2$. $c \fatsemi^\ell c$ does the job for it.
-$id(T)$ constructs an identity coercion of $T$ with the help of $id(P)$. 
-Their definitions are straightforward.
-$cast(T_1,l,T_2)$ constructs a coercion from a source type, a label, and a 
-target type. $c \fatsemi^\ell c$ does the most job.
+The definitions of $id(T)$ and $cast(T_1,l,T_2)$ are straightforward,
+although $cast(T_1,l,T_2)$ is unusual in its use of $id$ and
+composition.
 
-\begin{proposition}[\lazyD\ hypercoercion is a monoid]
+The proof of correctness for hypercoercions (in
+Section~\ref{secc:framework:monoid-correct}) relies on the following
+two basic properties of hypercoercions.
+
+\begin{proposition}[\lazyD\ hypercoercions form a monoid]
   \label{thm:hc-monoid}
   For all $c : T_1 \Longrightarrow T_2$,
   $c_1 : T_1 \Longrightarrow T_2$,
@@ -1633,11 +1608,12 @@ target type. $c \fatsemi^\ell c$ does the most job.
     \item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
   \end{enumerate}
 \end{proposition}
-\begin{proof} Part (1) and (2) are by induction on $c$. Part (3) is by 
-induction on $c_2$ and case analysis on $c_1$ and $c_3$.
+\begin{proof}
+  Part (1) and (2) are by induction on $c$. Part (3) is by induction
+  on $c_2$ and case analysis on $c_1$ then $c_3$.
 \end{proof}
 
-\begin{proposition}[]
+\begin{proposition}[Identity Casts]
   For all $T$ and $l$, $cast(T,l,T) = id(T) $
 \end{proposition}
 \begin{proof}
@@ -1926,7 +1902,7 @@ apply casts to values.
   \item[$id(T)$] constructs an identity cast from a type
   \item[$seq(c_1,c_2)$] composes two casts
   \item[$cast(T_1,l,T_2)$] constructs a cast from $T_1$ to $T_2$
-  \item[$ applyCast(v,c)$] applies a cast to a value, producing a result
+  \item[$applyCast(v,c)$] applies a cast to a value, producing a result
   \end{description}
   We denote by $c : T_1 \Longrightarrow T_2$ to mean $c$ is in $Cast \; T_1 \; T_2$
   and we say ``$c$ is from $T_1$ to $T_2$''.
@@ -1957,7 +1933,7 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
       \rOOfail{l} >>= f & = & \rOOfail{l}
     \end{array}
     \]
-  \item if $v : T_1$ and $\neg T_1 \smile T_2$,
+  \item if $v : T_1$ and $T_1 \not\smile T_2$,
     then $applyCast(v,cast(T_1, l, T_2)) = \rOOfail{l} $
   \item if $v : \star$, 
     then $applyCast(v,cast(\TOOdyn,l,\TOOdyn)) = \rOOsucc{v} $
@@ -2929,7 +2905,7 @@ c_2' = seq(c_2,cast(T_2,l,T_4))
   appS(v,\cOOcast{P_1}{l}{P_2})
 }{
   \rOOfail{l}
-}{\sidecond{\neg P_1 \smile P_2}}
+}{\sidecond{P_1 \not\smile P_2}}
 
 \end{array}
 \]
@@ -3056,7 +3032,7 @@ natural way.
   \funrule{applyMiddle(v,l,m)}{
     \rOOfail{l}
   }{
-    \sidecond{\neg v \smile m}
+    \sidecond{v \not\smile m}
   }
   \end{array}
   \]
