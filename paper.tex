@@ -139,20 +139,20 @@
 \newcommand{\kOOinl}[1]{[\mathtt{inl}\; \square]#1}
 \newcommand{\kOOinr}[1]{[\mathtt{inr}\; \square]#1}
 \newcommand{\kOOappI}[3]{
-	[\square \; \langle#1,#2\rangle]#3
+  [\square \; \langle#1,#2\rangle]#3
 }
 \newcommand{\kOOappII}[2]{
-	[#1 \; \square]#2}
+  [#1 \; \square]#2}
 \newcommand{\kOOcar}[1]{[\mathtt{fst} \; \square]#1}
 \newcommand{\kOOcdr}[1]{[\mathtt{snd} \; \square]#1}
 \newcommand{\kOOcaseI}[4]{
-	[\mathtt{case} \; \square \; \langle#1,#3\rangle \; \langle#2,#3\rangle ]#4}
+  [\mathtt{case} \; \square \; \langle#1,#3\rangle \; \langle#2,#3\rangle ]#4}
 \newcommand{\kOOcaseII}[4]{
-	[\mathtt{case} \; #1 \; \square \; \langle#2,#3\rangle ]#4}
+  [\mathtt{case} \; #1 \; \square \; \langle#2,#3\rangle ]#4}
 \newcommand{\kOOcaseIII}[3]{
-	[\mathtt{case} \; #1 \; #2 \; \square]#3}
+  [\mathtt{case} \; #1 \; #2 \; \square]#3}
 \newcommand{\kOOcast}[2]{
-	[\square \langle #1 \rangle]#2}
+  [\square \langle #1 \rangle]#2}
 
 %\newcommand{\kOOmt}[0]{\mathtt{stop}}
 %\newcommand{\kOOconsI}[3]{\mathtt{cons_1} \; #1 \; #2 \; #3}
@@ -160,22 +160,22 @@
 %\newcommand{\kOOinl}[1]{\mathtt{inl} \; #1}
 %\newcommand{\kOOinr}[1]{\mathtt{inr} \; #1}
 %\newcommand{\kOOappI}[3]{
-%	\mathtt{app_1} \; #1 \; #2 \; #3
+% \mathtt{app_1} \; #1 \; #2 \; #3
 %}
 %\newcommand{\kOOappII}[2]{
-%	\mathtt{app_2} \; #1 \; #2}
+% \mathtt{app_2} \; #1 \; #2}
 %\newcommand{\kOOcar}[1]{
-%	\mathtt{fst} \; #1}
+% \mathtt{fst} \; #1}
 %\newcommand{\kOOcdr}[1]{
-%	\mathtt{snd} \; #1}
+% \mathtt{snd} \; #1}
 %\newcommand{\kOOcaseI}[4]{
-%	\mathtt{case_1} \; #1 \; #2 \; #3 \; #4}
+% \mathtt{case_1} \; #1 \; #2 \; #3 \; #4}
 %\newcommand{\kOOcaseII}[4]{
-%	\mathtt{case_2} \; #1 \; #2 \; #3 \; #4}
+% \mathtt{case_2} \; #1 \; #2 \; #3 \; #4}
 %\newcommand{\kOOcaseIII}[3]{
-%	\mathtt{case_3} \; #1 \; #2 \; #3}
+% \mathtt{case_3} \; #1 \; #2 \; #3}
 %\newcommand{\kOOcast}[2]{
-%	\langle #1 \rangle #2}
+% \langle #1 \rangle #2}
 
 \newcommand{\typingHC}[3]{#1 : #2 \Longrightarrow #3}
 \newcommand{\hcvOOinj}[2]{\mathtt{Dyn}_{#1}(#2)}
@@ -460,90 +460,90 @@ In this section, we review lazy cast calculi
 \label{sec:cast-calculi}
 
 \begin{figure}
-	Syntax
-	\[
-	\begin{array}{rclr}
-	\stxrule{T}{types}{
-		\star \mid{}
-		P
-	}
-	\stxrule{P}{pre-types}{
-		\POOunit \mid
-		\POOfun{T_1}{T_2} \mid
-		\POOprod{T_1}{T_2} \mid
-		\POOsum{T_1}{T_2}
-	}
-	\stxrule{e}{terms}{
-		\eOOvar{x} \mid{}
-		\eOOsole{} \mid{}
-		\eOOlam{T_1}{T_2}{x}{e} \mid
-		\eOOapp{e_1}{e_2} \mid
-		\eOOcons{e_1}{e_2} \mid
-		\eOOcar{e} \mid
-		\eOOcdr{e}
-	}
-	\stxrulecont{
-		\eOOinl{e} \mid
-		\eOOinr{e} \mid
-		\eOOcase{e_1}{e_2}{e_3} \mid
-		\eOOcast{e}{T_1}{l}{T_2} \mid
-		\eOOblame{l}
-	}
-	\end{array}
-	\]
-	
-	Consistency
-	\fbox{$T_1 \sim T_2$}
-	\begin{gather*}
-	\inference{}{
-		\star \sim \star
-	} \quad
-	\inference{}{
-		\star \sim P
-	} \quad
-	\inference{}{
-		P \sim \star
-	} \\[1ex]
-	\inference{}{
-		\iota \sim \iota
-	} \quad
-	\inference{
-		S_1 \sim S_2 &
-		T_1 \sim T_2
-	}{
-		S_1 \rightarrow T_1 \sim S_2 \rightarrow T_2
-	} \quad
-	\inference{
-		S_1 \sim S_2 &
-		T_1 \sim T_2
-	}{
-		S_1 \times T_1 \sim S_2 \times T_2
-	} \quad
-	\inference{
-		S_1 \sim S_2 &
-		T_1 \sim T_2
-	}{
-		S_1 \plus T_1 \sim S_2 \plus T_2
-	}
-	\end{gather*}
-	
-	Term typing
-	\fbox{$\judgetype{\Gamma}{e}{T}$}
-	\begin{gather*}
+  Syntax
+  \[
+  \begin{array}{rclr}
+  \stxrule{T}{types}{
+    \star \mid{}
+    P
+  }
+  \stxrule{P}{pre-types}{
+    \POOunit \mid
+    \POOfun{T_1}{T_2} \mid
+    \POOprod{T_1}{T_2} \mid
+    \POOsum{T_1}{T_2}
+  }
+  \stxrule{e}{terms}{
+    \eOOvar{x} \mid{}
+    \eOOsole{} \mid{}
+    \eOOlam{T_1}{T_2}{x}{e} \mid
+    \eOOapp{e_1}{e_2} \mid
+    \eOOcons{e_1}{e_2} \mid
+    \eOOcar{e} \mid
+    \eOOcdr{e}
+  }
+  \stxrulecont{
+    \eOOinl{e} \mid
+    \eOOinr{e} \mid
+    \eOOcase{e_1}{e_2}{e_3} \mid
+    \eOOcast{e}{T_1}{l}{T_2} \mid
+    \eOOblame{l}
+  }
+  \end{array}
+  \]
+  
+  Consistency
+  \fbox{$T_1 \sim T_2$}
+  \begin{gather*}
+  \inference{}{
+    \star \sim \star
+  } \quad
+  \inference{}{
+    \star \sim P
+  } \quad
+  \inference{}{
+    P \sim \star
+  } \\[1ex]
+  \inference{}{
+    \iota \sim \iota
+  } \quad
+  \inference{
+    S_1 \sim S_2 &
+    T_1 \sim T_2
+  }{
+    S_1 \rightarrow T_1 \sim S_2 \rightarrow T_2
+  } \quad
+  \inference{
+    S_1 \sim S_2 &
+    T_1 \sim T_2
+  }{
+    S_1 \times T_1 \sim S_2 \times T_2
+  } \quad
+  \inference{
+    S_1 \sim S_2 &
+    T_1 \sim T_2
+  }{
+    S_1 \plus T_1 \sim S_2 \plus T_2
+  }
+  \end{gather*}
+  
+  Term typing
+  \fbox{$\judgetype{\Gamma}{e}{T}$}
+  \begin{gather*}
           \dots \qquad
-		\inference{
-			\Gamma \vdash e : T_1 & T_1 \sim T_2
-		}{
-			\judgetype{\Gamma}{\eOOcast{e}{T_1}{l}{T_2}}{T_2}
-		} \quad
-		\inference{
-		}{
-			\judgetype{\Gamma}{\eOOblame{l}}{T}
-		}
-	\end{gather*}
-	
-	\caption{Syntax and static semantics of the cast calculi.}
-	\label{fig:blame-static}
+    \inference{
+      \Gamma \vdash e : T_1 & T_1 \sim T_2
+    }{
+      \judgetype{\Gamma}{\eOOcast{e}{T_1}{l}{T_2}}{T_2}
+    } \quad
+    \inference{
+    }{
+      \judgetype{\Gamma}{\eOOblame{l}}{T}
+    }
+  \end{gather*}
+  
+  \caption{Syntax and static semantics of the cast calculi.}
+  \label{fig:blame-static}
 \end{figure}
 
 
@@ -669,110 +669,110 @@ are standard~\citep{felleisen03:_pllc}.
   Machine state and other runtime data structures
   \[
   \begin{array}{rclr}
-	\stxrule{v}{values}{
-		\vOOtt{} \mid
-		\vOOfun{\rho}{x}{e} \mid
-		\vOOcons{v_1}{v_2} \mid
-		\vOOinl{v} \mid
-		\vOOinr{v} \mid		
-		\vOOcast{v}{c}
-	}
-	\stxrule{c}{casts}{
-		\cOOcast{T_1}{l}{T_2}
-	}
-	\stxrule{I}{injectable types (\lazyD)}{
-		P
-	}
-	\stxrule{I}{injectable types (\lazyUD)}{
-		\POOunit \mid
-		\POOfun{\star}{\star} \mid
-		\star \times \star \mid
-		\star + \star
-	}
-	\stxrule{o}{observations}{
-		\oOOinj \mid
-		\oOOsole \mid
-		\oOOfun \mid
-		\oOOcons \mid
-		\oOOinl \mid
-		\oOOinr \mid
-		\oOOblame{l}
-	}
-	\stxrule{r}{cast results}{
-		\rOOsucc{v} \mid
-		\rOOfail{l}
-	}
-	\stxrule{s}{states}{
-		\sOOinspect{e}{\rho}{\kappa} \mid{}
-		\sOOreturn{v}{\kappa} \mid{}
-		\sOOhalt{o}
-	}
-	\stxrule{\kappa}{continuations}{
-		\kOOmt \mid
-		\kOOconsI{e}{\rho}{\kappa} \mid
-		\kOOconsII{v}{\kappa} \mid
-		\kOOinl{\kappa}
-	}
-	\stxrulecont{
-		\kOOinr{\kappa} \mid
-		\kOOappI{e}{\rho}{\kappa} \mid
-		\kOOappII{v}{\kappa} \mid
-		\kOOcar{\kappa}
-	}
-	\stxrulecont{	
-		\kOOcdr{\kappa}\mid
-		\kOOcaseI{e}{e}{\rho}{\kappa}\mid
-		\kOOcaseII{v}{e}{\rho}{\kappa}
-	}
-	\stxrulecont{
-		\kOOcaseIII{v}{v}{\kappa} \mid
-		\kOOcast{c}{\kappa}
-	}
+  \stxrule{v}{values}{
+    \vOOtt{} \mid
+    \vOOfun{\rho}{x}{e} \mid
+    \vOOcons{v_1}{v_2} \mid
+    \vOOinl{v} \mid
+    \vOOinr{v} \mid   
+    \vOOcast{v}{c}
+  }
+  \stxrule{c}{casts}{
+    \cOOcast{T_1}{l}{T_2}
+  }
+  \stxrule{I}{injectable types (\lazyD)}{
+    P
+  }
+  \stxrule{I}{injectable types (\lazyUD)}{
+    \POOunit \mid
+    \POOfun{\star}{\star} \mid
+    \star \times \star \mid
+    \star + \star
+  }
+  \stxrule{o}{observations}{
+    \oOOinj \mid
+    \oOOsole \mid
+    \oOOfun \mid
+    \oOOcons \mid
+    \oOOinl \mid
+    \oOOinr \mid
+    \oOOblame{l}
+  }
+  \stxrule{r}{cast results}{
+    \rOOsucc{v} \mid
+    \rOOfail{l}
+  }
+  \stxrule{s}{states}{
+    \sOOinspect{e}{\rho}{\kappa} \mid{}
+    \sOOreturn{v}{\kappa} \mid{}
+    \sOOhalt{o}
+  }
+  \stxrule{\kappa}{continuations}{
+    \kOOmt \mid
+    \kOOconsI{e}{\rho}{\kappa} \mid
+    \kOOconsII{v}{\kappa} \mid
+    \kOOinl{\kappa}
+  }
+  \stxrulecont{
+    \kOOinr{\kappa} \mid
+    \kOOappI{e}{\rho}{\kappa} \mid
+    \kOOappII{v}{\kappa} \mid
+    \kOOcar{\kappa}
+  }
+  \stxrulecont{ 
+    \kOOcdr{\kappa}\mid
+    \kOOcaseI{e}{e}{\rho}{\kappa}\mid
+    \kOOcaseII{v}{e}{\rho}{\kappa}
+  }
+  \stxrulecont{
+    \kOOcaseIII{v}{v}{\kappa} \mid
+    \kOOcast{c}{\kappa}
+  }
   \end{array}
   \]
 
         Shallow-consistency
-	\fbox{$T \smile T$}
-	\begin{gather*}
-	\inference{}{
-		\star \smile \star
-	} \quad
-	\inference{}{
-		\star \smile P
-	} \quad
-	\inference{}{
-		P \smile \star
-	} \\
-	\inference{}{
-		\iota \smile \iota
-	} \quad
-	\inference{}{
-		T_{11} \rightarrow T_{12} \smile T_{21} \rightarrow T_{22}
-	} \quad
-	\inference{}{
-		T_{11} \times T_{12} \smile T_{21} \times T_{22}
-	} \quad
-	\inference{}{
-	T_{11} \plus T_1 \smile S_2 \plus T_2
-	}
-	\end{gather*}
-	
-	Value typing \fbox{$v : T$}
-	\begin{gather*}
-	\dots \qquad
-	\inference{
-		v : I
-	}{
-		\vOOcast{v}{\cOOcast{I}{l}{\TOOdyn}} : \TOOdyn
-	}
-	\quad
-	\inference{
-		v : P_1 &
-		P_1 \smile P_2
-	}{
-		\vOOcast{v}{\cOOcast{P_1}{l}{P_2}} : P_2
-	}
-	\end{gather*}
+  \fbox{$T \smile T$}
+  \begin{gather*}
+  \inference{}{
+    \star \smile \star
+  } \quad
+  \inference{}{
+    \star \smile P
+  } \quad
+  \inference{}{
+    P \smile \star
+  } \\
+  \inference{}{
+    \iota \smile \iota
+  } \quad
+  \inference{}{
+    T_{11} \rightarrow T_{12} \smile T_{21} \rightarrow T_{22}
+  } \quad
+  \inference{}{
+    T_{11} \times T_{12} \smile T_{21} \times T_{22}
+  } \quad
+  \inference{}{
+  T_{11} \plus T_1 \smile S_2 \plus T_2
+  }
+  \end{gather*}
+  
+  Value typing \fbox{$v : T$}
+  \begin{gather*}
+  \dots \qquad
+  \inference{
+    v : I
+  }{
+    \vOOcast{v}{\cOOcast{I}{l}{\TOOdyn}} : \TOOdyn
+  }
+  \quad
+  \inference{
+    v : P_1 &
+    P_1 \smile P_2
+  }{
+    \vOOcast{v}{\cOOcast{P_1}{l}{P_2}} : P_2
+  }
+  \end{gather*}
         \caption{Definition of machine state and auxilliary data
           structures.}
         \label{fig:state}
@@ -797,66 +797,66 @@ blame.  The function converting values to observations ($observe(v) =
 o$) is defined in the natural way.
 
 \begin{figure}
-	%	Continuation typing \fbox{$\kappa : T_1 \Longrightarrow T_2$}
-	%	\begin{gather*}
-	%	\dots \quad
-	%	\inference{
-	%		c : T_1 \Longrightarrow T_2 &
-	%		\kappa : T_2 \Longrightarrow T_3
-	%	}{
-	%		\langle c \rangle \kappa : T_1 \Longrightarrow T_3
-	%	}
-	%	\end{gather*}
-	
-	\[
-	\begin{array}{rclr}
-	\end{array}
-	\]
-	
-	Reduction \fbox{$\judgeCreduce{s}{s}$}
-	\[
-	\begin{array}{rclr}
-		\hiredrule{
-		\sOOinspect{\eOOcast{e}{T_1}{l}{T_2}}{\rho}{\kappa}
-	}{
-		\sOOinspect{e}{\rho}{
-			\kOOcast{\cOOcast{T_1}{l}{T_2}}{\kappa}
-%			\langle\cOOcast{T_1}{l}{T_2}\rangle\kappa
-		}
-	}{}
-	\redrule{
-		\sOOinspect{\eOOvar{x}}{\rho}{\kappa}
-	}{	
-		\sOOreturn{\rho(x)}{\kappa}
-	}{}
-	\redrule{
-		\sOOinspect{\eOOsole}{\rho}{\kappa}
-	}{
-		\sOOreturn{\vOOtt}{\kappa}
-	}{}
-	\redrule{
-		\sOOinspect{\eOOlam{T_1}{T_2}{x}{e}}{\rho}{\kappa}
-	}{
-		\sOOreturn{\vOOfun{\rho}{x}{e}}{\kappa}
-	}{}
-	\redrule{
-		\sOOinspect{\eOOcons{e_1}{e_2}}{\rho}{\kappa}
-	}{
-		\sOOinspect{e_1}{\rho}{\kOOconsI{e_2}{\rho}{\kappa}}
-	}{}
-	\redrule{
-		\sOOinspect{\eOOinl{e}}{\rho}{\kappa}
-	}{
-		\sOOinspect{e}{\rho}{\kOOinl{\kappa}}
-	}{}
-	\redrule{
-	\sOOinspect{\eOOinr{e}}{\rho}{\kappa}
-	}{
-	\sOOinspect{e}{\rho}{\kOOinr{\kappa}}
-	}{}
-	\redrule{
-		\sOOinspect{\eOOapp{e_1}{e_2}}{\rho}{\kappa}
-	}{
+  % Continuation typing \fbox{$\kappa : T_1 \Longrightarrow T_2$}
+  % \begin{gather*}
+  % \dots \quad
+  % \inference{
+  %   c : T_1 \Longrightarrow T_2 &
+  %   \kappa : T_2 \Longrightarrow T_3
+  % }{
+  %   \langle c \rangle \kappa : T_1 \Longrightarrow T_3
+  % }
+  % \end{gather*}
+  
+  \[
+  \begin{array}{rclr}
+  \end{array}
+  \]
+  
+  Reduction \fbox{$\judgeCreduce{s}{s}$}
+  \[
+  \begin{array}{rclr}
+    \hiredrule{
+    \sOOinspect{\eOOcast{e}{T_1}{l}{T_2}}{\rho}{\kappa}
+  }{
+    \sOOinspect{e}{\rho}{
+      \kOOcast{\cOOcast{T_1}{l}{T_2}}{\kappa}
+%     \langle\cOOcast{T_1}{l}{T_2}\rangle\kappa
+    }
+  }{}
+  \redrule{
+    \sOOinspect{\eOOvar{x}}{\rho}{\kappa}
+  }{  
+    \sOOreturn{\rho(x)}{\kappa}
+  }{}
+  \redrule{
+    \sOOinspect{\eOOsole}{\rho}{\kappa}
+  }{
+    \sOOreturn{\vOOtt}{\kappa}
+  }{}
+  \redrule{
+    \sOOinspect{\eOOlam{T_1}{T_2}{x}{e}}{\rho}{\kappa}
+  }{
+    \sOOreturn{\vOOfun{\rho}{x}{e}}{\kappa}
+  }{}
+  \redrule{
+    \sOOinspect{\eOOcons{e_1}{e_2}}{\rho}{\kappa}
+  }{
+    \sOOinspect{e_1}{\rho}{\kOOconsI{e_2}{\rho}{\kappa}}
+  }{}
+  \redrule{
+    \sOOinspect{\eOOinl{e}}{\rho}{\kappa}
+  }{
+    \sOOinspect{e}{\rho}{\kOOinl{\kappa}}
+  }{}
+  \redrule{
+  \sOOinspect{\eOOinr{e}}{\rho}{\kappa}
+  }{
+  \sOOinspect{e}{\rho}{\kOOinr{\kappa}}
+  }{}
+  \redrule{
+    \sOOinspect{\eOOapp{e_1}{e_2}}{\rho}{\kappa}
+  }{
 \sOOinspect{e_1}{\rho}{\kOOappI{e_2}{\rho}{\kappa}}}{}
 
 \redrule{
@@ -864,8 +864,8 @@ o$) is defined in the natural way.
 \sOOinspect{e}{\rho}{\kOOcar{\kappa}}}{}
 
 \redrule{
-	\sOOinspect{\eOOcdr{e}}{\rho}{\kappa}}{
-	\sOOinspect{e}{\rho}{\kOOcdr{\kappa}}}{}
+  \sOOinspect{\eOOcdr{e}}{\rho}{\kappa}}{
+  \sOOinspect{e}{\rho}{\kOOcdr{\kappa}}}{}
 
 \redrule{
 \sOOinspect{\eOOcase{e_1}{e_2}{e_3}}{\rho}{\kappa}}{
@@ -894,62 +894,62 @@ o$) is defined in the natural way.
 \redrule{
 \sOOreturn{v_2}{\kOOappII{(\vOOfun{\rho}{x}{e})}{\kappa}}}{
 \sOOinspect{e}{\rho[x:=v_2]}{\kappa}}{}
-	\hiredrule{
-		\sOOreturn{v_1}{
-			\kOOappII{\vOOcast{v_2}{
-					\cOOcast{\POOfun{T_1}{T_2}}{l}{\POOfun{T_3}{T_4}}
-			}}{\kappa}
-%			(\mathtt{app_2} \; \vOOcast{v_2}{
-%				\cOOcast{\POOfun{T_1}{T_2}}{l}{\POOfun{T_3}{T_4}}
-%			} \; \kappa)
-		}
-	}{
-		\sOOreturn{v_1}{
-			\kOOcast{\cOOcast{T_3}{l}{T_1}}{
-				\kOOappII{v_2}{
-					\kOOcast{\cOOcast{T_2}{l}{T_4}}{\kappa}
-				}
-			}
-%			\langle\rangle
-%			(\mathtt{app_2} \; v_2 \; 
-%			\langle\cOOcast{T_2}{l}{T_4}\rangle \kappa}
-		}
-	}{}
-	\redrule{
-	\sOOreturn{
-		\vOOcons{v_1}{v_2}
-	}{\kOOcar{\kappa}}
-	}{
-	\sOOreturn{v_1}{\kappa}
-	}{}
-	\hiredrule{
-		\sOOreturn{
-			\vOOcast{v}{\cOOcast{\POOprod{T_1}{T_2}}{l}{
-					\POOprod{T_3}{T_4}}}
-		}{\mathtt{fst} \; \kappa}
-	}{
-		\sOOreturn{v}{
-			\kOOcar{
-				\kOOcast{\cOOcast{T_1}{l}{T_3}}{\kappa}
-			}}
-	}{}
-	\redrule{
-	\sOOreturn{
-	\vOOcons{v_1}{v_2}
-	}{\kOOcdr{\kappa}}
-	}{
-	\sOOreturn{v_2}{\kappa}
-	}{}
-	
-	\hiredrule{
-		\sOOreturn{
-			\vOOcast{v}{\cOOcast{\POOprod{T_1}{T_2}}{l}{
-					\POOprod{T_3}{T_4}}}
-		}{\mathtt{snd} \; \kappa}
-	}{
-		\sOOreturn{v}{
-			\kOOcdr{\kOOcast{\cOOcast{T_2}{l}{T_4}}{\kappa}}}
-	}{}
+  \hiredrule{
+    \sOOreturn{v_1}{
+      \kOOappII{\vOOcast{v_2}{
+          \cOOcast{\POOfun{T_1}{T_2}}{l}{\POOfun{T_3}{T_4}}
+      }}{\kappa}
+%     (\mathtt{app_2} \; \vOOcast{v_2}{
+%       \cOOcast{\POOfun{T_1}{T_2}}{l}{\POOfun{T_3}{T_4}}
+%     } \; \kappa)
+    }
+  }{
+    \sOOreturn{v_1}{
+      \kOOcast{\cOOcast{T_3}{l}{T_1}}{
+        \kOOappII{v_2}{
+          \kOOcast{\cOOcast{T_2}{l}{T_4}}{\kappa}
+        }
+      }
+%     \langle\rangle
+%     (\mathtt{app_2} \; v_2 \; 
+%     \langle\cOOcast{T_2}{l}{T_4}\rangle \kappa}
+    }
+  }{}
+  \redrule{
+  \sOOreturn{
+    \vOOcons{v_1}{v_2}
+  }{\kOOcar{\kappa}}
+  }{
+  \sOOreturn{v_1}{\kappa}
+  }{}
+  \hiredrule{
+    \sOOreturn{
+      \vOOcast{v}{\cOOcast{\POOprod{T_1}{T_2}}{l}{
+          \POOprod{T_3}{T_4}}}
+    }{\mathtt{fst} \; \kappa}
+  }{
+    \sOOreturn{v}{
+      \kOOcar{
+        \kOOcast{\cOOcast{T_1}{l}{T_3}}{\kappa}
+      }}
+  }{}
+  \redrule{
+  \sOOreturn{
+  \vOOcons{v_1}{v_2}
+  }{\kOOcdr{\kappa}}
+  }{
+  \sOOreturn{v_2}{\kappa}
+  }{}
+  
+  \hiredrule{
+    \sOOreturn{
+      \vOOcast{v}{\cOOcast{\POOprod{T_1}{T_2}}{l}{
+          \POOprod{T_3}{T_4}}}
+    }{\mathtt{snd} \; \kappa}
+  }{
+    \sOOreturn{v}{
+      \kOOcdr{\kOOcast{\cOOcast{T_2}{l}{T_4}}{\kappa}}}
+  }{}
 
 \redrule{
 \sOOreturn{v_1}{\kOOcaseI{e_2}{e_3}{\rho}{\kappa}}}{
@@ -958,35 +958,35 @@ o$) is defined in the natural way.
 \redrule{
 \sOOreturn{v_2}{\kOOcaseII{v_1}{e_3}{\rho}{\kappa}}}{
 \sOOinspect{e_3}{\rho}{
-	\kOOcaseIII{v_1}{v_2}{\kappa}
-}}{}	
+  \kOOcaseIII{v_1}{v_2}{\kappa}
+}}{}  
 
 \redrule{
 \sOOreturn{v_3}{
-	\kOOcaseIII{\vOOinl{v}}{v_2}{\kappa}
+  \kOOcaseIII{\vOOinl{v}}{v_2}{\kappa}
 }
 }{
 \sOOreturn{v}{\kOOappII{v_2}{\kappa}}
 }{}
 
 \redrule{
-	\sOOreturn{v_3}{
-		\kOOcaseIII{\vOOinr{v}}{v_2}{\kappa}
-	}
+  \sOOreturn{v_3}{
+    \kOOcaseIII{\vOOinr{v}}{v_2}{\kappa}
+  }
 }{
 \sOOreturn{v}{\kOOappII{v_3}{\kappa}}
 }{}
 
 \redrule{
-	\highlight{\sOOreturn{v_3}{
-		\kOOcaseIII{
-				\vOOcast{v}{\cOOcast{\POOsum{T_1}{T_2}}{l}{\POOsum{T_3}{T_4}}}
-			}{v_2}{\kappa}
-	}}
+  \highlight{\sOOreturn{v_3}{
+    \kOOcaseIII{
+        \vOOcast{v}{\cOOcast{\POOsum{T_1}{T_2}}{l}{\POOsum{T_3}{T_4}}}
+      }{v_2}{\kappa}
+  }}
 }{
-	\highlight{\sOOreturn{v_3'}{
-			\kOOcaseIII{v}{v_2'}{\kappa}
-	}}
+  \highlight{\sOOreturn{v_3'}{
+      \kOOcaseIII{v}{v_2'}{\kappa}
+  }}
 }{\\&&
 \highlight{\text{where}\;
 v2' = \vOOcast{v_2}{\cOOcast{\POOfun{T_4}{T}}{l}{\POOfun{T_2}{T}}}}
@@ -994,40 +994,40 @@ v2' = \vOOcast{v_2}{\cOOcast{\POOfun{T_4}{T}}{l}{\POOfun{T_2}{T}}}}
 \highlight{\text{and}\;
 v3' = \vOOcast{v_3}{\cOOcast{\POOfun{T_3}{T}}{l}{\POOfun{T_1}{T}}}}
 }
-	
-	\redrule{
-		\highlight{\sOOreturn{v}{
-				\kOOcast{c}{\kappa}
-			}}
-	}{
+  
+  \redrule{
+    \highlight{\sOOreturn{v}{
+        \kOOcast{c}{\kappa}
+      }}
+  }{
 \highlight{          
 \begin{cases}
-	\sOOreturn{v'}{\kappa} & \sidecond{applyCast(v,c) = \rOOsucc{v'}}
-	\\
-	\sOOhalt{\oOOblame{l}} & \sidecond{applyCast(v,c) = \rOOfail{l}}
+  \sOOreturn{v'}{\kappa} & \sidecond{applyCast(v,c) = \rOOsucc{v'}}
+  \\
+  \sOOhalt{\oOOblame{l}} & \sidecond{applyCast(v,c) = \rOOfail{l}}
 \end{cases}}
-	}{}
+  }{}
 \redrule{
 \sOOreturn{v}{\kOOmt}}{
 \sOOhalt{observe(v}}{}
-	\end{array}
-	\]	
-	
-	Evaluation \fbox{$\judgeCeval{e}{o}$}
-	\[
-	\inference{
-		\judgeCreduceTrans{
-			\sOOinspect{e}{\emptyset}{\hckOOmt}
-		}{\sOOhalt{o}}		
-	}{
-		\judgeCeval{e}{o}
-	}
-	\]
-	
-	\caption{Dynamic semantics of the cast calculi as a CEK
+  \end{array}
+  \]  
+  
+  Evaluation \fbox{$\judgeCeval{e}{o}$}
+  \[
+  \inference{
+    \judgeCreduceTrans{
+      \sOOinspect{e}{\emptyset}{\hckOOmt}
+    }{\sOOhalt{o}}    
+  }{
+    \judgeCeval{e}{o}
+  }
+  \]
+  
+  \caption{Dynamic semantics of the cast calculi as a CEK
           machine. The transitions that involve casts are highlighted
           in red.}
-	\label{fig:machine-cekc}
+  \label{fig:machine-cekc}
 \end{figure}
 
 Let $r$ range over cast results. A cast result is either a success, which 
@@ -1045,40 +1045,40 @@ the last continuation, $\langle c \rangle \kappa$ is to cast the value before
 returning to $\kappa$.
 
 \begin{figure}
-	
-	\fbox{$applyCast(v,c) = r$}
-	\[
-	\begin{array}{rclr}
-	\funrule{
-		applyCast(v,\cOOcast{\star}{l}{\star})
-	}{
-		\rOOsucc{v}
-	}{}
-	\funrule{
-		applyCast(\vOOcast{v}{\cOOcast{P_1}{l_1}{\star}},\cOOcast{\star}{l_2}{P_2})
-	}{
-		applyCast(v,\cOOcast{P_1}{l_2}{P_2})
-	}{}
-	\funrule{
-		applyCast(v,\cOOcast{P}{l}{\star})
-	}{
-		\rOOsucc{\vOOcast{v}{\cOOcast{P}{l}{\star}}}
-	}{}
-	\funrule{
-		applyCast(v,\cOOcast{P_1}{l}{P_2})
-	}{
-		\rOOsucc{\vOOcast{v}{\cOOcast{P_1}{l}{P_2}}}
-	}{\sidecond{P_1 \smile P_2}}
-	\funrule{
-		applyCast(v,\cOOcast{P_1}{l}{P_2})
-	}{
-		\rOOfail{l}
-	}{\sidecond{\neg P_1 \smile P_2}}
-	
-	\end{array}
-	\]
-	\caption{Definition of $applyCast$for \lazyD}
-	\label{fig:applyCast-D-C}
+  
+  \fbox{$applyCast(v,c) = r$}
+  \[
+  \begin{array}{rclr}
+  \funrule{
+    applyCast(v,\cOOcast{\star}{l}{\star})
+  }{
+    \rOOsucc{v}
+  }{}
+  \funrule{
+    applyCast(\vOOcast{v}{\cOOcast{P_1}{l_1}{\star}},\cOOcast{\star}{l_2}{P_2})
+  }{
+    applyCast(v,\cOOcast{P_1}{l_2}{P_2})
+  }{}
+  \funrule{
+    applyCast(v,\cOOcast{P}{l}{\star})
+  }{
+    \rOOsucc{\vOOcast{v}{\cOOcast{P}{l}{\star}}}
+  }{}
+  \funrule{
+    applyCast(v,\cOOcast{P_1}{l}{P_2})
+  }{
+    \rOOsucc{\vOOcast{v}{\cOOcast{P_1}{l}{P_2}}}
+  }{\sidecond{P_1 \smile P_2}}
+  \funrule{
+    applyCast(v,\cOOcast{P_1}{l}{P_2})
+  }{
+    \rOOfail{l}
+  }{\sidecond{\neg P_1 \smile P_2}}
+  
+  \end{array}
+  \]
+  \caption{Definition of $applyCast$for \lazyD}
+  \label{fig:applyCast-D-C}
 \end{figure}
 
 \begin{definition}[\lazyD{} CEK Machine]
@@ -1140,74 +1140,75 @@ calculus of \citet{siek2009exploring}.
 \clearpage
 \pagebreak
 
-\subsection{Coercions in Normal Form} 
+\subsection{Coercions and Normal Forms} 
 \label{sec:coercion-calculus}
 
 In this section we review the
 coercions~\citep{henglein1994dynamic,herman2010space} and the normal
 form of \citet{siek2012interpretations} to motivate the design of
-hypercoercions.  We ignore sum types and product types in this
-section, because \citet{siek2012interpretations} did not discuss
-them. We assume a basic familiarity with coercions and direct readers
-who are not familiar with them to \citet{siek2012interpretations}.
+hypercoercions.  We omit sum types and product types in this section,
+because \citet{siek2012interpretations} did not discuss them. We
+assume a basic familiarity with coercions and direct readers who are
+not familiar with them to \citet{siek2012interpretations} and
+\citet{siek2015blame}.
 
 \begin{figure}
-	\[
-	\begin{array}{rclr}
-	\stxrule{I}{injectable types (\lazyD)}{
-		\POOfun{T}{T} \mid \POOunit}
-	\stxrule{I}{injectable types (\lazyUD)}{
-		\POOfun{\TOOdyn}{\TOOdyn} \mid \POOunit
-	}
-	\stxrule{c}{coercions}{
-		\ncInj{I} \mid
-		\ncProj{I}{l} \mid
-		\ncId \mid
-		\ncFail{l} \mid
-		\ncSeq{c}{c} \mid
-		\ncFun{c}{c}
-	}
-	%% \stxrule{\bar{c}}{wrapper coercions}{	
-	%% 	\ncInj{I} \mid
-	%% 	\ncFun{\hat{c}}{\hat{c}} \mid
-	%% 	\ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}}
-	%% }
-%	\stxrulecont{
-%		\ncProd{\hat{c}}{\hat{c}} \mid
-%		\ncSeq{\ncProd{\hat{c}}{\hat{c}}}{\ncInj{I}} \mid
-%		\ncSum{\hat{c}}{\hat{c}} \mid
-%		\ncSeq{\ncSum{\hat{c}}{\hat{c}}}{\ncInj{I}} \mid	
-%	}
+  \[
+  \begin{array}{rclr}
+  \stxrule{I}{injectable types (\lazyD)}{
+    \POOfun{T}{T} \mid \POOunit}
+  \stxrule{I}{injectable types (\lazyUD)}{
+    \POOfun{\TOOdyn}{\TOOdyn} \mid \POOunit
+  }
+  \stxrule{c}{coercions}{
+    \ncInj{I} \mid
+    \ncProj{I}{l} \mid
+    \ncId \mid
+    \ncFail{l} \mid
+    \ncSeq{c}{c} \mid
+    \ncFun{c}{c}
+  }
+  %% \stxrule{\bar{c}}{wrapper coercions}{  
+  %%  \ncInj{I} \mid
+  %%  \ncFun{\hat{c}}{\hat{c}} \mid
+  %%  \ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}}
+  %% }
+% \stxrulecont{
+%   \ncProd{\hat{c}}{\hat{c}} \mid
+%   \ncSeq{\ncProd{\hat{c}}{\hat{c}}}{\ncInj{I}} \mid
+%   \ncSum{\hat{c}}{\hat{c}} \mid
+%   \ncSeq{\ncSum{\hat{c}}{\hat{c}}}{\ncInj{I}} \mid  
+% }
 \stxrule{\hat{c}}{normal coercions}{
-	\ncFun{\hat{c}}{\hat{c}} \mid
-	\ncSeq{\ncProj{I}{l}}{\ncFun{\hat{c}}{\hat{c}}} \mid
-	\ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}} \mid
-	\ncSeq{\ncProj{I}{l}}{\ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}}} \mid
-	\ncSeq{\ncProj{I}{l}}{\ncFail{l}}
+  \ncFun{\hat{c}}{\hat{c}} \mid
+  \ncSeq{\ncProj{I}{l}}{\ncFun{\hat{c}}{\hat{c}}} \mid
+  \ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}} \mid
+  \ncSeq{\ncProj{I}{l}}{\ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}}} \mid
+  \ncSeq{\ncProj{I}{l}}{\ncFail{l}}
 }
 \stxrulecont{
-	\ncId \mid
-	\ncProj{I}{l} \mid
-	\ncInj{I} \mid
-	\ncSeq{\ncProj{I}{l}}{\ncInj{I}} \mid
-	\ncFail{l} 
+  \ncId \mid
+  \ncProj{I}{l} \mid
+  \ncInj{I} \mid
+  \ncSeq{\ncProj{I}{l}}{\ncInj{I}} \mid
+  \ncFail{l} 
 }
-	%% \stxrule{\hat{c}}{normal coercions}{
-	%% 	\bar{c} \mid
-	%% 	\ncId \mid
-	%% 	\ncFail{l} \mid
-	%% 	\ncProj{I}{l} \mid
-	%% 	\ncSeq{\ncProj{I}{l}}{\ncFail{l}} \mid
-	%% 	\ncSeq{\ncProj{I}{l}}{\ncInj{I}}
-	%% }
-	%% \stxrulecont{
-	%% 	\ncSeq{\ncProj{I}{l}}{\ncFun{\hat{c}}{\hat{c}}} \mid
-	%% 	\ncSeq{\ncProj{I}{l}}{\ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}}}
-	%% }
-	\end{array}
-	\]
-	\caption{Syntax of coercions and normal forms}
-	\label{fig:normal-coercion}
+  %% \stxrule{\hat{c}}{normal coercions}{
+  %%  \bar{c} \mid
+  %%  \ncId \mid
+  %%  \ncFail{l} \mid
+  %%  \ncProj{I}{l} \mid
+  %%  \ncSeq{\ncProj{I}{l}}{\ncFail{l}} \mid
+  %%  \ncSeq{\ncProj{I}{l}}{\ncInj{I}}
+  %% }
+  %% \stxrulecont{
+  %%  \ncSeq{\ncProj{I}{l}}{\ncFun{\hat{c}}{\hat{c}}} \mid
+  %%  \ncSeq{\ncProj{I}{l}}{\ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}}}
+  %% }
+  \end{array}
+  \]
+  \caption{Syntax of coercions and normal forms}
+  \label{fig:normal-coercion}
 \end{figure}
 
 \figref{fig:normal-coercion} reviews the grammar for coercions,
@@ -1223,19 +1224,19 @@ $\POOfun{\TOOdyn}{\TOOdyn}$ is injectable.
 A projection $I?^l$ takes a value from type $\TOOdyn$ to type $I$, or
 halts the program and blames $l$ if the value is of a different type.
 The coercion $\iota$ is the identity, $\bot^{l}$ is the coercion that
-always fails and blames $l$, and $\ncSeq{c_1}{c_2}$ applies $c_1$ and
+always fails and blames $l$, and $(\ncSeq{c_1}{c_2})$ applies $c_1$ and
 then $c_2$ in sequence. The function coercion $\ncFun{c_1}{c_2}$
 applies $c_1$ to the argument of a function and $c_2$ to the return
 pvalue.
 
-Coercions come with a reduction relation so it is natural to ask what
-are their normal forms. \figref{fig:normal-coercion} defines the
-syntax of coercion in normal form, written $\hat{c}$. Conceptually, a
-coercion in normal form has three parts, all of which are optional.
-It may start with a projection $I?^l$, then it may be followed by a
-function coercion, and then it may be concluded with an injection $I!$
-or a failure $\bot^l$. While this is a simple idea, there are 10
-clauses in the definition for $\hat{c}$!
+Coercions come with a reduction relation so it is natural to ask about
+their normal forms. \figref{fig:normal-coercion} defines the syntax of
+coercion in normal form, written $\hat{c}$. Conceptually, a coercion
+in normal form has three parts, all of which are optional.  It may
+start with a projection $I?^l$, followed by a function coercion, and
+then concluded with an injection $I!$ or a failure $\bot^l$. While
+this is a simple idea, there are 10 clauses in the definition for
+$\hat{c}$!
 
 %% Let $\bar{c}$ range over wrapper coercions, which represent casts in $
 %% \vOOcast{v}{c}$.  Let $\hat{c}$ range over normal coercions. If we
@@ -1248,202 +1249,199 @@ clauses in the definition for $\hat{c}$!
 
 %% Three observations on this definition leads to hypercoercion: 
 %% \begin{enumerate}
-%% 	\item The length of normal coercion is at most three.
-%% 	\item Projections are always at the beginning when present.
-%% 	\item Injections and failures are always at the end when present.
+%%  \item The length of normal coercion is at most three.
+%%  \item Projections are always at the beginning when present.
+%%  \item Injections and failures are always at the end when present.
 %% \end{enumerate}
 
 
 \section{Definition of Hypercoercions} \label{sec:hypercoercion-definition}
 
 \begin{figure}
-	Syntax
-	\[
-	\begin{array}{lclr}
-	\stxrule{I}{injectable types (\lazyD)}{P}
-	\stxrule{I}{injectable types (\lazyUD)}{
-		\POOunit \mid
-		\POOfun{\TOOdyn}{\TOOdyn} \mid
-		\POOprod{\TOOdyn}{\TOOdyn} \mid
-		\POOsum{\TOOdyn}{\TOOdyn}
-	}
-	\stxrule{c}{hypercoercions}{
-		\hyperCoercionI \mid{}
-		\hyperCoercionC{h}{m}{t}
-	}
-	\stxrule{h}{heads}{
-		\epsilon \mid{}
-		?^l
-	}
-	\stxrule{m}{middles}{
-		\POOunit \mid
-		\POOfun{c_1}{c_2} \mid
-		\POOprod{c_1}{c_2} \mid
-		\POOsum{c_1}{c_2}
-	}
-	\stxrule{t}{tails}{
-		\epsilon \mid{}
-		! \mid{}
-		\bot^l
-	}
-	\end{array}
-	\]
-		
-	hypercoercion typing \fbox{$c : T \Longrightarrow T$}
-	\begin{gather*}
-	\inference{}{\typingHC{\hyperCoercionI}{\TOOdyn}{\TOOdyn}}
-	\quad
-	\inference{
-		\typingHC{h}{T_1}{P_1} &
-		\typingHC{m}{P_1}{P_2} &
-		\typingHC{t}{P_2}{T_2}
-	}{
-		\typingHC{\hyperCoercionC{h}{m}{t}}{T_1}{T_2}
-	}
-	\end{gather*}
-	
-	Head typing \fbox{$\typingHC{h}{T}{P}$}
-	\begin{gather*}
-	\inference{}{\typingHC{\epsilon}{P}{P}}
-	\quad
-	\inference{}{\typingHC{?^l}{\TOOdyn}{I}}
-	\end{gather*}
-	
-	Middle typing \fbox{$\typingHC{m}{T}{T}$}
-	\begin{gather*}
-	\inference{}{\typingHC{\POOunit}{\POOunit}{\POOunit}}
-	\quad
-	\inference{
-		\typingHC{c_1}{T_3}{T_1} &
-		\typingHC{c_2}{T_2}{T_4}
-	}{
-		\typingHC{\POOfun{c_1}{c_2}}{\POOfun{T_1}{T_2}}{\POOfun{T_3}{T_4}}
-	}
-	\\
-	\inference{
-		\typingHC{c_1}{T_1}{T_3} &
-		\typingHC{c_2}{T_2}{T_4}
-	}{
-		\typingHC{\POOprod{c_1}{c_2}}{\POOprod{T_1}{T_2}}{\POOprod{T_3}{T_4}}
-	}
-	\quad
-	\inference{
-		\typingHC{c_1}{T_1}{T_3} &
-		\typingHC{c_2}{T_2}{T_4}
-	}{
-		\typingHC{\POOsum{c_1}{c_2}}{\POOsum{T_1}{T_2}}{\POOsum{T_3}{T_4}}
-	}
-		\end{gather*}
-		
-		Tail typing \fbox{$\typingHC{t}{P}{T}$}
-		\begin{gather*}
-		\inference{}{\typingHC{\epsilon}{P}{P}} \quad
-		\inference{}{\typingHC{!}{I}{\TOOdyn}} \quad
-		\inference{}{\typingHC{\bot^l}{P}{T}} \quad
-		\end{gather*}
-	
-	\caption{Definition of hypercoercions (HC)}
-	\label{fig:hypercoercion}
+  Syntax
+  \[
+  \begin{array}{lclr}
+  \stxrule{I}{injectable types (\lazyD)}{P}
+  \stxrule{I}{injectable types (\lazyUD)}{
+    \POOunit \mid
+    \POOfun{\TOOdyn}{\TOOdyn} \mid
+    \POOprod{\TOOdyn}{\TOOdyn} \mid
+    \POOsum{\TOOdyn}{\TOOdyn}
+  }
+  \stxrule{c}{hypercoercions}{
+    \hyperCoercionI \mid{}
+    \hyperCoercionC{h}{m}{t}
+  }
+  \stxrule{h}{heads}{
+    \epsilon \mid{}
+    ?^l
+  }
+  \stxrule{m}{middles}{
+    \POOunit \mid
+    \POOfun{c_1}{c_2} \mid
+    \POOprod{c_1}{c_2} \mid
+    \POOsum{c_1}{c_2}
+  }
+  \stxrule{t}{tails}{
+    \epsilon \mid{}
+    ! \mid{}
+    \bot^l
+  }
+  \end{array}
+  \]
+    
+  Hypercoercion typing \fbox{$c : T \Longrightarrow T$}
+  \begin{gather*}
+  \inference{}{\typingHC{\hyperCoercionI}{\TOOdyn}{\TOOdyn}}
+  \quad
+  \inference{
+    \typingHC{h}{T_1}{P_1} &
+    \typingHC{m}{P_1}{P_2} &
+    \typingHC{t}{P_2}{T_2}
+  }{
+    \typingHC{\hyperCoercionC{h}{m}{t}}{T_1}{T_2}
+  }
+  \end{gather*}
+  
+  Head typing \fbox{$\typingHC{h}{T}{P}$}
+  \begin{gather*}
+  \inference{}{\typingHC{\epsilon}{P}{P}}
+  \quad
+  \inference{}{\typingHC{?^l}{\TOOdyn}{I}}
+  \end{gather*}
+  
+  Middle typing \fbox{$\typingHC{m}{T}{T}$}
+  \begin{gather*}
+  \inference{}{\typingHC{\POOunit}{\POOunit}{\POOunit}}
+  \quad
+  \inference{
+    \typingHC{c_1}{T_3}{T_1} &
+    \typingHC{c_2}{T_2}{T_4}
+  }{
+    \typingHC{\POOfun{c_1}{c_2}}{\POOfun{T_1}{T_2}}{\POOfun{T_3}{T_4}}
+  }
+  \\
+  \inference{
+    \typingHC{c_1}{T_1}{T_3} &
+    \typingHC{c_2}{T_2}{T_4}
+  }{
+    \typingHC{\POOprod{c_1}{c_2}}{\POOprod{T_1}{T_2}}{\POOprod{T_3}{T_4}}
+  }
+  \quad
+  \inference{
+    \typingHC{c_1}{T_1}{T_3} &
+    \typingHC{c_2}{T_2}{T_4}
+  }{
+    \typingHC{\POOsum{c_1}{c_2}}{\POOsum{T_1}{T_2}}{\POOsum{T_3}{T_4}}
+  }
+    \end{gather*}
+    
+    Tail typing \fbox{$\typingHC{t}{P}{T}$}
+    \begin{gather*}
+    \inference{}{\typingHC{\epsilon}{P}{P}} \quad
+    \inference{}{\typingHC{!}{I}{\TOOdyn}} \quad
+    \inference{}{\typingHC{\bot^l}{P}{T}} \quad
+    \end{gather*}
+  
+  \caption{Definition of hypercoercions (HC)}
+  \label{fig:hypercoercion}
 \end{figure}
 
 This section presents our first contribution, the definition of
 hypercoercions.  The design of hypercoercions is motivated by the
-observation that a normal coercion has at most three parts;
-projections are always at the beginning; injections and failures are
-always at the end. Hypercoercions make this structure explicit: a
-hypercion either is $\hyperCoercionI$, the identity cast for
-$\TOOdyn$, or contains three parts: the head is either a projection or
-the identity, the tail is either an injection, a failure, or the
-identity, and the middle involves coercions underneath a type
-constructor, i.e., coercions between function, pair, and sum types.
+observation that a normal coercion has at most three
+parts. Hypercoercions make this structure explicit: a hypercion $c$ is
+either $\hyperCoercionI$, the identity cast for $\TOOdyn$, or contains
+three parts: a head, middle, and tail, as defined in
+\figref{fig:hypercoercion}.
+\begin{itemize}
+\item The head $h$ is either a projection or the identity,
+\item the middle $m$ involves coercions that preserve a type
+  constructor, i.e., coercions between function, pair, sum types, and
+  unit types, and
+\item the tail $t$ is either an injection, a failure, or the identity.
+\end{itemize}
+There is a one-to-one correspondence between middle coercions and type
+constructors.  We generalize shallow-consistency to middles $m \smile
+m$ in the obvious way.
 
-\figref{fig:hypercoercion} defines the syntax of
-hypercoercions. Types, pre-types, and blame labels are as before.  Let
-$c$ range over hypercoercions. A hypercoercion either is the identity
-cast between the dynamic types, or includes a head, a middle, and a
-tail.  Let $h$ range over heads. A head is either a no-op, or a
-projection.  Let $m$ range over middles. There is a one-to-one
-correspondence between middles and type constructors.  We generalize
-shallow-consistency to middles $m \smile m$ in the obvious way.  Let
-$t$ range over tails. A tail is either a no-op, an injection, or a
-failure.
-
-Subsection~\ref{sec:ld-hc} defines functions that construct \lazyD\ 
-hypercoercions. Subsection~\ref{sec:lud-hc} defines the \lazyUD\ counterparts. 
-Functions that apply hypercoercions to values are deferred to 
-Section~\ref{sec:hypercoercion-correctness} because they depends on a new 
-definition of values, which is part of the framework in
+Subsection~\ref{sec:ld-hc} defines functions that construct
+\lazyD\ hypercoercions. Subsection~\ref{sec:lud-hc} defines the
+\lazyUD\ counterparts.  The functions that apply hypercoercions to
+values are defined later in
+Section~\ref{sec:hypercoercion-correctness}, after we introduce the
+space-efficient machine and its definition of values in
 Section~\ref{sec:framework}.
 
 \subsection{\lazyD{} hypercoercions}
 \label{sec:ld-hc}
 
 \begin{figure}
-	\[
-	\begin{array}{rclr}
-	\stxrule{\ell}{Maybe$l$}{\epsilon \mid l}
-	\end{array}
-	\]
-	
-	Composition of hypercoercions \fbox{$c \fatsemi^\ell c = c$}
-	\[ 
-	\begin{array}{rclclr}
-	
-	\comprule{
-		\hyperCoercionI
-	}{
-		\hyperCoercionI
-	}{
-		\hyperCoercionI
-	}{}
-	
-	\comprule{
-		\hyperCoercionI
-	}{
-		\hyperCoercionC{?^{l'}}{m}{t}
-	}{
-		\hyperCoercionC{?^{l'}}{m}{t}
-	}{}
-	
-	\comprulel{
-		\hyperCoercionI
-	}{
-		\hyperCoercionC{\epsilon}{m}{t}
-	}{
-		\hyperCoercionC{?^{l}}{m}{t}
-	}{}
-	
-	\comprule{
-		\hyperCoercionC{h}{m}{\bot^{l'}}
-	}{
-		c
-	}{
-		\hyperCoercionC{h}{m}{\bot^{l'}}
-	}{}
-	
-	\comprule{
-		\hyperCoercionC{h}{m}{t}
-	}{
-		\hyperCoercionI
-	}{
-		\hyperCoercionC{h}{m}{!}
-	}{
-		\sidecond{\forall l. t \neq \bot^{l}}
-	}
-	
-	\comprule{
-		\hyperCoercionC{h_1}{m_1}{t_1}
-	}{
-		\hyperCoercionC{?^l}{m_2}{t_2}
-	}{
-		\hyperCoercionC{h_1}{m_1}{\bot^l}
-	}{
-		\sidecond{
-			\neg \; m_1 \smile m_2
-			\; \text{and} \;
-			\forall l. t \neq \bot^{l}
-		}
-	}
+  \[
+  \begin{array}{rclr}
+  \stxrule{\ell}{Maybe$l$}{\epsilon \mid l}
+  \end{array}
+  \]
+  
+  Composition of hypercoercions \fbox{$c \fatsemi^\ell c = c$}
+  \[ 
+  \begin{array}{rclclr}
+  
+  \comprule{
+    \hyperCoercionI
+  }{
+    \hyperCoercionI
+  }{
+    \hyperCoercionI
+  }{}
+  
+  \comprule{
+    \hyperCoercionI
+  }{
+    \hyperCoercionC{?^{l'}}{m}{t}
+  }{
+    \hyperCoercionC{?^{l'}}{m}{t}
+  }{}
+  
+  \comprulel{
+    \hyperCoercionI
+  }{
+    \hyperCoercionC{\epsilon}{m}{t}
+  }{
+    \hyperCoercionC{?^{l}}{m}{t}
+  }{}
+  
+  \comprule{
+    \hyperCoercionC{h}{m}{\bot^{l'}}
+  }{
+    c
+  }{
+    \hyperCoercionC{h}{m}{\bot^{l'}}
+  }{}
+  
+  \comprule{
+    \hyperCoercionC{h}{m}{t}
+  }{
+    \hyperCoercionI
+  }{
+    \hyperCoercionC{h}{m}{!}
+  }{
+    \sidecond{\forall l. t \neq \bot^{l}}
+  }
+  
+  \comprule{
+    \hyperCoercionC{h_1}{m_1}{t_1}
+  }{
+    \hyperCoercionC{?^l}{m_2}{t_2}
+  }{
+    \hyperCoercionC{h_1}{m_1}{\bot^l}
+  }{
+    \sidecond{
+      \neg \; m_1 \smile m_2
+      \; \text{and} \;
+      \forall l. t \neq \bot^{l}
+    }
+  }
 
 \comprulel{
 \hyperCoercionC{h_1}{m_1}{t_1}
@@ -1453,9 +1451,9 @@ Section~\ref{sec:framework}.
 \hyperCoercionC{h_1}{m_1}{\bot^l}
 }{
 \sidecond{
-	\neg \; m_1 \smile m_2
-	\; \text{and} \;
-	\forall l. t \neq \bot^{l}
+  \neg \; m_1 \smile m_2
+  \; \text{and} \;
+  \forall l. t \neq \bot^{l}
 }
 }
 \comprule{
@@ -1466,120 +1464,120 @@ Section~\ref{sec:framework}.
 \hyperCoercionC{h_1}{m_1 \fatsemi^{l} m_2}{t_2}
 }{
 \sidecond{
-	m_1 \smile m_2
-	\; \text{and} \;
-	\forall l. t \neq \bot^{l}
+  m_1 \smile m_2
+  \; \text{and} \;
+  \forall l. t \neq \bot^{l}
 }
 }
-	\comprule{
-		\hyperCoercionC{h_1}{m_1}{t_1}
-	}{
-		\hyperCoercionC{\epsilon}{m_2}{t_2}
-	}{
-		\hyperCoercionC{h_1}{m_1 \fatsemi^{\ell} m_2}{t_2}
-	}{
-		\sidecond{
-			m_1 \smile m_2
-			\; \text{and} \;
-			\forall l. t \neq \bot^{l}
-		}
-	}
+  \comprule{
+    \hyperCoercionC{h_1}{m_1}{t_1}
+  }{
+    \hyperCoercionC{\epsilon}{m_2}{t_2}
+  }{
+    \hyperCoercionC{h_1}{m_1 \fatsemi^{\ell} m_2}{t_2}
+  }{
+    \sidecond{
+      m_1 \smile m_2
+      \; \text{and} \;
+      \forall l. t \neq \bot^{l}
+    }
+  }
 %
-%	\comprule{
-%		\hyperCoercionC{h}{m_1}{t_1}
-%	}{
-%		\hyperCoercionC{\epsilon}{m_2}{t_2}
-%	}{
-%		\hyperCoercionC{h}{m'}{t'}
-%	}{
-%		\sidecond{
-%			m_1 \fatsemi^{\ell} (m_2, t_2) = (m', t')
-%			 \; \text{and} \;
-%			 \forall l. t \neq \bot^{l}
-%		}
-%	}
-%	
-%	\comprule{
-%		\hyperCoercionC{h}{m_1}{t_1}
-%	}{
-%		\hyperCoercionC{?^{l'}}{m_2}{t_2}
-%	}{
-%		\hyperCoercionC{h}{m'}{t'}
-%	}{
-%		\sidecond{
-%			m_1 \fatsemi^{l'} (m_2, t_2) = (m', t')
-%			\; \text{and} \;
-%			\forall l. t \neq \bot^{l} 
-%		}
-%	}
-	\end{array}
-	\]
-	
-	Composition of middles \fbox{$m \fatsemi^\ell m = m$}
-	\[ 
-	\begin{array}{rclclr}
-	\comprule{\POOunit}{\POOunit}{
-		\POOunit
-	}{}
-	\comprule{\POOfun{c_1}{c_2}}{\POOfun{c_3}{c_4}}{
-		\POOfun{c_3 \fatsemi^{\ell} c_1}{c_2 \fatsemi^\ell c_4}
-	}{}
-	\comprule{\POOprod{c_1}{c_2}}{\POOprod{c_3}{c_4}}{
-		\POOprod{c_1 \fatsemi^\ell c_3}{c_2 \fatsemi^\ell c_4}
-	}{}
-	\comprule{\POOsum{c_1}{c_2}}{\POOsum{c_3}{c_4}}{
-		\POOsum{c_1 \fatsemi^\ell c_3}{c_2 \fatsemi^\ell c_4}
-	}{}
-	\end{array}
-	\]
-	
-	\fbox{$seq(c,c) = c$}
-	\[
-	\begin{array}{rclr}
-	\funrule{seq(c_1,c_2)}{
-		c_1 \fatsemi^\epsilon c_2
-	}{}
-	\end{array}
-	\]
-	
-	\fbox{$id( P ) = m$}
-	\[
-	\begin{array}{rclr}
-	\funrule{id(\POOunit)}{\POOunit}{}
-	\funrule{id(\POOfun{T_1}{T_2})}{
-		\POOfun{id(T_1)}{id(T_2)}
-	}{}
-	\funrule{id(\POOprod{T_1}{T_2})}{
-		\POOprod{id(T_1)}{id(T_2)}
-	}{}
-	\funrule{id(\POOsum{T_1}{T_2})}{
-		\POOsum{id(T_1)}{id(T_2)}
-	}{}
-	\end{array}
-	\]
-	
-	\fbox{$id( T ) = c$}
-	\[
-	\begin{array}{rclr}
-	\funrule{id(\star)}{
-		\hyperCoercionI
-	}{}
-	\funrule{id(P)}{
-		\hyperCoercionC{\epsilon}{id(P)}{\epsilon}
-	}{}
-	\end{array}
-	\]
-	
-	\fbox{$cast(T,l,T) = c$}
-	\[
-	\begin{array}{rclr}
-	\funrule{cast(T_1,l,T_2)}{
-		id(T_1) \fatsemi^l id(T_2)
-	}{}
-	\end{array}
-	\]
-	\caption{\lazyD{} Hypercoercions}
-	\label{fig:HC-D}
+% \comprule{
+%   \hyperCoercionC{h}{m_1}{t_1}
+% }{
+%   \hyperCoercionC{\epsilon}{m_2}{t_2}
+% }{
+%   \hyperCoercionC{h}{m'}{t'}
+% }{
+%   \sidecond{
+%     m_1 \fatsemi^{\ell} (m_2, t_2) = (m', t')
+%      \; \text{and} \;
+%      \forall l. t \neq \bot^{l}
+%   }
+% }
+% 
+% \comprule{
+%   \hyperCoercionC{h}{m_1}{t_1}
+% }{
+%   \hyperCoercionC{?^{l'}}{m_2}{t_2}
+% }{
+%   \hyperCoercionC{h}{m'}{t'}
+% }{
+%   \sidecond{
+%     m_1 \fatsemi^{l'} (m_2, t_2) = (m', t')
+%     \; \text{and} \;
+%     \forall l. t \neq \bot^{l} 
+%   }
+% }
+  \end{array}
+  \]
+  
+  Composition of middles \fbox{$m \fatsemi^\ell m = m$}
+  \[ 
+  \begin{array}{rclclr}
+  \comprule{\POOunit}{\POOunit}{
+    \POOunit
+  }{}
+  \comprule{\POOfun{c_1}{c_2}}{\POOfun{c_3}{c_4}}{
+    \POOfun{c_3 \fatsemi^{\ell} c_1}{c_2 \fatsemi^\ell c_4}
+  }{}
+  \comprule{\POOprod{c_1}{c_2}}{\POOprod{c_3}{c_4}}{
+    \POOprod{c_1 \fatsemi^\ell c_3}{c_2 \fatsemi^\ell c_4}
+  }{}
+  \comprule{\POOsum{c_1}{c_2}}{\POOsum{c_3}{c_4}}{
+    \POOsum{c_1 \fatsemi^\ell c_3}{c_2 \fatsemi^\ell c_4}
+  }{}
+  \end{array}
+  \]
+  
+  \fbox{$seq(c,c) = c$}
+  \[
+  \begin{array}{rclr}
+  \funrule{seq(c_1,c_2)}{
+    c_1 \fatsemi^\epsilon c_2
+  }{}
+  \end{array}
+  \]
+  
+  \fbox{$id( P ) = m$}
+  \[
+  \begin{array}{rclr}
+  \funrule{id(\POOunit)}{\POOunit}{}
+  \funrule{id(\POOfun{T_1}{T_2})}{
+    \POOfun{id(T_1)}{id(T_2)}
+  }{}
+  \funrule{id(\POOprod{T_1}{T_2})}{
+    \POOprod{id(T_1)}{id(T_2)}
+  }{}
+  \funrule{id(\POOsum{T_1}{T_2})}{
+    \POOsum{id(T_1)}{id(T_2)}
+  }{}
+  \end{array}
+  \]
+  
+  \fbox{$id( T ) = c$}
+  \[
+  \begin{array}{rclr}
+  \funrule{id(\star)}{
+    \hyperCoercionI
+  }{}
+  \funrule{id(P)}{
+    \hyperCoercionC{\epsilon}{id(P)}{\epsilon}
+  }{}
+  \end{array}
+  \]
+  
+  \fbox{$cast(T,l,T) = c$}
+  \[
+  \begin{array}{rclr}
+  \funrule{cast(T_1,l,T_2)}{
+    id(T_1) \fatsemi^l id(T_2)
+  }{}
+  \end{array}
+  \]
+  \caption{\lazyD{} Hypercoercions}
+  \label{fig:HC-D}
 \end{figure}
 
 \figref{fig:HC-D} defines functions that construct \lazyD{} hypercoercions. We 
@@ -1624,26 +1622,26 @@ $cast(T_1,l,T_2)$ constructs a coercion from a source type, a label, and a
 target type. $c \fatsemi^\ell c$ does the most job.
 
 \begin{proposition}[\lazyD\ hypercoercion is a monoid]
-	\label{thm:hc-monoid}
-	For all $c : T_1 \Longrightarrow T_2$,
-	$c_1 : T_1 \Longrightarrow T_2$,
-	$c_2 : T_2 \Longrightarrow T_3$, and
-	$c_3 : T_3 \Longrightarrow T_4$,
-	\begin{enumerate}
-		\item $seq(id(T_1),c) = c$,
-		\item $seq(c,id(T_2)) = c$, and
-		\item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
-	\end{enumerate}
+  \label{thm:hc-monoid}
+  For all $c : T_1 \Longrightarrow T_2$,
+  $c_1 : T_1 \Longrightarrow T_2$,
+  $c_2 : T_2 \Longrightarrow T_3$, and
+  $c_3 : T_3 \Longrightarrow T_4$,
+  \begin{enumerate}
+    \item $seq(id(T_1),c) = c$,
+    \item $seq(c,id(T_2)) = c$, and
+    \item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
+  \end{enumerate}
 \end{proposition}
 \begin{proof} Part (1) and (2) are by induction on $c$. Part (3) is by 
 induction on $c_2$ and case analysis on $c_1$ and $c_3$.
 \end{proof}
 
 \begin{proposition}[]
-	For all $T$ and $l$, $cast(T,l,T) = id(T) $
+  For all $T$ and $l$, $cast(T,l,T) = id(T) $
 \end{proposition}
 \begin{proof}
-	By induction on T.
+  By induction on T.
 \end{proof}
 
 \subsection{\lazyUD{} hypercoercion [Jeremy]}
@@ -1702,13 +1700,13 @@ Figure~\ref{fig:HC-UD}
   \begin{array}{rclr}
     \funrule{id(\POOunit)}{\POOunit}{}
     \funrule{id(\POOfun{T_1}{T_2})}{
-		\POOfun{id(T_1)}{id(T_2)}
+    \POOfun{id(T_1)}{id(T_2)}
     }{}
     \funrule{id(\POOprod{T_1}{T_2})}{
-		\POOprod{id(T_1)}{id(T_2)}
+    \POOprod{id(T_1)}{id(T_2)}
     }{}
     \funrule{id(\POOsum{T_1}{T_2})}{
-		\POOsum{id(T_1)}{id(T_2)}
+    \POOsum{id(T_1)}{id(T_2)}
     }{}
   \end{array}
   \]
@@ -1717,10 +1715,10 @@ Figure~\ref{fig:HC-UD}
   \[
   \begin{array}{rclr}
     \funrule{id(\star)}{
-		\hyperCoercionI
+    \hyperCoercionI
     }{}
     \funrule{id(P)}{
-		\hyperCoercionC{\epsilon}{id(P)}{\epsilon}
+    \hyperCoercionC{\epsilon}{id(P)}{\epsilon}
     }{}
   \end{array}
   \]
@@ -1819,15 +1817,15 @@ Figure~\ref{fig:HC-UD-cast}
 
 
 \begin{proposition}[\lazyUD\ hypercoercions form a monoid]
-	For all $c : T_1 \Longrightarrow T_2$,
-	$c_1 : T_1 \Longrightarrow T_2$,
-	$c_2 : T_2 \Longrightarrow T_3$, and
-	$c_3 : T_3 \Longrightarrow T_4$,
-	\begin{enumerate}
-		\item $seq(id(T_1),c) = c$,
-		\item $seq(c,id(T_2)) = c$, and
-		\item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
-	\end{enumerate}
+  For all $c : T_1 \Longrightarrow T_2$,
+  $c_1 : T_1 \Longrightarrow T_2$,
+  $c_2 : T_2 \Longrightarrow T_3$, and
+  $c_3 : T_3 \Longrightarrow T_4$,
+  \begin{enumerate}
+    \item $seq(id(T_1),c) = c$,
+    \item $seq(c,id(T_2)) = c$, and
+    \item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
+  \end{enumerate}
 \end{proposition}
 
 
@@ -1891,17 +1889,17 @@ Fixed. -KC}
 \label{def:values-effCEK}
   \[
   \begin{array}{rclr}
-	\stxrule{v}{values}{
-		\hcvOOtt \mid
-		\hcvOOfun{c}{\rho}{x}{e}{c} \mid
-		\hcvOOcons{v}{c}{v}{c} \mid
-		\hcvOOinl{v}{c} \mid
-		\hcvOOinr{v}{c} \mid
-		\hcvOOinj{P}{v}
-	}
+  \stxrule{v}{values}{
+    \hcvOOtt \mid
+    \hcvOOfun{c}{\rho}{x}{e}{c} \mid
+    \hcvOOcons{v}{c}{v}{c} \mid
+    \hcvOOinl{v}{c} \mid
+    \hcvOOinr{v}{c} \mid
+    \hcvOOinj{P}{v}
+  }
 \stxrule{r}{cast results}{
-	\rOOsucc{v} \mid
-	\rOOfail{l}
+  \rOOsucc{v} \mid
+  \rOOfail{l}
 }
   \end{array}
   \]
@@ -2009,157 +2007,157 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
 \label{sec:framework:cek}
 
 \begin{figure}
-	Syntax
-	\[
-	\begin{array}{rclr}
-%	\stxrule{r}{cast results}{
-%		\rOOsucc{v} \mid
-%		\rOOfail{l}
-%	}
-%	\stxrule{s}{states}{
-%		\sOOinspect{e}{\rho}{\kappa} \mid{}
-%		\sOOreturn{v}{\kappa} \mid{}
-%		\sOOhalt{o}
-%	}
-	\stxrule{\kappa}{continuation}{
-		\kOOcast{c}{k}
-	}
-	\stxrule{k}{pre-continuations}{
-		\kOOmt \mid{}
-		\kOOconsI{e}{\rho}{\kappa} \mid
-		\kOOconsII{v}{\kappa} \mid
-		\kOOinl{\kappa} \mid
-		\kOOinr{\kappa}
-	}
-	\stxrulecont{
-		\kOOappI{e}{\rho}{\kappa} \mid
-		\kOOappII{v}{\kappa} \mid
-		\kOOcar{\kappa} \mid
-		\kOOcdr{\kappa}
-	}
-	\stxrulecont{
-		\kOOcaseI{e}{e}{\rho}{\kappa} \mid
-		\kOOcaseII{v}{e}{\rho}{\kappa} \mid
-		\kOOcaseIII{v}{v}{\kappa}
-	}
-	\end{array}
-	\]
-	
-	Build continuation \fbox{$wrap(k) = \kappa$}
-	\[
-	\begin{array}{rclc}
-	\funrule{wrap(k)}{\kOOcast{id(T_1)}{k}}{
-		\sidecond{k : T_1 \Longrightarrow T_2}}
-	\end{array}
-	\]
-	
-	Extend continuation \fbox{$ext(c,\kappa) = \kappa$}
-	\[
-	\begin{array}{rclc}
-	\funrule{ext(c_1,\kOOcast{c_2}{k})}{
-		\kOOcast{seq(c_1,c_2)}{k}
-	}{}
-	\end{array}
-	\]
+  Syntax
+  \[
+  \begin{array}{rclr}
+% \stxrule{r}{cast results}{
+%   \rOOsucc{v} \mid
+%   \rOOfail{l}
+% }
+% \stxrule{s}{states}{
+%   \sOOinspect{e}{\rho}{\kappa} \mid{}
+%   \sOOreturn{v}{\kappa} \mid{}
+%   \sOOhalt{o}
+% }
+  \stxrule{\kappa}{continuation}{
+    \kOOcast{c}{k}
+  }
+  \stxrule{k}{pre-continuations}{
+    \kOOmt \mid{}
+    \kOOconsI{e}{\rho}{\kappa} \mid
+    \kOOconsII{v}{\kappa} \mid
+    \kOOinl{\kappa} \mid
+    \kOOinr{\kappa}
+  }
+  \stxrulecont{
+    \kOOappI{e}{\rho}{\kappa} \mid
+    \kOOappII{v}{\kappa} \mid
+    \kOOcar{\kappa} \mid
+    \kOOcdr{\kappa}
+  }
+  \stxrulecont{
+    \kOOcaseI{e}{e}{\rho}{\kappa} \mid
+    \kOOcaseII{v}{e}{\rho}{\kappa} \mid
+    \kOOcaseIII{v}{v}{\kappa}
+  }
+  \end{array}
+  \]
+  
+  Build continuation \fbox{$wrap(k) = \kappa$}
+  \[
+  \begin{array}{rclc}
+  \funrule{wrap(k)}{\kOOcast{id(T_1)}{k}}{
+    \sidecond{k : T_1 \Longrightarrow T_2}}
+  \end{array}
+  \]
+  
+  Extend continuation \fbox{$ext(c,\kappa) = \kappa$}
+  \[
+  \begin{array}{rclc}
+  \funrule{ext(c_1,\kOOcast{c_2}{k})}{
+    \kOOcast{seq(c_1,c_2)}{k}
+  }{}
+  \end{array}
+  \]
 
-	Reduction \fbox{$\judgeSreduce{C}{s}{s}$}
-	\[
-	\begin{array}{rclr}
-	\hiredruleS{
-		\sOOinspect{\eOOcast{e}{T_1}{l}{T_2}}{\rho}{\kappa}
-	}{
-		\sOOinspect{e}{\rho}{ext(cast(T_1,l,T_2),\kappa)}
-	}{}
-	\redruleS{
-		\sOOinspect{\eOOvar{x}}{\rho}{\kappa}
-	}{	
-		\sOOreturn{\rho(x)}{\kappa}
-	}{}
-	\redruleS{
-		\sOOinspect{\eOOsole}{\rho}{\kappa}
-	}{
-		\sOOreturn{\hcvOOtt}{\kappa}
-	}{}
-	\hiredruleS{
-		\sOOinspect{\eOOlam{T_1}{T_2}{x}{e}}{\rho}{\kappa}
-	}{
-		\sOOreturn{\hcvOOfun{id(T_1)}{\rho}{x}{e}{id(T_2)}}{\kappa}
-	}{}
-	\redruleS{
-		\sOOinspect{\eOOcons{e_1}{e_2}}{\rho}{\kappa}
-	}{
-		\sOOinspect{e_1}{\rho}{
-			wrap(\kOOconsI{e_2}{\rho}{\kappa})
-		}
-	}{}
-	\redruleS{
-		\sOOinspect{\eOOinl{e}}{\rho}{\kappa}
-	}{
-		\sOOinspect{e}{\rho}{wrap(\kOOinl{\kappa})}
-	}{}
-	\redruleS{
-		\sOOinspect{\eOOinr{e}}{\rho}{\kappa}
-	}{
-		\sOOinspect{e}{\rho}{wrap(\kOOinr{\kappa})}
-	}{}
-	\redruleS{
-		\sOOinspect{\eOOapp{e_1}{e_2}}{\rho}{\kappa}
-	}{
-		\sOOinspect{e_1}{\rho}{wrap(\kOOappI{e_2}{\rho}{\kappa})}}{}
-	
-	\redruleS{
-		\sOOinspect{\eOOcar{e})}{\rho}{\kappa}}{
-		\sOOinspect{e}{\rho}{wrap(\kOOcar{\kappa})}}{}
-	
-	\redruleS{
-		\sOOinspect{\eOOcdr{e}}{\rho}{\kappa}}{
-		\sOOinspect{e}{\rho}{wrap(\kOOcdr{\kappa})}}{}
-	
-	\redruleS{
-		\sOOinspect{\eOOcase{e_1}{e_2}{e_3}}{\rho}{\kappa}}{
-		\sOOinspect{e_1}{\rho}{wrap(\kOOcaseI{e_2}{e_3}{\rho}{\kappa})}}{}
-	\hiredruleS{
-		\sOOreturn{v}{\kOOcast{c}{k}}
-	}{
-	\begin{cases}
-	\continue{k}{v'} & \sidecond{applyCast(v,c) = \rOOsucc{v'}} 
-	\\
-	\sOOhalt{\oOOblame{l}} & \sidecond{applyCast(v,c) = \rOOfail{l}}
-	\end{cases}
-	}{}
-	\end{array}
-	\]
-	
-	Apply continuation
-	\fbox{$\continue{k}{v} = s$}
-	\[
-	\begin{array}{rclr}
-	
-
-\funrule{
-	\continue{v_1}{\kOOconsI{e_2}{\rho}{\kappa}}}{
-	\sOOinspect{e_2}{\rho}{wrap(\kOOconsII{v_1}{\kappa})}}{}
-
-\hifunrule{
-	\continue{v_2}{\kOOconsII{v_1}{\kappa}}}{
-	\sOOreturn{\hcvOOcons{v_1}{id(T_1)}{v_2}{id(T_2)}}{\kappa}}{}
-
-\hifunrule{
-	\continue{v}{\kOOinl{\kappa}}}{
-	\sOOreturn{\hcvOOinl{v}{id(T)}}{\kappa}}{}
-
-\hifunrule{
-	\continue{v}{\kOOinr{\kappa}}}{
-	\sOOreturn{\hcvOOinr{v}{id(T)}}{\kappa}}{}
+  Reduction \fbox{$\judgeSreduce{C}{s}{s}$}
+  \[
+  \begin{array}{rclr}
+  \hiredruleS{
+    \sOOinspect{\eOOcast{e}{T_1}{l}{T_2}}{\rho}{\kappa}
+  }{
+    \sOOinspect{e}{\rho}{ext(cast(T_1,l,T_2),\kappa)}
+  }{}
+  \redruleS{
+    \sOOinspect{\eOOvar{x}}{\rho}{\kappa}
+  }{  
+    \sOOreturn{\rho(x)}{\kappa}
+  }{}
+  \redruleS{
+    \sOOinspect{\eOOsole}{\rho}{\kappa}
+  }{
+    \sOOreturn{\hcvOOtt}{\kappa}
+  }{}
+  \hiredruleS{
+    \sOOinspect{\eOOlam{T_1}{T_2}{x}{e}}{\rho}{\kappa}
+  }{
+    \sOOreturn{\hcvOOfun{id(T_1)}{\rho}{x}{e}{id(T_2)}}{\kappa}
+  }{}
+  \redruleS{
+    \sOOinspect{\eOOcons{e_1}{e_2}}{\rho}{\kappa}
+  }{
+    \sOOinspect{e_1}{\rho}{
+      wrap(\kOOconsI{e_2}{\rho}{\kappa})
+    }
+  }{}
+  \redruleS{
+    \sOOinspect{\eOOinl{e}}{\rho}{\kappa}
+  }{
+    \sOOinspect{e}{\rho}{wrap(\kOOinl{\kappa})}
+  }{}
+  \redruleS{
+    \sOOinspect{\eOOinr{e}}{\rho}{\kappa}
+  }{
+    \sOOinspect{e}{\rho}{wrap(\kOOinr{\kappa})}
+  }{}
+  \redruleS{
+    \sOOinspect{\eOOapp{e_1}{e_2}}{\rho}{\kappa}
+  }{
+    \sOOinspect{e_1}{\rho}{wrap(\kOOappI{e_2}{\rho}{\kappa})}}{}
+  
+  \redruleS{
+    \sOOinspect{\eOOcar{e})}{\rho}{\kappa}}{
+    \sOOinspect{e}{\rho}{wrap(\kOOcar{\kappa})}}{}
+  
+  \redruleS{
+    \sOOinspect{\eOOcdr{e}}{\rho}{\kappa}}{
+    \sOOinspect{e}{\rho}{wrap(\kOOcdr{\kappa})}}{}
+  
+  \redruleS{
+    \sOOinspect{\eOOcase{e_1}{e_2}{e_3}}{\rho}{\kappa}}{
+    \sOOinspect{e_1}{\rho}{wrap(\kOOcaseI{e_2}{e_3}{\rho}{\kappa})}}{}
+  \hiredruleS{
+    \sOOreturn{v}{\kOOcast{c}{k}}
+  }{
+  \begin{cases}
+  \continue{k}{v'} & \sidecond{applyCast(v,c) = \rOOsucc{v'}} 
+  \\
+  \sOOhalt{\oOOblame{l}} & \sidecond{applyCast(v,c) = \rOOfail{l}}
+  \end{cases}
+  }{}
+  \end{array}
+  \]
+  
+  Apply continuation
+  \fbox{$\continue{k}{v} = s$}
+  \[
+  \begin{array}{rclr}
+  
 
 \funrule{
-	\continue{v_1}{\kOOappI{e_2}{\rho}{\kappa}}}{
-	\sOOinspect{e_2}{\rho}{
-		wrap(\kOOappII{v_1}{\kappa})
-	}}{}
+  \continue{v_1}{\kOOconsI{e_2}{\rho}{\kappa}}}{
+  \sOOinspect{e_2}{\rho}{wrap(\kOOconsII{v_1}{\kappa})}}{}
 
 \hifunrule{
-	\continue{v_2}{\kOOappII{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{\kappa}}}{
+  \continue{v_2}{\kOOconsII{v_1}{\kappa}}}{
+  \sOOreturn{\hcvOOcons{v_1}{id(T_1)}{v_2}{id(T_2)}}{\kappa}}{}
+
+\hifunrule{
+  \continue{v}{\kOOinl{\kappa}}}{
+  \sOOreturn{\hcvOOinl{v}{id(T)}}{\kappa}}{}
+
+\hifunrule{
+  \continue{v}{\kOOinr{\kappa}}}{
+  \sOOreturn{\hcvOOinr{v}{id(T)}}{\kappa}}{}
+
+\funrule{
+  \continue{v_1}{\kOOappI{e_2}{\rho}{\kappa}}}{
+  \sOOinspect{e_2}{\rho}{
+    wrap(\kOOappII{v_1}{\kappa})
+  }}{}
+
+\hifunrule{
+  \continue{v_2}{\kOOappII{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{\kappa}}}{
 \begin{cases}
 \sOOinspect{e}{\rho[x:=v']}{ext(c_2,\kappa)} \\
 \sidecond{applyCast(v_2,c_1) = \rOOsucc{v'}}
@@ -2171,82 +2169,82 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
 
 
 \hifunrule{
-	\continue{\hcvOOcons{v_1}{c_1}{v_2}{c_2}}{
-		\kOOcar{\kappa}
-	}
+  \continue{\hcvOOcons{v_1}{c_1}{v_2}{c_2}}{
+    \kOOcar{\kappa}
+  }
 }{
-	\sOOreturn{v_1}{ext(c_1,k)}
+  \sOOreturn{v_1}{ext(c_1,k)}
 }{}
 \hifunrule{
-	\continue{\hcvOOcons{v_1}{c_1}{v_2}{c_2}}{
-		\kOOcdr{\kappa}
-	}
+  \continue{\hcvOOcons{v_1}{c_1}{v_2}{c_2}}{
+    \kOOcdr{\kappa}
+  }
 }{
-	\sOOreturn{v_2}{ext(c_2,k)}
+  \sOOreturn{v_2}{ext(c_2,k)}
 }{}
 
 \funrule{
-	\continue{v_1}{\kOOcaseI{e_2}{e_3}{\rho}{\kappa}}
+  \continue{v_1}{\kOOcaseI{e_2}{e_3}{\rho}{\kappa}}
 }{
-	\sOOinspect{e_2}{\rho}{
-		wrap(\kOOcaseII{v_1}{e_3}{\rho}{\kappa})
-	}
+  \sOOinspect{e_2}{\rho}{
+    wrap(\kOOcaseII{v_1}{e_3}{\rho}{\kappa})
+  }
 }{}
 
 \funrule{
-	\continue{v_2}{
-		\kOOcaseII{v_1}{e_3}{\rho}{\kappa}
-	}
+  \continue{v_2}{
+    \kOOcaseII{v_1}{e_3}{\rho}{\kappa}
+  }
 }{
-	\sOOinspect{e_3}{\rho}{
-	wrap(\kOOcaseIII{v_1}{v_2}{\kappa})
-	}
+  \sOOinspect{e_3}{\rho}{
+  wrap(\kOOcaseIII{v_1}{v_2}{\kappa})
+  }
 }{}
 
 \hifunrule{
-	\continue{v_3}{
-		\kOOcaseIII{(\hcvOOinl{v}{c})}{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{\kappa}
-%		(\mathtt{case_3}\;()\;
-%		()
-%		\;)
-	}
+  \continue{v_3}{
+    \kOOcaseIII{(\hcvOOinl{v}{c})}{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{\kappa}
+%   (\mathtt{case_3}\;()\;
+%   ()
+%   \;)
+  }
 }{
-	\sOOreturn{v}{wrap(\kOOappII{(\hcvOOfun{seq(c,c_1)}{\rho}{x}{e}{c_2})}{\kappa})}
+  \sOOreturn{v}{wrap(\kOOappII{(\hcvOOfun{seq(c,c_1)}{\rho}{x}{e}{c_2})}{\kappa})}
 }{}
 
 \hifunrule{
-	\continue{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}
-	{
-		\kOOcaseIII{(\hcvOOinr{v}{c})}{v_2}{\kappa}
-	}
+  \continue{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}
+  {
+    \kOOcaseIII{(\hcvOOinr{v}{c})}{v_2}{\kappa}
+  }
 }{
-	\sOOreturn{v}{wrap(\kOOappII{(\hcvOOfun{seq(c,c_1)}{\rho}{x}{e}{c_2})}{\kappa})}
+  \sOOreturn{v}{wrap(\kOOappII{(\hcvOOfun{seq(c,c_1)}{\rho}{x}{e}{c_2})}{\kappa})}
 }{}
 
 \funrule{
-	\continue{v}{\kOOmt}}{
-	\sOOhalt{observe(v)}}{}
-	
-	\end{array}\]
-	
-%	Transitive closure of reduction \fbox{$s \longrightarrow_{S(C)}^{*} s$}
-%	\[\dots\]
-	
-%	Evaluation \fbox{$\judgeSeval{C}{e}{o}$}
-%	\[
-%	\inference{
-%		\judgeSreduceTrans{C}{
-%			\sOOinspect{e}{\emptyset}{wrap(\hckOOmt)}
-%		}{
-%			\sOOhalt{o}
-%		}		
-%	}{
-%		\judgeSeval{C}{e}{o}
-%	}
-%	\]
-	
-	\caption{Space-efficient CEK machine$\mathcal{S}(C)$}
-	\label{fig:machine-cekcc}
+  \continue{v}{\kOOmt}}{
+  \sOOhalt{observe(v)}}{}
+  
+  \end{array}\]
+  
+% Transitive closure of reduction \fbox{$s \longrightarrow_{S(C)}^{*} s$}
+% \[\dots\]
+  
+% Evaluation \fbox{$\judgeSeval{C}{e}{o}$}
+% \[
+% \inference{
+%   \judgeSreduceTrans{C}{
+%     \sOOinspect{e}{\emptyset}{wrap(\hckOOmt)}
+%   }{
+%     \sOOhalt{o}
+%   }   
+% }{
+%   \judgeSeval{C}{e}{o}
+% }
+% \]
+  
+  \caption{Space-efficient CEK machine$\mathcal{S}(C)$}
+  \label{fig:machine-cekcc}
 \end{figure}
 
 \figref{fig:machine-cekcc} defines \effCEK{C}, a space-efficient CEK
@@ -2348,16 +2346,16 @@ a weak bisimulation between \effCEK{C} and \ineffCEKD{}.
 We define monoid as follows.
 
 \begin{definition}[Monoid]
-	A Cast ADT is a monoid if 
-	for all
-	$c_1 : T_1 \Longrightarrow T_2$,
-	$c_2 : T_2 \Longrightarrow T_3$, and
-	$c_3 : T_3 \Longrightarrow T_4$,
-	\begin{enumerate}
-		\item $seq(id(T_1),c_1) = c_1$,
-		\item $seq(c_1,id(T_2)) = c_1$, and
-		\item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
-	\end{enumerate}
+  A Cast ADT is a monoid if 
+  for all
+  $c_1 : T_1 \Longrightarrow T_2$,
+  $c_2 : T_2 \Longrightarrow T_3$, and
+  $c_3 : T_3 \Longrightarrow T_4$,
+  \begin{enumerate}
+    \item $seq(id(T_1),c_1) = c_1$,
+    \item $seq(c_1,id(T_2)) = c_1$, and
+    \item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
+  \end{enumerate}
 \end{definition}
 
 %Lazy D Cast ADT confines the behavior of operators so narrowly that it 
@@ -2409,58 +2407,58 @@ If functions are related, we can apply the same cast on both side.
 Rules for products and sums are similar.
 
 \begin{figure}
-	$\text{\effCEK{C}} \approx \text{\ineffCEKD}$
-%	\[\dots\]
-	
-	\fbox{$\kappa \approx \kappa$}
-	\begin{gather*}
-	\inference{
-		k \approx \kappa
-	}{
-		wrap(k) \approx \kappa
-	}
-	\quad
-	\inference{
-		\kappa_1 \approx \kappa_2
-	}{
-		ext(cast(T_1,l,T_2),\kappa_1) \approx 
-		\kOOcast{\cOOcast{T_1}{l}{T_2}}{\kappa_2}
-	}
+  $\text{\effCEK{C}} \approx \text{\ineffCEKD}$
+% \[\dots\]
+  
+  \fbox{$\kappa \approx \kappa$}
+  \begin{gather*}
+  \inference{
+    k \approx \kappa
+  }{
+    wrap(k) \approx \kappa
+  }
+  \quad
+  \inference{
+    \kappa_1 \approx \kappa_2
+  }{
+    ext(cast(T_1,l,T_2),\kappa_1) \approx 
+    \kOOcast{\cOOcast{T_1}{l}{T_2}}{\kappa_2}
+  }
 \\
-	\end{gather*}
-\\	
-	\fbox{$v \approx v : T$}
-	\begin{gather*}
-	\inference{
-		v_1 \approx v_2 : P
-	}{
-		\hcvOOinj{P}{v_1} \approx \vOOcast{v_2}{\cOOcast{P}{l}{\TOOdyn}}
-		: \TOOdyn
-	}
+  \end{gather*}
+\\  
+  \fbox{$v \approx v : T$}
+  \begin{gather*}
+  \inference{
+    v_1 \approx v_2 : P
+  }{
+    \hcvOOinj{P}{v_1} \approx \vOOcast{v_2}{\cOOcast{P}{l}{\TOOdyn}}
+    : \TOOdyn
+  }
 \\ \\
-	%% \inference{}{
-	%% 	\hcvOOtt \approx \vOOtt : \POOunit
-	%% }
-	%% \quad
-	\inference{}{
-		\hcvOOtt \approx \vOOcast{\vOOtt}{\cOOcast{\POOunit}{l}{\POOunit}}
-		: \POOunit
-	}
-	\\ \\
-	\inference{
-		\rho_1 \approx \rho_2 &
-		dom(\rho_1) = dom(\rho_2) = \Gamma \\
-		\Gamma , x : T_1 \vdash e : T_2
-	}{
-		\hcvOOfun{id(T_1)}{\rho_1}{x}{e}{id(T_2)}
-		\approx
-		\vOOfun{\rho_2}{x}{e}
-		: \POOfun{T_1}{T_2}
-	}
+  %% \inference{}{
+  %%  \hcvOOtt \approx \vOOtt : \POOunit
+  %% }
+  %% \quad
+  \inference{}{
+    \hcvOOtt \approx \vOOcast{\vOOtt}{\cOOcast{\POOunit}{l}{\POOunit}}
+    : \POOunit
+  }
+  \\ \\
+  \inference{
+    \rho_1 \approx \rho_2 &
+    dom(\rho_1) = dom(\rho_2) = \Gamma \\
+    \Gamma , x : T_1 \vdash e : T_2
+  }{
+    \hcvOOfun{id(T_1)}{\rho_1}{x}{e}{id(T_2)}
+    \approx
+    \vOOfun{\rho_2}{x}{e}
+    : \POOfun{T_1}{T_2}
+  }
 \\ \\
 \inference{
 \hcvOOfun{c_1}{\rho}{x}{e}{c_2} \approx v_2 : \POOfun{T_1}{T_2} \\
-%		\judgeType{\hcvOOfun{c_1}{\rho}{x}{e}{c_2}}{\POOfun{T_1}{T_2}} \\
+%   \judgeType{\hcvOOfun{c_1}{\rho}{x}{e}{c_2}}{\POOfun{T_1}{T_2}} \\
 c_1' = seq(cast(T_3,l,T_1),c_1) \\
 c_2' = seq(c_2,cast(T_2,l,T_4))
 }{
@@ -2470,62 +2468,62 @@ c_2' = seq(c_2,cast(T_2,l,T_4))
 : \POOfun{T_3}{T_4}
 }
 \\ \\
-	\inference{
-		v_1 \approx v_2 : T_1 &
-		v_3 \approx v_4 : T_2 &
-	}{
-		\hcvOOcons{v_1}{id(T_1)}{v_3}{id(T_2)}
-		\approx
-		\vOOcons{v_2}{v_3}
-		: \POOprod{T_1}{T_2}
-	}
+  \inference{
+    v_1 \approx v_2 : T_1 &
+    v_3 \approx v_4 : T_2 &
+  }{
+    \hcvOOcons{v_1}{id(T_1)}{v_3}{id(T_2)}
+    \approx
+    \vOOcons{v_2}{v_3}
+    : \POOprod{T_1}{T_2}
+  }
 \\ \\
-	\inference{
-		\hcvOOcons{v_1}{c_1}{v_3}{c_2} \approx v_2 : \POOsum{T_1}{T_2} \\
-		c_1' = seq(c_1,cast(T_1,l,T_3)) \\
-		c_2' = seq(c_2,cast(T_2,l,T_4))
-	}{
-		\hcvOOcons{v_1}{c_1'}{v_3}{c_2'} \approx
-		\vOOcast{v}{\cOOcast{\POOprod{T_1}{T_2}}{l}{\POOprod{T_3}{T_4}}}
-		: \POOprod{T_3}{T_4}
-	}
+  \inference{
+    \hcvOOcons{v_1}{c_1}{v_3}{c_2} \approx v_2 : \POOsum{T_1}{T_2} \\
+    c_1' = seq(c_1,cast(T_1,l,T_3)) \\
+    c_2' = seq(c_2,cast(T_2,l,T_4))
+  }{
+    \hcvOOcons{v_1}{c_1'}{v_3}{c_2'} \approx
+    \vOOcast{v}{\cOOcast{\POOprod{T_1}{T_2}}{l}{\POOprod{T_3}{T_4}}}
+    : \POOprod{T_3}{T_4}
+  }
 \\ \\
-	\inference{
-		v_1 \approx v_2 : T_1
-	}{
-		\hcvOOinl{v_1}{id(T_1)} \approx \vOOinl{v_2}
-		: \POOsum{T_1}{T_2}
-	}
-	\quad
-	\inference{
-		\hcvOOinl{v_1}{c} \approx v_2
-		: \POOsum{T_1}{T_2} &
-		c' = seq(c,cast(T_1,l,T_3))
-	}{
-		\hcvOOinl{v_1}{c'} \approx
-		\vOOcast{v}{\cOOcast{\POOsum{T_1}{T_2}}{l}{\POOsum{T_3}{T_4}}}
-		: \POOsum{T_3}{T_4}	
-	}
-	\\
-	\inference{
-	v_1 \approx v_2 : T_2
-	}{
-	\hcvOOinr{v_1}{id(T_2)} \approx \vOOinr{v_2}
-	: \POOsum{T_1}{T_2}
-	}
-	\quad
-	\inference{
-	\hcvOOinr{v_1}{c} \approx v_2
-	: \POOsum{T_1}{T_2} &
-	c' = seq(c,cast(T_2,l,T_4))
-	}{
-	\hcvOOinr{v_1}{c'} \approx
-	\vOOcast{v}{\cOOcast{\POOsum{T_1}{T_2}}{l}{\POOsum{T_3}{T_4}}}
-	: \POOsum{T_3}{T_4}
-	}
-	\end{gather*}
-	\caption{Bisimulation between \effCEK{C} and \ineffCEKD}
-	\label{fig:bisim-SC-D}
+  \inference{
+    v_1 \approx v_2 : T_1
+  }{
+    \hcvOOinl{v_1}{id(T_1)} \approx \vOOinl{v_2}
+    : \POOsum{T_1}{T_2}
+  }
+  \quad
+  \inference{
+    \hcvOOinl{v_1}{c} \approx v_2
+    : \POOsum{T_1}{T_2} &
+    c' = seq(c,cast(T_1,l,T_3))
+  }{
+    \hcvOOinl{v_1}{c'} \approx
+    \vOOcast{v}{\cOOcast{\POOsum{T_1}{T_2}}{l}{\POOsum{T_3}{T_4}}}
+    : \POOsum{T_3}{T_4} 
+  }
+  \\
+  \inference{
+  v_1 \approx v_2 : T_2
+  }{
+  \hcvOOinr{v_1}{id(T_2)} \approx \vOOinr{v_2}
+  : \POOsum{T_1}{T_2}
+  }
+  \quad
+  \inference{
+  \hcvOOinr{v_1}{c} \approx v_2
+  : \POOsum{T_1}{T_2} &
+  c' = seq(c,cast(T_2,l,T_4))
+  }{
+  \hcvOOinr{v_1}{c'} \approx
+  \vOOcast{v}{\cOOcast{\POOsum{T_1}{T_2}}{l}{\POOsum{T_3}{T_4}}}
+  : \POOsum{T_3}{T_4}
+  }
+  \end{gather*}
+  \caption{Bisimulation between \effCEK{C} and \ineffCEKD}
+  \label{fig:bisim-SC-D}
 \end{figure}
 
 \todo[inline]{Give the motivation for the following lemma. Where
@@ -2536,21 +2534,21 @@ Partially fixed. Will say in which cases after finishing the bisim proof. -KC}
 We use the following lemma in our bisimulation proof.
 
 \begin{lemma}[SoAndSo]
-	\label{thm:lem-apply-cast-SD}
-	Assume $C$ implements Lazy D Cast ADT
-	and $v_1$ is a value in \effCEK{C}
-	and $v_2$ is a value in \ineffCEKD\
-	and $v_1 \approx v_2 : T_1$,
-	\[
-	applyCast_{\text{\effCEK{C}}}(v,cast(T_1,l,T_2)) 
-	\approx 
-	applyCast_{\text{\ineffCEKD}}(v,\cOOcast{T_1}{l}{T_2})
-	\]
+  \label{thm:lem-apply-cast-SD}
+  Assume $C$ implements Lazy D Cast ADT
+  and $v_1$ is a value in \effCEK{C}
+  and $v_2$ is a value in \ineffCEKD\
+  and $v_1 \approx v_2 : T_1$,
+  \[
+  applyCast_{\text{\effCEK{C}}}(v,cast(T_1,l,T_2)) 
+  \approx 
+  applyCast_{\text{\ineffCEKD}}(v,\cOOcast{T_1}{l}{T_2})
+  \]
 \end{lemma}
 \begin{proof}
-	Case splitting whether $T_1$ is shallowly consistent with $T_2$.
-	If yes, case splitting how they are shallowly consistent.
-	Then apply properties (3) - (11) of Lazy D Cast when applicable.
+  Case splitting whether $T_1$ is shallowly consistent with $T_2$.
+  If yes, case splitting how they are shallowly consistent.
+  Then apply properties (3) - (11) of Lazy D Cast when applicable.
 \end{proof}
 
 Before proving the weak bisimulation between \effCEK{C} and \ineffCEKD, we 
@@ -2573,59 +2571,59 @@ s_1 \approx s_2'
 
 
 \begin{lemma}[Weak Bisimulation between \effCEK{C} and \ineffCEKD]
-	\label{thm:surely-monoidic-reduce}
-	Assume $C$ implements Lazy D Cast ADT
-	and $C$ is a monoid
-	and $cast(T,l,T)=id(T)$,
-	$ s_{1} \in \text{\effCEK{C}}$,
-	$ s_{2} \in \text{\ineffCEKD}$,
-	$ s_{1} \approx s_{2}$,
+  \label{thm:surely-monoidic-reduce}
+  Assume $C$ implements Lazy D Cast ADT
+  and $C$ is a monoid
+  and $cast(T,l,T)=id(T)$,
+  $ s_{1} \in \text{\effCEK{C}}$,
+  $ s_{2} \in \text{\ineffCEKD}$,
+  $ s_{1} \approx s_{2}$,
 \begin{enumerate}
-	\item If $s_1 = \sOOhalt{o}$ then $s_2 = \sOOhalt{o}$
-	\item If $s_2 = \sOOhalt{o}$ then $s_1 = \sOOhalt{o}$
-	\item If $\judgeSreduce{C}{s_1}{s_3}$ 
-		then $\judgeDreduce{s_2}{s_4}$ for some $s_4$
-	\item If $\judgeDreduce{s_2}{s_4}$
-		then $\judgeSreduce{C}{s_1}{s_3}$ for some $s_3$
-	\item If $\judgeSreduce{C}{s_1}{s_3}$ 
-		and  $\judgeDreduce{s_2}{s_4}$ 
-		then $s_3 \approx^{*} s_4$
+  \item If $s_1 = \sOOhalt{o}$ then $s_2 = \sOOhalt{o}$
+  \item If $s_2 = \sOOhalt{o}$ then $s_1 = \sOOhalt{o}$
+  \item If $\judgeSreduce{C}{s_1}{s_3}$ 
+    then $\judgeDreduce{s_2}{s_4}$ for some $s_4$
+  \item If $\judgeDreduce{s_2}{s_4}$
+    then $\judgeSreduce{C}{s_1}{s_3}$ for some $s_3$
+  \item If $\judgeSreduce{C}{s_1}{s_3}$ 
+    and  $\judgeDreduce{s_2}{s_4}$ 
+    then $s_3 \approx^{*} s_4$
 \end{enumerate}
-	Or diagrammatically, 
-	\[\begin{array}{clclc}
-	s_{1} & \longrightarrow_{\text{\effCEK{C}}} & s_1'\\
-	\rotatebox[origin=c]{90}{$\approx$} 
-	& & & \;\;\;\rotatebox[origin=c]{-20}{$\approx$} \\
-	s_{2} & 
-	\longrightarrow_{\text{\ineffCEKD}} & s_2' &
-	\longrightarrow^{*}_{\text{\ineffCEKD}} & s_2'' \\
-	\end{array}\]
+  Or diagrammatically, 
+  \[\begin{array}{clclc}
+  s_{1} & \longrightarrow_{\text{\effCEK{C}}} & s_1'\\
+  \rotatebox[origin=c]{90}{$\approx$} 
+  & & & \;\;\;\rotatebox[origin=c]{-20}{$\approx$} \\
+  s_{2} & 
+  \longrightarrow_{\text{\ineffCEKD}} & s_2' &
+  \longrightarrow^{*}_{\text{\ineffCEKD}} & s_2'' \\
+  \end{array}\]
 \end{lemma}
 \begin{proof}
-	Part (1) and (2) follow from the definition of $s \approx s$.
-	Part (3) and (4) are true because we have transition rules for every 
-	non-halting state.
-	Part (5) is more interesting. Our goal is to prove that one reduction step 
-	in 	\effCEK{C} corresponds to one or more steps in \ineffCEKD.	
-	Consider
-	\[
-	\sOOreturn{\hcvOOcons{v_{11}}{c_{11}}{v_{12}}{c_{12}}}{
-		wrap(\kOOcar{\kappa})
-	}
-	\approx
-	\sOOreturn{v_2}{\kOOcar{\kappa}}
-	\]
+  Part (1) and (2) follow from the definition of $s \approx s$.
+  Part (3) and (4) are true because we have transition rules for every 
+  non-halting state.
+  Part (5) is more interesting. Our goal is to prove that one reduction step 
+  in  \effCEK{C} corresponds to one or more steps in \ineffCEKD.  
+  Consider
+  \[
+  \sOOreturn{\hcvOOcons{v_{11}}{c_{11}}{v_{12}}{c_{12}}}{
+    wrap(\kOOcar{\kappa})
+  }
+  \approx
+  \sOOreturn{v_2}{\kOOcar{\kappa}}
+  \]
 
-	By looking at the definition of $v \approx v$, we know
-	\[ c_{11} = seq(\dots seq(id(T_1),cast(T_1,l,T_3)) \dots) \]
-	\[ c_{12} = seq(\dots seq(id(T_2),cast(T_2,l,T_4)) \dots) \] 
-	\[ v_2 = \vOOcast{(\vOOcons{v_{21}}{v_{22}})}{
-		\cOOcast{\POOprod{T_1}{T_2}}{l_1}{\POOprod{T_3}{T_4}}} \dots
-	\]
-	Thus we have the following reduction in \effCEK{C}. The equation 
-	reasoning employs the fact that $C$ is a monoid.
-	\[
-	\begin{array}{ll}
+  By looking at the definition of $v \approx v$, we know
+  \[ c_{11} = seq(\dots seq(id(T_1),cast(T_1,l,T_3)) \dots) \]
+  \[ c_{12} = seq(\dots seq(id(T_2),cast(T_2,l,T_4)) \dots) \] 
+  \[ v_2 = \vOOcast{(\vOOcons{v_{21}}{v_{22}})}{
+    \cOOcast{\POOprod{T_1}{T_2}}{l_1}{\POOprod{T_3}{T_4}}} \dots
+  \]
+  Thus we have the following reduction in \effCEK{C}. The equation 
+  reasoning employs the fact that $C$ is a monoid.
+  \[
+  \begin{array}{ll}
 &
 \sOOreturn{\hcvOOcons{v_{11}}{c_{11}}{v_{12}}{c_{12}}}{wrap(\kOOcar{\kappa})}
 \\
@@ -2637,8 +2635,8 @@ s_1 \approx s_2'
 \\
 = &
 \sOOreturn{v_{11}}{ext(cast(T_1,l,T_3),\dots,\kappa)}
-	\end{array}
-	\]
+  \end{array}
+  \]
 
 And we have the following reduction in \ineffCEKD, where the last state is 
 related to the last state in the above sequence.
@@ -2646,19 +2644,19 @@ related to the last state in the above sequence.
 \[
 \begin{array}{ll}
 & \sOOreturn{
-	\vOOcast{(\vOOcons{v_{21}}{v_{22}})}{		
-	\cOOcast{\POOprod{T_1}{T_2}}{l_1}{\POOprod{T_3}{T_4}}} \dots
+  \vOOcast{(\vOOcons{v_{21}}{v_{22}})}{   
+  \cOOcast{\POOprod{T_1}{T_2}}{l_1}{\POOprod{T_3}{T_4}}} \dots
 }{\kOOcar{\kappa}}
 \\
 \longmapsto_{\mathcal{D}}^{*} &
 \sOOreturn{(\vOOcons{v_{21}}{v_{22}})}{
-	\kOOcar{
-	\kOOcast{\cOOcast{T_1}{l}{T_3}}{\dots\kappa}
+  \kOOcar{
+  \kOOcast{\cOOcast{T_1}{l}{T_3}}{\dots\kappa}
 }}
 \\
 \longmapsto_{\mathcal{D}} &
 \sOOreturn{v_{21}}{
-	\kOOcast{\cOOcast{T_1}{l}{T_3}}{\dots\kappa}
+  \kOOcast{\cOOcast{T_1}{l}{T_3}}{\dots\kappa}
 }
 \end{array}
 \]
@@ -2713,45 +2711,45 @@ Exactly, fixed. -KC}
 \begin{gather*}
 \inference{
 }{
-	cast_1(T_1,l,T_2) \approx cast_2(T_1,l,T_2)
+  cast_1(T_1,l,T_2) \approx cast_2(T_1,l,T_2)
 }
 \quad
 \inference{
 }{
-	id_1(T) \approx id_2(T)
+  id_1(T) \approx id_2(T)
 }
 \quad
 \inference{
-	c_1 \approx c_2 &
-	c_3 \approx c_4
+  c_1 \approx c_2 &
+  c_3 \approx c_4
 }{
-	seq_1(c_1,c_3) \approx seq_2(c_2,c_4)
+  seq_1(c_1,c_3) \approx seq_2(c_2,c_4)
 }
 \end{gather*}
 
 \begin{lemma}[Strong Bisimulation among $\mathcal{S}(\cdot)$]
-	\label{thm:CEKS-bisim}
-	Assume $C_1$ and $C_2$ implements Lazy D Cast ADT
-	$s_{1} \in \text{\effCEK{C_1}}$,
-	$s_{2} \in \text{\effCEK{C_2}}$,
-	$s_{1} \approx s_{2}$,
-	\begin{enumerate}
-		\item If $s_1 = \sOOhalt{o}$ then $s_2 = \sOOhalt{o}$
-		\item If $s_2 = \sOOhalt{o}$ then $s_1 = \sOOhalt{o}$
-		\item If $\judgeSreduce{C_1}{s_1}{s_3}$ 
-		then $\judgeSreduce{C_2}{s_2}{s_4}$ and $s_3 \approx s_4$ for some $s_4$
-		\item If $\judgeSreduce{C_2}{s_2}{s_4}$ 
-		then $\judgeSreduce{C_1}{s_1}{s_3}$ and $s_3 \approx s_4$ for some $s_3$
-	\end{enumerate}
-%	
-	Or diagrammatically, 
-	\[\begin{array}{clc}
-	s_{1} & \longrightarrow_{\text{\effCEK{C}}} & s_3\\
-	\rotatebox[origin=c]{90}{$\approx$} 
-	& & \rotatebox[origin=c]{90}{$\approx$} \\
-	s_{2} & 
-	\longrightarrow_{\text{\ineffCEKD}} & s_4 \\
-	\end{array}\]
+  \label{thm:CEKS-bisim}
+  Assume $C_1$ and $C_2$ implements Lazy D Cast ADT
+  $s_{1} \in \text{\effCEK{C_1}}$,
+  $s_{2} \in \text{\effCEK{C_2}}$,
+  $s_{1} \approx s_{2}$,
+  \begin{enumerate}
+    \item If $s_1 = \sOOhalt{o}$ then $s_2 = \sOOhalt{o}$
+    \item If $s_2 = \sOOhalt{o}$ then $s_1 = \sOOhalt{o}$
+    \item If $\judgeSreduce{C_1}{s_1}{s_3}$ 
+    then $\judgeSreduce{C_2}{s_2}{s_4}$ and $s_3 \approx s_4$ for some $s_4$
+    \item If $\judgeSreduce{C_2}{s_2}{s_4}$ 
+    then $\judgeSreduce{C_1}{s_1}{s_3}$ and $s_3 \approx s_4$ for some $s_3$
+  \end{enumerate}
+% 
+  Or diagrammatically, 
+  \[\begin{array}{clc}
+  s_{1} & \longrightarrow_{\text{\effCEK{C}}} & s_3\\
+  \rotatebox[origin=c]{90}{$\approx$} 
+  & & \rotatebox[origin=c]{90}{$\approx$} \\
+  s_{2} & 
+  \longrightarrow_{\text{\ineffCEKD}} & s_4 \\
+  \end{array}\]
 \end{lemma}
 \begin{proof} By casing on $s_{1} \approx s_{2}$.
 %
@@ -2774,18 +2772,18 @@ By casing on the bisimulation relation. -KC}
   \]
 \end{proposition}
 \begin{proof}
-	Without lost of generality, assume $\judgeSreduce{C_1}{e}{o}$, prove 
-	$\judgeSreduce{C_2}{e}{o}$.\\
-	By the definition of $eval_{\mathcal{S}(C)}$, we know 
+  Without lost of generality, assume $\judgeSreduce{C_1}{e}{o}$, prove 
+  $\judgeSreduce{C_2}{e}{o}$.\\
+  By the definition of $eval_{\mathcal{S}(C)}$, we know 
 \[
 \judgeSreduceTrans{C_2}{\sOOinspect{e}{\emptyset}{wrap(\kOOmt)}}{\sOOhalt{o}}
 \]
-	By induction on this reduction sequence and Lemma~\ref{thm:CEKS-bisim}, we 
-	have 
+  By induction on this reduction sequence and Lemma~\ref{thm:CEKS-bisim}, we 
+  have 
 \[
 \judgeSreduceTrans{C_2}{\sOOinspect{e}{\emptyset}{wrap(\kOOmt)}}{\sOOhalt{o}}
 \]
-	that is, $\judgeSreduce{C_2}{e}{o}$
+  that is, $\judgeSreduce{C_2}{e}{o}$
 \todo[inline]{Induction on what? -JS
 \\---\\
 Fixed. -KC}
@@ -2806,9 +2804,9 @@ Steps Typing
 \fbox{$\judgeTypeFT{s}{T}{T}$}
 \begin{gather*}
 \inference{
-	T_1 \neq T_2
+  T_1 \neq T_2
 }{
-	\judgeTypeFT{\lsOOcast{T_1}{l}{T_2}}{T_1}{T_2}
+  \judgeTypeFT{\lsOOcast{T_1}{l}{T_2}}{T_1}{T_2}
 }
 \end{gather*}
 
@@ -2817,14 +2815,14 @@ Casts typing
 \begin{gather*}
 \inference{
 }{
-	\judgeTypeFT{\lcOOnull}{T}{T}
+  \judgeTypeFT{\lcOOnull}{T}{T}
 }
 \quad
 \inference{
-	\judgeTypeFT{s}{T_1}{T_2} &
-	\judgeTypeFT{c}{T_2}{T_3}
+  \judgeTypeFT{s}{T_1}{T_2} &
+  \judgeTypeFT{c}{T_2}{T_3}
 }{
-	\judgeTypeFT{\lcOOcons{s}{c}}{T_1}{T_3}
+  \judgeTypeFT{\lcOOcons{s}{c}}{T_1}{T_3}
 }
 \end{gather*}
 
@@ -2847,31 +2845,31 @@ Casts typing
 \[
 \begin{array}{rclc}
 \funrule{cast(T_1,l,T_2)}{
-	\lcOOnull
+  \lcOOnull
 }{
-	\sidecond{T_1 = T_2}
+  \sidecond{T_1 = T_2}
 }
 \funrule{cast(T_1,l,T_2)}{
-	\lcOOcons{\lsOOcast{T_1}{l}{T_2}}{\lcOOnull}
+  \lcOOcons{\lsOOcast{T_1}{l}{T_2}}{\lcOOnull}
 }{
-	\sidecond{T_1 \neq T_2}
+  \sidecond{T_1 \neq T_2}
 }
 \end{array}
 \]
 
-	
+  
 \fbox{$appS(v,s) = r$}
 \[
 \begin{array}{rclr}
 \funrule{
-	appS(v,\cOOcast{\star}{l}{\star})
+  appS(v,\cOOcast{\star}{l}{\star})
 }{
-	\rOOsucc{v}
+  \rOOsucc{v}
 }{}
 \funrule{
-	appS(\vOOcast{v}{\cOOcast{P_1}{l_1}{\star}},\cOOcast{\star}{l_2}{P_2})
+  appS(\vOOcast{v}{\cOOcast{P_1}{l_1}{\star}},\cOOcast{\star}{l_2}{P_2})
 }{
-	\rOOsucc{v}
+  \rOOsucc{v}
 }{\sidecond{P_1 = P_2}}
 \funrule{
 appS(\vOOcast{v}{\cOOcast{P_1}{l_1}{\star}},\cOOcast{\star}{l_2}{P_2})
@@ -2879,36 +2877,36 @@ appS(\vOOcast{v}{\cOOcast{P_1}{l_1}{\star}},\cOOcast{\star}{l_2}{P_2})
 appS(v,\cOOcast{P_1}{l_2}{P_2})
 }{\sidecond{P_1 \neq P_2}}
 \funrule{
-	appS(v,\cOOcast{P}{l}{\star})
+  appS(v,\cOOcast{P}{l}{\star})
 }{
-	\rOOsucc{\hcvOOinj{P}{v}}
+  \rOOsucc{\hcvOOinj{P}{v}}
 }{}
 \funrule{
-	appS(v,\lsOOcast{\POOunit}{l}{\POOunit})
+  appS(v,\lsOOcast{\POOunit}{l}{\POOunit})
 }{
-	\rOOsucc{v}
+  \rOOsucc{v}
 }{}
 \funrule{
-	appS(
-		\hcvOOfun{c_1}{\rho}{x}{e}{c_2},
-		\lsOOcast{\POOfun{T_1}{T_2}}{l}{\POOfun{T_3}{T_4}})
+  appS(
+    \hcvOOfun{c_1}{\rho}{x}{e}{c_2},
+    \lsOOcast{\POOfun{T_1}{T_2}}{l}{\POOfun{T_3}{T_4}})
 }{
-	\rOOsucc{(\hcvOOfun{c_1'}{\rho}{x}{b}{c_2'})}
+  \rOOsucc{(\hcvOOfun{c_1'}{\rho}{x}{b}{c_2'})}
 }{
-	\\ &&
-	\text{where} \;
-	c_1' = seq(cast(T_3,l,T_1),c_1)
-	\\ &&
-	\text{and} \;
-	c_2' = seq(c_2,cast(T_2,l,T_4))
+  \\ &&
+  \text{where} \;
+  c_1' = seq(cast(T_3,l,T_1),c_1)
+  \\ &&
+  \text{and} \;
+  c_2' = seq(c_2,cast(T_2,l,T_4))
 }
 
 \funrule{
-	appS(
-		\hcvOOcons{v_1}{c_1}{v_2}{c_2},
-		\lsOOcast{\POOprod{T_1}{T_2}}{l}{\POOprod{T_3}{T_4}}
+  appS(
+    \hcvOOcons{v_1}{c_1}{v_2}{c_2},
+    \lsOOcast{\POOprod{T_1}{T_2}}{l}{\POOprod{T_3}{T_4}}
 }{
-	\rOOsucc{(\hcvOOcons{v_1}{c_1'}{v_2}{c_2'})}
+  \rOOsucc{(\hcvOOcons{v_1}{c_1'}{v_2}{c_2'})}
 }{
 \\ &&
 \text{where} \;
@@ -2918,19 +2916,19 @@ c_1' = seq(c_1,cast(T_1,l,T_3))
 c_2' = seq(c_2,cast(T_2,l,T_4))
 }
 \funrule{
-	appS(\hcvOOinl{v}{c},\lsOOcast{\POOsum{T_1}{T_2}}{l}{\POOsum{T_3}{T_4}})
+  appS(\hcvOOinl{v}{c},\lsOOcast{\POOsum{T_1}{T_2}}{l}{\POOsum{T_3}{T_4}})
 }{
-	\rOOsucc{(\hcvOOinl{v}{seq(c,cast(T_1,l,T_3))})}
+  \rOOsucc{(\hcvOOinl{v}{seq(c,cast(T_1,l,T_3))})}
 }{}
 \funrule{
-	appS(\hcvOOinr{v}{c},\lsOOcast{\POOsum{T_1}{T_2}}{l}{\POOsum{T_3}{T_4}})
+  appS(\hcvOOinr{v}{c},\lsOOcast{\POOsum{T_1}{T_2}}{l}{\POOsum{T_3}{T_4}})
 }{
-	\rOOsucc{(\hcvOOinr{v}{seq(c,cast(T_2,l,T_4))})}
+  \rOOsucc{(\hcvOOinr{v}{seq(c,cast(T_2,l,T_4))})}
 }{}
 \funrule{
-	appS(v,\cOOcast{P_1}{l}{P_2})
+  appS(v,\cOOcast{P_1}{l}{P_2})
 }{
-	\rOOfail{l}
+  \rOOfail{l}
 }{\sidecond{\neg P_1 \smile P_2}}
 
 \end{array}
@@ -2941,19 +2939,19 @@ c_2' = seq(c_2,cast(T_2,l,T_4))
 \[
 \begin{array}{rclr}
 \funrule{
-	applyCast(v,\lcOOnull)
+  applyCast(v,\lcOOnull)
 }{
-	\rOOsucc{v}
+  \rOOsucc{v}
 }{}
 \funrule{
-	applyCast(v,\lcOOcons{s}{c})
+  applyCast(v,\lcOOcons{s}{c})
 }{
-	applyStep(v,s) >>= \lambda v. applyCast(v,c)
+  applyStep(v,s) >>= \lambda v. applyCast(v,c)
 }{}
 \end{array}
 \]
 
-	\caption{The $L$ Lazy D Cast ADT}
+  \caption{The $L$ Lazy D Cast ADT}
 \end{figure}
 
 \begin{proposition}[$L$ properties]\label{thm:L-LazyD-monoid}\ 
@@ -2964,13 +2962,13 @@ c_2' = seq(c_2,cast(T_2,l,T_4))
   \end{enumerate}
 \end{proposition}
 \begin{proof}
-	Part (1) is straightforward because property (1) and (2) are trivial and 
-	that $appS$ basically repeats property (3) - (11).
-	Part (2) is true because in $L$ casts are list, $seq(c,c)$ is list 
-	appending, and $id(T)$ is the empty list. Lists is know to be a monoid 
-	where the binary operation is appending and the identity element is the 
-	empty list.
-	Part (3) follows immediately from the definition of $cast(T,l,T)$
+  Part (1) is straightforward because property (1) and (2) are trivial and 
+  that $appS$ basically repeats property (3) - (11).
+  Part (2) is true because in $L$ casts are list, $seq(c,c)$ is list 
+  appending, and $id(T)$ is the empty list. Lists is know to be a monoid 
+  where the binary operation is appending and the identity element is the 
+  empty list.
+  Part (3) follows immediately from the definition of $cast(T,l,T)$
 \end{proof}
 
 \begin{lemma}[$L$ is correct wrt. \ineffCEKD]
@@ -2980,8 +2978,8 @@ c_2' = seq(c_2,cast(T_2,l,T_4))
   \]
 \end{lemma}
 \begin{proof}
-	Immedialy from Correctness of \effCEK{C} \ref{thm:surely-monoidic-eval} and 
-	L properties \ref{thm:L-LazyD-monoid}.
+  Immedialy from Correctness of \effCEK{C} \ref{thm:surely-monoidic-eval} and 
+  L properties \ref{thm:L-LazyD-monoid}.
 \end{proof}
 
 \subsubsection{Correctness of \effCEK{C}}
@@ -2995,12 +2993,12 @@ c_2' = seq(c_2,cast(T_2,l,T_4))
   \]
 \end{theorem}
 \begin{proof}
-	If we have a Lazy D Cast ADT and it is a monoid, this 
-	proof is immediately from Lemma~\ref{thm:surely-monoidic-eval} and 
-	Proposition~\ref{thm:surely-lazyD-eqv}. One such representation is to 
-	represent casts as a list of triples of type, label, and type, where 
-	$id(T)$ is the empty list and $seq(c,c)$ is the list append. Another such 
-	representation is the \lazyD\ hypercoercion!
+  If we have a Lazy D Cast ADT and it is a monoid, this 
+  proof is immediately from Lemma~\ref{thm:surely-monoidic-eval} and 
+  Proposition~\ref{thm:surely-lazyD-eqv}. One such representation is to 
+  represent casts as a list of triples of type, label, and type, where 
+  $id(T)$ is the empty list and $seq(c,c)$ is the list append. Another such 
+  representation is the \lazyD\ hypercoercion!
 \end{proof}
 
 
@@ -3024,60 +3022,60 @@ shallow-consistency to compare middles and values ($v \smile m$) in the
 natural way.
 
 \begin{figure}
-	\fbox{$applyCast(v,c) = r$}
-	\[
-	\begin{array}{rclr}
-	\funrule{applyCast(v,\hyperCoercionI,)}{\rOOsucc{v}}{}
-	\funrule{applyCast(\hcvOOinj{P}{v},\hyperCoercionC{?^l}{m}{t})}{
-		applyMiddle(v,l,m) \; >>= \; \lambda v. applyTail(t,v)
-	}{}
-	\funrule{applyCast(v,\hyperCoercionC{\epsilon}{m}{t})}{
-		applyMiddle(v,\epsilon,m) \; >>= \; \lambda v. applyTail(t,v)
-	}{}
-	\end{array}
-	\]
-	
-	\fbox{$applyMiddle(v,\ell,m) = r$}
-	\[
-	\begin{array}{rclr}
-	\funrule{applyMiddle(\hcvOOtt,\ell,\POOunit)}{\rOOsucc{\hcvOOtt}}{}
-	\funrule{applyMiddle(\hcvOOfun{c_1}{\rho}{x}{e}{c_2}\ell,\POOfun{c_3}{c_4})}{
-		\rOOsucc{(\hcvOOfun{(c_3 \fatsemi^\ell c_1)}{\rho}{x}{e}{(c_2 
-		\fatsemi^\ell c_4)})}
-	}{}
-	\funrule{applyMiddle(\hcvOOcons{v_1}{c_1}{v_2}{c_2},\ell,\POOprod{c_3}{c_4})}{
-		\rOOsucc{(\hcvOOcons{v_1}{(c_1 \fatsemi^\ell c_3)}{v_2}{(c_2 
-		\fatsemi^\ell c_4)})}
-	}{}
-	\funrule{applyMiddle(\hcvOOinl{v}{c_1},\ell,\POOsum{c_3}{c_4})}{
-		\rOOsucc{(\hcvOOinl{v}{(c_1 \fatsemi^\ell c_3)})}
-	}{}
-	\funrule{applyMiddle(\hcvOOinr{v}{c_2},\ell,\POOsum{c_3}{c_4})}{
-		\rOOsucc{(\hcvOOinr{v}{(c_2 \fatsemi^\ell c_4)})}
-	}{}
-	\funrule{applyMiddle(v,l,m)}{
-		\rOOfail{l}
-	}{
-		\sidecond{\neg v \smile m}
-	}
-	\end{array}
-	\]
-	
-	\fbox{$applyTail(v,t) = r$}
-	\[
-	\begin{array}{rclr}
-	\funrule{applyTail(v,\bot^l)}{\rOOfail{l}}{}
-	\funrule{applyTail(v,\epsilon)}{\rOOsucc{v}}{}
-	\funrule{applyTail(v,!)}{\rOOsucc{(\hcvOOinj{P}{v})}}{}
-	\end{array}
-	\]
-	\caption{\lazyD\ hypercoercion's $applyCast$}
-	\label{hc-applyCast}
+  \fbox{$applyCast(v,c) = r$}
+  \[
+  \begin{array}{rclr}
+  \funrule{applyCast(v,\hyperCoercionI,)}{\rOOsucc{v}}{}
+  \funrule{applyCast(\hcvOOinj{P}{v},\hyperCoercionC{?^l}{m}{t})}{
+    applyMiddle(v,l,m) \; >>= \; \lambda v. applyTail(t,v)
+  }{}
+  \funrule{applyCast(v,\hyperCoercionC{\epsilon}{m}{t})}{
+    applyMiddle(v,\epsilon,m) \; >>= \; \lambda v. applyTail(t,v)
+  }{}
+  \end{array}
+  \]
+  
+  \fbox{$applyMiddle(v,\ell,m) = r$}
+  \[
+  \begin{array}{rclr}
+  \funrule{applyMiddle(\hcvOOtt,\ell,\POOunit)}{\rOOsucc{\hcvOOtt}}{}
+  \funrule{applyMiddle(\hcvOOfun{c_1}{\rho}{x}{e}{c_2}\ell,\POOfun{c_3}{c_4})}{
+    \rOOsucc{(\hcvOOfun{(c_3 \fatsemi^\ell c_1)}{\rho}{x}{e}{(c_2 
+    \fatsemi^\ell c_4)})}
+  }{}
+  \funrule{applyMiddle(\hcvOOcons{v_1}{c_1}{v_2}{c_2},\ell,\POOprod{c_3}{c_4})}{
+    \rOOsucc{(\hcvOOcons{v_1}{(c_1 \fatsemi^\ell c_3)}{v_2}{(c_2 
+    \fatsemi^\ell c_4)})}
+  }{}
+  \funrule{applyMiddle(\hcvOOinl{v}{c_1},\ell,\POOsum{c_3}{c_4})}{
+    \rOOsucc{(\hcvOOinl{v}{(c_1 \fatsemi^\ell c_3)})}
+  }{}
+  \funrule{applyMiddle(\hcvOOinr{v}{c_2},\ell,\POOsum{c_3}{c_4})}{
+    \rOOsucc{(\hcvOOinr{v}{(c_2 \fatsemi^\ell c_4)})}
+  }{}
+  \funrule{applyMiddle(v,l,m)}{
+    \rOOfail{l}
+  }{
+    \sidecond{\neg v \smile m}
+  }
+  \end{array}
+  \]
+  
+  \fbox{$applyTail(v,t) = r$}
+  \[
+  \begin{array}{rclr}
+  \funrule{applyTail(v,\bot^l)}{\rOOfail{l}}{}
+  \funrule{applyTail(v,\epsilon)}{\rOOsucc{v}}{}
+  \funrule{applyTail(v,!)}{\rOOsucc{(\hcvOOinj{P}{v})}}{}
+  \end{array}
+  \]
+  \caption{\lazyD\ hypercoercion's $applyCast$}
+  \label{hc-applyCast}
 \end{figure}
 
 
 \begin{lemma}[\lazyD{} hypercoercion is a \lazyD{} Cast ADT]
-	\label{thm:hc-surely-lazyD}
+  \label{thm:hc-surely-lazyD}
 \end{lemma}
 \begin{proof} See the supplementary material. \end{proof}
 
@@ -3088,11 +3086,11 @@ natural way.
   \]
 \end{theorem}
 \begin{proof}
-	Immediately from Theorem~\ref{thm:surely-lazyD-correct} and 
-	Lemma~\ref{thm:hc-surely-lazyD}.
-	Alternatively, from Lemma~\ref{thm:surely-monoidic-eval},
-	Lemma~\ref{thm:hc-surely-lazyD}, and 
-	Proposition~\ref{thm:hc-monoid}.
+  Immediately from Theorem~\ref{thm:surely-lazyD-correct} and 
+  Lemma~\ref{thm:hc-surely-lazyD}.
+  Alternatively, from Lemma~\ref{thm:surely-monoidic-eval},
+  Lemma~\ref{thm:hc-surely-lazyD}, and 
+  Proposition~\ref{thm:hc-monoid}.
 \end{proof}
 
 \section{Conclusion} \label{sec:conclude}
