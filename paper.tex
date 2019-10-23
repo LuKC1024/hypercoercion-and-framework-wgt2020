@@ -1351,7 +1351,7 @@ This section presents our first contribution, the definition of
 hypercoercions.  The design of hypercoercions is motivated by the
 observation that a normal coercion has at most three
 parts. Hypercoercions make this structure explicit: a hypercion $c$ is
-either $\hyperCoercionI$, the identity cast for $\TOOdyn$, or contains
+either $\hyperCoercionI$, the identity cast for $\TOOdyn$, or it contains
 three parts: a head, middle, and tail, as defined in
 \figref{fig:hypercoercion}.
 \begin{itemize}
@@ -1361,11 +1361,12 @@ three parts: a head, middle, and tail, as defined in
   unit types, and
 \item the tail $t$ is either an injection, a failure, or the identity.
 \end{itemize}
-There is a one-to-one correspondence between middle coercions and type
+There is a close correspondence between middle coercions and type
 constructors.  We generalize shallow-consistency to middles $m \smile
 m$ in the obvious way.
 
-Subsection~\ref{sec:ld-hc} defines functions that construct
+Subsection~\ref{sec:ld-hc} defines the $id$, $seq$, and $cast$
+functions that construct
 \lazyD\ hypercoercions. Subsection~\ref{sec:lud-hc} defines the
 \lazyUD\ counterparts.  The functions that apply hypercoercions to
 values are defined later in
