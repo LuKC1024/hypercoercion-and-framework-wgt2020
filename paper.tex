@@ -408,15 +408,21 @@ This paper presents a new cast representation, named
 good for implementation. The composition operator for hypercoercions
 is defined by structural recursion and hypercoercions are suggestive
 of a bit-level representation that minimizes the need for pointers and
-fits all first-order casts into 64 bits. We present two flavors of
-hypercoercions to support the two blame tracking strategies from the
-literature: D and UD~\citep{siek2009exploring}. We are interested in
-the D blame tracking strategy because it comes with a more
-straightforward notion safe cast compared to
-UD~\citep{siek2009exploring}, which is why D was chosen Grift
-compiler. We are also intersted in UD because it plays a prominent
-role in the gradual typing literature \citep{wadler2009well}. The
-semantics of casts can also be lazy or
+fits all first-order casts into 64 bits.
+%
+We present two flavors of hypercoercions to support the two blame
+tracking strategies from the literature: D and
+UD~\citep{siek2009exploring}. We are interested in the D blame
+tracking strategy because it comes with a more straightforward notion
+safe cast compared to UD~\citep{siek2009exploring}, which is why D was
+chosen Grift compiler. We are also intersted in UD because it plays a
+prominent role in the gradual typing literature
+\citep{wadler2009well}.  The UD hypercoercions were inspired by the
+supercoercions of \citet{garcia2013calculating} (hence the name) and
+the D hypercoercions were inspired by the normal forms of
+\citet{siek2012interpretations}.
+%
+The semantics of casts can be lazy or
 eager~\citep{siek2009exploring}. In this paper we focus on lazy cast
 strategies because we suspect that they are more efficient than eager
 strategies and because \citet{new2019gradual} show that eager
@@ -1136,10 +1142,6 @@ type, such as $\star \to \star$.
 We conjecture that \ineffCEKUD{} agrees with the \lazyUD{} cast
 calculus of \citet{siek2009exploring}.
 
-% the following are temporary -JS
-\clearpage
-\pagebreak
-
 \subsection{Coercions and Normal Forms} 
 \label{sec:coercion-calculus}
 
@@ -1258,7 +1260,7 @@ $\hat{c}$!
 \section{Definition of Hypercoercions} \label{sec:hypercoercion-definition}
 
 \begin{figure}
-  Syntax
+  Syntax of Hypercoercions
   \[
   \begin{array}{lclr}
   \stxrule{I}{injectable types (\lazyD)}{P}
@@ -1597,7 +1599,7 @@ The proof of correctness for hypercoercions (in
 Section~\ref{secc:framework:monoid-correct}) relies on the following
 two basic properties of hypercoercions.
 
-\begin{proposition}[\lazyD\ hypercoercions form a monoid]
+\begin{proposition}[\lazyD{} hypercoercions form a monoid]
   \label{thm:hc-monoid}
   For all $c : T_1 \Longrightarrow T_2$,
   $c_1 : T_1 \Longrightarrow T_2$,
@@ -1614,14 +1616,14 @@ two basic properties of hypercoercions.
   on $c_2$ and case analysis on $c_1$ then $c_3$.
 \end{proof}
 
-\begin{proposition}[Identity Casts]
+\begin{proposition}[\lazyD{} Identity Casts]
   For all $T$ and $l$, $cast(T,l,T) = id(T) $
 \end{proposition}
 \begin{proof}
   By induction on T.
 \end{proof}
 
-\subsection{\lazyUD{} hypercoercion [Jeremy]}
+\subsection{\lazyUD{} hypercoercions}
 \label{sec:lud-hc}
 
 Hypercoercions for the UD blame tracking strategy have the same syntax
@@ -1809,7 +1811,7 @@ The definition of $id$ is straightforward (Figure~\ref{fig:HC-UD}) .
 \end{figure}
 
 
-\begin{proposition}[\lazyUD\ hypercoercions form a monoid]
+\begin{proposition}[\lazyUD{} hypercoercions form a monoid]
   For all $c : T_1 \Longrightarrow T_2$,
   $c_1 : T_1 \Longrightarrow T_2$,
   $c_2 : T_2 \Longrightarrow T_3$, and
@@ -1820,6 +1822,12 @@ The definition of $id$ is straightforward (Figure~\ref{fig:HC-UD}) .
     \item $seq(seq(c_1, c_2), c_3) = seq(c_1, seq(c_2, c_3))$.
   \end{enumerate}
 \end{proposition}
+\begin{proof}
+  See the Agda proof at the following URL:
+  
+  \url{https://github.com/jsiek/gradual-typing-in-agda/blob/master/HyperCoercions.agda}
+  
+\end{proof}
 
 The $cast$ function is defined in Figure~\ref{fig:HC-UD-cast}.  Prior
 presentations of this function do not use auxiliary functions, as we
@@ -1829,19 +1837,58 @@ and $\mathit{castFromInj}$, is to ensure that all of the are
 structurally recursive, which makes them straightforward to define in
 Agda.
 
-
-\todo[inline]{I need to add $cast(T,l,T) = id(T)$. -JS}
-
-
-\subsection{Compact Memory Representation for Hypercoercions}
-
-
-\todo[inline]{UNDER CONSTRUCTION (a couple paragraphs) -Jeremy}
+\begin{proposition}[\lazyUD{} Identity Casts]
+  For all $T$ and $l$, $cast(T,l,T) = id(T) $
+\end{proposition}
+\begin{proof}
+  By induction on T.
+\end{proof}
 
 
-% the following are temporary -JS
-\clearpage
-\pagebreak
+\subsection{Compact Representation of Hypercoercions}
+
+Hypercoercions enable a bit-level representation that is particularly
+compact for the most common-case coercions. The most frequent
+coercions are injections and projections to base types (here
+$\POOunit$ is the only base type, but in a real language the base
+types would include integers, Booleans, etc.) and identity coercions.
+Values of base types are often stored in CPU registers, so it would be
+nice for coercions on base types to also fit in registers, that is, in
+64 bits, so that applying a coercion to a value would not require
+access to main memory, which is an order of magnitude slower than
+accessing registers on a modern CPU.
+%
+Coercions involving non-base types, such as functions types,
+may be arbitrarily large, so in those cases the hypercoercion
+representation can be a pointer to a heap-allocated structure.  Here
+is a sketch for the bit-level representation for hypercoercions.
+
+\begin{itemize}
+\item 1 bit to differentiate between $\hyperCoercionI$
+  and three-part coercions.
+
+\item 1 bit to differentiate between middle coercions of base type
+  versus non-base type.
+
+\item If the middle is of non-base type, then 61 bits represent a
+  pointer to a heap-allocated structure. Heap allocated structures are
+  usually 8-byte aligned, so there are 3 unused bits in a pointer.
+
+\item If the middle is of base type, then the remaining 62 bits are
+  used to represent the head (21 bits), middle (22 bits), and tail (19
+  bits).
+  \begin{itemize}
+  \item The head requires 1 bit to differentiate between $\epsilon$
+    and $?^l$ and then 24 bits could be used for the label $l$.
+  \item The middle would use 11 bits to differentiate all the base types.
+  \item The tail requires 2 bits to differentiate between $\epsilon$,
+    $!$, and $\bot^l$, and could use 24 bits for the label $l$.
+  \end{itemize}
+  In the event that a program requires too many blame labels, then one
+  can fallback to using the heap-allocated structure for more
+  coercions.
+\end{itemize}
+  
 
 \section{A framework for proving correctness of cast representations}
 \label{sec:framework}
