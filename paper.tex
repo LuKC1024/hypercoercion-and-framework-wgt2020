@@ -2956,13 +2956,22 @@ c_2' = seq(c_2,cast(T_2,l,T_4))
 	\caption{The $L$ Lazy D Cast ADT}
 \end{figure}
 
-\begin{proposition}[$L$ properties]\ 
+\begin{proposition}[$L$ properties]\label{thm:L-LazyD-monoid}\ 
   \begin{enumerate}
   \item $L$ is an instance of the Lazy D ADT
   \item $L$ is a monoid
   \item $cast(T,l,T) = id(T)$
   \end{enumerate}
 \end{proposition}
+\begin{proof}
+	Part (1) is straightforward because property (1) and (2) are trivial and 
+	that $appS$ basically repeats property (3) - (11).
+	Part (2) is true because in $L$ casts are list, $seq(c,c)$ is list 
+	appending, and $id(T)$ is the empty list. Lists is know to be a monoid 
+	where the binary operation is appending and the identity element is the 
+	empty list.
+	Part (3) follows immediately from the definition of $cast(T,l,T)$
+\end{proof}
 
 \begin{lemma}[$L$ is correct wrt. \ineffCEKD]
   \label{lem:L-correct}
@@ -2970,6 +2979,10 @@ c_2' = seq(c_2,cast(T_2,l,T_4))
   \text{\evalEqv{\effCEK{L}}{\ineffCEKD}}
   \]
 \end{lemma}
+\begin{proof}
+	Immedialy from Correctness of \effCEK{C} \ref{thm:surely-monoidic-eval} and 
+	L properties \ref{thm:L-LazyD-monoid}.
+\end{proof}
 
 \subsubsection{Correctness of \effCEK{C}}
 
@@ -3063,7 +3076,7 @@ natural way.
 \end{figure}
 
 
-\begin{lemma}[\lazyD{} hypercoercion is a \lazyD Cast ADT]
+\begin{lemma}[\lazyD{} hypercoercion is a \lazyD{} Cast ADT]
 	\label{thm:hc-surely-lazyD}
 \end{lemma}
 \begin{proof} See the supplementary material. \end{proof}
