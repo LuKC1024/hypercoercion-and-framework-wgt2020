@@ -1625,8 +1625,8 @@ two basic properties of hypercoercions.
 
 Hypercoercions for the UD blame tracking strategy have the same syntax
 as for D (\figref{fig:hypercoercion}), but the definitions of $id$,
-$cast$, and $seq$, given Figure~\ref{fig:HC-UD}, differ from D.
-Again, the $seq$ operator is defined in terms of composition, but here
+$cast$, and $seq$, differ from D.  Again, the $seq$ operator
+(Figure~\ref{fig:HC-UD}) is defined in terms of composition, but here
 composition $c_1 \fatsemi c_2$ makes the usual assumption that the
 target type of $c_1$ matches the source type of $c_2$.  The definition
 of composition for UD is particularly straightfoward. The first two
@@ -1643,6 +1643,8 @@ is a failure coercion with the projection's label.  The last line
 handles the case when the tail of $c_1$ is a failure, in which case
 the result of composition is $c_1$.
 
+
+The definition of $id$ is straightforward (Figure~\ref{fig:HC-UD}) .
 
 \begin{figure}
   Composition of hypercoercions \fbox{$c \fatsemi c = c$}
@@ -1715,14 +1717,11 @@ the result of composition is $c_1$.
     }{}
   \end{array}
   \]
-
-  
   \caption{Lazy UD Hypercoercions}
   \label{fig:HC-UD}
 \end{figure}
 
 
-Figure~\ref{fig:HC-UD-cast}
 
 
 \begin{figure}
@@ -1821,8 +1820,14 @@ Figure~\ref{fig:HC-UD-cast}
   \end{enumerate}
 \end{proposition}
 
+The $cast$ function is defined in Figure~\ref{fig:HC-UD-cast}.  Prior
+presentations of this function do not use auxiliary functions, as we
+do here. The reason that we introduction the auxiliary functions
+$\mathit{castToDyn}$, $\mathit{castFromDyn}$, $\mathit{castToInj}$,
+and $\mathit{castFromInj}$, is to ensure that all of the are
+structurally recursive, which makes them straightforward to define in
+Agda.
 
-\todo[inline]{talk about $cast(T,l,T)$. -JS}
 
 \todo[inline]{I need to add $cast(T,l,T) = id(T)$. -JS}
 
