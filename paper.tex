@@ -151,30 +151,6 @@
   [\mathtt{case} \; #1 \; #2 \; \square]#3}
 \newcommand{\kOOcast}[2]{
   [\square \langle #1 \rangle]#2}
-
-%\newcommand{\kOOmt}[0]{\mathtt{stop}}
-%\newcommand{\kOOconsI}[3]{\mathtt{cons_1} \; #1 \; #2 \; #3}
-%\newcommand{\kOOconsII}[2]{\mathtt{cons_2} \; #1 \; #2}
-%\newcommand{\kOOinl}[1]{\mathtt{inl} \; #1}
-%\newcommand{\kOOinr}[1]{\mathtt{inr} \; #1}
-%\newcommand{\kOOappI}[3]{
-% \mathtt{app_1} \; #1 \; #2 \; #3
-%}
-%\newcommand{\kOOappII}[2]{
-% \mathtt{app_2} \; #1 \; #2}
-%\newcommand{\kOOcar}[1]{
-% \mathtt{fst} \; #1}
-%\newcommand{\kOOcdr}[1]{
-% \mathtt{snd} \; #1}
-%\newcommand{\kOOcaseI}[4]{
-% \mathtt{case_1} \; #1 \; #2 \; #3 \; #4}
-%\newcommand{\kOOcaseII}[4]{
-% \mathtt{case_2} \; #1 \; #2 \; #3 \; #4}
-%\newcommand{\kOOcaseIII}[3]{
-% \mathtt{case_3} \; #1 \; #2 \; #3}
-%\newcommand{\kOOcast}[2]{
-% \langle #1 \rangle #2}
-
 \newcommand{\typingHC}[3]{#1 : #2 \Longrightarrow #3}
 \newcommand{\hcvOOinj}[2]{\mathtt{Dyn}_{#1}(#2)}
 %\newcommand{\hcvOOfun}[5]{\mathtt{fun} \; #1 \; #2 \; #3 \; #4 \; #5}
@@ -243,6 +219,11 @@
 \newcommand{\lsOOcast}[3]{\cOOcast{#1}{#2}{#3}}
 \newcommand{\lcOOnull}[0]{[]}
 \newcommand{\lcOOcons}[2]{#1 \; :: \; #2}
+
+% URLs
+\newcommand{\urlLazyDProof}{
+	\url{https://github.com/LuKC1024/Blame-and-Coercion-Together-Again-for-the-Second-Time/tree/master/Proof}
+}
 
 \begin{document}
 
@@ -1223,10 +1204,6 @@ $\hat{c}$!
 
 
 \section{Definition of Hypercoercions} \label{sec:hypercoercion-definition}
-\todo[inline]{
-The figures of applyCast for hypercoercions is before coercions, even before 
-the syntax definition of hypercoercions! -KC
-}
 
 \begin{figure}
   Syntax of Hypercoercions
@@ -1571,7 +1548,7 @@ Section~\ref{secc:framework:monoid-correct}) relies on the following
 two basic properties of hypercoercions.
 
 \begin{proposition}[\lazyD{} Hypercoercions Form a Monoid]
-  \label{thm:hc-monoid}
+  \label{thm:LazyD-HC-monoid}
   For all $c : T_1 \Longrightarrow T_2$,
   $c_1 : T_1 \Longrightarrow T_2$,
   $c_2 : T_2 \Longrightarrow T_3$, and
@@ -1588,6 +1565,7 @@ two basic properties of hypercoercions.
 \end{proof}
 
 \begin{proposition}[\lazyD{} Identity Casts]
+	\label{thm:LazyD-HC-identity-casts}
   For all $T$ and $l$, $cast(T,l,T) = id(T) $
 \end{proposition}
 \begin{proof}
@@ -1900,7 +1878,7 @@ is an instance of the Lazy D Cast ADT, and therefore
 
 Before turning to the definition of the abstract data types, we first
 give the definition of values and cast results used by the \effCEK{C}, as they 
-are mentioned in the definition of the ADTs. The $\hcvOOinj{P}{v}$ stands for 
+are mentioned in the definition of the ADTs. The $\hcvOOinj{I}{v}$ stands for 
 values that are cast to the dynamic type, as in \citet{wadler2009well}.
 
 \begin{definition}[Values and cast results for the \effCEK{C} machine] 
@@ -1929,7 +1907,7 @@ values that are cast to the dynamic type, as in \citet{wadler2009well}.
 
 The \emph{Cast Abstract Data Type}, defined below, captures the set of
 operators that a cast representation $C$ must provide for it to be
-used with the \effCEK{C} machine.  The first three operators enables
+used with the \effCEK{C} machine.  The first three operators enable
 \effCEK{C} to construct casts so we call them \textit{cast
   constructors}. The forth and last operator enables \effCEK{C} to
 apply casts to values.
@@ -1942,7 +1920,7 @@ apply casts to values.
   \item[$id(T)$] constructs an identity cast from a type
   \item[$seq(c_1,c_2)$] composes two casts
   \item[$cast(T_1,l,T_2)$] constructs a cast from $T_1$ to $T_2$
-  \item[$applyCast(v,c)$] applies a cast to a value, producing a result
+  \item[$applyCast(v,c)$] applies a cast to a value, producing a cast result
   \end{description}
   We denote by $c : T_1 \Longrightarrow T_2$ to mean $c$ is in $Cast \; T_1 \; T_2$
   and we say ``$c$ is from $T_1$ to $T_2$''.
@@ -3030,9 +3008,9 @@ correct. First we define $applyCast(v,c)$ to make it an instance of Cast ADT,
 then prove that it is also Lazy D, and finally apply 
 Theorem~\ref{thm:surely-lazyD-correct} to finish the proof.
 
-\figref{hc-applyCast} defines $applyCast(v,c)$ for \lazyD\ hypercoercion. 
+\figref{hc-applyCast} defines $applyCast(v,c)$ for \lazyD\ hypercoercions. 
 Applying the identity cast for the 
-dynamic type succeeds immediately. When applying a compound cast, we firstly 
+dynamic type succeeds immediately. Otherwise, we firstly 
 apply the middle, then apply the tail. We denote by $r \; >>= \; f$ to mean 
 that if $r$ is $\rOOsucc{v}$, the result is $f(v)$, otherwise the result 
 is the failure.
@@ -3097,7 +3075,10 @@ natural way.
 \begin{lemma}[\lazyD{} Hypercoercion is a \lazyD{} Cast ADT]
   \label{thm:hc-surely-lazyD}
 \end{lemma}
-\begin{proof} See the supplementary material. \end{proof}
+\begin{proof}
+	See the Agda proof at the following URL:\\
+	\urlLazyDProof
+\end{proof}
 
 \begin{theorem}[\lazyD{} Hypercoercion Respect \ineffCEKD]
   If $\judgetype{\emptyset}{e}{T}$ and $o : T$
@@ -3106,16 +3087,24 @@ natural way.
   \]
 \end{theorem}
 \begin{proof}
-  Immediately from Theorem~\ref{thm:surely-lazyD-correct} and 
-  Lemma~\ref{thm:hc-surely-lazyD}.
+  Immediately from that every Lazy D Cast ADT is correct ( 
+  Theorem~\ref{thm:surely-lazyD-correct}) and that Lazy D hypercoercion is a 
+  Lazy D Cast ADT (Lemma~\ref{thm:hc-surely-lazyD}). 
+  %
   Alternatively, from Lemma~\ref{thm:surely-monoidic-eval},
-  Lemma~\ref{thm:hc-surely-lazyD}, and 
-  Proposition~\ref{thm:hc-monoid}.
+  Lemma~\ref{thm:hc-surely-lazyD}, Proposition~\ref{thm:LazyD-HC-monoid}, and 
+  Proposition~\ref{thm:LazyD-HC-identity-casts}
 \end{proof}
 
 \section{Conclusion} \label{sec:conclude}
 
 \todoKC{write conclusion. -KC}
+
+\todo[inline]{
+Back out and be like remember all our contribution. Bring them back to the 
+beginning. Repeat but not repeat literally.
+I can assume that people have eaten meat.
+}
 
 %% Acknowledgments
 \begin{acks}                            %% acks environment is optional
