@@ -78,3 +78,8 @@ data _⊢_ : Context → Type → Set where
     → Γ ⊢ T1
     --------
     → Γ ⊢ T2
+
+  blame : ∀ {Γ T}
+    → (l : Label)
+    ---
+    → Γ ⊢ T

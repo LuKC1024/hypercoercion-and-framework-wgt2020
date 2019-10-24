@@ -541,6 +541,7 @@ progress (inspect (car e) E κ) = inspect e E (mk-cont (car κ))
 progress (inspect (cdr e) E κ) = inspect e E (mk-cont (cdr κ))
 progress (inspect (case e1 e2 e3) E κ) = inspect e1 E (mk-cont (case₁ E e2 e3 κ))
 progress (inspect (cast l T1 T2 e) E κ) = inspect e E (ext-cont (cast l T1 T2) κ)
+progress (inspect (blame l) E κ) = halt (blame l)
 progress (return {lv1 = lv1} {rv1 = rv1} v {(LM.cont lfst lsnd)} {(RM.cont rfst rsnd)} (cont fst₂ snd₂))
   with (L.apply-cast lfst lv1) | (R.apply-cast rfst rv1) | apply-cast fst₂ v
 ... | Values.succ _ | (RV.succ _) | succ u = progress-return u snd₂

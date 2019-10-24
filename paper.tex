@@ -882,6 +882,10 @@ o$) is defined in the natural way.
 \sOOinspect{e_1}{\rho}{\kOOcaseI{e_2}{e_3}{\rho}{\kappa}}}{}
 
 \redrule{
+\sOOinspect{\eOOblame{l}}{\rho}{\kappa}}{
+\sOOhalt{(\oOOblame{l})}}{}
+
+\redrule{
 \sOOreturn{v_1}{\kOOconsI{e_2}{\rho}{\kappa}}}{
 \sOOinspect{e_2}{\rho}{\kOOconsII{v_1}{\kappa}}}{}
 
@@ -2163,6 +2167,12 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
   \redruleS{
     \sOOinspect{\eOOcase{e_1}{e_2}{e_3}}{\rho}{\kappa}}{
     \sOOinspect{e_1}{\rho}{wrap(\kOOcaseI{e_2}{e_3}{\rho}{\kappa})}}{}
+
+
+\redruleS{
+	\sOOinspect{\eOOblame{l}}{\rho}{\kappa}}{
+	\sOOhalt{(\oOOblame{l})}}{}
+
   \hiredruleS{
     \sOOreturn{v}{\kOOcast{c}{k}}
   }{

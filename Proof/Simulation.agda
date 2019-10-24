@@ -752,6 +752,7 @@ progress* (inspect (car e) E κ) = done (inspect e E (mk-cont (car κ)))
 progress* (inspect (cdr e) E κ) = done (inspect e E (mk-cont (cdr κ)))
 progress* (inspect (case e e₁ e₂) E κ) = done (inspect e E (mk-cont (case₁ E e₁ e₂ κ)))
 progress* (inspect (cast l T1 T2 e) E κ) = done (inspect e E (ext-cont l _ _ κ))
+progress* (inspect (blame l) E κ) = done (halt (blame l))
 progress* (return v k) = progress-ret v k
 progress* (halt o) = done (halt o)
 

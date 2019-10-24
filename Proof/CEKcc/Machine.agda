@@ -197,6 +197,7 @@ progress (inspect (car e) E κ) = inspect e E (mk-cont (car κ))
 progress (inspect (cdr e) E κ) = inspect e E (mk-cont (cdr κ))
 progress (inspect (case e1 e2 e3) E κ) = inspect e1 E (mk-cont (case₁ E e2 e3 κ))
 progress (inspect (cast l T1 T2 e) E κ) = inspect e E (ext-cont (mk-cast l T1 T2) κ)
+progress (inspect (blame l) E κ) = halt (blame l)
 progress (return v (cont fst snd)) with apply-cast fst v
 progress (return v (cont fst snd)) | succ u = progress-return u snd
 progress (return v (cont fst snd)) | fail l = halt (blame l)

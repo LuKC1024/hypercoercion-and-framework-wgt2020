@@ -192,6 +192,7 @@ module Progress
   progress (inspect (cdr e) E κ) = inspect e E (cdr κ)
   progress (inspect (case e e₁ e₂) E κ) = inspect e E (case₁ E e₁ e₂ κ)
   progress (inspect (cast l T1 T2 e) E κ) = inspect e E (cast (mk-cast l T1 T2) κ)
+  progress (inspect (blame l) E κ) = halt (blame l)
   progress (return v mt) = halt (done (observe-val v))
   progress (return v (cons₁ E e1 κ)) = inspect e1 E (cons₂ v κ)
   progress (return v (cons₂ v1 κ)) = return (cons v1 v) κ
