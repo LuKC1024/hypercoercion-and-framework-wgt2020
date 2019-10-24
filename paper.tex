@@ -397,7 +397,7 @@ metatheory because their compose operators are structurally recursive,
 making them easy to define in a proof assistant such as Agda. In
 contrast, the coercions in normal form have compose operators that are
 not structurally recursive, which makes it more difficult to define in
-proof assistants, requiring what amounts to an explicit proof of termination.
+Agda, requiring what amounts to an explicit proof of termination.
 %
 On the other hand, coercions in normal form are easier to understand
 than threesomes (with a strange labelled bottom type), and
@@ -1326,11 +1326,11 @@ either $\hyperCoercionI$, the identity cast for $\TOOdyn$, or it contains
 three parts: a head, middle, and tail, as defined in
 \figref{fig:hypercoercion}.
 \begin{itemize}
-\item The head $h$ is either a projection or the identity,
+\item The head $h$ is either a projection or the no-op,
 \item the middle $m$ involves coercions that preserve a type
   constructor, i.e., coercions between function, pair, sum types, and
   unit types, and
-\item the tail $t$ is either an injection, a failure, or the identity.
+\item the tail $t$ is either an injection, a failure, or the no-op.
 \end{itemize}
 There is a close correspondence between middle coercions and type
 constructors.  We generalize shallow-consistency to middles $m \smile
@@ -1543,7 +1543,7 @@ Then we write composition of hypercoercions as $c_1
 \fatsemi^\ell c_2$.  When both $c_1$ and $c_2$ are $\hyperCoercionI$,
 their composition is also $\hyperCoercionI$.  If the head of $c_2$ is
 a projection, the result is $c_2$.  Otherwise, we need a label to
-build the projection. Since the head of $c_2$ is $\epsilon$, its
+build the projection. Since the head of $c_2$ is the no-op, its
 source type must be a pretype. Thus we know $\ell$ must be a label and
 we put it in the projection. When $c_1$ ends with a failure, the
 composition is $c_1$ itself. In all the remaining cases, $c_1$ does
@@ -1551,7 +1551,7 @@ not end with a failure.  When $m_1$ and $m_2$ have different top
 constructors ($m_1 \not\smile m_2$), the result is a failure coercion,
 which needs a label. When $c_2$ starts with a projection, we blame the 
 projection for casting a value to a shallowly inconsistent type. When $c_2$
-starts with a $\epsilon$, we know $\ell$ must be a label, which is blamed for
+starts with the no-op, we know $\ell$ must be a label, which is blamed for
 composing shallowly inconsistent hypercoercions. The last two cases
 compose $m_1$ and $m_2$ with the auxilliary function $m \fatsemi^\ell
 m$, which assumes its inputs have the same top constructor. The
@@ -1560,7 +1560,7 @@ recursion. Going back to the last two cases of $c_1 \fatsemi^\ell
 c_2$. When $c_2$ starts with a projection, we do not know whether the
 target type of $m_1$ matches the source of $m_2$. So we use the $l$ in the 
 projection to  compose the middles $m_1 \fatsemi^l m_2$. When $c_2$ starts with 
-a $\epsilon$, we compose the middles using $\ell$.
+the no-op, we compose the middles using $\ell$.
 
 The definitions of $id(T)$ and $cast(T_1,l,T_2)$ are straightforward,
 although $cast(T_1,l,T_2)$ is unusual in its use of $id$ and
@@ -1846,7 +1846,7 @@ is a sketch for the bit-level representation for hypercoercions.
   usually 8-byte aligned, so there are 3 unused bits in a pointer.
 
 \item If the middle is of base type, then the remaining 62 bits are
-  used to represent the head (21 bits), middle (22 bits), and tail (19
+  used to represent the head (25 bits), middle (11 bits), and tail (26
   bits).
   \begin{itemize}
   \item The head requires 1 bit to differentiate between $\epsilon$
