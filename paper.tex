@@ -1071,7 +1071,7 @@ to cast the value before returning to $\kappa$.
   
   \end{array}
   \]
-  \caption{Definition of $applyCast$for \lazyD}
+  \caption{Definition of $applyCast$ for \lazyD}
   \label{fig:applyCast-D-C}
 \end{figure}
 
@@ -1158,17 +1158,6 @@ not familiar with them to \citet{siek2012interpretations} and
     \ncSeq{c}{c} \mid
     \ncFun{c}{c}
   }
-  %% \stxrule{\bar{c}}{wrapper coercions}{  
-  %%  \ncInj{I} \mid
-  %%  \ncFun{\hat{c}}{\hat{c}} \mid
-  %%  \ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}}
-  %% }
-% \stxrulecont{
-%   \ncProd{\hat{c}}{\hat{c}} \mid
-%   \ncSeq{\ncProd{\hat{c}}{\hat{c}}}{\ncInj{I}} \mid
-%   \ncSum{\hat{c}}{\hat{c}} \mid
-%   \ncSeq{\ncSum{\hat{c}}{\hat{c}}}{\ncInj{I}} \mid  
-% }
 \stxrule{\hat{c}}{normal coercions}{
   \ncFun{\hat{c}}{\hat{c}} \mid
   \ncSeq{\ncProj{I}{l}}{\ncFun{\hat{c}}{\hat{c}}} \mid
@@ -1183,18 +1172,6 @@ not familiar with them to \citet{siek2012interpretations} and
   \ncSeq{\ncProj{I}{l}}{\ncInj{I}} \mid
   \ncFail{l} 
 }
-  %% \stxrule{\hat{c}}{normal coercions}{
-  %%  \bar{c} \mid
-  %%  \ncId \mid
-  %%  \ncFail{l} \mid
-  %%  \ncProj{I}{l} \mid
-  %%  \ncSeq{\ncProj{I}{l}}{\ncFail{l}} \mid
-  %%  \ncSeq{\ncProj{I}{l}}{\ncInj{I}}
-  %% }
-  %% \stxrulecont{
-  %%  \ncSeq{\ncProj{I}{l}}{\ncFun{\hat{c}}{\hat{c}}} \mid
-  %%  \ncSeq{\ncProj{I}{l}}{\ncSeq{\ncFun{\hat{c}}{\hat{c}}}{\ncInj{I}}}
-  %% }
   \end{array}
   \]
   \caption{Syntax of coercions and normal forms}
@@ -1221,7 +1198,7 @@ value.
 
 Coercions come with a reduction relation so it is natural to ask about
 their normal forms. \figref{fig:normal-coercion} defines the syntax of
-coercions in normal form, written $\hat{c}$. Conceptually, a coercion
+coercion in normal form, written $\hat{c}$. Conceptually, a coercion
 in normal form has three parts, all of which are optional.  It may
 start with a projection $I?^l$, followed by a function coercion, and
 then concluded with an injection $I!$ or a failure $\bot^l$. While
@@ -1246,6 +1223,10 @@ $\hat{c}$!
 
 
 \section{Definition of Hypercoercions} \label{sec:hypercoercion-definition}
+\todo[inline]{
+The figures of applyCast for hypercoercions is before coercions, even before 
+the syntax definition of hypercoercions! -KC
+}
 
 \begin{figure}
   Syntax of Hypercoercions
