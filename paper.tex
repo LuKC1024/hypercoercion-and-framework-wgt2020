@@ -1525,7 +1525,8 @@ Section~\ref{sec:framework}.
 \end{figure}
 
 \figref{fig:HC-D} defines the functions $id$, $seq$, and $cast$ that
-construct \lazyD{} hypercoercions, towards satisifying the Cast ADT.
+construct \lazyD{} hypercoercions, towards satisifying the Cast abstract data 
+type defined in Section~\ref{sec:framework}.
 \figref{fig:HC-D} also defines some auxiliary functions.
 
 The $seq$ operator is defined in terms of coercion composition, which
@@ -1536,7 +1537,9 @@ However, it is useful to relax this restriction for the D blame
 tracking strategy.
 %
 We shall need optional blame labels, written $\ell$ , that range over
-$\epsilon$ or $l$. Then we write composition of hypercoercions as $c_1
+$\epsilon$ or $l$. The label is mandatory when the target
+type of the first coercion does not match the source type of the second. 
+Then we write composition of hypercoercions as $c_1
 \fatsemi^\ell c_2$.  When both $c_1$ and $c_2$ are $\hyperCoercionI$,
 their composition is also $\hyperCoercionI$.  If the head of $c_2$ is
 a projection, the result is $c_2$.  Otherwise, we need a label to
@@ -1546,29 +1549,28 @@ we put it in the projection. When $c_1$ ends with a failure, the
 composition is $c_1$ itself. In all the remaining cases, $c_1$ does
 not end with a failure.  When $m_1$ and $m_2$ have different top
 constructors ($m_1 \not\smile m_2$), the result is a failure coercion,
-which needs a label. When $c_2$ starts with a projection, it is to
-blame for casting a value to a shallowly inconsistent type. When $c_2$
-starts with a no-op, $\ell$ must be a label. And we blame it for
+which needs a label. When $c_2$ starts with a projection, we blame the 
+projection for casting a value to a shallowly inconsistent type. When $c_2$
+starts with a $\epsilon$, we know $\ell$ must be a label, which is blamed for
 composing shallowly inconsistent hypercoercions. The last two cases
 compose $m_1$ and $m_2$ with the auxilliary function $m \fatsemi^\ell
 m$, which assumes its inputs have the same top constructor. The
 definition of $m \fatsemi^\ell m$ is a straightforward structural
 recursion. Going back to the last two cases of $c_1 \fatsemi^\ell
 c_2$. When $c_2$ starts with a projection, we do not know whether the
-target type of $m_1$ matches the source of $m_2$, although we know
-they are shallowly consistent. So we use the $l$ in the projection to
-compose the middles $m_1 \fatsemi^l m_2$. When $c_2$ starts with a
-no-op, we compose the middles using $\ell$.
+target type of $m_1$ matches the source of $m_2$. So we use the $l$ in the 
+projection to  compose the middles $m_1 \fatsemi^l m_2$. When $c_2$ starts with 
+a $\epsilon$, we compose the middles using $\ell$.
 
 The definitions of $id(T)$ and $cast(T_1,l,T_2)$ are straightforward,
 although $cast(T_1,l,T_2)$ is unusual in its use of $id$ and
 composition.
 
-The proof of correctness for hypercoercions (in
+A proof of correctness for hypercoercions (in 
 Section~\ref{secc:framework:monoid-correct}) relies on the following
 two basic properties of hypercoercions.
 
-\begin{proposition}[\lazyD{} hypercoercions form a monoid]
+\begin{proposition}[\lazyD{} Hypercoercions Form a Monoid]
   \label{thm:hc-monoid}
   For all $c : T_1 \Longrightarrow T_2$,
   $c_1 : T_1 \Longrightarrow T_2$,
@@ -1780,7 +1782,7 @@ The definition of $id$ is straightforward (Figure~\ref{fig:HC-UD}) .
 \end{figure}
 
 
-\begin{proposition}[\lazyUD{} hypercoercions form a monoid]
+\begin{proposition}[\lazyUD{} Hypercoercions Form a Monoid]
   For all $c : T_1 \Longrightarrow T_2$,
   $c_1 : T_1 \Longrightarrow T_2$,
   $c_2 : T_2 \Longrightarrow T_3$, and
@@ -2775,7 +2777,7 @@ that also includes the pairs induced by the rules below.
   $cast(T,l,T)$ with property (3)-(11).
 \end{proof}
 
-\begin{proposition}[Equivalence of two \lazyD{} Cast ADTs]
+\begin{proposition}[Equivalence of Two \lazyD{} Cast ADTs]
   \label{thm:surely-lazyD-eqv}
   Assume $C_1$ and $C_2$ implements Lazy D Cast ADT,
   \[
@@ -2970,7 +2972,7 @@ The $L$ cast representation is defined in
   the $L$ cast representation. -JS}
 
 
-\begin{proposition}[$L$ properties]\label{thm:L-LazyD-monoid}\ 
+\begin{proposition}[$L$ Properties]\label{thm:L-LazyD-monoid}\ 
   \begin{enumerate}
   \item $L$ is an instance of the Lazy D ADT
   \item $L$ is a monoid
@@ -2987,7 +2989,7 @@ The $L$ cast representation is defined in
   Part (3) follows immediately from the definition of $cast(T,l,T)$
 \end{proof}
 
-\begin{lemma}[$L$ is correct wrt. \ineffCEKD]
+\begin{lemma}[$L$ is Correct wrt. \ineffCEKD]
   \label{lem:L-correct}
   \[
   \text{\evalEqv{\effCEK{L}}{\ineffCEKD}}
@@ -3000,7 +3002,7 @@ The $L$ cast representation is defined in
 
 \subsubsection{Correctness of \effCEK{C}}
 
-\begin{theorem}[\effCEK{C} is correct wrt. \ineffCEKD{}]
+\begin{theorem}[\effCEK{C} is Correct wrt. \ineffCEKD{}]
   \label{thm:surely-lazyD-correct}
   Suppose $C$ is a \lazyD{} Cast ADT.  If
   $\judgetype{\emptyset}{e}{T}$ and $o : T$, then
@@ -3090,12 +3092,12 @@ natural way.
 \end{figure}
 
 
-\begin{lemma}[\lazyD{} hypercoercion is a \lazyD{} Cast ADT]
+\begin{lemma}[\lazyD{} Hypercoercion is a \lazyD{} Cast ADT]
   \label{thm:hc-surely-lazyD}
 \end{lemma}
 \begin{proof} See the supplementary material. \end{proof}
 
-\begin{theorem}[\lazyD{} hypercoercion Respect \ineffCEKD]
+\begin{theorem}[\lazyD{} Hypercoercion Respect \ineffCEKD]
   If $\judgetype{\emptyset}{e}{T}$ and $o : T$
   \[
   \text{\evalEqv{\effCEK{H}}{\ineffCEKD}}
