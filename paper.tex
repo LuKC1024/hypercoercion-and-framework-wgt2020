@@ -470,18 +470,18 @@ In this section, we review lazy cast calculi
 \begin{figure}
   Syntax
   \[
-  \begin{array}{rclr}
-  \stxrule{T}{types}{
+  \begin{array}{lrcl}
+  \stxrule{T}{Types}{
     \star \mid{}
     P
   }
-  \stxrule{P}{pre-types}{
+  \stxrule{P}{Pre-types}{
     \POOunit \mid
     \POOfun{T}{T} \mid
     \POOprod{T}{T} \mid
     \POOsum{T}{T}
   }
-  \stxrule{e}{terms}{
+  \stxrule{e}{Terms}{
     \eOOvar{x} \mid{}
     \eOOsole{} \mid{}
     \eOOlam{T}{T}{x}{e} \mid
@@ -1163,13 +1163,13 @@ not familiar with them to \citet{siek2012interpretations} and
 
 \begin{figure}
   \[
-  \begin{array}{rclr}
-  \stxrule{I}{injectable types (\lazyD)}{
+  \begin{array}{lrcl}
+  \stxrule{I}{Injectable types (\lazyD)}{
     \POOfun{T}{T} \mid \POOunit}
-  \stxrule{I}{injectable types (\lazyUD)}{
+  \stxrule{I}{Injectable types (\lazyUD)}{
     \POOfun{\TOOdyn}{\TOOdyn} \mid \POOunit
   }
-  \stxrule{c}{coercions}{
+  \stxrule{c}{Coercions}{
     \ncInj{I} \mid
     \ncProj{I}{l} \mid
     \ncId \mid
