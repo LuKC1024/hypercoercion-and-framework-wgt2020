@@ -590,7 +590,21 @@ entry onto the continuation, and (2) those that return a value to the
 current continuation and possibly perform a computation.
 Corresponding to (1) and (2), the machine state is either in an
 $\sOOinspect{e}{\rho}{\kappa}$ or $\sOOreturn{v}{\kappa}$ configuration, 
-respectively. Additionally, there is the $\sOOhalt{o}$ configuration.
+respectively. Additionally, there is the $\sOOhalt{o}$ configuration, where the 
+machine halts with an observation.
+%Let $s$ range over machine states. A state is either looking at an 
+%expression to decide what to do next, returning a value to a continuation, or 
+%halting with an observation.
+
+Let $v$ range over values. A value is either the unit, a function, a pair, a 
+left injection, a right injection, or a casted value. Value typing rules 
+restrict the casts in casted values. If the cast is between pre-types, source 
+and target types must have the same type constructor at the top ($P_1 \approx 
+P_2$). If the cast is from a pre-type to the dynamic type, the pre-type must be 
+injectable. The definition of injectable types depends on blame
+strategies: for the \lazyD\ strategy, every pre-type is injectable;
+for the \lazyUD\ strategy, a pre-types is injectable if all its sub-parts are 
+the dynamic type.
 
 The transition relation $\judgeCreduce{s}{s}$ is parameterized over
 $applyCast$ to allow for the differences between D and UD.
@@ -615,18 +629,24 @@ underlying pair, and cast the result.
 To case split an injection in cast, the machine moves the cast from
 the injection to continuations functions.
 %
-To cast a value, the machine invokes $applyCast$ on the value.  If the
-cast succeeds, the machine returns the result to the next
-continuation.  If the cast fails, the machine halts with the blame
-label.
+To cast a value, the machine invokes $applyCast$ on the value. If the cast 
+succeeds ($\rOOsucc{v'}$), the machine returns the result to the next
+continuation.  If the cast fails ($\rOOfail{l}$), the machine halts with the 
+blame label.
+%Let $r$ range over cast results. A cast result is either a success, which 
+%brings back a value, or a failure, which brings back a blame label. 
+
 %
 %% When the continuation is $stop$, the machine enters a halting
 %% state. The When the machine is in a halting state, it stays in the
 %% same state.
 
 The reflexive transitive closure of reduction ($\judgeCreduceTrans{s}{s}$) and 
-evaluation ($eval_\mathcal{x}(e)$)
-are standard~\citep{felleisen03:_pllc}.
+evaluation ($eval_\mathcal{x}(e)$) are standard~\citep{felleisen03:_pllc}.
+Let $o$ range over observations. They are what we would observe if 
+a program terminates. Observations include all value constructors and
+blame.  The function converting values to observations ($observe(v) =
+o$) is defined in the natural way.
 
 
 \begin{figure}
@@ -742,16 +762,6 @@ are standard~\citep{felleisen03:_pllc}.
         \label{fig:state}
 \end{figure}
 
-Let $v$ range over values. A value is either the unit, a function, a pair, a 
-left injection, a right injection, or a value in cast. 
-As shown by the value typing rules, for values in casts, 
-if the cast is between pre-types, source and target types must have the 
-same type constructor at the top. 
-If the cast is from a pre-type to the dynamic type, the pre-type must be 
-injectable. The definition of injectable types depends on blame
-strategies: for the \lazyD\ strategy, every pre-type is injectable;
-for the \lazyUD\ strategy, a pre-types is injectable if all its sub-parts are 
-the dynamic type.
 %As shown by the value typing rules, if the target type of a
 %value in cast is the dynamic type, the underlying value must be of an
 %injectable type. The definition of injectable types depends on blame
@@ -760,13 +770,6 @@ the dynamic type.
 %all its sub-parts are the dynamic type. If the target type of a value in cast 
 %is a pre-type, the type of the underlying value must have the
 %same type constructor.
-
-Let $c$ range over casts. A cast is a triple of a type, a label, and a type.
-
-Let $o$ range over observations. They are what we would observe if 
-a program terminates. Observations include all value constructors and
-blame.  The function converting values to observations ($observe(v) =
-o$) is defined in the natural way.
 
 \begin{figure}
   % Continuation typing \fbox{$\kappa : T_1 \Longrightarrow T_2$}
@@ -1006,18 +1009,13 @@ v3' = \vOOcast{v_3}{\cOOcast{\POOfun{T_3}{T}}{l}{\POOfun{T_1}{T}}}}
   \label{fig:machine-cekc}
 \end{figure}
 
-Let $r$ range over cast results. A cast result is either a success, which 
-brings back a value, or a failure, which brings back a blame label.
-
-Let $s$ range over machine states. A state is either looking at an 
-expression to decide what to do next, returning a value to a continuation, or 
-halting with an observation.
-
-Let $\kappa$ range over continuations. $\mathtt{stop}$ is the top 
-continuation. The remaining continuations correspond to expressions. For 
-example, $\kOOconsI{T_1}{T_2}{e}{\rho}{\kappa}$ is the continuation waiting for 
-the first part of the pair. And the last continuation, $\kOOcast{c}{\kappa}$ is 
-to cast the value before returning to $\kappa$.
+%Let $\kappa$ range over continuations. $\mathtt{stop}$ is the top 
+%continuation. The remaining continuations correspond to expressions. For 
+%example, $\kOOconsI{T_1}{T_2}{e}{\rho}{\kappa}$ is the continuation waiting 
+%for 
+%the first part of the pair. And the last continuation, $\kOOcast{c}{\kappa}$ 
+%is 
+%to cast the value before returning to $\kappa$.
 
 \begin{figure}
   
@@ -2253,7 +2251,7 @@ machine.  This machine is similar to the \ineffCEK{} machine
 and continuations.
 
 Let $v$ range over values. In \ineffCEK{} we have one value
-constructor for all values in casts.  In \effCEK{C}, however, we do not
+constructor for all castes values.  In \effCEK{C}, however, we do not
 have this generic value constructor, instead we push those casts into
 the ordinary values. For instance, $(\vOOcons{v_1}{v_2})$ corresponds
 to $(\hcvOOcons{v_1'}{id(T_1)}{v_2'}{id(T_2)})$. To construct values
@@ -3098,13 +3096,13 @@ natural way.
 
 \section{Conclusion} \label{sec:conclude}
 
-\todoKC{write conclusion. -KC}
-
 \todo[inline]{
 Back out and be like remember all our contribution. Bring them back to the 
 beginning. Repeat but not repeat literally.
 I can assume that people have eaten meat.
 }
+
+In this 
 
 %% Acknowledgments
 \begin{acks}                            %% acks environment is optional
