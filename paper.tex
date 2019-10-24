@@ -449,8 +449,7 @@ To summarize, the primary contributions of this paper are:
   of the \lazyD{} cast calculus.
 \end{itemize}
 
-In Section~\ref{sec:background} we review cast calculi and coercions in normal 
-form. 
+In Section~\ref{sec:background} we review cast calculi and coercions. 
 We present hypercoercions in
 Section~\ref{sec:hypercoercion-definition}.  We present a framework
 for proving correctness of \lazyD\ cast reprensentations in
@@ -461,7 +460,7 @@ Section~\ref{sec:hypercoercion-correctness}.
 \section{Background} \label{sec:background}
 
 In this section, we review lazy cast calculi
-(Section~\ref{sec:cast-calculi}) and coercion in normal form
+(Section~\ref{sec:cast-calculi}) and coercions 
 (Section~\ref{sec:coercion-calculus}).
 
 \subsection{Cast Calculi}
@@ -579,35 +578,6 @@ $\eOOcast{e}{T_1}{l}{T_2}$ are required to be consistent, written $T_1
 \sim T_2$. The consistency relation is standard and defined in
 \figref{fig:blame-static}.
 
-%% defines the syntax of the cast calculus and
-%% its static semantics. We extend the syntax of
-%%  with sum and product types.  Let $T$ range
-%% over types. A type is either the dynamic type$\star$(a.k.a. $
-%% \mathtt{Dyn}$, $\mathbb{?}$, or$\mathtt{Unknown}$), or a type
-
-%% As usual we write$T_1 \sim T_2$when$T_1$ and $T_2$ are
-%% consistent. The intuition of $T_1 \sim T_2$ is that $T_1$and $
-%% T_2$have no conflicting type information. Two types are consistent
-%% if one of them is $\star$, or they have the same top-most type
-%% constructor and the corresponding sub-parts are
-%% consistent. Consistency is reflexive and symmetric, but not
-%% transitive.
-
-%% We write$T_1 \smile T_2$when$T_1$ and $T_2$ are
-%% shallowly-consistent, that is, if one of them is $\star$, or they
-%% have the same type constructor at the top. Shallow-inconsistency is
-%% the root of all blame in lazy cast strategies -- casting a value to a
-%% shallowly inconsistent type leads to a blame. Shallow-consistency is
-%% reflexive, symmetric, but not transitive.
-
-%% Let $e$ range over terms. Most terms are standard for a simply-typed
-%% lambda calculus. We annotate the codomain of a lambda abstraction
-%% explicitly because we refer to it in the dynamic semantics. Becuase
-%% this is a cast calculus, we have two additional terms: cast
-%% expressions and blame expressions. Cast expressions perform runtime
-%% type checks and blame expressions raise an error.
-
-
 \paragraph{Dynamic Semantics}
 
 The dynamic semantics of a cast calculus is typically defined with a
@@ -624,8 +594,12 @@ cast calculi, but we have not yet done so.
 
 Fig.~\ref{fig:machine-cekc} defines the transition relation of the CEK
 machine and Fig.~\ref{fig:state} gives a grammar for machine states
-$s$, including a definition of values and value typing. The
-transitions involving casts are highlighted in red and described in
+$s$, including a definition of values and value typing. 
+%Fig.~\ref{fig:state} gives a grammar for machine states
+%$s$, including a definition of values and value typing and
+%Fig.~\ref{fig:machine-cekc} defines the transition relation of the CEK
+%machine.
+The transitions involving casts are highlighted in red and described in
 more detail below. The other transitions are standard for a CEK
 machine for an extended simply typed lambda calculus.
 %
@@ -634,8 +608,8 @@ that dive further into an expression (looking for a redex) and push an
 entry onto the continuation, and (2) those that return a value to the
 current continuation and possibly perform a computation.
 Corresponding to (1) and (2), the machine state is either in an
-$\mathtt{Eval}$ or $\mathtt{Cont}$ configuration, respectively.
-Additionally, there is the $\mathtt{Halt}$ configuration.
+$\sOOinspect{e}{\rho}{\kappa}$ or $\sOOreturn{v}{\kappa}$ configuration, 
+respectively. Additionally, there is the $\sOOhalt{o}$ configuration.
 
 The transition relation $\judgeCreduce{s}{s}$ is parameterized over
 $applyCast$ to allow for the differences between D and UD.
@@ -645,8 +619,8 @@ continuation and evaluates the inner expression.
 %% Other
 %% transition rules starting from$Eval$states are standard.
 To apply a function in cast, the machine first casts $v_1$, the
-operand, then applies the operand in cast to $v_2$, the underlying
-function, and finally cast the result of the function application.
+operand, then applies the cast operand to $v_2$, the underlying
+function, and finally cast the return value.
 %
 To take out the first (resp. second) part of a pair in cast, the
 machine firstly take out the first (resp. second) part of $v$, the
@@ -657,8 +631,8 @@ underlying pair, and cast the result.
 %function to the value inside the left injection. The case for right
 %injection is similar.
 %
-When the target value is a sum in cast, the machine moves the cast from
-the target value to continuations functions.
+To case split an injection in cast, the machine moves the cast from
+the injection to continuations functions.
 %
 To cast a value, the machine invokes $applyCast$ on the value.  If the
 cast succeeds, the machine returns the result to the next
@@ -787,20 +761,28 @@ are standard~\citep{felleisen03:_pllc}.
         \label{fig:state}
 \end{figure}
 
-Let $v$ range over values. A value is either the unit, a function (a
-closure), a pair, a left injection, a right injection, or a value in cast. As 
-shown by the value typing rules, if the target type of a
-value in cast is the dynamic type, the underlying value must be of an
-injectable type. The definition of injectable types depends on blame
+Let $v$ range over values. A value is either the unit, a function, a pair, a 
+left injection, a right injection, or a value in cast. 
+As shown by the value typing rules, for values in casts, 
+if the cast is between pre-types, source and target types must have the 
+same type constructor at the top. 
+If the cast is from a pre-type to the dynamic type, the pre-type must be 
+injectable. The definition of injectable types depends on blame
 strategies: for the \lazyD\ strategy, every pre-type is injectable;
-for the \lazyUD\ strategy, a pre-types is injectable if and only if
-all its sub-parts are the dynamic type. If the target type of a value in cast 
-is a pre-type, the type of the underlying value must have the
-same type constructor.
+for the \lazyUD\ strategy, a pre-types is injectable if all its sub-parts are 
+the dynamic type.
+%As shown by the value typing rules, if the target type of a
+%value in cast is the dynamic type, the underlying value must be of an
+%injectable type. The definition of injectable types depends on blame
+%strategies: for the \lazyD\ strategy, every pre-type is injectable;
+%for the \lazyUD\ strategy, a pre-types is injectable if and only if
+%all its sub-parts are the dynamic type. If the target type of a value in cast 
+%is a pre-type, the type of the underlying value must have the
+%same type constructor.
 
 Let $c$ range over casts. A cast is a triple of a type, a label, and a type.
 
-Let $o$ range over observations. They are what would be observed if
+Let $o$ range over observations. They are what we would observe if 
 a program terminates. Observations include all value constructors and
 blame.  The function converting values to observations ($observe(v) =
 o$) is defined in the natural way.
@@ -1044,7 +1026,7 @@ v3' = \vOOcast{v_3}{\cOOcast{\POOfun{T_3}{T}}{l}{\POOfun{T_1}{T}}}}
 \end{figure}
 
 Let $r$ range over cast results. A cast result is either a success, which 
-brings back a value, or a failure, which brings a blame label.
+brings back a value, or a failure, which brings back a blame label.
 
 Let $s$ range over machine states. A state is either looking at an 
 expression to decide what to do next, returning a value to a continuation, or 
@@ -1052,10 +1034,9 @@ halting with an observation.
 
 Let $\kappa$ range over continuations. $\mathtt{stop}$ is the top 
 continuation. The remaining continuations correspond to expressions. For 
-example, $(\mathtt{cons_1} \; e \; \rho \; \kappa)$ is the continuation where 
-we are waiting for the value of the first argument to a $\mathtt{cons}$. And 
-the last continuation, $\langle c \rangle \kappa$ is to cast the value before 
-returning to $\kappa$.
+example, $\kOOconsI{T_1}{T_2}{e}{\rho}{\kappa}$ is the continuation waiting for 
+the first part of the pair. And the last continuation, $\kOOcast{c}{\kappa}$ is 
+to cast the value before returning to $\kappa$.
 
 \begin{figure}
   
@@ -1236,11 +1217,11 @@ The coercion $\iota$ is the identity, $\bot^{l}$ is the coercion that
 always fails and blames $l$, and $(\ncSeq{c_1}{c_2})$ applies $c_1$ and
 then $c_2$ in sequence. The function coercion $\ncFun{c_1}{c_2}$
 applies $c_1$ to the argument of a function and $c_2$ to the return
-pvalue.
+value.
 
 Coercions come with a reduction relation so it is natural to ask about
 their normal forms. \figref{fig:normal-coercion} defines the syntax of
-coercion in normal form, written $\hat{c}$. Conceptually, a coercion
+coercions in normal form, written $\hat{c}$. Conceptually, a coercion
 in normal form has three parts, all of which are optional.  It may
 start with a projection $I?^l$, followed by a function coercion, and
 then concluded with an injection $I!$ or a failure $\bot^l$. While
