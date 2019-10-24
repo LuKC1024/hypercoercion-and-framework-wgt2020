@@ -72,8 +72,8 @@
 \newcommand{\GTLC}{\texttt{GTLC+}}
 \newcommand{\figref}[1]{Fig.~\ref{#1}}
 \newcommand{\secref}[1]{Section~\ref{#1}}
-\newcommand{\stxrule}[3]{#1 & ::= & #3 & \text{#2}\\}
-\newcommand{\stxrulecont}[1]{& | & #1 & \\}
+\newcommand{\stxrule}[3]{\text{#2} & #1 & ::= & #3\\}
+\newcommand{\stxrulecont}[1]{& & | & #1 \\}
 \newcommand{\funrule}[3]{#1 &=& #2 & #3\\}
 \newcommand{\hifunrule}[3]{\highlight{#1} &\highlight{=}& \highlight{#2} & 
 \highlight{#3}\\}
@@ -677,8 +677,8 @@ are standard~\citep{felleisen03:_pllc}.
 \begin{figure}
   Machine state and other runtime data structures
   \[
-  \begin{array}{rclr}
-  \stxrule{v}{values}{
+  \begin{array}{lrcl}
+  \stxrule{v}{Values}{
     \vOOtt{} \mid
     \vOOfun{\rho}{x}{e} \mid
     \vOOcons{v}{v} \mid
@@ -686,19 +686,19 @@ are standard~\citep{felleisen03:_pllc}.
     \vOOinr{v} \mid   
     \vOOcast{v}{c}
   }
-  \stxrule{c}{casts}{
+  \stxrule{c}{Casts}{
     \cOOcast{T}{l}{T}
   }
-  \stxrule{I}{injectable types (\lazyD)}{
+  \stxrule{I}{Injectable types (\lazyD)}{
     P
   }
-  \stxrule{I}{injectable types (\lazyUD)}{
+  \stxrule{I}{Injectable types (\lazyUD)}{
     \POOunit \mid
     \POOfun{\star}{\star} \mid
     \star \times \star \mid
     \star + \star
   }
-  \stxrule{o}{observations}{
+  \stxrule{o}{Observations}{
     \oOOinj \mid
     \oOOsole \mid
     \oOOfun \mid
@@ -707,16 +707,16 @@ are standard~\citep{felleisen03:_pllc}.
     \oOOinr \mid
     \oOOblame{l}
   }
-  \stxrule{r}{cast results}{
+  \stxrule{r}{Cast results}{
     \rOOsucc{v} \mid
     \rOOfail{l}
   }
-  \stxrule{s}{states}{
+  \stxrule{s}{States}{
     \sOOinspect{e}{\rho}{\kappa} \mid{}
     \sOOreturn{v}{\kappa} \mid{}
     \sOOhalt{o}
   }
-  \stxrule{\kappa}{continuations}{
+  \stxrule{\kappa}{Continuations}{
     \kOOmt \mid
     \kOOconsI{T}{T}{e}{\rho}{\kappa} \mid
     \kOOconsII{T}{T}{v}{\kappa} \mid
@@ -1269,29 +1269,29 @@ $\hat{c}$!
 \begin{figure}
   Syntax of Hypercoercions
   \[
-  \begin{array}{lclr}
-  \stxrule{I}{injectable types (\lazyD)}{P}
-  \stxrule{I}{injectable types (\lazyUD)}{
+  \begin{array}{lrcl}
+  \stxrule{I}{Injectable types (\lazyD)}{P}
+  \stxrule{I}{Injectable types (\lazyUD)}{
     \POOunit \mid
     \POOfun{\TOOdyn}{\TOOdyn} \mid
     \POOprod{\TOOdyn}{\TOOdyn} \mid
     \POOsum{\TOOdyn}{\TOOdyn}
   }
-  \stxrule{c}{hypercoercions}{
+  \stxrule{c}{Hypercoercions}{
     \hyperCoercionI \mid{}
     \hyperCoercionC{h}{m}{t}
   }
-  \stxrule{h}{heads}{
+  \stxrule{h}{Heads}{
     \epsilon \mid{}
     ?^l
   }
-  \stxrule{m}{middles}{
+  \stxrule{m}{Middles}{
     \POOunit \mid
     \POOfun{c}{c} \mid
     \POOprod{c}{c} \mid
     \POOsum{c}{c}
   }
-  \stxrule{t}{tails}{
+  \stxrule{t}{Tails}{
     \epsilon \mid{}
     ! \mid{}
     \bot^l
@@ -1388,8 +1388,8 @@ Section~\ref{sec:framework}.
 
 \begin{figure}
   \[
-  \begin{array}{rclr}
-  \stxrule{\ell}{Maybe$l$}{\epsilon \mid l}
+  \begin{array}{lrcl}
+  \stxrule{\ell}{Maybe $l$}{\epsilon \mid l}
   \end{array}
   \]
   
@@ -2059,7 +2059,7 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
 \begin{figure}
   Syntax
   \[
-  \begin{array}{rclr}
+  \begin{array}{lrcl}
 % \stxrule{r}{cast results}{
 %   \rOOsucc{v} \mid
 %   \rOOfail{l}
@@ -2069,10 +2069,10 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
 %   \sOOreturn{v}{\kappa} \mid{}
 %   \sOOhalt{o}
 % }
-  \stxrule{\kappa}{continuation}{
+  \stxrule{\kappa}{Continuation}{
     \kOOcast{c}{k}
   }
-  \stxrule{k}{pre-continuations}{
+  \stxrule{k}{Pre-continuations}{
     \kOOmt \mid{}
     \kOOconsI{T}{T}{e}{\rho}{\kappa} \mid
     \kOOconsII{T}{T}{v}{\kappa} \mid
@@ -2840,9 +2840,9 @@ that also includes the pairs induced by the rules below.
 \begin{figure}
 Syntax
 \[
-\begin{array}{rclr}
-\stxrule{c}{casts}{\lcOOnull{} \mid \lcOOcons{s}{c}}
-\stxrule{s}{steps}{\lsOOcast{T}{l}{T}}
+\begin{array}{lrcl}
+\stxrule{c}{Casts}{\lcOOnull{} \mid \lcOOcons{s}{c}}
+\stxrule{s}{Steps}{\lsOOcast{T}{l}{T}}
 \end{array}
 \]
 
