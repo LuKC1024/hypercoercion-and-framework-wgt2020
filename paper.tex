@@ -1874,7 +1874,8 @@ over the cast representation $C$
 (Section~\ref{sec:framework:cek}). This machine is space efficient
 provided that the cast representation performs compression.  The
 interface between the machine and the cast representation is defined
-by an abstract data type, named Cast ADT, that we define shortly.  We
+by an abstract data type, named Cast ADT, that we define shortly 
+(Section~\ref{sec:framework:adt}).  We
 conjecture that all cast representations defined in the literature
 are instances of this ADT.
 
@@ -1905,8 +1906,8 @@ values that are cast to the dynamic type, as in \citet{wadler2009well}.
 \begin{definition}[Values and cast results for the \effCEK{C} machine] 
 \label{def:values-effCEK}
   \[
-  \begin{array}{rclr}
-  \stxrule{v}{values}{
+  \begin{array}{lrcl}
+  \stxrule{v}{Values}{
     \hcvOOtt \mid
     \hcvOOfun{c}{\rho}{x}{e}{c} \mid
     \hcvOOcons{v}{c}{v}{c} \mid
@@ -1914,7 +1915,7 @@ values that are cast to the dynamic type, as in \citet{wadler2009well}.
     \hcvOOinr{v}{c} \mid
     \hcvOOinj{I}{v}
   }
-\stxrule{r}{cast results}{
+\stxrule{r}{Cast results}{
   \rOOsucc{v} \mid
   \rOOfail{l}
 }
@@ -1924,6 +1925,7 @@ values that are cast to the dynamic type, as in \citet{wadler2009well}.
 
 
 \subsection{The Cast Abstract Data Types}
+\label{sec:framework:adt}
 
 The \emph{Cast Abstract Data Type}, defined below, captures the set of
 operators that a cast representation $C$ must provide for it to be
