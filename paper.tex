@@ -568,14 +568,14 @@ familiar with CEK machines and believes that a CEK machine is more
 convenient to use for the space-efficient semantics in
 Section~\ref{sec:framework:cek} (a major point of space-efficiency is about 
 compressing continuations). So using an abstract machine for the cast calculi in
-this section makes it easier prove correctness of the space-efficient
+this section makes it easier to prove correctness of the space-efficient
 machines. Of course, one should prove that the abstract machine
 presented here is equivalent to the standard reduction semantics for
 cast calculi, but we have not yet done so.
 
 Fig.~\ref{fig:machine-cekc} defines the transition relation of the CEK
 machine and Fig.~\ref{fig:state} gives a grammar for machine states
-$s$, including a definition of values and value typing. 
+$s$, including a definition of values $v$ and value typing. 
 %Fig.~\ref{fig:state} gives a grammar for machine states
 %$s$, including a definition of values and value typing and
 %Fig.~\ref{fig:machine-cekc} defines the transition relation of the CEK
@@ -591,7 +591,9 @@ current continuation and possibly perform a computation.
 Corresponding to (1) and (2), the machine state is either in an
 $\sOOinspect{e}{\rho}{\kappa}$ or $\sOOreturn{v}{\kappa}$ configuration, 
 respectively. Additionally, there is the $\sOOhalt{o}$ configuration, where the 
-machine halts with an observation.
+machine halts with an observation ($o$). Observations include all value 
+constructors and blame. The function converting values to 
+observations ($observe(v) = o$) is defined in the natural way.
 %Let $s$ range over machine states. A state is either looking at an 
 %expression to decide what to do next, returning a value to a continuation, or 
 %halting with an observation.
@@ -613,11 +615,11 @@ When evaluating a cast expression, the machine moves the cast to the
 continuation and evaluates the inner expression.
 %% Other
 %% transition rules starting from$Eval$states are standard.
-To apply a function in cast, the machine first casts $v_1$, the
+To apply a casted function, the machine first casts $v_1$, the
 operand, then applies the cast operand to $v_2$, the underlying
 function, and finally cast the return value.
 %
-To take out the first (resp. second) part of a pair in cast, the
+To take out the first (resp. second) part of a casted pair, the
 machine firstly take out the first (resp. second) part of $v$, the
 underlying pair, and cast the result.
 %
@@ -626,7 +628,7 @@ underlying pair, and cast the result.
 %function to the value inside the left injection. The case for right
 %injection is similar.
 %
-To case split an injection in cast, the machine moves the cast from
+To case split a casted injection, the machine moves the cast from
 the injection to continuations functions.
 %
 To cast a value, the machine invokes $applyCast$ on the value. If the cast 
@@ -643,11 +645,6 @@ blame label.
 
 The reflexive transitive closure of reduction ($\judgeCreduceTrans{s}{s}$) and 
 evaluation ($eval_\mathcal{x}(e)$) are standard~\citep{felleisen03:_pllc}.
-Let $o$ range over observations. They are what we would observe if 
-a program terminates. Observations include all value constructors and
-blame.  The function converting values to observations ($observe(v) =
-o$) is defined in the natural way.
-
 
 \begin{figure}
   Machine state and other runtime data structures
