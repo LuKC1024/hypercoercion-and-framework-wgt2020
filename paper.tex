@@ -421,7 +421,7 @@ normal form, threesomes, and supercoercions.
 
 To summarize, the primary contributions of this paper are:
 \begin{itemize}
-\item hypercoercions, a new space-efficient cast representation, which
+\item hypercoercions, a new cast representation, which
   has a structurally recursive composition and a more compact memory
   representation.
 \item a framework in Agda for proving the correctness of \lazyD{} cast
@@ -1502,7 +1502,7 @@ type defined in Section~\ref{sec:framework}.
 \figref{fig:HC-D} also defines some auxiliary functions.
 
 The $seq$ operator is defined in terms of coercion composition, which
-is the key to compressing coercions and maintaining space efficiency.
+is the key to compressing coercions and maintaining space-efficiency.
 A composition operator for coercions typically requires the target
 type of the first coercion to match the source type of the second.
 However, it is useful to relax this restriction for the D blame
@@ -1838,13 +1838,13 @@ is a sketch for the bit-level representation for hypercoercions.
 \label{sec:framework}
 
 This section presents our second contribution, a framework for proving
-the correctness of cast representations, especially space efficient
+the correctness of cast representations, especially space-efficient
 ones. Section~\ref{sec:hypercoercion-correctness} applies this
 framework to prove the correctness of the \lazyD{} hypercoercions.
 
 We start by defining a CEK machine \effCEK{C} that is parameterized
 over the cast representation $C$
-(Section~\ref{sec:framework:cek}). This machine is space efficient
+(Section~\ref{sec:framework:cek}). This machine is space-efficient
 provided that the cast representation performs compression.  The
 interface between the machine and the cast representation is defined
 by an abstract data type, named Cast ADT, that we define shortly 
@@ -1984,13 +1984,6 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
     = \rOOsucc{(\hcvOOinr{v}{seq(c,cast(T_2,l,T_4))})} $
   \end{enumerate}
 \end{definition}
-
-%% After showing their cast is an instance of Lazy D Cast, users of our
-%% frameworks can plug-in this cast representation to our space-efficient
-%% abstract machine in subsection~\ref{ssec:framework:cek}, and prove
-%% that this machine is equivalent to
-%% \ineffCEKD\ (subsection~\ref{secc:framework:all-correct}), which
-%% depends on lemmas in subsection~\ref{secc:framework:monoid-correct}.
 
 \subsection{A Space-efficient CEK machine}
 \label{sec:framework:cek}
@@ -3099,7 +3092,17 @@ beginning. Repeat but not repeat literally.
 I can assume that people have eaten meat.
 }
 
-In this 
+In this paper we presented a new cast representation, hypercoercions, in two 
+flavors, Lazy D and Lazy UD. Hypercoercions have a structurally recursive 
+composition, which is a win over coercions in normal form for mechanized 
+metatheory. What is more, hypercoercions have a more compact memory 
+representation. We prove that $S(H)$, an abstract machine that uses Lazy D 
+hypercoercions, is equivalent to $D$, a semantics of Lazy D Cast Calculus. 
+
+We also present a framework for proving the correctness of Lazy D Cast ADT. 
+If $C$ implements the Lazy D Cast ADT, $S(C)$ would be equivalent to $D$.
+
+\todo[inline]{related works. -KC}
 
 %% Acknowledgments
 \begin{acks}                            %% acks environment is optional
