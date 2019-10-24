@@ -391,13 +391,15 @@ The current state of the art includes
 \item coercions in normal form
   \citep{siek2012interpretations,siek2015blame}.
 \end{itemize}
-Recall that in these systems, casts are compressed using a composition
-operator.  Threesomes and supercoercions are good for mechanized
+%Recall that in these systems, casts are compressed using a composition
+%operator.
+These systems compress casts using a compose operator.
+Threesomes and supercoercions are good for mechanized
 metatheory because their compose operators are structurally recursive,
 making them easy to define in a proof assistant such as Agda. In
 contrast, the coercions in normal form have compose operators that are
 not structurally recursive, which makes it more difficult to define in
-Agda, requiring what amounts to an explicit proof of termination.
+proof assistants, requiring what amounts to an explicit proof of termination.
 %
 On the other hand, coercions in normal form are easier to understand
 than threesomes (with a strange labelled bottom type), and
@@ -413,9 +415,10 @@ fits all first-order casts into 64 bits.
 We present two flavors of hypercoercions to support the two blame
 tracking strategies from the literature: D and
 UD~\citep{siek2009exploring}. We are interested in the D blame
-tracking strategy because it comes with a more straightforward notion
+tracking strategy because it comes with a more straightforward notion of
 safe cast compared to UD~\citep{siek2009exploring}, which is why D was
-chosen Grift compiler. We are also intersted in UD because it plays a
+chosen in Grift compiler~\citep{kuhlenschmidt2018efficient}. We are also 
+interested in UD because it plays a
 prominent role in the gradual typing literature
 \citep{wadler2009well}.  The UD hypercoercions were inspired by the
 supercoercions of \citet{garcia2013calculating} (hence the name) and
@@ -435,7 +438,7 @@ abstract machine using \lazyD{} hypercoercions is equivalent to an
 abstract machine using standard \lazyD{}
 casts~\citep{siek2009exploring}. We conjecture that the framework can
 be generalized to \lazyUD{} and that it can be applied to coercions in
-normal form and threesomes.
+normal form, threesomes, and supercoercions.
 
 To summarize, the primary contributions of this paper are:
 \begin{itemize}
@@ -444,14 +447,15 @@ To summarize, the primary contributions of this paper are:
   representation.
 \item a framework in Agda for proving the correctness of \lazyD{} cast
   represantations.
-\item a formal proof that hypercoercions respect the semantics
+\item a formal proof that \lazyD\ hypercoercions respect the semantics
   of the \lazyD{} cast calculus.
 \end{itemize}
 
-In Section~\ref{sec:background} we review cast calculi and coercions.
+In Section~\ref{sec:background} we review cast calculi and coercions in normal 
+form. 
 We present hypercoercions in
 Section~\ref{sec:hypercoercion-definition}.  We present a framework
-for proving correctness of cast reprensentations in
+for proving correctness of \lazyD\ cast reprensentations in
 Section~\ref{sec:framework} and use it to prove the correctness of
 \lazyD{} hypercoercions in
 Section~\ref{sec:hypercoercion-correctness}.
