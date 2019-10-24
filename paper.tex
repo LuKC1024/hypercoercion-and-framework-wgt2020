@@ -681,13 +681,13 @@ are standard~\citep{felleisen03:_pllc}.
   \stxrule{v}{values}{
     \vOOtt{} \mid
     \vOOfun{\rho}{x}{e} \mid
-    \vOOcons{v_1}{v_2} \mid
+    \vOOcons{v}{v} \mid
     \vOOinl{v} \mid
     \vOOinr{v} \mid   
     \vOOcast{v}{c}
   }
   \stxrule{c}{casts}{
-    \cOOcast{T_1}{l}{T_2}
+    \cOOcast{T}{l}{T}
   }
   \stxrule{I}{injectable types (\lazyD)}{
     P
@@ -718,12 +718,12 @@ are standard~\citep{felleisen03:_pllc}.
   }
   \stxrule{\kappa}{continuations}{
     \kOOmt \mid
-    \kOOconsI{T_1}{T_2}{e}{\rho}{\kappa} \mid
-    \kOOconsII{T_1}{T_2}{v}{\kappa} \mid
-    \kOOinl{T_1}{T_2}{\kappa}
+    \kOOconsI{T}{T}{e}{\rho}{\kappa} \mid
+    \kOOconsII{T}{T}{v}{\kappa} \mid
+    \kOOinl{T}{T}{\kappa}
   }
   \stxrulecont{
-    \kOOinr{T_1}{T_2}{\kappa} \mid
+    \kOOinr{T}{T}{\kappa} \mid
     \kOOappI{e}{\rho}{\kappa} \mid
     \kOOappII{v}{\kappa} \mid
     \kOOcar{\kappa}
@@ -1287,9 +1287,9 @@ $\hat{c}$!
   }
   \stxrule{m}{middles}{
     \POOunit \mid
-    \POOfun{c_1}{c_2} \mid
-    \POOprod{c_1}{c_2} \mid
-    \POOsum{c_1}{c_2}
+    \POOfun{c}{c} \mid
+    \POOprod{c}{c} \mid
+    \POOsum{c}{c}
   }
   \stxrule{t}{tails}{
     \epsilon \mid{}
@@ -2074,12 +2074,12 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
   }
   \stxrule{k}{pre-continuations}{
     \kOOmt \mid{}
-    \kOOconsI{T_1}{T_2}{e}{\rho}{\kappa} \mid
-    \kOOconsII{T_1}{T_2}{v}{\kappa} \mid
-    \kOOinl{T_1}{T_2}{\kappa}
+    \kOOconsI{T}{T}{e}{\rho}{\kappa} \mid
+    \kOOconsII{T}{T}{v}{\kappa} \mid
+    \kOOinl{T}{T}{\kappa}
   }
   \stxrulecont{
-  	\kOOinr{T_1}{T_2}{\kappa} \mid
+  	\kOOinr{T}{T}{\kappa} \mid
     \kOOappI{e}{\rho}{\kappa} \mid
     \kOOappII{v}{\kappa} \mid
     \kOOcar{\kappa} \mid
