@@ -431,9 +431,12 @@ Section~\ref{sec:hypercoercion-correctness}.
 
 \section{Background} \label{sec:background}
 
-In this section, we review lazy cast calculi
-(Section~\ref{sec:cast-calculi}) and coercions 
-(Section~\ref{sec:coercion-calculus}).
+In this section, we fist review lazy cast calculi
+(Section~\ref{sec:cast-calculi}), where we present an abstract machine that is 
+employed in our framework (Section~\ref{sec:framework}). Then we review 
+coercions and their normal forms (Section~\ref{sec:coercion-calculus}), which 
+motivates and inspires the design of hypercoercions 
+(Section~\ref{sec:hypercoercion-definition}).
 
 \subsection{Cast Calculi}
 \label{sec:cast-calculi}
@@ -584,7 +587,7 @@ $\sOOinspect{e}{\mathcal{E}}{\kappa}$ or continuing $\sOOreturn{v}{\kappa}$ conf
 respectively. Additionally, there is the $\sOOhalt{o}$ configuration, where the 
 machine halts with an observation ($o$). Observations include all value 
 constructors and blame. The function converting values to 
-observations ($observe(v) = o$) is defined in the natural way.
+observations ($observe(v) = o$) is defined in the obvious way.
 %Let $s$ range over machine states. A state is either looking at an 
 %expression to decide what to do next, returning a value to a continuation, or 
 %halting with an observation.
@@ -1142,7 +1145,7 @@ not familiar with them to \citet{siek2012interpretations} and
 }
   \end{array}
   \]
-  \caption{Syntax of coercions and normal forms}
+  \caption{Syntax of coercions and normal forms {\`a} la \citet{siek2012interpretations}.}
   \label{fig:normal-coercion}
 \end{figure}
 
@@ -1488,7 +1491,7 @@ and its new space-efficient definition of values in Section~\ref{sec:framework}.
 \end{figure}
 
 \figref{fig:HC-D} defines the functions $id$, $seq$, and $cast$ that
-construct \lazyD{} hypercoercions, towards satisifying the Cast abstract data 
+construct \lazyD{} hypercoercions, towards satisfying the Cast abstract data 
 type defined in Section~\ref{sec:framework}.
 \figref{fig:HC-D} also defines some auxiliary functions.
 
@@ -1502,7 +1505,7 @@ tracking strategy.
 We shall need optional blame labels, written $\ell$ , that range over
 $\epsilon$ or $l$. The label is mandatory when the target
 type of the first coercion does not match the source type of the second. 
-Then we write composition of hypercoercions as $c_1
+Then we write the composition of hypercoercions as $c_1
 \fatsemi^\ell c_2$.  When both $c_1$ and $c_2$ are $\hyperCoercionI$,
 their composition is also $\hyperCoercionI$.  If the head of $c_2$ is
 a projection, the result is $c_2$.  Otherwise, we need a label to
@@ -1516,7 +1519,7 @@ which needs a label. When $c_2$ starts with a projection, we blame the
 projection for casting a value to a shallowly inconsistent type. When $c_2$
 starts with the no-op, we know $\ell$ must be a label, which is blamed for
 composing shallowly inconsistent hypercoercions. The last two cases
-compose $m_1$ and $m_2$ with the auxilliary function $m \fatsemi^\ell
+compose $m_1$ and $m_2$ with the auxiliary function $m \fatsemi^\ell
 m$, which assumes its inputs have the same top constructor. The
 definition of $m \fatsemi^\ell m$ is a straightforward structural
 recursion. Going back to the last two cases of $c_1 \fatsemi^\ell
@@ -1567,7 +1570,7 @@ $cast$, and $seq$, differ from D.  Again, the $seq$ operator
 (Figure~\ref{fig:HC-UD}) is defined in terms of composition, but here
 composition $c_1 \fatsemi c_2$ makes the usual assumption that the
 target type of $c_1$ matches the source type of $c_2$.  The definition
-of composition for UD is particularly straightfoward. The first two
+of composition for UD is particularly straightforward. The first two
 lines say that $\hyperCoercionI$ acts as the identity on both the left
 and right. The third line handles the case when both the tail of $c_1$
 and the head of $c_2$ are no-ops, in which case the middles types
@@ -1793,8 +1796,8 @@ nice for coercions on base types to also fit in registers, that is, in
 access to main memory, which is an order of magnitude slower than
 accessing registers on a modern CPU.
 %
-Coercions involving non-base types, such as functions types,
-may be arbitrarily large, so in those cases the hypercoercion
+Coercions involving non-base types, such as function types,
+may be arbitrarily large, so in those cases, the hypercoercion
 representation can be a pointer to a heap-allocated structure.  Here
 is a sketch for the bit-level representation for hypercoercions.
 
@@ -1809,7 +1812,7 @@ is a sketch for the bit-level representation for hypercoercions.
   pointer to a heap-allocated structure. Heap allocated structures are
   usually 8-byte aligned, so there are 3 unused bits in a pointer.
 
-\item If the middle is of base type, then the remaining 62 bits are
+\item If the middle is of base types, then the remaining 62 bits are
   used to represent the head (25 bits), middle (11 bits), and tail (26
   bits).
   \begin{itemize}
@@ -1838,7 +1841,8 @@ The framework includes an abstract data type named Cast ADT
 parameterized over Cast ADTs (Section~\ref{sec:framework:cek}). This machine is 
 space-efficient provided that the Cast ADT implementation performs compression. 
 We conjecture that all cast representations defined in the literature
-are instances of this ADT.
+are instances of this ADT. The framework is available at the following URL:
+\[\text{\urlLazyDProof}\]
 
 %We start by defining a CEK machine \effCEK{C} that is parameterized
 %over the cast representation $C$
@@ -1852,7 +1856,7 @@ are instances of this ADT.
 
 In Section~\ref{secc:framework:monoid-correct} we prove that, for any
 instance $C$ of the Cast ADT, if $C$ satisfies a more refined abstract
-data type for Lazy D casts, then \effCEK{C} is equivelent to
+data type for Lazy D casts, then \effCEK{C} is equivalent to
 \ineffCEKD{}, that is,
 \[
   \evalEqv{\effCEK{C}}{\ineffCEKD}
@@ -1896,8 +1900,8 @@ values that are cast to the dynamic type, as in \citet{wadler2009well}.
 
 Let $v$ range over values. In \ineffCEK{} we have one value
 constructor for all casted values.  In \effCEK{C}, however, we do not
-have this generic value constructor, instead we push casts into the ordinary 
-values. Thus non-casted values in \ineffCEK\ corresponds to values in 
+have this generic value constructor, instead, we push casts into the ordinary 
+values. Thus non-casted values in \ineffCEK\ correspond to values in 
 \effCEK{C} where casts are identities. For instance, $(\vOOcons{v_1}{v_2})$ 
 corresponds to $(\hcvOOcons{v_1'}{id(T_1)}{v_2'}{id(T_2)})$.
 
@@ -1920,7 +1924,7 @@ The \emph{Cast Abstract Data Type}, defined below, captures the set of
 operators that a cast representation $C$ must provide for it to be
 used with the \effCEK{C} machine.  The first three operators enable
 \effCEK{C} to construct casts so we call them \textit{cast
-  constructors}. The forth and last operator enables \effCEK{C} to
+  constructors}. The fourth and last operator enables \effCEK{C} to
 apply casts to values.
 
 \begin{definition}[Cast Abstract Data Type (Cast ADT)]
@@ -1938,12 +1942,12 @@ apply casts to values.
   and we say ``$c$ is from $T_1$ to $T_2$''.
 \end{definition}
 
-Next we define the \emph{Lazy D Cast ADT}, which capture the further
+Next, we define the \emph{Lazy D Cast ADT}, which captures the further
 requirements that are needed for the theorem that establishes
 equivalence to \ineffCEKD{}. Property (1) below states that $id(T)$
-acts like the identity function. Property (2) states that $seq(c,c)$
-acts like a sequence of casts. Properties (3) through (11) state that
-$cast(T_1,l,T_2)$ act like the Lazy D $applyCast$ for \ineffCEK\
+acts as the identity function. Property (2) states that $seq(c,c)$
+acts as a sequence of casts. Properties (3) through (11) state that
+$cast(T_1,l,T_2)$ acts like the Lazy D $applyCast$ for \ineffCEK\
 (Fig.~\ref{fig:applyCast-D-C}).
 
 \begin{definition}[Lazy D Cast ADT]
@@ -2005,14 +2009,18 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$ for \ineffCEK\
 \subsection{A Space-efficient CEK machine}
 \label{sec:framework:cek}
 
-\figref{fig:machine-cekcc} defines \effCEK{C}, a space-efficient CEK
-machine parameterized over Cast ADT ($C$).  The key differences between 
-\effCEK{C} and \ineffCEK\ are the places where casts can accumulate at runtime, 
-that is, values and continuations. We discuss above the difference in values
-(Definition~\ref{def:values-effCEK}).
+%<<<<<<< HEAD
+\effCEK{C} is a space-efficient CEK machine parameterized over Cast ADT ($C$).  
+The key differences between \effCEK{C} and \ineffCEK\ are the places where 
+casts can accumulate at runtime, that is, values and continuations. We discuss 
+above the difference in values (Definition~\ref{def:values-effCEK}).
 
 \begin{definition}[Continuations for the \effCEK{C} machine] 
 \label{def:values-effCEK}
+%=======
+%\begin{figure}
+%%  Syntax
+%>>>>>>> bd39888b0287dbef61e981bd0e79bc8822fc85ce
   \[
   \begin{array}{lrcl}
 % \stxrule{r}{cast results}{
@@ -2278,7 +2286,8 @@ $seq(c,c)$.
   \label{fig:machine-cekcc}
 \end{figure}
 
-The transition relation $\judgeSreduce{C}{s}{s}$ relies on functions provided 
+\figref{fig:machine-cekcc} defines the transition relation 
+$\judgeSreduce{C}{s}{s}$. They rely on functions provided 
 by $C$ to work with casts.
 %
 When evaluating a cast expression, the machine extends the continuation with 
@@ -2297,7 +2306,7 @@ fills the casts with $id$ as well, just like how it did for functions.
 %
 To apply a function, the machine applies the domain cast $c_1$ to the 
 operand $v_2$, extends the continuation with the codomain cast $c_2$, and 
-evaluate the function body.
+evaluates the function body.
 %
 To take out the first part of a pair, the machine returns the first value to a 
 continuation extended with the first cast. Taking out the second 
@@ -2308,7 +2317,7 @@ part of a pair is similar.
 %%function to the value inside the left injection. The case for right
 %%injection is similar.
 %%
-To case split a variant, the machine first look at the variant value. If the 
+To case split a variant, the machine first looks at the variant value. If the 
 variant is a left injection, the machine composes the cast in the left 
 injection with the domain cast of the first continuation function, then move 
 to a state that will apply the new function to the value in the left injection.
@@ -2410,7 +2419,7 @@ related values.
 To relate to a naked function in \ineffCEKD, the function in \effCEK{C} 
 must use identities as its casts.
 %
-If functions are related, we can apply the same cast on both side.
+If functions are related, we can apply the same cast on both sides.
 %
 Rules for products and sums are similar.
 
@@ -2438,9 +2447,9 @@ Rules for products and sums are similar.
   \fbox{$v \approx v : T$}
   \begin{gather*}
   \inference{
-    v_1 \approx v_2 : P
+    v_1 \approx v_2 : I
   }{
-    \hcvOOinj{P}{v_1} \approx \vOOcast{v_2}{\cOOcast{P}{l}{\TOOdyn}}
+    \hcvOOinj{I}{v_1} \approx \vOOcast{v_2}{\cOOcast{I}{l}{\TOOdyn}}
     : \TOOdyn
   }
 \\ \\
@@ -2636,7 +2645,7 @@ happen.
 %  \end{array}\]
 \end{lemma}
 \begin{proof}
-  Part (1) follow from the definition of $s \approx s$.
+  Part (1) follows from the definition of $s \approx s$.
   Part (2) and (3) are more interesting. 
   By the definition of $s \approx s$, it is straightforward to prove 
   $\judgeSreduce{C}{s_1}{s_3}$ if and only if $\judgeDreduce{s_2}{s_4}$.
@@ -2712,16 +2721,16 @@ related to the above \effCEK{C} state.
 \end{array}
 \]
 
-Other cases are similar. Of course we need the lemma about $applyCast$ 
+Other cases are similar. Of course, we need the lemma about $applyCast$ 
 (\ref{thm:lem-apply-cast-SD}) when cast applications happen in both machines. 
-And in case spliting, we employ $cast(T,l,T)=id(T)$ to relate the continuation 
+And in case splitting, we employ $cast(T,l,T)=id(T)$ to relate the continuation 
 functions.
 \end{proof}
 
 \begin{corollary}[Correctness of \effCEK{C}]
   \label{thm:SD-equiv}
   Suppose $C$ is an instance of the Cast ADT
-  and the \lazyD{} ADT, $C$ is a monoid,
+  and the \lazyD{} ADT, $C$ is a monoid
   and $cast(T,l,T)=id(T)$.
   If $\judgetype{\emptyset}{e}{T}$ and $o : T$, then
   \[
@@ -2842,14 +2851,14 @@ that also includes the rules below.
     then $\judgeSreduce{C_1}{s_1}{s_3}$ and $s_3 \approx s_4$ for some $s_3$
   \end{enumerate}
 % 
-  Or diagrammatically, 
-  \[\begin{array}{clc}
-  s_{1} & \longrightarrow_{\text{\effCEK{C}}} & s_3\\
-  \rotatebox[origin=c]{90}{$\approx$} 
-  & & \rotatebox[origin=c]{90}{$\approx$} \\
-  s_{2} & 
-  \longrightarrow_{\text{\ineffCEKD}} & s_4 \\
-  \end{array}\]
+%  Or diagrammatically, 
+%  \[\begin{array}{clc}
+%  s_{1} & \longrightarrow_{\text{\effCEK{C}}} & s_3\\
+%  \rotatebox[origin=c]{90}{$\approx$} 
+%  & & \rotatebox[origin=c]{90}{$\approx$} \\
+%  s_{2} & 
+%  \longrightarrow_{\text{\ineffCEKD}} & s_4 \\
+%  \end{array}\]
 \end{lemma}
 \begin{proof} This proof is straightforward. The key ideas are undoing 
   uses of $seq$ with the property (2) of Lazy D Cast ADT, and handling all
@@ -2864,7 +2873,7 @@ that also includes the rules below.
   \]
 \end{proposition}
 \begin{proof}
-  Without lost of generality, assume $\judgeSreduce{C_1}{e}{o}$, prove 
+  Without lose of generality, assume $\judgeSreduce{C_1}{e}{o}$, prove 
   $\judgeSreduce{C_2}{e}{o}$.\\
   By the definition of $eval_{\mathcal{S}(C)}$, we know 
 \[
@@ -3073,7 +3082,7 @@ restriction is necessary to show $cast(T,l,T) = id(T)$.
   \]
 \end{lemma}
 \begin{proof}
-  Immedialy from 
+  Immediately from
   Correctness of \effCEK{C} (Lemma~\ref{thm:SD-equiv}) and 
   Properties of $L$ (Proposition~\ref{thm:L-LazyD-monoid}).
 \end{proof}
@@ -3099,8 +3108,8 @@ restriction is necessary to show $cast(T,l,T) = id(T)$.
 \section{Correctness Proof of \lazyD{} hypercoercions}
 \label{sec:hypercoercion-correctness}
 
-In this section we prove \lazyD\ hypercoercion is 
-correct. First we define $applyCast(v,c)$ to make it an instance of Cast ADT, 
+In this section, we prove \lazyD\ hypercoercions are 
+correct. First, we define $applyCast(v,c)$ to make it an instance of Cast ADT, 
 then prove that it is also Lazy D, and finally apply 
 Theorem~\ref{thm:surely-lazyD-correct} to finish the proof.
 
@@ -3108,12 +3117,12 @@ Theorem~\ref{thm:surely-lazyD-correct} to finish the proof.
 Applying the identity cast for the 
 dynamic type succeeds immediately. Otherwise, we firstly 
 apply the middle, then apply the tail. We denote by $r \; >>= \; f$ to mean 
-that if $r$ is $\rOOsucc{v}$, the result is $f(v)$, otherwise the result 
+that if $r$ is $\rOOsucc{v}$, the result is $f(v)$, otherwise, the result 
 is the failure.
 $ applyMiddle(v,\ell,m)$ and $applyTail(v,t)$ are straightforward.
 In the definition of $applyMiddle(v,\ell,m)$, we generalize 
 shallow-consistency to compare middles and values ($v \smile m$) in the 
-natural way.
+obvious way.
 
 \begin{figure}
   \fbox{$applyCast(v,c) = r$}
@@ -3194,7 +3203,7 @@ natural way.
 
 \section{Conclusion} \label{sec:conclude}
 
-In this paper we presented a new cast representation, hypercoercions,
+In this paper, we presented a new cast representation, hypercoercions,
 in two flavors, Lazy D and Lazy UD. Hypercoercions have a structurally
 recursive composition operator and have a more compact memory
 representation in comparison to coercions in normal form.
@@ -3203,12 +3212,14 @@ We also present steps toward the first framework for proving the
 correctness of cast representations.
 %
 The framework includes abstract data types for cast representations
-(Cast ADT and Lazy D Cast ADT), a parameterized abstract machine
+(Cast ADT and its refinement Lazy D Cast ADT), a parameterized abstract machine
 \effCEK{C}, and a theorem which states that \effCEK{C} is equivalent
 to $D$ when $C$ is a Lazy D Cast ADT.
 %
-The Lazy D Cast ADT refines the Cast ADT. We conjecture that Lazy D
-threesomes, and Lazy D coercions in normal form are instances of the
+%The Lazy D Cast ADT refines the Cast ADT. 
+%
+We conjecture that Lazy D
+threesomes and Lazy D coercions in normal form are instances of the
 Lazy D Cast ADT.
 
 Finally, we proved that Lazy D hypercoercions ($H$) is a Lazy D Cast
