@@ -121,7 +121,9 @@
 \newcommand{\oOOinr}{\mathtt{inr}}
 \newcommand{\oOOblame}[1]{\mathtt{blame} \; #1}
 \newcommand{\vOOcast}[2]{#1\langle#2\rangle}
-\newcommand{\vOOfun}[3]{\mathtt{fun} \; #1 \; #2 \; #3}
+%\newcommand{\vOOfun}[3]{\mathtt{fun} \; #1 \; #2 \; #3}
+% Jeremy prefers the following
+\newcommand{\vOOfun}[3]{\langle \lambda  #2. #3, #1 \rangle}
 \newcommand{\vOOtt}[0]{\mathtt{unit}}
 \newcommand{\vOOcons}[2]{\mathtt{cons}\;#1\;#2}
 \newcommand{\vOOinl}[1]{\mathtt{inl}\;#1}
@@ -154,7 +156,9 @@
 \newcommand{\typingHC}[3]{#1 : #2 \Longrightarrow #3}
 \newcommand{\hcvOOinj}[2]{\mathtt{Dyn}_{#1}(#2)}
 %\newcommand{\hcvOOfun}[5]{\mathtt{fun} \; #1 \; #2 \; #3 \; #4 \; #5}
-\newcommand{\hcvOOfun}[5]{\mathtt{fun} \; #2 \; #1 \; #3 \; #4 \; #5}
+%\newcommand{\hcvOOfun}[5]{\mathtt{fun} \; #2 \; #1 \; #3 \; #4 \; #5}
+% Jeremy prefers the following version:
+\newcommand{\hcvOOfun}[5]{\langle \lambda #3.\, #4 , #1 , #5, #2 \rangle}
 \newcommand{\hcvOOtt}[0]{\mathtt{unit}}
 %\newcommand{\hcvOOcons}[4]{\mathtt{cons}\;#1\;#2\;#3\;#4}
 \newcommand{\hcvOOcons}[4]{\mathtt{cons}\;#1\langle#2\rangle\;#3\langle#4\rangle}
@@ -779,7 +783,7 @@ evaluation ($eval_\mathcal{x}(e)$) are standard~\citep{felleisen03:_pllc}.
   \end{array}
   \]
   
-  Reduction \fbox{$\judgeCreduce{s}{s}$}
+  Transition \fbox{$\judgeCreduce{s}{s}$}
   \[
   \begin{array}{rclr}
     \hiredrule{
@@ -2093,7 +2097,7 @@ $seq(c,c)$.
   \end{array}
   \]
 
-  Reduction \fbox{$\judgeSreduce{C}{s}{s}$}
+  Transition \fbox{$\judgeSreduce{C}{s}{s}$}
   \[
   \begin{array}{rclr}
   \hiredruleS{
@@ -2396,8 +2400,13 @@ The relation is mutually defined on continuations, written $\kappa
 %
 If $k \approx \kappa : T$, adding an identity cast on top of $k$ gives a 
 related continuation. This handles the way in which
-\effCEK{C} uses $wrap$ to add identity coercions around continuations
+\effCEK{C} uses $wrap$ to push identity coercions onto continuations
 whereas \ineffCEKD{} does not.
+%
+We remark that this bisimulation relation is unusual in that it uses
+some ADT operations in its definition, such as $id$, $cast$, and
+$seq$, which is necessary because \effCEK{C} and the bisimulation
+is parameterized over the Cast ADT.
 %
 %\todo[inline]{The use of ``wrap'' obscures this explanation.
 %  Consider getting rid of wrap by inlining it. -JS
@@ -2410,21 +2419,26 @@ whereas \ineffCEKD{} does not.
 %-JS
 %}
 %
-If $\kOOcast{c}{k_1} \approx \kappa_2 : T$, extending them with 
-the same cast gives related continuations.
+If $\kOOcast{c}{k_1} \approx \kappa_2 : T$, extending the right-hand
+side with a cast $T_1 \Rightarrow^l T_2$ and sequencing
+$cast(T_1,l,T_2)$ with $c$ on the left-hand side, produces related
+continuations. This takes care of the difference between
+the transition rules for $e \langle T_1 \Rightarrow^l T_2$
+on the two machines.
 %
-If two values of type $P$ are related, injecting them to $\TOOdyn$ gives 
-related values.
+If two values of type $I$ are related, injecting them to $\TOOdyn$
+gives related values.
 %
 % The following is part of being a congruence. -JS
 %Unit values are of course related. 
 %
-To relate to a naked function in \ineffCEKD, the function in \effCEK{C} 
-must use identities as its casts.
+To relate to a closure in \ineffCEKD, the closure in \effCEK{C} must
+have identities as its casts.
 %
-If functions are related, we can apply the same cast on both sides.
+If a closure on the left is related to a value, we can apply
+equivalent casts on both sides to obtain related values.
 %
-Rules for products and sums are similar.
+The rules for products and sums are similar.
 
 \begin{figure}
 %  $\text{\effCEK{C}} \approx \text{\ineffCEKD}$
@@ -2472,11 +2486,12 @@ Rules for products and sums are similar.
     \hcvOOinj{I}{v_1} \approx \vOOcast{v_2}{\cOOcast{I}{l}{\TOOdyn}}
     : \TOOdyn
   }
-\\ \\
-   \inference{}{
-    \hcvOOtt \approx \vOOtt : \POOunit
-   }
-   \quad
+  \\ \\
+   %% This one is an obvious congruence rule. -Jeremy
+   %% \inference{}{
+   %%  \hcvOOtt \approx \vOOtt : \POOunit
+   %% }
+   %% \quad
   \inference{}{
     \hcvOOtt \approx \vOOcast{\vOOtt}{\cOOcast{\POOunit}{l}{\POOunit}}
     : \POOunit
