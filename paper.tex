@@ -201,9 +201,9 @@
 % abbrev
 \newcommand{\castCalculus}[0]{$\lambda_{\rightarrow}^{\langle\cdot\rangle}$}
 % names
-\newcommand{\ineffCEK}{$\mathcal{X}$}
-\newcommand{\ineffCEKD}{$\mathcal{D}$}
-\newcommand{\ineffCEKUD}{$\mathcal{UD}$}
+\newcommand{\ineffCEK}{\ensuremath{\mathcal{X}}}
+\newcommand{\ineffCEKD}{\ensuremath{\mathcal{D}}}
+\newcommand{\ineffCEKUD}{\ensuremath{\mathcal{UD}}}
 \newcommand{\judgeDreduce}[2]{#1 \longmapsto_{\mathcal{D}} #2}
 \newcommand{\judgeDreduceTrans}[2]{#1 \longmapsto_{\mathcal{D}}^{*} #2}
 \newcommand{\judgeDreducePlus}[2]{#1 \longmapsto_{\mathcal{D}}^{+} #2}
@@ -211,7 +211,7 @@
 \newcommand{\judgeUDreduce}[2]{#1 \longmapsto_{\mathcal{UD}} #2}
 \newcommand{\judgeUDreduceTrans}[2]{#1 \longmapsto_{\mathcal{UD}}^{*} #2}
 \newcommand{\judgeUDeval}[2]{eval_{\mathcal{UD}}(#1) = #2}
-\newcommand{\effCEK}[1]{$\mathcal{S}(#1)$}
+\newcommand{\effCEK}[1]{\ensuremath{\mathcal{S}(#1)}}
 \newcommand{\evalEqv}[2]{\ensuremath{eval_{\text{#1}} = eval_{\text{#2}}}}
 \newcommand{\continue}[2]{cont(#2,#1)}
 \newcommand{\highlight}[1]{{\color{red} #1}}
@@ -2385,8 +2385,9 @@ We define monoid as follows.
 %be 
 %related, but its (iii) rules in Figure 6 looks wired to me. -KC}
 
-Fig.~\ref{fig:bisim-SC-D} defines the bisimulation relation $s \approx
-s$.  It is the smallest congruence relation that also includes the
+Fig.~\ref{fig:bisim-SC-D} defines the bisimulation relation
+$s_1 \approx s_2$, where $s_1 \in \effCEK{C}$ and $s_2 \in \ineffCEKD{}$.
+It is the smallest congruence relation that also includes the
 pairs induced by the rules in Fig.~\ref{fig:bisim-SC-D}.
 %
 The relation is mutually defined on continuations, written $\kappa
@@ -2426,10 +2427,24 @@ Rules for products and sums are similar.
 \begin{figure}
 %  $\text{\effCEK{C}} \approx \text{\ineffCEKD}$
 % \[\dots\]
-  \fbox{$s \approx s$}  
+  \fbox{$s \approx s$}
+  % The following rules for s \approx s are technically not needed,
+  % but I think it's kind
+  % to the reader to include them. -Jeremy
   \begin{gather*}
+    \inference{dom(\mathcal{E}_1) = dom(\mathcal{E}_2) \\
+               \forall x {:} T \in dom(\mathcal{E}_1),\,
+                   \mathcal{E}_1(x) \approx \mathcal{E}_2(x) : T\\
+               \kappa_1 \approx \kappa_2 : T}
+              {\langle e, \mathcal{E}_1, \kappa_1 \rangle \approx
+              \langle e, \mathcal{E}_2, \kappa_2 \rangle}
+    \quad
+    \inference{v_1 \approx v_2 : T \quad \kappa_1 \approx \kappa_2 : T}
+              {\langle v_1, \kappa_1 \rangle  \approx
+              \langle v_2, \kappa_2 \rangle}
+    \quad
     \inference{}
-              {}
+              {\sOOhalt{o} \approx \sOOhalt{o}}
   \end{gather*}
   \fbox{$\kappa \approx \kappa : T$}
   \begin{gather*}
