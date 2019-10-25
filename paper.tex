@@ -206,6 +206,7 @@
 \newcommand{\ineffCEKUD}{$\mathcal{UD}$}
 \newcommand{\judgeDreduce}[2]{#1 \longmapsto_{\mathcal{D}} #2}
 \newcommand{\judgeDreduceTrans}[2]{#1 \longmapsto_{\mathcal{D}}^{*} #2}
+\newcommand{\judgeDreducePlus}[2]{#1 \longmapsto_{\mathcal{D}}^{+} #2}
 \newcommand{\judgeDeval}[2]{eval_{\mathcal{D}}(#1) = #2}
 \newcommand{\judgeUDreduce}[2]{#1 \longmapsto_{\mathcal{UD}} #2}
 \newcommand{\judgeUDreduceTrans}[2]{#1 \longmapsto_{\mathcal{UD}}^{*} #2}
@@ -2569,9 +2570,9 @@ Given any two states $s_1$ and $s_2$, we write $s_1 \approx^{*} s_2$
 if and only if there exists a state $s_2' \in \text{\ineffCEKD}$ such
 that
 \[
-s_1 \approx s_2'
-\;\text{and}\;
 \judgeDreduceTrans{s_2}{s_2'}
+\;\text{and}\;
+s_1 \approx s_2'
 \]
 \end{definition}
 
@@ -2604,7 +2605,20 @@ The lemma below formulate the weak bisimulation between \effCEK{C} and
     and  $s_3 \approx^{*} s_4$
     for some $s_3$
 \end{enumerate}
-  Or diagrammatically, 
+{\color{red}
+  Jeremy's attempt to reformulate in a more standard way that
+  remains equivalent:
+\begin{enumerate}
+\item If $\judgeSreduce{C}{s_1}{s_3}$ then
+  $\judgeDreducePlus{s_2}{s_4}$ and $s_3 \approx s_4$ for some $s_4$.
+\item If $\judgeDreduce{s_2}{s_4}$ then
+  $\judgeSreduce{C}{s_1}{s_3}$,
+  $\judgeDreduceTrans{s_2}{s_5}$, and
+   $s_3 \approx s_5$ for some $s_3$ and $s_5$.
+\item $s_1 = \sOOhalt{o}$ if and only if  $s_2 = \sOOhalt{o}$
+\end{enumerate}
+}
+Or diagrammatically, 
   \[\begin{array}{clclc}
   s_{1} & \longrightarrow_{\text{\effCEK{C}}} & s_1'\\
   \rotatebox[origin=c]{90}{$\approx$} 
