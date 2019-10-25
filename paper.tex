@@ -167,11 +167,11 @@
 \newcommand{\hckOOappII}[2]{\mathtt{app_2}\;#1\;#2}
 \newcommand{\sidecond}[1]{\text{if}\;#1}
 % Lazy D cast calculus on space-inefficient CEK
-\newcommand{\judgeCreduce}[2]{#1 \longmapsto_{\mathcal{x}} #2}
-\newcommand{\judgeCreduceTrans}[2]{#1 \longmapsto_{\mathcal{x}}^{*} #2}
-\newcommand{\judgeCeval}[2]{eval_{\mathcal{x}}(#1) = #2}
-\newcommand{\redrule}[3]{#1 & \longmapsto_\mathcal{x} & #2 & #3\\}
-\newcommand{\hiredrule}[3]{\highlight{#1} & \highlight{\longmapsto_\mathcal{x}} 
+\newcommand{\judgeCreduce}[2]{#1 \longmapsto_{\mathcal{X}} #2}
+\newcommand{\judgeCreduceTrans}[2]{#1 \longmapsto_{\mathcal{X}}^{*} #2}
+\newcommand{\judgeCeval}[2]{eval_{\mathcal{X}}(#1) = #2}
+\newcommand{\redrule}[3]{#1 & \longmapsto_\mathcal{X} & #2 & #3\\}
+\newcommand{\hiredrule}[3]{\highlight{#1} & \highlight{\longmapsto_\mathcal{X}} 
 & \highlight{#2} & \highlight{#3} \\}
 % blame calculus on space-efficient CEK
 \newcommand{\judgeSreduce}[3]{#2 \longmapsto_{\mathcal{S}(#1)} #3}
@@ -201,7 +201,7 @@
 % abbrev
 \newcommand{\castCalculus}[0]{$\lambda_{\rightarrow}^{\langle\cdot\rangle}$}
 % names
-\newcommand{\ineffCEK}{$\mathcal{C}$}
+\newcommand{\ineffCEK}{$\mathcal{X}$}
 \newcommand{\ineffCEKD}{$\mathcal{D}$}
 \newcommand{\ineffCEKUD}{$\mathcal{UD}$}
 \newcommand{\judgeDreduce}[2]{#1 \longmapsto_{\mathcal{D}} #2}
@@ -1842,15 +1842,22 @@ the correctness of cast representations, especially space-efficient
 ones. Section~\ref{sec:hypercoercion-correctness} applies this
 framework to prove the correctness of the \lazyD{} hypercoercions.
 
-We start by defining a CEK machine \effCEK{C} that is parameterized
-over the cast representation $C$
-(Section~\ref{sec:framework:cek}). This machine is space-efficient
-provided that the cast representation performs compression.  The
-interface between the machine and the cast representation is defined
-by an abstract data type, named Cast ADT, that we define shortly 
-(Section~\ref{sec:framework:adt}).  We
-conjecture that all cast representations defined in the literature
+The framework includes an abstract data type named Cast ADT 
+(Section~\ref{sec:framework:adt}), and a CEK machine \effCEK{C} that is 
+parameterized over Cast ADTs (Section~\ref{sec:framework:cek}). This machine is 
+space-efficient provided that the Cast ADT implementation performs compression. 
+We conjecture that all cast representations defined in the literature
 are instances of this ADT.
+
+%We start by defining a CEK machine \effCEK{C} that is parameterized
+%over the cast representation $C$
+%(Section~\ref{sec:framework:cek}). This machine is space-efficient
+%provided that the cast representation performs compression.  The
+%interface between the machine and the cast representation is defined
+%by an abstract data type, named Cast ADT, that we define shortly 
+%(Section~\ref{sec:framework:adt}).  We
+%conjecture that all cast representations defined in the literature
+%are instances of this ADT.
 
 In Section~\ref{secc:framework:monoid-correct} we prove that, for any
 instance $C$ of the Cast ADT, if $C$ satisfies a more refined abstract
@@ -1896,6 +1903,23 @@ values that are cast to the dynamic type, as in \citet{wadler2009well}.
   \]
 \end{definition}
 
+Let $v$ range over values. In \ineffCEK{} we have one value
+constructor for all casted values.  In \effCEK{C}, however, we do not
+have this generic value constructor, instead we push casts into the ordinary 
+values. Thus non-casted values in \ineffCEK\ corresponds to values in 
+\effCEK{C} where casts are identities. For instance, $(\vOOcons{v_1}{v_2})$ 
+corresponds to $(\hcvOOcons{v_1'}{id(T_1)}{v_2'}{id(T_2)})$.
+
+%\hcvOOcons{v_1}{c_1}{v_3}{c_2} \approx v_2 : \POOprod{T_1}{T_2} \\
+%c_1' = seq(c_1,cast(T_1,l,T_3)) \\
+%c_2' = seq(c_2,cast(T_2,l,T_4))
+%}{
+%\hcvOOcons{v_1}{c_1'}{v_3}{c_2'} \approx
+%\vOOcast{v_2}{\cOOcast{\POOprod{T_1}{T_2}}{l}{\POOprod{T_3}{T_4}}}
+%: \POOprod{T_3}{T_4}
+%}
+
+Cast results ($r$) are the same as for \ineffCEK.
 
 \subsection{The Cast Abstract Data Types}
 \label{sec:framework:adt}
@@ -1912,10 +1936,11 @@ apply casts to values.
   A cast abstract data type is a set $Cast$, which is indexed by two types, 
   with four operators:
   \begin{description}
-  \item[$id(T)$] constructs an identity cast from a type
-  \item[$seq(c_1,c_2)$] composes two casts
-  \item[$cast(T_1,l,T_2)$] constructs a cast from $T_1$ to $T_2$
-  \item[$applyCast(v,c)$] applies a cast to a value, producing a cast result
+  \item[$id(T)=c$] constructs an identity cast from a type
+  \item[$seq(c,c)=c$] composes two casts
+  \item[$cast(T,l,T)=c$] constructs a cast from a source type, a label, and a 
+  target type
+  \item[$applyCast(v,c)=r$] applies a cast to a value, producing a cast result
   \end{description}
   We denote by $c : T_1 \Longrightarrow T_2$ to mean $c$ is in $Cast \; T_1 \; T_2$
   and we say ``$c$ is from $T_1$ to $T_2$''.
@@ -2239,16 +2264,6 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
 machine.  This machine is similar to the \ineffCEK{} machine
 (Figure~\ref{fig:machine-cekc}).  The key differences are in values
 and continuations.
-
-Let $v$ range over values. In \ineffCEK{} we have one value
-constructor for all castes values.  In \effCEK{C}, however, we do not
-have this generic value constructor, instead we push those casts into
-the ordinary values. For instance, $(\vOOcons{v_1}{v_2})$ corresponds
-to $(\hcvOOcons{v_1'}{id(T_1)}{v_2'}{id(T_2)})$. To construct values
-of the dynamic type, we use $\hcvOOinj{P}{v}$.
-
-Cast results ($r$) and machine states ($s$) are the same as for
-\ineffCEK{}.
 
 Let $\kappa$ range over continuations and let $k$ range over
 pre-continuations.  A continuation is now a pre-continuation prefixed
@@ -3096,13 +3111,25 @@ In this paper we presented a new cast representation, hypercoercions, in two
 flavors, Lazy D and Lazy UD. Hypercoercions have a structurally recursive 
 composition, which is a win over coercions in normal form for mechanized 
 metatheory. What is more, hypercoercions have a more compact memory 
-representation. We prove that $S(H)$, an abstract machine that uses Lazy D 
-hypercoercions, is equivalent to $D$, a semantics of Lazy D Cast Calculus. 
+representation.
 
-We also present a framework for proving the correctness of Lazy D Cast ADT. 
-If $C$ implements the Lazy D Cast ADT, $S(C)$ would be equivalent to $D$.
+We also present steps toward the first framework for proving the correctness of 
+cast representations.
+%
+The framework includes abstract data types for cast representations (Cast ADT 
+and Lazy D Cast ADT), an parameterized abstract machine \effCEK{C}, and a 
+theorem states that \effCEK{C} is equivalent to $D$ if $C$ is a Lazy D Cast 
+ADT.
+Cast ADT is the interface between cast representations and \effCEK{C}. Its
+implementation should provide four functions: $cast(T,l,T) = c$, $id(T)=c$, and 
+$seq(c,c)=c$ for cast construction, and $applyCast(v,c)=r$ for cast application.
+%
+Lazy D Cast ADT refines Cast ADT. We conjecture that Lazy D threesomes, and 
+Lazy D coercions in normal form are also Lazy D Cast ADT.
 
-\todo[inline]{related works. -KC}
+Finally, we proved that Lazy D hypercoercions ($H$) is a Lazy D Cast ADT. By 
+using our framework, we shown that it is a correct cast representation because 
+$S(H)$ is equivalent to $D$.
 
 %% Acknowledgments
 \begin{acks}                            %% acks environment is optional
