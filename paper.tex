@@ -2594,8 +2594,8 @@ The lemma below formulate the weak bisimulation between \effCEK{C} and
   $s_{2} \in \text{\ineffCEKD}$,
   $s_{1} \approx s_{2}$,
 \begin{enumerate}
-  \item If $s_1 = \sOOhalt{o}$ then $s_2 = \sOOhalt{o}$
-  \item If $s_2 = \sOOhalt{o}$ then $s_1 = \sOOhalt{o}$
+  \item $s_1 = \sOOhalt{o}$ if and only if  $s_2 = \sOOhalt{o}$
+%  \item If $s_2 = \sOOhalt{o}$ then $s_1 = \sOOhalt{o}$
   \item If $\judgeSreduce{C}{s_1}{s_3}$ 
     then $\judgeDreduce{s_2}{s_4}$ 
     and  $s_3 \approx^{*} s_4$
@@ -2629,8 +2629,8 @@ Or diagrammatically,
   \end{array}\]
 \end{lemma}
 \begin{proof}
-  Part (1) and (2) follow from the definition of $s \approx s$.
-  Part (3) and (4) are more interesting. 
+  Part (1) follow from the definition of $s \approx s$.
+  Part (2) and (3) are more interesting. 
   By the definition of $s \approx s$, it is straightforward to prove 
   $\judgeSreduce{C}{s_1}{s_3}$ if and only if $\judgeDreduce{s_2}{s_4}$.
   So we can prove two parts together by showing that 
@@ -2722,12 +2722,50 @@ functions.
   \]
 \end{corollary}
 \begin{proof}
-  Proving that the left-hand side implies the right-hand side is
-  trivial.  To prove $\judgeDeval{e}{o}$ implies
-  $\judgeSeval{C}{e}{o}$, we first take one step in \effCEK{C}, and
-  catch it up in \ineffCEKD\ by taking one or more steps in
-  \ineffCEKD. As we just took a positive number of steps, we are
-  closer to the halting state.
+	By the definitions of $eval$, we need to show 
+	\[
+	\judgeSreduceTrans{C}{\sOOinspect{e}{\emptyset}{wrap(\kOOmt)}}{
+		\sOOhalt{o}
+	}
+	\;\text{if and only if}\;
+	\judgeSreduceTrans{C}{\sOOinspect{e}{\emptyset}{\kOOmt}}{
+		\sOOhalt{o}
+	}
+	\]
+	Obviously, the initial states are related in the bisimulation relation.
+	\[
+	\sOOinspect{e}{\emptyset}{wrap(\kOOmt)}
+	\approx
+	\sOOinspect{e}{\emptyset}{\kOOmt}
+	\]
+	So we can generalize our goal, and prove that if $s_1 \approx s_2$
+	\[
+	\judgeSreduceTrans{C}{s_1}{\sOOhalt{o}}
+	\;\text{if and only if}\;
+	\judgeSreduceTrans{C}{s_2}{\sOOhalt{o}}
+	\]
+	Let us prove left to right first by induction on 
+	$\judgeSreduceTrans{C}{s_1}{\sOOhalt{o}}$.
+	
+	\begin{itemize}
+		\item 
+		If $s_1$ takes zero step to the halting state, it must be halting.
+		By Lemma~\ref{thm:SD-bisim}, $s_2$ is halting as well, so we are done.
+		\item 
+		If $\judgeSreduce{C}{s_1}{s_3}$ and 
+		$\judgeSreduceTrans{C}{s_3}{\sOOhalt{o}}$,
+		by Lemma~\ref{thm:SD-bisim}, there exists a $s_4$ such that 
+		$\judgeDreduceTrans{s_2}{s_4}$ and $s_3 \approx s_4$. So we can apply 
+		our induction hypothesis.
+	\end{itemize}
+	
+	The other direction is similar.
+%  Proving that the left-hand side implies the right-hand side is
+%  trivial.  To prove $\judgeDeval{e}{o}$ implies
+%  $\judgeSeval{C}{e}{o}$, we first take one step in \effCEK{C}, and
+%  catch it up in \ineffCEKD\ by taking one or more steps in
+%  \ineffCEKD. As we just took a positive number of steps, we are
+%  closer to the halting state.
 \end{proof}
 
 %% \subsection{\lazyD\ Cast ADT Respect \ineffCEKD}
