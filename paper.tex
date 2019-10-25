@@ -1148,7 +1148,7 @@ not familiar with them to \citet{siek2012interpretations} and
 }
   \end{array}
   \]
-  \caption{Syntax of coercions and normal forms}
+  \caption{Syntax of coercions and normal forms {\`a} la \citet{siek2012interpretations}.}
   \label{fig:normal-coercion}
 \end{figure}
 
@@ -2012,7 +2012,7 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$ for \ineffCEK\
 \label{sec:framework:cek}
 
 \begin{figure}
-  Syntax
+%  Syntax
   \[
   \begin{array}{lrcl}
 % \stxrule{r}{cast results}{
@@ -2440,9 +2440,9 @@ Rules for products and sums are similar.
   \fbox{$v \approx v : T$}
   \begin{gather*}
   \inference{
-    v_1 \approx v_2 : P
+    v_1 \approx v_2 : I
   }{
-    \hcvOOinj{P}{v_1} \approx \vOOcast{v_2}{\cOOcast{P}{l}{\TOOdyn}}
+    \hcvOOinj{I}{v_1} \approx \vOOcast{v_2}{\cOOcast{I}{l}{\TOOdyn}}
     : \TOOdyn
   }
 \\ \\
