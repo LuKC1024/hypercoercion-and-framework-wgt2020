@@ -589,7 +589,7 @@ that dive further into an expression (looking for a redex) and push an
 entry onto the continuation, and (2) those that return a value to the
 current continuation and possibly perform a computation.
 Corresponding to (1) and (2), the machine state is either in an
-$\sOOinspect{e}{\rho}{\kappa}$ or $\sOOreturn{v}{\kappa}$ configuration, 
+$\sOOinspect{e}{\mathcal{E}}{\kappa}$ or $\sOOreturn{v}{\kappa}$ configuration, 
 respectively. Additionally, there is the $\sOOhalt{o}$ configuration, where the 
 machine halts with an observation ($o$). Observations include all value 
 constructors and blame. The function converting values to 
@@ -652,7 +652,7 @@ evaluation ($eval_\mathcal{x}(e)$) are standard~\citep{felleisen03:_pllc}.
   \begin{array}{lrcl}
   \stxrule{v}{Values}{
     \vOOtt{} \mid
-    \vOOfun{\rho}{x}{e} \mid
+    \vOOfun{\mathcal{E}}{x}{e} \mid
     \vOOcons{v}{v} \mid
     \vOOinl{v} \mid
     \vOOinr{v} \mid   
@@ -684,26 +684,26 @@ evaluation ($eval_\mathcal{x}(e)$) are standard~\citep{felleisen03:_pllc}.
     \rOOfail{l}
   }
   \stxrule{s}{States}{
-    \sOOinspect{e}{\rho}{\kappa} \mid{}
+    \sOOinspect{e}{\mathcal{E}}{\kappa} \mid{}
     \sOOreturn{v}{\kappa} \mid{}
     \sOOhalt{o}
   }
   \stxrule{\kappa}{Continuations}{
     \kOOmt \mid
-    \kOOconsI{T}{T}{e}{\rho}{\kappa} \mid
+    \kOOconsI{T}{T}{e}{\mathcal{E}}{\kappa} \mid
     \kOOconsII{T}{T}{v}{\kappa} \mid
     \kOOinl{T}{T}{\kappa}
   }
   \stxrulecont{
     \kOOinr{T}{T}{\kappa} \mid
-    \kOOappI{e}{\rho}{\kappa} \mid
+    \kOOappI{e}{\mathcal{E}}{\kappa} \mid
     \kOOappII{v}{\kappa} \mid
     \kOOcar{\kappa}
   }
   \stxrulecont{ 
     \kOOcdr{\kappa}\mid
-    \kOOcaseI{e}{e}{\rho}{\kappa}\mid
-    \kOOcaseII{v}{e}{\rho}{\kappa}
+    \kOOcaseI{e}{e}{\mathcal{E}}{\kappa}\mid
+    \kOOcaseII{v}{e}{\mathcal{E}}{\kappa}
   }
   \stxrulecont{
     \kOOcaseIII{v}{v}{\kappa} \mid
@@ -789,67 +789,67 @@ evaluation ($eval_\mathcal{x}(e)$) are standard~\citep{felleisen03:_pllc}.
   \[
   \begin{array}{rclr}
     \hiredrule{
-    \sOOinspect{\eOOcast{e}{T_1}{l}{T_2}}{\rho}{\kappa}
+    \sOOinspect{\eOOcast{e}{T_1}{l}{T_2}}{\mathcal{E}}{\kappa}
   }{
-    \sOOinspect{e}{\rho}{
+    \sOOinspect{e}{\mathcal{E}}{
       \kOOcast{\cOOcast{T_1}{l}{T_2}}{\kappa}
 %     \langle\cOOcast{T_1}{l}{T_2}\rangle\kappa
     }
   }{}
   \redrule{
-    \sOOinspect{\eOOvar{x}}{\rho}{\kappa}
+    \sOOinspect{\eOOvar{x}}{\mathcal{E}}{\kappa}
   }{  
-    \sOOreturn{\rho(x)}{\kappa}
+    \sOOreturn{\mathcal{E}(x)}{\kappa}
   }{}
   \redrule{
-    \sOOinspect{\eOOsole}{\rho}{\kappa}
+    \sOOinspect{\eOOsole}{\mathcal{E}}{\kappa}
   }{
     \sOOreturn{\vOOtt}{\kappa}
   }{}
   \redrule{
-    \sOOinspect{\eOOlam{T_1}{T_2}{x}{e}}{\rho}{\kappa}
+    \sOOinspect{\eOOlam{T_1}{T_2}{x}{e}}{\mathcal{E}}{\kappa}
   }{
-    \sOOreturn{\vOOfun{\rho}{x}{e}}{\kappa}
+    \sOOreturn{\vOOfun{\mathcal{E}}{x}{e}}{\kappa}
   }{}
   \redrule{
-    \sOOinspect{\eOOcons{T_1}{T_2}{e_1}{e_2}}{\rho}{\kappa}
+    \sOOinspect{\eOOcons{T_1}{T_2}{e_1}{e_2}}{\mathcal{E}}{\kappa}
   }{
-    \sOOinspect{e_1}{\rho}{\kOOconsI{T_1}{T_2}{e_2}{\rho}{\kappa}}
+    \sOOinspect{e_1}{\mathcal{E}}{\kOOconsI{T_1}{T_2}{e_2}{\mathcal{E}}{\kappa}}
   }{}
   \redrule{
-    \sOOinspect{\eOOinl{T_1}{T_2}{e}}{\rho}{\kappa}
+    \sOOinspect{\eOOinl{T_1}{T_2}{e}}{\mathcal{E}}{\kappa}
   }{
-    \sOOinspect{e}{\rho}{\kOOinl{T_1}{T_2}{\kappa}}
+    \sOOinspect{e}{\mathcal{E}}{\kOOinl{T_1}{T_2}{\kappa}}
   }{}
   \redrule{
-  \sOOinspect{\eOOinl{T_1}{T_2}{e}}{\rho}{\kappa}
+  \sOOinspect{\eOOinl{T_1}{T_2}{e}}{\mathcal{E}}{\kappa}
   }{
-  \sOOinspect{e}{\rho}{\kOOinr{T_1}{T_2}{\kappa}}
+  \sOOinspect{e}{\mathcal{E}}{\kOOinr{T_1}{T_2}{\kappa}}
   }{}
   \redrule{
-    \sOOinspect{\eOOapp{e_1}{e_2}}{\rho}{\kappa}
+    \sOOinspect{\eOOapp{e_1}{e_2}}{\mathcal{E}}{\kappa}
   }{
-\sOOinspect{e_1}{\rho}{\kOOappI{e_2}{\rho}{\kappa}}}{}
+\sOOinspect{e_1}{\mathcal{E}}{\kOOappI{e_2}{\mathcal{E}}{\kappa}}}{}
 
 \redrule{
-\sOOinspect{\eOOcar{e}}{\rho}{\kappa}}{
-\sOOinspect{e}{\rho}{\kOOcar{\kappa}}}{}
+\sOOinspect{\eOOcar{e}}{\mathcal{E}}{\kappa}}{
+\sOOinspect{e}{\mathcal{E}}{\kOOcar{\kappa}}}{}
 
 \redrule{
-  \sOOinspect{\eOOcdr{e}}{\rho}{\kappa}}{
-  \sOOinspect{e}{\rho}{\kOOcdr{\kappa}}}{}
+  \sOOinspect{\eOOcdr{e}}{\mathcal{E}}{\kappa}}{
+  \sOOinspect{e}{\mathcal{E}}{\kOOcdr{\kappa}}}{}
 
 \redrule{
-\sOOinspect{\eOOcase{e_1}{e_2}{e_3}}{\rho}{\kappa}}{
-\sOOinspect{e_1}{\rho}{\kOOcaseI{e_2}{e_3}{\rho}{\kappa}}}{}
+\sOOinspect{\eOOcase{e_1}{e_2}{e_3}}{\mathcal{E}}{\kappa}}{
+\sOOinspect{e_1}{\mathcal{E}}{\kOOcaseI{e_2}{e_3}{\mathcal{E}}{\kappa}}}{}
 
 \redrule{
-\sOOinspect{\eOOblame{l}}{\rho}{\kappa}}{
+\sOOinspect{\eOOblame{l}}{\mathcal{E}}{\kappa}}{
 \sOOhalt{(\oOOblame{l})}}{}
 
 \redrule{
-\sOOreturn{v_1}{\kOOconsI{T_1}{T_2}{e_2}{\rho}{\kappa}}}{
-\sOOinspect{e_2}{\rho}{\kOOconsII{T_1}{T_2}{v_1}{\kappa}}}{}
+\sOOreturn{v_1}{\kOOconsI{T_1}{T_2}{e_2}{\mathcal{E}}{\kappa}}}{
+\sOOinspect{e_2}{\mathcal{E}}{\kOOconsII{T_1}{T_2}{v_1}{\kappa}}}{}
 
 \redrule{
 \sOOreturn{v_2}{\kOOconsII{T_1}{T_2}{v_1}{\kappa}}}{
@@ -864,12 +864,12 @@ evaluation ($eval_\mathcal{x}(e)$) are standard~\citep{felleisen03:_pllc}.
 \sOOreturn{\vOOinr{v}}{\kappa}}{}
 
 \redrule{
-\sOOreturn{v_1}{\kOOappI{e_2}{\rho}{\kappa}}}{
-\sOOinspect{e_2}{\rho}{\kOOappII{v_1}{\kappa}}}{}
+\sOOreturn{v_1}{\kOOappI{e_2}{\mathcal{E}}{\kappa}}}{
+\sOOinspect{e_2}{\mathcal{E}}{\kOOappII{v_1}{\kappa}}}{}
 
 \redrule{
-\sOOreturn{v_2}{\kOOappII{(\vOOfun{\rho}{x}{e})}{\kappa}}}{
-\sOOinspect{e}{\rho[x:=v_2]}{\kappa}}{}
+\sOOreturn{v_2}{\kOOappII{(\vOOfun{\mathcal{E}}{x}{e})}{\kappa}}}{
+\sOOinspect{e}{\mathcal{E}[x:=v_2]}{\kappa}}{}
   \hiredrule{
     \sOOreturn{v_1}{
       \kOOappII{\vOOcast{v_2}{
@@ -928,12 +928,12 @@ evaluation ($eval_\mathcal{x}(e)$) are standard~\citep{felleisen03:_pllc}.
   }{}
 
 \redrule{
-\sOOreturn{v_1}{\kOOcaseI{e_2}{e_3}{\rho}{\kappa}}}{
-\sOOinspect{e_2}{\rho}{\kOOcaseII{v_1}{e_3}{\rho}{\kappa}}}{}
+\sOOreturn{v_1}{\kOOcaseI{e_2}{e_3}{\mathcal{E}}{\kappa}}}{
+\sOOinspect{e_2}{\mathcal{E}}{\kOOcaseII{v_1}{e_3}{\mathcal{E}}{\kappa}}}{}
 
 \redrule{
-\sOOreturn{v_2}{\kOOcaseII{v_1}{e_3}{\rho}{\kappa}}}{
-\sOOinspect{e_3}{\rho}{
+\sOOreturn{v_2}{\kOOcaseII{v_1}{e_3}{\mathcal{E}}{\kappa}}}{
+\sOOinspect{e_3}{\mathcal{E}}{
   \kOOcaseIII{v_1}{v_2}{\kappa}
 }}{}  
 
@@ -1008,7 +1008,8 @@ v3' = \vOOcast{v_3}{\cOOcast{\POOfun{T_3}{T}}{l}{\POOfun{T_1}{T}}}}
 
 %Let $\kappa$ range over continuations. $\mathtt{stop}$ is the top 
 %continuation. The remaining continuations correspond to expressions. For 
-%example, $\kOOconsI{T_1}{T_2}{e}{\rho}{\kappa}$ is the continuation waiting 
+%example, $\kOOconsI{T_1}{T_2}{e}{\mathcal{E}}{\kappa}$ is the continuation 
+%waiting 
 %for 
 %the first part of the pair. And the last continuation, $\kOOcast{c}{\kappa}$ 
 %is 
@@ -1889,7 +1890,7 @@ values that are cast to the dynamic type, as in \citet{wadler2009well}.
   \begin{array}{lrcl}
   \stxrule{v}{Values}{
     \hcvOOtt \mid
-    \hcvOOfun{c}{\rho}{x}{e}{c} \mid
+    \hcvOOfun{c}{\mathcal{E}}{x}{e}{c} \mid
     \hcvOOcons{v}{c}{v}{c} \mid
     \hcvOOinl{v}{c} \mid
     \hcvOOinr{v}{c} \mid
@@ -1951,19 +1952,19 @@ requirements that are needed for the theorem that establishes
 equivalence to \ineffCEKD{}. Property (1) below states that $id(T)$
 acts like the identity function. Property (2) states that $seq(c,c)$
 acts like a sequence of casts. Properties (3) through (11) state that
-$cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
+$cast(T_1,l,T_2)$ act like the Lazy D $applyCast$ for \ineffCEK\
 (Fig.~\ref{fig:applyCast-D-C}).
 
 \begin{definition}[Lazy D Cast ADT]
   \label{def:surely-lazyd}
   A  Cast is a Lazy D Cast if:
   \begin{enumerate}
-  \item if $v : T$, then $applyCast(v,id(T)) = \mathtt{succ} \; v $
-  \item if $\judgeType{v}{T_1}$,
-    $ \judgeTypeFT{c_1}{T_1}{T_2}$, and
-    $ \judgeTypeFT{c_2}{T_2}{T_3}$,\\
+  \item If $v : T$ then $applyCast(v,id(T)) = \mathtt{succ} \; v $
+  \item If $\judgeType{v}{T_1}$ and
+    $ \judgeTypeFT{c_1}{T_1}{T_2}$ and
+    $ \judgeTypeFT{c_2}{T_2}{T_3}$\\
     then $applyCast(v,seq(c_1,c_2)) = 
-    applyCast(v,c_1) >>= \lambda v.applyCast(v,c_2)$\\
+    applyCast(v,c_1) >>= \lambda v'.applyCast(v',c_2)$\\
     where 
     \[
     \begin{array}{rcl}
@@ -1971,25 +1972,25 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
       \rOOfail{l} >>= f & = & \rOOfail{l}
     \end{array}
     \]
-  \item if $v : T_1$ and $T_1 \not\smile T_2$,
+  \item If $v : T_1$ and $T_1 \not\smile T_2$,
     then $applyCast(v,cast(T_1, l, T_2)) = \rOOfail{l} $
-  \item if $v : \star$, 
+  \item If $v : \star$,
     then $applyCast(v,cast(\TOOdyn,l,\TOOdyn)) = \rOOsucc{v} $
-  \item if $v : P$,
+  \item If $v : P$,
     then $applyCast(\hcvOOinj{P}{v},cast(\star,l,P')) 
     = applyCast(v,cast(P,l,P')) $
-  \item if $v : P$,
+  \item If $v : P$,
     then $applyCast(v,cast(P,l,\star)) = \rOOsucc{(\hcvOOinj{P}{v})} $
-  \item if $v : \POOunit$,
+  \item If $v : \POOunit$,
     then $applyCast(v,cast(\POOunit,l,\POOunit)) = \rOOsucc{v} $
-  \item if $(\hcvOOfun{c_1}{\rho}{x}{e}{c_2}) : \POOfun{T_1}{T_2}$,
+  \item If $(\hcvOOfun{c_1}{\mathcal{E}}{x}{e}{c_2}) : \POOfun{T_1}{T_2}$,
     then\\
     $ 
-    applyCast(\hcvOOfun{c_1}{\rho}{x}{e}{c_2}, 
+    applyCast(\hcvOOfun{c_1}{\mathcal{E}}{x}{e}{c_2}, 
     cast(\POOfun{T_1}{T_2},l,\POOfun{T_3}{T_4})) \\
     = 
-    \rOOsucc{(\hcvOOfun{seq(cast(T_3,l,T_1),c_1)}{\rho}{x}{b}{seq(c_2,cast(T_2,l,T_4))})}$
-  \item if $(\hcvOOcons{v_1}{c_1}{v_2}{c_2}) : \POOprod{T_1}{T_2}$,
+    \rOOsucc{(\hcvOOfun{seq(cast(T_3,l,T_1),c_1)}{\mathcal{E}}{x}{b}{seq(c_2,cast(T_2,l,T_4))})}$
+  \item If $(\hcvOOcons{v_1}{c_1}{v_2}{c_2}) : \POOprod{T_1}{T_2}$,
     then \\
     $ 
     applyCast(\hcvOOcons{v_1}{c_1}{v_2}{c_2},cast(\POOprod{T_1}{T_2},l,T_3 
@@ -1998,12 +1999,12 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
     $ = 
     \rOOsucc{(\hcvOOcons{v_1}{seq(c_1,cast(T_1,l,T_3))}{v_2}{seq(c_2,cast(T_2,l,T_4))})}
     $ 
-  \item if $(\hcvOOinl{v}{c}) : \POOsum{T_1}{T_2}$,
+  \item If $(\hcvOOinl{v}{c}) : \POOsum{T_1}{T_2}$,
     then \\
     $ 
     applyCast(\hcvOOinl{v}{c},cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}))
     = \rOOsucc{(\hcvOOinl{v}{seq(c,cast(T_1,l,T_3))})} $
-  \item if $(\hcvOOinr{v}{c}) : \POOsum{T_1}{T_2}$,
+  \item If $(\hcvOOinr{v}{c}) : \POOsum{T_1}{T_2}$,
     then \\$
     applyCast(\hcvOOinr{v}{c},cast(\POOsum{T_1}{T_2},l,\POOsum{T_3}{T_4}))
     = \rOOsucc{(\hcvOOinr{v}{seq(c,cast(T_2,l,T_4))})} $
@@ -2022,7 +2023,7 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
 %   \rOOfail{l}
 % }
 % \stxrule{s}{states}{
-%   \sOOinspect{e}{\rho}{\kappa} \mid{}
+%   \sOOinspect{e}{\mathcal{E}}{\kappa} \mid{}
 %   \sOOreturn{v}{\kappa} \mid{}
 %   \sOOhalt{o}
 % }
@@ -2031,20 +2032,20 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
   }
   \stxrule{k}{Pre-continuations}{
     \kOOmt \mid{}
-    \kOOconsI{T}{T}{e}{\rho}{\kappa} \mid
+    \kOOconsI{T}{T}{e}{\mathcal{E}}{\kappa} \mid
     \kOOconsII{T}{T}{v}{\kappa} \mid
     \kOOinl{T}{T}{\kappa}
   }
   \stxrulecont{
   	\kOOinr{T}{T}{\kappa} \mid
-    \kOOappI{e}{\rho}{\kappa} \mid
+    \kOOappI{e}{\mathcal{E}}{\kappa} \mid
     \kOOappII{v}{\kappa} \mid
     \kOOcar{\kappa} \mid
     \kOOcdr{\kappa}
   }
   \stxrulecont{
-    \kOOcaseI{e}{e}{\rho}{\kappa} \mid
-    \kOOcaseII{v}{e}{\rho}{\kappa} \mid
+    \kOOcaseI{e}{e}{\mathcal{E}}{\kappa} \mid
+    \kOOcaseII{v}{e}{\mathcal{E}}{\kappa} \mid
     \kOOcaseIII{v}{v}{\kappa}
   }
   \end{array}
@@ -2071,62 +2072,62 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
   \[
   \begin{array}{rclr}
   \hiredruleS{
-    \sOOinspect{\eOOcast{e}{T_1}{l}{T_2}}{\rho}{\kappa}
+    \sOOinspect{\eOOcast{e}{T_1}{l}{T_2}}{\mathcal{E}}{\kappa}
   }{
-    \sOOinspect{e}{\rho}{ext(cast(T_1,l,T_2),\kappa)}
+    \sOOinspect{e}{\mathcal{E}}{ext(cast(T_1,l,T_2),\kappa)}
   }{}
   \redruleS{
-    \sOOinspect{\eOOvar{x}}{\rho}{\kappa}
+    \sOOinspect{\eOOvar{x}}{\mathcal{E}}{\kappa}
   }{  
-    \sOOreturn{\rho(x)}{\kappa}
+    \sOOreturn{\mathcal{E}(x)}{\kappa}
   }{}
   \redruleS{
-    \sOOinspect{\eOOsole}{\rho}{\kappa}
+    \sOOinspect{\eOOsole}{\mathcal{E}}{\kappa}
   }{
     \sOOreturn{\hcvOOtt}{\kappa}
   }{}
   \hiredruleS{
-    \sOOinspect{\eOOlam{T_1}{T_2}{x}{e}}{\rho}{\kappa}
+    \sOOinspect{\eOOlam{T_1}{T_2}{x}{e}}{\mathcal{E}}{\kappa}
   }{
-    \sOOreturn{\hcvOOfun{id(T_1)}{\rho}{x}{e}{id(T_2)}}{\kappa}
+    \sOOreturn{\hcvOOfun{id(T_1)}{\mathcal{E}}{x}{e}{id(T_2)}}{\kappa}
   }{}
   \redruleS{
-    \sOOinspect{\eOOcons{T_1}{T_2}{e_1}{e_2}}{\rho}{\kappa}
+    \sOOinspect{\eOOcons{T_1}{T_2}{e_1}{e_2}}{\mathcal{E}}{\kappa}
   }{
-    \sOOinspect{e_1}{\rho}{
-      wrap(\kOOconsI{T_1}{T_2}{e_2}{\rho}{\kappa})
+    \sOOinspect{e_1}{\mathcal{E}}{
+      wrap(\kOOconsI{T_1}{T_2}{e_2}{\mathcal{E}}{\kappa})
     }
   }{}
   \redruleS{
-    \sOOinspect{\eOOinl{T_1}{T_2}{e}}{\rho}{\kappa}
+    \sOOinspect{\eOOinl{T_1}{T_2}{e}}{\mathcal{E}}{\kappa}
   }{
-    \sOOinspect{e}{\rho}{wrap(\kOOinl{T_1}{T_2}{\kappa})}
+    \sOOinspect{e}{\mathcal{E}}{wrap(\kOOinl{T_1}{T_2}{\kappa})}
   }{}
   \redruleS{
-    \sOOinspect{\eOOinl{T_1}{T_2}{e}}{\rho}{\kappa}
+    \sOOinspect{\eOOinl{T_1}{T_2}{e}}{\mathcal{E}}{\kappa}
   }{
-    \sOOinspect{e}{\rho}{wrap(\kOOinr{T_1}{T_2}{\kappa})}
+    \sOOinspect{e}{\mathcal{E}}{wrap(\kOOinr{T_1}{T_2}{\kappa})}
   }{}
   \redruleS{
-    \sOOinspect{\eOOapp{e_1}{e_2}}{\rho}{\kappa}
+    \sOOinspect{\eOOapp{e_1}{e_2}}{\mathcal{E}}{\kappa}
   }{
-    \sOOinspect{e_1}{\rho}{wrap(\kOOappI{e_2}{\rho}{\kappa})}}{}
+    \sOOinspect{e_1}{\mathcal{E}}{wrap(\kOOappI{e_2}{\mathcal{E}}{\kappa})}}{}
   
   \redruleS{
-    \sOOinspect{\eOOcar{e})}{\rho}{\kappa}}{
-    \sOOinspect{e}{\rho}{wrap(\kOOcar{\kappa})}}{}
+    \sOOinspect{\eOOcar{e})}{\mathcal{E}}{\kappa}}{
+    \sOOinspect{e}{\mathcal{E}}{wrap(\kOOcar{\kappa})}}{}
   
   \redruleS{
-    \sOOinspect{\eOOcdr{e}}{\rho}{\kappa}}{
-    \sOOinspect{e}{\rho}{wrap(\kOOcdr{\kappa})}}{}
+    \sOOinspect{\eOOcdr{e}}{\mathcal{E}}{\kappa}}{
+    \sOOinspect{e}{\mathcal{E}}{wrap(\kOOcdr{\kappa})}}{}
   
   \redruleS{
-    \sOOinspect{\eOOcase{e_1}{e_2}{e_3}}{\rho}{\kappa}}{
-    \sOOinspect{e_1}{\rho}{wrap(\kOOcaseI{e_2}{e_3}{\rho}{\kappa})}}{}
+    \sOOinspect{\eOOcase{e_1}{e_2}{e_3}}{\mathcal{E}}{\kappa}}{
+    \sOOinspect{e_1}{\mathcal{E}}{wrap(\kOOcaseI{e_2}{e_3}{\mathcal{E}}{\kappa})}}{}
 
 
 \redruleS{
-	\sOOinspect{\eOOblame{l}}{\rho}{\kappa}}{
+	\sOOinspect{\eOOblame{l}}{\mathcal{E}}{\kappa}}{
 	\sOOhalt{(\oOOblame{l})}}{}
 
   \hiredruleS{
@@ -2148,8 +2149,8 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
   
 
 \funrule{
-  \continue{v_1}{\kOOconsI{T_1}{T_2}{e_2}{\rho}{\kappa}}}{
-  \sOOinspect{e_2}{\rho}{wrap(\kOOconsII{T_1}{T_2}{v_1}{\kappa})}}{}
+  \continue{v_1}{\kOOconsI{T_1}{T_2}{e_2}{\mathcal{E}}{\kappa}}}{
+  \sOOinspect{e_2}{\mathcal{E}}{wrap(\kOOconsII{T_1}{T_2}{v_1}{\kappa})}}{}
 
 \hifunrule{
   \continue{v_2}{\kOOconsII{T_1}{T_2}{v_1}{\kappa}}}{
@@ -2164,15 +2165,15 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
   \sOOreturn{\hcvOOinr{v}{id(T_2)}}{\kappa}}{}
 
 \funrule{
-  \continue{v_1}{\kOOappI{e_2}{\rho}{\kappa}}}{
-  \sOOinspect{e_2}{\rho}{
+  \continue{v_1}{\kOOappI{e_2}{\mathcal{E}}{\kappa}}}{
+  \sOOinspect{e_2}{\mathcal{E}}{
     wrap(\kOOappII{v_1}{\kappa})
   }}{}
 
 \hifunrule{
-  \continue{v_2}{\kOOappII{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{\kappa}}}{
+  \continue{v_2}{\kOOappII{(\hcvOOfun{c_1}{\mathcal{E}}{x}{e}{c_2})}{\kappa}}}{
 \begin{cases}
-\sOOinspect{e}{\rho[x:=v']}{ext(c_2,\kappa)} \\
+\sOOinspect{e}{\mathcal{E}[x:=v']}{ext(c_2,\kappa)} \\
 \sidecond{applyCast(v_2,c_1) = \rOOsucc{v'}}
 \\
 \sOOhalt{l} \\
@@ -2197,41 +2198,41 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
 }{}
 
 \funrule{
-  \continue{v_1}{\kOOcaseI{e_2}{e_3}{\rho}{\kappa}}
+  \continue{v_1}{\kOOcaseI{e_2}{e_3}{\mathcal{E}}{\kappa}}
 }{
-  \sOOinspect{e_2}{\rho}{
-    wrap(\kOOcaseII{v_1}{e_3}{\rho}{\kappa})
+  \sOOinspect{e_2}{\mathcal{E}}{
+    wrap(\kOOcaseII{v_1}{e_3}{\mathcal{E}}{\kappa})
   }
 }{}
 
 \funrule{
   \continue{v_2}{
-    \kOOcaseII{v_1}{e_3}{\rho}{\kappa}
+    \kOOcaseII{v_1}{e_3}{\mathcal{E}}{\kappa}
   }
 }{
-  \sOOinspect{e_3}{\rho}{
+  \sOOinspect{e_3}{\mathcal{E}}{
   wrap(\kOOcaseIII{v_1}{v_2}{\kappa})
   }
 }{}
 
 \hifunrule{
   \continue{v_3}{
-    \kOOcaseIII{(\hcvOOinl{v}{c})}{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}{\kappa}
+    \kOOcaseIII{(\hcvOOinl{v}{c})}{(\hcvOOfun{c_1}{\mathcal{E}}{x}{e}{c_2})}{\kappa}
 %   (\mathtt{case_3}\;()\;
 %   ()
 %   \;)
   }
 }{
-  \sOOreturn{v}{wrap(\kOOappII{(\hcvOOfun{seq(c,c_1)}{\rho}{x}{e}{c_2})}{\kappa})}
+  \sOOreturn{v}{wrap(\kOOappII{(\hcvOOfun{seq(c,c_1)}{\mathcal{E}}{x}{e}{c_2})}{\kappa})}
 }{}
 
 \hifunrule{
-  \continue{(\hcvOOfun{c_1}{\rho}{x}{e}{c_2})}
+  \continue{(\hcvOOfun{c_1}{\mathcal{E}}{x}{e}{c_2})}
   {
     \kOOcaseIII{(\hcvOOinr{v}{c})}{v_2}{\kappa}
   }
 }{
-  \sOOreturn{v}{wrap(\kOOappII{(\hcvOOfun{seq(c,c_1)}{\rho}{x}{e}{c_2})}{\kappa})}
+  \sOOreturn{v}{wrap(\kOOappII{(\hcvOOfun{seq(c,c_1)}{\mathcal{E}}{x}{e}{c_2})}{\kappa})}
 }{}
 
 \funrule{
@@ -2261,24 +2262,29 @@ $cast(T_1,l,T_2)$ act like the Lazy D $applyCast$
 \end{figure}
 
 \figref{fig:machine-cekcc} defines \effCEK{C}, a space-efficient CEK
-machine.  This machine is similar to the \ineffCEK{} machine
-(Figure~\ref{fig:machine-cekc}).  The key differences are in values
-and continuations.
+machine parameterized over Cast ADT ($C$).  The key differences between 
+\effCEK{C} and \ineffCEK\ are the places where casts can accumulate at runtime, 
+that is, values and continuations. We discuss above the difference in values
+(Definition~\ref{def:values-effCEK}).
 
 Let $\kappa$ range over continuations and let $k$ range over
-pre-continuations.  A continuation is now a pre-continuation prefixed
-with a cast.  Pre-continuation are like the continuations in
-\ineffCEK{}, but there is no constructor for casts.  Continuations in
-\ineffCEKD{} have zero or more casts at the top.  In \effCEK{C},
-however, every continuation has exactly one cast at the top.
+pre-continuations.
+%
+Pre-continuations are like the continuations in \ineffCEK{}, but there is no 
+constructor for casts.
+%
+A continuation is now a pre-continuation prefixed with a cast.
+%
+Continuations in \ineffCEKD{} have zero or more casts at the top.  In 
+\effCEK{C}, however, every continuation has exactly one cast at the top.
 Continuations in \ineffCEK\ that have no casts at the top correspond
-to continuations in \effCEK{C}\ whose casts are identity.
+to continuations in \effCEK{C}\ whose casts are identities.
 Continuations in \ineffCEK\ that have many casts at the top correspond
 to continuations in \effCEK{C}\ where those casts are composed by
 $seq(c,c)$.
 
-The transition relation $\judgeSreduce{C}{s}{s}$ uses functions provides by $C$ 
-to represent cases and to apply casts.
+The transition relation $\judgeSreduce{C}{s}{s}$ relies on functions provided 
+by $C$ to work with casts.
 %
 When evaluating a cast expression, the machine extends the continuation with 
 cast $cast(T_1,l,T_2)$. The function $ext(c,\kappa)$ composes $c$ with the cast 
@@ -2453,22 +2459,22 @@ Rules for products and sums are similar.
   }
   \\ \\
   \inference{
-    \rho_1 \approx \rho_2 &
-    dom(\rho_1) = dom(\rho_2) = \Gamma \\
+    \mathcal{E}_1 \approx \mathcal{E}_2 &
+    dom(\mathcal{E}_1) = dom(\mathcal{E}_2) = \Gamma \\
     \Gamma , x : T_1 \vdash e : T_2
   }{
-    \hcvOOfun{id(T_1)}{\rho_1}{x}{e}{id(T_2)}
+    \hcvOOfun{id(T_1)}{\mathcal{E}_1}{x}{e}{id(T_2)}
     \approx
-    \vOOfun{\rho_2}{x}{e}
+    \vOOfun{\mathcal{E}_2}{x}{e}
     : \POOfun{T_1}{T_2}
   }
 \\ \\
 \inference{
-\hcvOOfun{c_1}{\rho}{x}{e}{c_2} \approx v_2 : \POOfun{T_1}{T_2} \\
+\hcvOOfun{c_1}{\mathcal{E}}{x}{e}{c_2} \approx v_2 : \POOfun{T_1}{T_2} \\
 c_1' = seq(cast(T_3,l,T_1),c_1) \\
 c_2' = seq(c_2,cast(T_2,l,T_4))
 }{
-\hcvOOfun{c_1'}{\rho}{x}{e}{c_2'}
+\hcvOOfun{c_1'}{\mathcal{E}}{x}{e}{c_2'}
 \approx
 \vOOcast{v_2}{\cOOcast{\POOfun{T_1}{T_2}}{l}{\POOfun{T_3}{T_4}}}
 : \POOfun{T_3}{T_4}
@@ -2881,10 +2887,10 @@ appS(v,\cOOcast{P_1}{l_2}{P_2})
 }{}
 \funrule{
   appS(
-    \hcvOOfun{c_1}{\rho}{x}{e}{c_2},
+    \hcvOOfun{c_1}{\mathcal{E}}{x}{e}{c_2},
     \lsOOcast{\POOfun{T_1}{T_2}}{l}{\POOfun{T_3}{T_4}})
 }{
-  \rOOsucc{(\hcvOOfun{c_1'}{\rho}{x}{b}{c_2'})}
+  \rOOsucc{(\hcvOOfun{c_1'}{\mathcal{E}}{x}{b}{c_2'})}
 }{
   \\ &&
   \text{where} \;
@@ -3040,8 +3046,8 @@ natural way.
   \[
   \begin{array}{rclr}
   \funrule{applyMiddle(\hcvOOtt,\ell,\POOunit)}{\rOOsucc{\hcvOOtt}}{}
-  \funrule{applyMiddle(\hcvOOfun{c_1}{\rho}{x}{e}{c_2}\ell,\POOfun{c_3}{c_4})}{
-    \rOOsucc{(\hcvOOfun{(c_3 \fatsemi^\ell c_1)}{\rho}{x}{e}{(c_2 
+  \funrule{applyMiddle(\hcvOOfun{c_1}{\mathcal{E}}{x}{e}{c_2}\ell,\POOfun{c_3}{c_4})}{
+    \rOOsucc{(\hcvOOfun{(c_3 \fatsemi^\ell c_1)}{\mathcal{E}}{x}{e}{(c_2 
     \fatsemi^\ell c_4)})}
   }{}
   \funrule{applyMiddle(\hcvOOcons{v_1}{c_1}{v_2}{c_2},\ell,\POOprod{c_3}{c_4})}{
