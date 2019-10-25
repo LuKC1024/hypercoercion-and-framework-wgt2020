@@ -2378,9 +2378,9 @@ We define monoid as follows.
 %be 
 %related, but its (iii) rules in Figure 6 looks wired to me. -KC}
 
-Fig.~\ref{fig:bisim-SC-D} defines the bisimulation relation.  It is
-the smallest congruence relation that also includes the pairs induced
-by the rules in Fig.~\ref{fig:bisim-SC-D}.
+Fig.~\ref{fig:bisim-SC-D} defines the bisimulation relation $s \approx
+s$.  It is the smallest congruence relation that also includes the
+pairs induced by the rules in Fig.~\ref{fig:bisim-SC-D}.
 %
 The relation is mutually defined on continuations, written $\kappa
 \approx \kappa : T$, where $T$ is their source type, and values, written $v 
@@ -2417,9 +2417,13 @@ If functions are related, we can apply the same cast on both side.
 Rules for products and sums are similar.
 
 \begin{figure}
-  $\text{\effCEK{C}} \approx \text{\ineffCEKD}$
+%  $\text{\effCEK{C}} \approx \text{\ineffCEKD}$
 % \[\dots\]
-  
+  \fbox{$s \approx s$}  
+  \begin{gather*}
+    \inference{}
+              {}
+  \end{gather*}
   \fbox{$\kappa \approx \kappa : T$}
   \begin{gather*}
   \inference{
