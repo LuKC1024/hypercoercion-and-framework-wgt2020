@@ -2825,8 +2825,8 @@ that also includes the rules below.
   \end{array}\]
 \end{lemma}
 \begin{proof} This proof is straightforward. The key ideas are undoing 
-sequencing with the property (2) of Lazy D Cast ADT, and handling all possibly 
-uses of $cast(T,l,T)$ with property (3)-(11).
+  uses of $seq$ with the property (2) of Lazy D Cast ADT, and handling all
+  uses of $cast$ with properties (3)-(11).
 \end{proof}
 
 \begin{proposition}[Equivalence of Two \lazyD{} Cast ADTs]
@@ -3167,25 +3167,26 @@ natural way.
 
 \section{Conclusion} \label{sec:conclude}
 
-In this paper we presented a new cast representation, hypercoercions, in two 
-flavors, Lazy D and Lazy UD. Hypercoercions have a structurally recursive 
-composition and have a more compact memory representation in comparison to 
-coercions in normal form.
+In this paper we presented a new cast representation, hypercoercions,
+in two flavors, Lazy D and Lazy UD. Hypercoercions have a structurally
+recursive composition operator and have a more compact memory
+representation in comparison to coercions in normal form.
 
-We also present steps toward the first framework for proving the correctness of 
-cast representations.
+We also present steps toward the first framework for proving the
+correctness of cast representations.
 %
-The framework includes abstract data types for cast representations (Cast ADT 
-and Lazy D Cast ADT), an parameterized abstract machine \effCEK{C}, and a 
-theorem states that \effCEK{C} is equivalent to $D$ if $C$ is a Lazy D Cast 
-ADT.
+The framework includes abstract data types for cast representations
+(Cast ADT and Lazy D Cast ADT), a parameterized abstract machine
+\effCEK{C}, and a theorem which states that \effCEK{C} is equivalent
+to $D$ when $C$ is a Lazy D Cast ADT.
 %
-Lazy D Cast ADT refines Cast ADT. We conjecture that Lazy D threesomes, and 
-Lazy D coercions in normal form are also Lazy D Cast ADT.
+The Lazy D Cast ADT refines the Cast ADT. We conjecture that Lazy D
+threesomes, and Lazy D coercions in normal form are instances of the
+Lazy D Cast ADT.
 
-Finally, we proved that Lazy D hypercoercions ($H$) is a Lazy D Cast ADT. By 
-using our framework, we shown that it is a correct cast representation because 
-$S(H)$ is equivalent to $D$.
+Finally, we proved that Lazy D hypercoercions ($H$) is a Lazy D Cast
+ADT. By using our framework, we showed that it is a correct cast
+representation because $S(H)$ is equivalent to $D$.
 
 %% Acknowledgments
 \begin{acks}                            %% acks environment is optional
