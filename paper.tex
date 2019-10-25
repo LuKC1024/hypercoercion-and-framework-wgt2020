@@ -2395,7 +2395,9 @@ The relation is mutually defined on continuations, written $\kappa
 \approx v : T$, where $T$ is their type.
 %
 If $k \approx \kappa : T$, adding an identity cast on top of $k$ gives a 
-related continuation.
+related continuation. This handles the way in which
+\effCEK{C} uses $wrap$ to add identity coercions around continuations
+whereas \ineffCEKD{} does not.
 %
 %\todo[inline]{The use of ``wrap'' obscures this explanation.
 %  Consider getting rid of wrap by inlining it. -JS
@@ -2428,9 +2430,8 @@ Rules for products and sums are similar.
 %  $\text{\effCEK{C}} \approx \text{\ineffCEKD}$
 % \[\dots\]
   \fbox{$s \approx s$}
-  % The following rules for s \approx s are technically not needed,
-  % but I think it's kind
-  % to the reader to include them. -Jeremy
+  % Because the grammar for states of the two machines are not identical,
+  % I think it is worthwhile to write out these rules explicitly. -Jeremy
   \begin{gather*}
     \inference{dom(\mathcal{E}_1) = dom(\mathcal{E}_2) \\
                \forall x {:} T \in dom(\mathcal{E}_1),\,
@@ -2438,10 +2439,10 @@ Rules for products and sums are similar.
                \kappa_1 \approx \kappa_2 : T}
               {\langle e, \mathcal{E}_1, \kappa_1 \rangle \approx
               \langle e, \mathcal{E}_2, \kappa_2 \rangle}
-    \quad
-    \inference{v_1 \approx v_2 : T \quad \kappa_1 \approx \kappa_2 : T}
-              {\langle v_1, \kappa_1 \rangle  \approx
-              \langle v_2, \kappa_2 \rangle}
+    %% \quad
+    %% \inference{v_1 \approx v_2 : T \quad \kappa_1 \approx \kappa_2 : T}
+    %%           {\langle v_1, \kappa_1 \rangle  \approx
+    %%           \langle v_2, \kappa_2 \rangle}
     \quad
     \inference{}
               {\sOOhalt{o} \approx \sOOhalt{o}}
