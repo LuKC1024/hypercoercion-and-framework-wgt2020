@@ -13,6 +13,7 @@ open import Relation.Nullary using (Dec; yes; no; ¬_)
 open import Data.Nat using (ℕ; suc; zero; _+_)
 open import Data.Product using (Σ; _×_ ; Σ-syntax; ∃-syntax)
   renaming (_,_ to ⟨_,_⟩)
+open import Data.Sum using (_⊎_ ; inj₁; inj₂)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym; subst)
 
 open import Variables
@@ -850,9 +851,25 @@ data HaltL {T : Type} : LM.State T → Set where
   halt : ∀ o
     → HaltL (LM.halt o)
 
+haltl? : ∀ {T}
+  → (s : LM.State T)
+  ---
+  → Dec (HaltL s)
+haltl? (LM.inspect e E κ) = no λ ()
+haltl? (LM.return v κ) = no λ ()
+haltl? (LM.halt o) = yes (halt o)
+
 data HaltR {T : Type} : RM.State T → Set where
   halt : ∀ o
     → HaltR (RM.halt o)
+
+haltr? : ∀ {T}
+  → (s : RM.State T)
+  ---
+  → Dec (HaltR s)
+haltr? (RM.inspect e E κ) = no λ ()
+haltr? (RM.return v κ) = no λ ()
+haltr? (RM.halt o) = yes (halt o)
 
 lem-both-halt-l : ∀ {T}
   → {ls : LM.State T}
@@ -883,6 +900,15 @@ data _−→L_ {T : Type} : LM.State T → LM.State T → Set where
     → ¬ HaltL s
     → s −→L (LM.progress s)
 
+data _−→L*_ {T : Type} : LM.State T → LM.State T → Set where
+  refl : ∀ {s}
+    → s −→L* s
+  tran : ∀ {r s t}
+    → r −→L s
+    → s −→L* t
+    ---
+    → r −→L* t
+
 data _−→R_ {T : Type} : RM.State T → RM.State T → Set where
   it : ∀ {s}
     → ¬ HaltR s
@@ -896,6 +922,15 @@ data _−→R*_ {T : Type} : RM.State T → RM.State T → Set where
     → s −→R* t
     ---
     → r −→R* t
+
+transitiveR : ∀ {T}
+  → {r s t : RM.State T}
+  → r −→R* s
+  → s −→R* t
+  ---
+  → r −→R* t
+transitiveR refl p2 = p2
+transitiveR (tran x p1) p2 = tran x (transitiveR p1 p2)  
 
 lem-not-halt-l :  ∀ {T}
   → {ls : LM.State T}
@@ -915,6 +950,33 @@ lem-not-halt-r :  ∀ {T}
   → ¬ HaltL ls
 lem-not-halt-r s p = λ x → ⊥-elim (p (lem-both-halt-l s x))
 
+_≈*_ : {T : Type} → LM.State T → RM.State T → Set
+ls ≈* rs = ∃[ rs' ]((rs −→R* rs') × (ls ≈ rs'))
+
+halt? : ∀ {T}
+  → {ls : LM.State T}
+  → {rs : RM.State T}
+  → StateRelate ls rs
+  ---
+  → (HaltL ls × HaltR rs) ⊎ (¬ HaltL ls × ¬ HaltR rs)
+halt? (inspect e E κ) = inj₂ ⟨ (λ ()) , (λ ()) ⟩
+halt? (return v1 κ) = inj₂ ⟨ (λ ()) , (λ ()) ⟩
+halt? (halt o) = inj₁ ⟨ (halt o) , (halt o) ⟩
+
+translate≈* : ∀ {T}
+  → {ls : LM.State T}
+  → {rs : RM.State T}
+  → StateRelate* ls rs
+  ---
+  → ls ≈* rs
+translate≈* (done ss) = ⟨ (rstate ss) , ⟨ refl , ss ⟩ ⟩
+translate≈* (step {rS1 = rs} s) with haltr? rs
+translate≈* (step s) | yes (halt o) with fast-halt o s
+... | refl = ⟨ (RM.halt o) , ⟨ refl , (halt o) ⟩ ⟩
+translate≈* (step s) | no ¬p with translate≈* s
+translate≈* (step s) | no ¬p | ⟨ rs' , ⟨ −→* , rel ⟩ ⟩
+  = ⟨ rs' , ⟨ (tran (it ¬p) −→*) , rel ⟩ ⟩
+
 lem-both-progress-l : ∀ {T}
   → {ls : LM.State T}
   → {rs : RM.State T}
@@ -932,6 +994,75 @@ lem-both-progress-r : ∀ {T}
   ---
   → Σ[ ls' ∈ LM.State T ] ls −→L ls'
 lem-both-progress-r s ⟨ _ , it x ⟩ = ⟨ _ , it (lem-not-halt-r s x) ⟩
+
+lem-progress-l : ∀ {T}
+  → {ls ls' : LM.State T}
+  → {rs : RM.State T}
+  → StateRelate ls rs
+  → ls −→L ls'
+  ---
+  → Σ[ rs' ∈ RM.State T ] (rs −→R rs' × ls' ≈* rs')
+lem-progress-l s (it x)
+  = ⟨ _ , ⟨ (it (lem-not-halt-l s x)) , translate≈* (progress* s) ⟩ ⟩
+
+lem-progress-r : ∀ {T}
+  → {ls : LM.State T}
+  → {rs rs' : RM.State T}
+  → StateRelate ls rs
+  → rs −→R rs'
+  ---
+  → Σ[ ls' ∈ LM.State T ] (ls −→L ls' × ls' ≈* rs')
+lem-progress-r s (it x)
+  = ⟨ _ , ⟨ (it (lem-not-halt-r s x)) , translate≈* (progress* s) ⟩ ⟩
+
+lem-evalo-red-l : ∀ {T}
+  → {ls : LM.State T}
+  → {rs : RM.State T}
+  → {o : Observe T}
+  → ls −→L* LM.halt o
+  → (ss : ls ≈ rs)
+  ---
+  → rs −→R* RM.halt o
+lem-evalo-red-l refl (halt o) = refl
+lem-evalo-red-l (tran lstep lstep*) s with lem-progress-l s lstep
+lem-evalo-red-l (tran lstep lstep*) s | ⟨ rs' , ⟨ rstep , ⟨ rs'' , ⟨ rs'→rs'' , snd ⟩ ⟩ ⟩ ⟩
+  = tran rstep (transitiveR rs'→rs'' (lem-evalo-red-l lstep* snd))
+
+-- cutR : ∀ {T}
+--   → {rs rs' : RM.State T}
+--   → {o : Observe T}
+--   → rs −→R* RM.halt o
+--   → rs −→R* rs'
+--   ---
+--   → rs' −→R* RM.halt o
+-- cutR m refl = m
+-- cutR refl (tran (it x) n) = ⊥-elim (x (halt _))
+-- cutR (tran x₁ m) (tran x n) = {!cutR m n!}
+
+mutual
+  lem-evalo-red-r* : ∀ {T}
+    → {ls : LM.State T}
+    → {rs : RM.State T}
+    → {o : Observe T}
+    → rs −→R* RM.halt o
+    → (ss : ls ≈* rs)
+    ---
+    → ls −→L* LM.halt o
+  lem-evalo-red-r* rp ⟨ rs' , ⟨ x , y ⟩ ⟩ = {!!}
+
+  lem-evalo-red-r : ∀ {T}
+    → {ls : LM.State T}
+    → {rs : RM.State T}
+    → {o : Observe T}
+    → rs −→R* RM.halt o
+    → (ss : ls ≈ rs)
+    ---
+    → ls −→L* LM.halt o
+  lem-evalo-red-r refl (halt o) = refl
+  lem-evalo-red-r (tran rstep rstep*) s with lem-progress-r s rstep
+  lem-evalo-red-r (tran rstep rstep*) s | ⟨ ls' , ⟨ lstep , ls'≈*rs' ⟩ ⟩
+    with lem-evalo-red-r* rstep* ls'≈*rs'
+  ... | rr = tran lstep rr
 
 -- lem-preserve : ∀ {T}
 --   → {ls ls' : LM.State T}

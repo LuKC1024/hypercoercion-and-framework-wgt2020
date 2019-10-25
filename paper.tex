@@ -290,7 +290,8 @@
 \begin{abstract}
   Designing a space-efficient cast representation that is good for
   both mechanized metatheory and implementation is
-  challenging. Existing solutions are good for one or the other. This
+  challenging. Existing solutions (i.e. coercions, threesomes, and 
+  supercoercions) are good for one or the other. This
   paper presents a new cast representation, named hypercoercions, that
   is good for both. On the way to proving the correctness of
   hypercoercions, this paper also makes progress on a general
@@ -334,18 +335,13 @@ languages</concept_desc>
 %% environment and commands, and keywords command.
 \maketitle
 
-
-\listoftodos{}
-
-
 \section{Introduction}
 
-\todo[inline]{I see lots of mistakes regarding when to make words
-  plural (whether they should have an ``s'' at the end). Please review
-  the rules of English regarding plurals. The rules are tricky...
-  some words don't have a plural form, like ``blame''. -JS
-  \\---\\
-  Will fix grammar after fixing all other problems -KC}
+\todo[inline]{
+	Check grammar;
+	Improve the proof of \ref{thm:SD-bisim}.
+	And the proof of \ref{thm:SD-equiv}
+}
 
 Around 2006, several groups of researchers proposed ways to integrate
 dynamic typing and static typing, notably gradual typing
@@ -1314,9 +1310,8 @@ functions that construct
 \lazyD\ hypercoercions. Subsection~\ref{sec:lud-hc} defines the
 \lazyUD\ counterparts.  The functions that apply hypercoercions to
 values are defined later in
-Section~\ref{sec:hypercoercion-correctness}, after we introduce the
-space-efficient machine and its definition of values in
-Section~\ref{sec:framework}.
+Section~\ref{sec:hypercoercion-correctness}, after we introduce the framework 
+and its new space-efficient definition of values in Section~\ref{sec:framework}.
 
 \subsection{\lazyD{} hypercoercions}
 \label{sec:ld-hc}
@@ -1920,7 +1915,8 @@ corresponds to $(\hcvOOcons{v_1'}{id(T_1)}{v_2'}{id(T_2)})$.
 %: \POOprod{T_3}{T_4}
 %}
 
-Cast results ($r$) are the same as for \ineffCEK.
+Cast results ($r$) are the same as for \ineffCEK. 
+Value typing ($\judgeType{v}{T}$) is defined in the obvious way.
 
 \subsection{The Cast Abstract Data Types}
 \label{sec:framework:adt}
@@ -2290,7 +2286,7 @@ When evaluating a cast expression, the machine extends the continuation with
 cast $cast(T_1,l,T_2)$. The function $ext(c,\kappa)$ composes $c$ with the cast 
 at the top of $k$ by calling $seq$.
 %
-To construct a function, the machine fills the casts $id$.
+To construct a function, the machine fills the casts with $id$s.
 %
 To return a value to a continuation, the machine first applies the top cast to 
 the value. If the application fails, the machine halts with the blame label 
@@ -2305,8 +2301,8 @@ operand $v_2$, extends the continuation with the codomain cast $c_2$, and
 evaluate the function body.
 %
 To take out the first part of a pair, the machine returns the first value to a 
-continuation extended with the first cast. Taking out the second part of a pair 
-is similar.
+continuation extended with the first cast. Taking out the second 
+part of a pair is similar.
 %
 %%In case splitting, if the target value is a left injection, the
 %%machine moves to a state that will apply the first continuation
@@ -2315,18 +2311,17 @@ is similar.
 %%
 To case split a variant, the machine first look at the variant value. If the 
 variant is a left injection, the machine composes the cast in the left 
-injection with the domain casts of the first continuation function, then moves 
+injection with the domain cast of the first continuation function, then move 
 to a state that will apply the new function to the value in the left injection.
 The case for right injections is similar.
 
-Transitive closure of reduction ($\judgeSreduceTrans{C}{s}{s}$) and 
-evaluation ($\judgeSeval{C}{e}{o}$) are standard. Value typing 
-($\judgeType{v}{T}$) is straightforward.
+Reflexive transitive closure of reduction ($\judgeSreduceTrans{C}{s}{s}$) and
+evaluation ($\judgeSeval{C}{e}{o}$) are the same as for \ineffCEK.
 
 \subsection{\effCEK{C} is equivalent to \ineffCEKD{}, provided $C$ is an instance of the Lazy D ADT}
 \label{secc:framework:monoid-correct}
 
-In this subsection, we prove that for all $C$, if $C$ is a Lazy D Cast
+In this section, we prove that for all $C$, if $C$ is a Lazy D Cast
 ADT, then
 \[
   \evalEqv{\effCEK{C}}{\ineffCEKD}
@@ -2348,7 +2343,7 @@ ADT $C$ we have \evalEqv{\effCEK{C}}{\ineffCEKD}.
 
 \subsubsection{Weak Bisimulation between \effCEK{C} and \ineffCEKD{}}
 
-We shall prove that if a instance of Cast ADT $C$ is Lazy D, is a
+We shall prove that if an instance of Cast ADT $C$ is Lazy D, is a
 monoid, and if $cast(T,l,T) = id(T)$, then there is
 %% $eval_\mathcal{D} = eval_{\mathcal{S}(C)}$. We proof this lemma with
 a weak bisimulation between \effCEK{C} and \ineffCEKD{}.
@@ -2371,40 +2366,41 @@ We define monoid as follows.
 %effectively allows us to ``run'' programs without referring to an actual 
 %representation of cast.
 
-\todo[inline]{How does the following bisimulation relation
-  compare to the one used in the Blame and Coercion paper?
-  Are there any guiding principles to how this bisimulation
-  relation was constructed? -JS
-\\---\\
-The guiding principle is to keep the change in D side atomic. \\
-In the blame and coercion paper,
-the bisimulation relation between $ \lambda{}C $ and $ \lambda{}S $ seems to be 
-related, but its (iii) rules in Figure 6 looks wired to me. -KC}
+%\todo[inline]{How does the following bisimulation relation
+%  compare to the one used in the Blame and Coercion paper?
+%  Are there any guiding principles to how this bisimulation
+%  relation was constructed? -JS
+%\\---\\
+%The guiding principle is to keep the change in D side atomic. \\
+%In the blame and coercion paper,
+%the bisimulation relation between $ \lambda{}C $ and $ \lambda{}S $ seems to 
+%be 
+%related, but its (iii) rules in Figure 6 looks wired to me. -KC}
 
 Fig.~\ref{fig:bisim-SC-D} defines the bisimulation relation.  It is
 the smallest congruence relation that also includes the pairs induced
 by the rules in Fig.~\ref{fig:bisim-SC-D}.
 %
 The relation is mutually defined on continuations, written $\kappa
-\approx \kappa$, and values, written $v \approx v : T$, where $T$ is
-their type.
+\approx \kappa : T$, where $T$ is their source type, and values, written $v 
+\approx v : T$, where $T$ is their type.
 %
-If $k \approx \kappa$, adding an identity cast on top of $k$ gives a related 
-continuation.
+If $k \approx \kappa : T$, adding an identity cast on top of $k$ gives a 
+related continuation.
 %
-\todo[inline]{The use of ``wrap'' obscures this explanation.
-  Consider getting rid of wrap by inlining it. -JS
-\\---\\
-I agree that inlining wrap and ext can improve readability of $\kappa \approx 
-\kappa$, but this would make latex different from Agda, is it alright?
--KC
-\\---\\
-Yes, that is alright. Inlining is really a trivial change.
--JS
-}
+%\todo[inline]{The use of ``wrap'' obscures this explanation.
+%  Consider getting rid of wrap by inlining it. -JS
+%\\---\\
+%I agree that inlining wrap and ext can improve readability of $\kappa \approx 
+%\kappa$, but this would make latex different from Agda, is it alright?
+%-KC
+%\\---\\
+%Yes, that is alright. Inlining is really a trivial change.
+%-JS
+%}
 %
-If $\kappa_1 \approx \kappa_2$, extending $\kappa_1$ and $\kappa_2$ with the 
-same cast gives related results.
+If $\kOOcast{c}{k_1} \approx \kappa_2 : T$, extending them with 
+the same cast gives related continuations.
 %
 If two values of type $P$ are related, injecting them to $\TOOdyn$ gives 
 related values.
@@ -2423,18 +2419,18 @@ Rules for products and sums are similar.
   $\text{\effCEK{C}} \approx \text{\ineffCEKD}$
 % \[\dots\]
   
-  \fbox{$\kappa \approx \kappa$}
+  \fbox{$\kappa \approx \kappa : T$}
   \begin{gather*}
   \inference{
-    k \approx \kappa
+    k \approx \kappa : T
   }{
-    wrap(k) \approx \kappa
+    \kOOcast{id(T)}{k} \approx \kappa
   }
   \quad
   \inference{
-    \kappa_1 \approx \kappa_2
+    \kOOcast{c}{k_1} \approx \kappa_2 : T_2
   }{
-    ext(cast(T_1,l,T_2),\kappa_1) \approx 
+    \kOOcast{seq(cast(T_1,l,T_2),c)}{k_1} \approx 
     \kOOcast{\cOOcast{T_1}{l}{T_2}}{\kappa_2}
   }
 \\
@@ -2538,23 +2534,24 @@ c_2' = seq(c_2,cast(T_2,l,T_4))
   \label{fig:bisim-SC-D}
 \end{figure}
 
-\todo[inline]{Give the motivation for the following lemma. Where
-  does it get used? As in, which case of which other lemma or theorem? -JS
-\\---\\
-Partially fixed. Will say in which cases after finishing the bisim proof. -KC}
+%\todo[inline]{Give the motivation for the following lemma. Where
+%  does it get used? As in, which case of which other lemma or theorem? -JS
+%\\---\\
+%Partially fixed. Will say in which cases after finishing the bisim proof. -KC}
 
-We use the following lemma in our bisimulation proof.
+We use the following lemma in our bisimulation proof when cast applications 
+happen.
 
-\begin{lemma}[SoAndSo]
+\begin{lemma}[$applyCast$ Preserves Bisimulation]
   \label{thm:lem-apply-cast-SD}
-  Assume $C$ implements Lazy D Cast ADT
-  and $v_1$ is a value in \effCEK{C}
-  and $v_2$ is a value in \ineffCEKD\
+  Assume $C$ implements Lazy D Cast ADT,
+  $v_1$ is a value in \effCEK{C},
+  $v_2$ is a value in \ineffCEKD,
   and $v_1 \approx v_2 : T_1$,
   \[
-  applyCast_{\text{\effCEK{C}}}(v,cast(T_1,l,T_2)) 
+  applyCast_{\text{\effCEK{C}}}(v_1,cast(T_1,l,T_2)) 
   \approx 
-  applyCast_{\text{\ineffCEKD}}(v,\cOOcast{T_1}{l}{T_2})
+  applyCast_{\text{\ineffCEKD}}(v_2,\cOOcast{T_1}{l}{T_2})
   \]
 \end{lemma}
 \begin{proof}
@@ -2564,7 +2561,8 @@ We use the following lemma in our bisimulation proof.
 \end{proof}
 
 Before proving the weak bisimulation between \effCEK{C} and \ineffCEKD, we 
-introduce one more definition.
+introduce one more definition. $s_1 \approx^{*} s_2$ means we will get $s_1 
+\approx s_2$ after more transition steps in \ineffCEKD.
 
 \begin{definition}[$s \approx^{*} s$]
 Given any two states $s_1$ and $s_2$, we write $s_1 \approx^{*} s_2$
@@ -2577,29 +2575,34 @@ s_1 \approx s_2'
 \]
 \end{definition}
 
-\todo[inline]{Explain that this is an unusual formulation of a weak
-  bisimulation.  We promise it will all be OK regarding how it is used
-  in the correctness proof for S(C). -JS}
+%\todo[inline]{Explain that this is an unusual formulation of a weak
+%  bisimulation.  We promise it will all be OK regarding how it is used
+%  in the correctness proof for S(C). -JS}
 
+The lemma below formulate the weak bisimulation between \effCEK{C} and 
+\ineffCEKD. It is unusual because we use $s \approx s$ in premise while $s 
+\approx^{*} s$ in conclusion. As we will show in the correctness proof for 
+\effCEK{C}, however, this formulation is fine for our purpose.
 
 \begin{lemma}[Weak Bisimulation between \effCEK{C} and \ineffCEKD]
-  \label{thm:surely-monoidic-reduce}
+  \label{thm:SD-bisim}
   Assume $C$ implements Lazy D Cast ADT
   and $C$ is a monoid
   and $cast(T,l,T)=id(T)$,
-  $ s_{1} \in \text{\effCEK{C}}$,
-  $ s_{2} \in \text{\ineffCEKD}$,
-  $ s_{1} \approx s_{2}$,
+  $s_{1} \in \text{\effCEK{C}}$,
+  $s_{2} \in \text{\ineffCEKD}$,
+  $s_{1} \approx s_{2}$,
 \begin{enumerate}
   \item If $s_1 = \sOOhalt{o}$ then $s_2 = \sOOhalt{o}$
   \item If $s_2 = \sOOhalt{o}$ then $s_1 = \sOOhalt{o}$
   \item If $\judgeSreduce{C}{s_1}{s_3}$ 
-    then $\judgeDreduce{s_2}{s_4}$ for some $s_4$
+    then $\judgeDreduce{s_2}{s_4}$ 
+    and  $s_3 \approx^{*} s_4$
+    for some $s_4$
   \item If $\judgeDreduce{s_2}{s_4}$
-    then $\judgeSreduce{C}{s_1}{s_3}$ for some $s_3$
-  \item If $\judgeSreduce{C}{s_1}{s_3}$ 
-    and  $\judgeDreduce{s_2}{s_4}$ 
-    then $s_3 \approx^{*} s_4$
+    then $\judgeSreduce{C}{s_1}{s_3}$ 
+    and  $s_3 \approx^{*} s_4$
+    for some $s_3$
 \end{enumerate}
   Or diagrammatically, 
   \[\begin{array}{clclc}
@@ -2613,10 +2616,20 @@ s_1 \approx s_2'
 \end{lemma}
 \begin{proof}
   Part (1) and (2) follow from the definition of $s \approx s$.
-  Part (3) and (4) are true because we have transition rules for every 
-  non-halting state.
-  Part (5) is more interesting. Our goal is to prove that one reduction step 
-  in  \effCEK{C} corresponds to one or more steps in \ineffCEKD.  
+  Part (3) and (4) are more interesting. 
+  By the definition of $s \approx s$, it is straightforward to prove 
+  $\judgeSreduce{C}{s_1}{s_3}$ if and only if $\judgeDreduce{s_2}{s_4}$.
+  So we can prove two parts together by showing that 
+  \[
+  \text{if}\; s_{1} \approx s_{2}
+  \;\text{and}\;\judgeSreduce{C}{s_1}{s_3}
+  \;\text{and}\;\judgeDreduce{s_2}{s_4}
+  \;\text{then}\; s_3 \approx^{*} s_4.
+  \]
+  To put it another way, our goal is to proving 
+  one reduction step in \effCEK{C} corresponds to
+  one or more steps in \ineffCEKD.  
+  Although there are many cases, the general idea is the same.
   Consider
   \[
   \sOOreturn{\hcvOOcons{v_{11}}{c_{11}}{v_{12}}{c_{12}}}{
@@ -2627,13 +2640,13 @@ s_1 \approx s_2'
   \]
 
   By looking at the definition of $v \approx v$, we know
-  \[ c_{11} = seq(\dots seq(id(T_1),cast(T_1,l,T_3)) \dots) \]
-  \[ c_{12} = seq(\dots seq(id(T_2),cast(T_2,l,T_4)) \dots) \] 
+  \[ c_{11} = seq(seq(id(T_1),cast(T_1,l,T_3)) \dots) \]
+  \[ c_{12} = seq(seq(id(T_2),cast(T_2,l,T_4)) \dots) \] 
   \[ v_2 = \vOOcast{(\vOOcons{v_{21}}{v_{22}})}{
     \cOOcast{\POOprod{T_1}{T_2}}{l_1}{\POOprod{T_3}{T_4}}} \dots
   \]
   Thus we have the following reduction in \effCEK{C}. The equation 
-  reasoning employs the fact that $C$ is a monoid.
+  reasoning employs the premise that $C$ is a monoid.
   \[
   \begin{array}{ll}
 &
@@ -2643,15 +2656,20 @@ s_1 \approx s_2'
 \sOOreturn{v_{11}}{ext(c_{11},\kappa)}
 \\
 = &
-\sOOreturn{v_{11}}{ext(seq(\dots seq(id(T_1),cast(T_1,l,T_3))\dots),\kappa)}
+\sOOreturn{v_{11}}{ext(seq(seq(id(T_1),cast(T_1,l,T_3))\dots),\kappa)}
 \\
 = &
-\sOOreturn{v_{11}}{ext(cast(T_1,l,T_3),\dots,\kappa)}
+\sOOreturn{v_{11}}{
+	ext(id(T_1),ext(cast(T_1,l,T_3),ext(\dots,\kappa)))
+}
+\\
+= &
+\sOOreturn{v_{11}}{ext(cast(T_1,l,T_3),ext(\dots,\kappa)}
   \end{array}
   \]
 
 And we have the following reduction in \ineffCEKD, where the last state is 
-related to the last state in the above sequence.
+related to the above \effCEK{C} state.
 
 \[
 \begin{array}{ll}
@@ -2675,15 +2693,12 @@ related to the last state in the above sequence.
 
 Other cases are similar. Of course we need the lemma about $applyCast$ 
 (\ref{thm:lem-apply-cast-SD}) when cast applications happen in both machines. 
-And in case spliting, we shall use $cast(T,l,T)=id(T)$ to relate the 
-continuation functions.
+And in case spliting, we employ $cast(T,l,T)=id(T)$ to relate the continuation 
+functions.
 \end{proof}
 
-\todo[inline]{Should I invest time on restating the bisimulation lemma in the 
-standard format? -KC}
-
 \begin{corollary}[Correctness of \effCEK{C}]
-  \label{thm:surely-monoidic-eval}
+  \label{thm:SD-equiv}
   Suppose $C$ is an instance of the Cast ADT
   and the \lazyD{} ADT, $C$ is a monoid,
   and $cast(T,l,T)=id(T)$.
@@ -2699,7 +2714,6 @@ standard format? -KC}
   catch it up in \ineffCEKD\ by taking one or more steps in
   \ineffCEKD. As we just took a positive number of steps, we are
   closer to the halting state.
-  \todo[inline]{I might want to revise this proof. -KC}
 \end{proof}
 
 %% \subsection{\lazyD\ Cast ADT Respect \ineffCEKD}
@@ -2708,14 +2722,13 @@ standard format? -KC}
 %% In this subsection, we prove that for all $C$, if $C$ is a Lazy D Cast ADT, 
 %% then \evalEqv{\ineffCEKD}{\effCEK{C}}. We first 
 %% prove that all $S(C)$ where $C$ is a Lazy D Cast ADT are equivalent, then 
-%% connect this theorem to Lemma~\ref{thm:surely-monoidic-eval}.
+%% connect this theorem to Lemma~\ref{thm:SD-equiv}.
 
 \subsubsection{\effCEK{C_1} and \effCEK{C_2} are equivalence if $C_1$ and $C_2$ are Lazy D}
 
 We prove the equivalence among two \effCEK{C} machines with a strong
 bisimulation. The bisimulation relation is the smallest congruence relation 
-that also includes the pairs induced by the rules below.
-
+that also includes the rules below.
 \begin{gather*}
 \inference{
 }{
@@ -2759,11 +2772,9 @@ that also includes the pairs induced by the rules below.
   \longrightarrow_{\text{\ineffCEKD}} & s_4 \\
   \end{array}\]
 \end{lemma}
-\begin{proof} By cases on $s_{1} \approx s_{2}$.
-%
-  The key ideas of this proof are undoing sequencing with the property
-  (2) of Lazy D Cast ADT, and handling all possibly uses of
-  $cast(T,l,T)$ with property (3)-(11).
+\begin{proof} This proof is straightforward. The key ideas are undoing 
+sequencing with the property (2) of Lazy D Cast ADT, and handling all possibly 
+uses of $cast(T,l,T)$ with property (3)-(11).
 \end{proof}
 
 \begin{proposition}[Equivalence of Two \lazyD{} Cast ADTs]
@@ -2954,12 +2965,12 @@ c_2' = seq(c_2,cast(T_2,l,T_4))
 \label{fig:L-instance-LazyD}
 \end{figure}
 
-The $L$ cast representation is defined in
-\figref{fig:L-instance-LazyD}.
-
-\todo[inline]{KC, please write a 2-3 sentence overview of
-  the $L$ cast representation. -JS}
-
+The $L$ cast representation is defined in \figref{fig:L-instance-LazyD}.
+Casts in $L$ are lists of steps ($s$), where every step is like a cast in 
+\ineffCEKD. The operators $id$ and $seq$ are the empty list and list appending 
+respectively. And $applyCast$ applies steps from left to right. Steps are 
+confined by its type rule such that its source and target are different. This 
+restriction is necessary to show $cast(T,l,T) = id(T)$.
 
 \begin{proposition}[$L$ Properties]\label{thm:L-LazyD-monoid}\ 
   \begin{enumerate}
@@ -2969,12 +2980,10 @@ The $L$ cast representation is defined in
   \end{enumerate}
 \end{proposition}
 \begin{proof}
-  Part (1) is straightforward because property (1) and (2) are trivial and 
-  that $appS$ basically repeats property (3) - (11).
-  Part (2) is true because in $L$ casts are list, $seq(c,c)$ is list 
-  appending, and $id(T)$ is the empty list. Lists is know to be a monoid 
-  where the binary operation is appending and the identity element is the 
-  empty list.
+  Part (1) is straightforward because property (1) and (2) are 
+  trivially true and because $appS$ effectively repeats property (3) - 
+  (11).
+  Part (2) is true because list is known to be a monoid.
   Part (3) follows immediately from the definition of $cast(T,l,T)$
 \end{proof}
 
@@ -2985,8 +2994,9 @@ The $L$ cast representation is defined in
   \]
 \end{lemma}
 \begin{proof}
-  Immedialy from Correctness of \effCEK{C} \ref{thm:surely-monoidic-eval} and 
-  L properties \ref{thm:L-LazyD-monoid}.
+  Immedialy from 
+  Correctness of \effCEK{C} (Lemma~\ref{thm:SD-equiv}) and 
+  Properties of $L$ (Proposition~\ref{thm:L-LazyD-monoid}).
 \end{proof}
 
 \subsubsection{Correctness of \effCEK{C}}
@@ -3000,12 +3010,10 @@ The $L$ cast representation is defined in
   \]
 \end{theorem}
 \begin{proof}
-  If we have a Lazy D Cast ADT and it is a monoid, this 
-  proof is immediately from Lemma~\ref{thm:surely-monoidic-eval} and 
-  Proposition~\ref{thm:surely-lazyD-eqv}. One such representation is to 
-  represent casts as a list of triples of type, label, and type, where 
-  $id(T)$ is the empty list and $seq(c,c)$ is the list append. Another such 
-  representation is the \lazyD\ hypercoercion!
+	Immediately from 
+	\evalEqv{\effCEK{C}}{\effCEK{L}} (Lemma~\ref{thm:surely-lazyD-eqv})
+	and
+	\evalEqv{\effCEK{L}}{\ineffCEKD} (Lemma~\ref{lem:L-correct})
 \end{proof}
 
 
@@ -3100,24 +3108,17 @@ natural way.
   Theorem~\ref{thm:surely-lazyD-correct}) and that Lazy D hypercoercion is a 
   Lazy D Cast ADT (Lemma~\ref{thm:hc-surely-lazyD}). 
   %
-  Alternatively, from Lemma~\ref{thm:surely-monoidic-eval},
+  Alternatively, from Lemma~\ref{thm:SD-equiv},
   Lemma~\ref{thm:hc-surely-lazyD}, Proposition~\ref{thm:LazyD-HC-monoid}, and 
   Proposition~\ref{thm:LazyD-HC-identity-casts}
 \end{proof}
 
 \section{Conclusion} \label{sec:conclude}
 
-\todo[inline]{
-Back out and be like remember all our contribution. Bring them back to the 
-beginning. Repeat but not repeat literally.
-I can assume that people have eaten meat.
-}
-
 In this paper we presented a new cast representation, hypercoercions, in two 
 flavors, Lazy D and Lazy UD. Hypercoercions have a structurally recursive 
-composition, which is a win over coercions in normal form for mechanized 
-metatheory. What is more, hypercoercions have a more compact memory 
-representation.
+composition and have a more compact memory representation in comparison to 
+coercions in normal form.
 
 We also present steps toward the first framework for proving the correctness of 
 cast representations.
@@ -3126,9 +3127,6 @@ The framework includes abstract data types for cast representations (Cast ADT
 and Lazy D Cast ADT), an parameterized abstract machine \effCEK{C}, and a 
 theorem states that \effCEK{C} is equivalent to $D$ if $C$ is a Lazy D Cast 
 ADT.
-Cast ADT is the interface between cast representations and \effCEK{C}. Its
-implementation should provide four functions: $cast(T,l,T) = c$, $id(T)=c$, and 
-$seq(c,c)=c$ for cast construction, and $applyCast(v,c)=r$ for cast application.
 %
 Lazy D Cast ADT refines Cast ADT. We conjecture that Lazy D threesomes, and 
 Lazy D coercions in normal form are also Lazy D Cast ADT.
