@@ -1115,12 +1115,12 @@ calculus of \citet{siek2009exploring}.
 \label{sec:coercion-calculus}
 
 In this section, we review the
-coercions~\citep{henglein1994dynamic,herman2010space} and the normal
-form of \citet{siek2012interpretations} to motivate the design of
-hypercoercions.  We omit sum types and product types in this section
-because \citet{siek2012interpretations} did not discuss them. We
-assume a basic familiarity with coercions and direct readers who are
-not familiar with them to \citet{siek2012interpretations} and
+coercions~\citep{henglein1994dynamic,herman2010space} and the normal form of
+\citet{siek2012interpretations} to motivate the design of hypercoercions.  We
+omit sum types and product types in this section because
+\citet{siek2012interpretations} did not discuss them. We assume a basic
+familiarity with coercions, and suggest that readers unfamiliar with coercions
+to familiarize themselves with \citet{siek2012interpretations} and
 \citet{siek2015blame}.
 
 \begin{figure}
@@ -1164,10 +1164,10 @@ written $c$.
 %
 To review, an injection $I!$ takes a value from an injectable type
 $I$ to type $\TOOdyn$. An injectable type is simply a type that can be
-cast directly to (injection) and from (projection) $\TOOdyn$. The
+cast directly to and from $\TOOdyn$. The
 definition of injectable types depends on the blame strategy. With \lazyD,
 all pre-types are injectable. With \lazyUD, only
-$\POOfun{\TOOdyn}{\TOOdyn}$ is injectable.
+$\POOfun{\TOOdyn}{\TOOdyn}$ and $\POOunit$ are injectable.
 %
 A projection $I?^l$ takes a value from type $\TOOdyn$ to type $I$, or
 halts the program and blames $l$ if the value is of a different type.
@@ -1321,7 +1321,7 @@ values are defined later in
 Section~\ref{sec:hypercoercion-correctness}, after we introduce the framework 
 and its new space-efficient definition of values in Section~\ref{sec:framework}.
 
-\subsection{\lazyD{} hypercoercions}
+\subsection{\lazyD{} Hypercoercions}
 \label{sec:ld-hc}
 
 \begin{figure}
@@ -1500,10 +1500,10 @@ and its new space-efficient definition of values in Section~\ref{sec:framework}.
   \label{fig:HC-D}
 \end{figure}
 
-\figref{fig:HC-D} defines the functions $id$, $seq$, and $cast$ that
-construct \lazyD{} hypercoercions, towards satisfying the Cast abstract data 
-type defined in Section~\ref{sec:framework}.
-\figref{fig:HC-D} also defines some auxiliary functions.
+\figref{fig:HC-D} defines the functions $id$, $seq$, and $cast$ that construct
+\lazyD{} hypercoercions. We use these functions to satisfy the Cast abstract
+data type defined in Section~\ref{sec:framework}. \figref{fig:HC-D} also defines
+some auxiliary functions.
 
 The $seq$ operator is defined in terms of coercion composition, which
 is the key to compressing coercions and maintaining space-efficiency.
@@ -1571,7 +1571,7 @@ two basic properties of hypercoercions.
   By induction on $T$.
 \end{proof}
 
-\subsection{\lazyUD{} hypercoercions}
+\subsection{\lazyUD{} Hypercoercions}
 \label{sec:lud-hc}
 
 Hypercoercions for the UD blame tracking strategy have the same syntax
@@ -1781,7 +1781,7 @@ The $cast$ function is defined in Figure~\ref{fig:HC-UD-cast}.  Prior
 presentations of this function do not use auxiliary functions, as we
 do here. The reason that we introduction the auxiliary functions
 $\mathit{castToDyn}$, $\mathit{castFromDyn}$, $\mathit{castToInj}$,
-and $\mathit{castFromInj}$, is to ensure that all of the are
+and $\mathit{castFromInj}$, is to ensure that each of them is
 structurally recursive, which makes them straightforward to define in
 Agda.
 
@@ -1832,7 +1832,8 @@ is a sketch for the bit-level representation for hypercoercions.
   \item The tail requires 2 bits to differentiate between $\epsilon$,
     $!$, and $\bot^l$, and could use 24 bits for the label $l$.
   \end{itemize}
-  In the event that a program requires too many blame labels, then one
+  The bits for blame labels represent an index into a table of blame information.
+  In the event that a program requires too many blame labels, then the implementation
   can fallback to using the heap-allocated structure for more
   coercions.
 \end{itemize}
@@ -1948,7 +1949,7 @@ apply casts to values.
   target type
   \item[$applyCast(v,c)=r$] applies a cast to a value, producing a cast result
   \end{description}
-  We denote by $c : T_1 \Longrightarrow T_2$ to mean $c$ is in $Cast \; T_1 \; T_2$
+  We use the syntax $c : T_1 \Longrightarrow T_2$ to mean $c$ is in the set $Cast \; T_1 \; T_2$
   and we say ``$c$ is from $T_1$ to $T_2$''.
 \end{definition}
 
