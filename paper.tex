@@ -615,9 +615,9 @@ When evaluating a cast expression, the machine moves the cast to the
 continuation and evaluates the inner expression.
 %% Other
 %% transition rules starting from$Eval$states are standard.
-To apply a casted function, the machine first casts $v_1$, the operand, then
-applies $v_2$ (the underlying function) to the casted operand, and finally cast
-the return value.
+To apply a casted function, the machine first casts $v_1$ (the operand), then
+applies $v_2$ (the underlying function) to the casted operand, and then finally
+casts the return value.
 %
 To take out the first (resp. second) part of a casted pair, the
 machine firstly takes out the first (resp. second) part of $v$, the
@@ -1069,9 +1069,9 @@ of \citet{siek2009exploring}.
 
 Next, we define the CEK Machine for \lazyUD{}. The only difference with
 respect to \lazyD{} is in the definition of the $\mathit{applyCast}$
-function, in which a cast whose source or target is the unknown type
+function, in which a cast whose source or target is the dynamic type
 $\star$ is always split into two casts that go through an injectable
-type, that is, a type in which all sub-components are the unknown
+type, that is, a type in which all sub-components are the dynamic
 type, such as $\star \to \star$.
 
 
