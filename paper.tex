@@ -3104,10 +3104,11 @@ c_2' = seq(c_2,cast(T_2,l,T_4))
 
 The $L$ cast representation is defined in \figref{fig:L-instance-LazyD}.
 Casts in $L$ are lists of steps ($s$), where every step is like a cast in 
-\ineffCEKD. The operators $id$ and $seq$ are the empty list and list appending 
-respectively. And $applyCast$ applies steps from left to right. Steps are 
-confined by its type rule such that its source and target are different. This 
-restriction is necessary to show $cast(T,l,T) = id(T)$.
+\ineffCEKD. The function $applyCast$ applies steps from left to right. Steps are 
+restricted by its typing rule such that its source and target are different. This 
+restriction is necessary to show $cast(T,l,T) = id(T)$. With this representation
+of casts, the operators $id$ and $seq$ are the empty list of steps and list
+append on casts respectively. 
 
 \begin{proposition}[$L$ Properties]\label{thm:L-LazyD-monoid}\ 
   \begin{enumerate}
