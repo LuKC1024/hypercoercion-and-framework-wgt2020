@@ -1910,6 +1910,10 @@ values that are cast to the dynamic type, as in \citet{wadler2009well}.
   \rOOsucc{v} \mid
   \rOOfail{l}
 }
+\stxrule{\mathcal{E}}{Environments}{
+	\text{a partial function}\;\{\langle x , v \rangle , \dots \}
+}
+
   \end{array}
   \]
 \end{definition}
@@ -1930,7 +1934,8 @@ corresponds to $(\hcvOOcons{v_1'}{id(T_1)}{v_2'}{id(T_2)})$.
 %: \POOprod{T_3}{T_4}
 %}
 
-Cast results ($r$) are the same as for \ineffCEK. 
+Cast results ($r$) and environments ($\mathcal{E}$) are the same as for 
+\ineffCEK. 
 Value typing ($\judgeType{v}{T}$) is defined in the obvious way.
 
 \subsection{The Cast Abstract Data Types}
