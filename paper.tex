@@ -3163,17 +3163,21 @@ correct. First, we define $applyCast(v,c)$ to make it an instance of Cast ADT,
 then prove that it is also Lazy D, and finally apply 
 Theorem~\ref{thm:surely-lazyD-correct} to finish the proof.
 
-\figref{hc-applyCast} defines $applyCast(v,c)$ for \lazyD\ hypercoercions. 
-Applying the identity cast for the 
-dynamic type succeeds immediately. Otherwise, we firstly 
-apply the middle, then apply the tail. We denote by $r \; >>= \; f$ to mean 
-that if $r$ is $\rOOsucc{v}$, the result is $f(v)$, otherwise, the result 
-is the failure. The functions
-$ applyMiddle(v,\ell,m)$ and $applyTail(v,t)$ are straightforward.
-In the definition of $applyMiddle(v,\ell,m)$, we generalize 
-shallow-consistency to compare middles and values ($v \smile m$) in the 
-obvious way. Likewise, $applyTail(v, t)$ interprets the tail to the appropriate
-cast of $v$.
+\figref{hc-applyCast} defines $applyCast(v,c)$ for \lazyD\ hypercoercions.
+Applying the identity cast for the dynamic type succeeds immediately. If the
+value is injected and the cast is not the identity cast, then $applyCast$
+projects the value and relies on $applyMiddle$ to ensure that value is shallow
+consistent with target type of the head. Regardless of whether or not the value
+is projected, $applyCast$ applies the middle, then apply the tail if the middle
+succeeds. We denote by $r \; >>= \; f$ to mean that if $r$ is $\rOOsucc{v}$, the
+result is $f(v)$, otherwise, the result is the failure. In the definition of
+$applyMiddle(v,\ell,m)$, we generalize shallow-consistency to compare middles
+and values ($v \smile m$) in the obvious way. When a value is shallowly
+inconsistent from the middle, it is the result of projecting a value that was
+shallowly inconsistent with the expected type of the projection in the head. Thus, a
+blame label $l$ must have been pass in as $\ell$ and is to blame. Finally if a
+failure in $applyMiddle$ has not occurred then $applyTail(v, t)$ interprets the
+tail, $t$, to the appropriate cast of the value $v$.
 
 \begin{figure}
   \fbox{$applyCast(v,c) = r$}
@@ -3300,10 +3304,10 @@ representation because $S(H)$ is equivalent to $D$.
 
 
 %% Appendix
-\appendix
-\section{Appendix}
+% \appendix
+% \section{Appendix}
 
-Text of appendix \ldots
+% Text of appendix \ldots
 
 
 \end{document}
