@@ -615,9 +615,9 @@ When evaluating a cast expression, the machine moves the cast to the
 continuation and evaluates the inner expression.
 %% Other
 %% transition rules starting from$Eval$states are standard.
-To apply a casted function, the machine first casts $v_1$, the
-operand, then applies the cast operand to $v_2$, the underlying
-function, and finally cast the return value.
+To apply a casted function, the machine first casts $v_1$, the operand, then
+applies $v_2$ (the underlying function) to the casted operand, and finally cast
+the return value.
 %
 To take out the first (resp. second) part of a casted pair, the
 machine firstly takes out the first (resp. second) part of $v$, the
@@ -729,7 +729,7 @@ evaluation ($eval_\mathcal{x}(e)$) are standard~\citep{felleisen03:_pllc}.
     P \smile \star
   } \\
   \inference{}{
-    \iota \smile \iota
+    \POOunit \smile \POOunit
   } \quad
   \inference{}{
     T_{11} \rightarrow T_{12} \smile T_{21} \rightarrow T_{22}
