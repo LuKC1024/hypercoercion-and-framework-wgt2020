@@ -2030,29 +2030,24 @@ $cast(T_1,l,T_2)$ acts like the Lazy D $applyCast$ for \ineffCEK\
 \subsection{A Space-efficient CEK Machine}
 \label{sec:framework:cek}
 
-%<<<<<<< HEAD
 \effCEK{C} is a space-efficient CEK machine parameterized over the Cast ADT ($C$).  
 The key differences between \effCEK{C} and \ineffCEK\ are the places where 
-casts can accumulate at runtime, that is, values and continuations. We discuss 
-above the difference in values (Definition~\ref{def:values-effCEK}).
+casts can accumulate at runtime, that is, values and continuations.
+The differences regarding values was discussed 
+above (Definition~\ref{def:values-effCEK}).
+We define contiuations below, with $\kappa$ ranging over continuations
+and $k$ ranging over pre-continuations.
+%
+Pre-continuations are like the continuations in \ineffCEK{}, but there is no 
+constructor for casts.
+%
+A continuation is now a pre-continuation prefixed with a cast.
+
 
 \begin{definition}[Continuations for the \effCEK{C} machine] 
 \label{def:values-effCEK}
-%=======
-%\begin{figure}
-%%  Syntax
-%>>>>>>> bd39888b0287dbef61e981bd0e79bc8822fc85ce
   \[
   \begin{array}{lrcl}
-% \stxrule{r}{cast results}{
-%   \rOOsucc{v} \mid
-%   \rOOfail{l}
-% }
-% \stxrule{s}{states}{
-%   \sOOinspect{e}{\mathcal{E}}{\kappa} \mid{}
-%   \sOOreturn{v}{\kappa} \mid{}
-%   \sOOhalt{o}
-% }
   \stxrule{\kappa}{Continuation}{
     \kOOcast{c}{k}
   }
@@ -2079,14 +2074,6 @@ above the difference in values (Definition~\ref{def:values-effCEK}).
 \end{definition}
 
 
-Let $\kappa$ range over continuations and let $k$ range over
-pre-continuations.
-%
-Pre-continuations are like the continuations in \ineffCEK{}, but there is no 
-constructor for casts.
-%
-A continuation is now a pre-continuation prefixed with a cast.
-%
 Continuations in \ineffCEKD{} have zero or more casts at the top.  In 
 \effCEK{C}, however, every continuation has exactly one cast at the top.
 Continuations in \ineffCEK\ that have no casts at the top correspond
@@ -2411,7 +2398,10 @@ $s_1 \approx s_2$, where $s_1 \in \effCEK{C}$ and $s_2 \in \ineffCEKD{}$.
 It is the smallest congruence relation that also includes the
 pairs induced by the rules in Fig.~\ref{fig:bisim-SC-D}.
 %
-The relation is mutually defined on continuations, written $\kappa
+One nice aspect of using abstract machines for this proof is that
+the expressions in the machine are simply related by syntactic equality.
+%
+The bisimulation relation is mutually defined on continuations, written $\kappa
 \approx \kappa : T$, where $T$ is their source type, and values, written $v 
 \approx v : T$, where $T$ is their type.
 %
@@ -2440,7 +2430,7 @@ If $\kOOcast{c}{k_1} \approx \kappa_2 : T$, extending the right-hand
 side with a cast $T_1 \Rightarrow^l T_2$ and sequencing
 $cast(T_1,l,T_2)$ with $c$ on the left-hand side, produces related
 continuations. This takes care of the difference between
-the transition rules for $e \langle T_1 \Rightarrow^l T_2$
+the transition rules for $e \langle T_1 \Rightarrow^l T_2 \rangle$
 on the two machines.
 
 \begin{figure}
@@ -2626,31 +2616,10 @@ handle the transitions that apply casts to values.
   Then apply properties (3) - (11) of Lazy D Cast when applicable.
 \end{proof}
 
-%Before proving the weak bisimulation between \effCEK{C} and \ineffCEKD, we 
-%introduce one more definition. $s_1 \approx^{*} s_2$ means we will get $s_1 
-%\approx s_2$ after more transition steps in \ineffCEKD.
-%
-%\begin{definition}[$s \approx^{*} s$]
-%Given any two states $s_1$ and $s_2$, we write $s_1 \approx^{*} s_2$
-%if and only if there exists a state $s_2' \in \text{\ineffCEKD}$ such
-%that
-%\[
-%\judgeDreduceTrans{s_2}{s_2'}
-%\;\text{and}\;
-%s_1 \approx s_2'
-%\]
-%\end{definition}
-%
-%%\todo[inline]{Explain that this is an unusual formulation of a weak
-%%  bisimulation.  We promise it will all be OK regarding how it is used
-%%  in the correctness proof for S(C). -JS}
-%
-%The lemma below formulate the weak bisimulation between \effCEK{C} and 
-%\ineffCEKD. It is unusual because we use $s \approx s$ in premise while $s 
-%\approx^{*} s$ in conclusion. As we will show in the correctness proof for 
-%\effCEK{C}, however, this formulation is fine for our purpose.
+We now come to the main lemma, the weak bisimulation between
+\effCEK{C} and \ineffCEKD{}.
 
-\begin{lemma}[Weak Bisimulation between \effCEK{C} and \ineffCEKD]
+\begin{lemma}[Weak Bisimulation between \effCEK{C} and \ineffCEKD{}]
   \label{thm:SD-bisim}
   Assume $C$ implements Lazy D Cast ADT
   and $C$ is a monoid
@@ -2789,7 +2758,7 @@ $cast(T,l,T)=id(T)$ to relate the continuation functions.
 \begin{corollary}[Correctness of \effCEK{C}]
   \label{thm:SD-equiv}
   Suppose $C$ is an instance of the Cast ADT
-  and the \lazyD{} ADT, $C$ is a monoid
+  and the \lazyD{} ADT, $C$ is a monoid,
   and $cast(T,l,T)=id(T)$.
   If $\judgetype{\emptyset}{e}{T}$ and $o : T$, then
   \[
@@ -2932,7 +2901,7 @@ that also includes the rules below.
   \]
 \end{proposition}
 \begin{proof}
-  Without lose of generality, assume $\judgeSreduce{C_1}{e}{o}$, prove 
+  Without loss of generality, assume $\judgeSreduce{C_1}{e}{o}$ and prove 
   $\judgeSreduce{C_2}{e}{o}$.\\
   By the definition of $eval_{\mathcal{S}(C)}$, we know 
 \[
@@ -3117,8 +3086,8 @@ Casts in $L$ are lists of steps ($s$), where every step is like a cast in
 \ineffCEKD. The function $applyCast$ applies steps from left to right. Steps are 
 restricted by its typing rule such that its source and target are different. This 
 restriction is necessary to show $cast(T,l,T) = id(T)$. With this representation
-of casts, the operators $id$ and $seq$ are the empty list of steps and list
-append on casts respectively. 
+of casts, the operator $id$ produces an empty list of steps
+and $seq$ appends two lists of steps. 
 
 \begin{proposition}[$L$ Properties]\label{thm:L-LazyD-monoid}\ 
   \begin{enumerate}
@@ -3285,7 +3254,7 @@ correctness of cast representations.
 The framework includes abstract data types for cast representations
 (Cast ADT and its refinement Lazy D Cast ADT), a parameterized abstract machine
 \effCEK{C}, and a theorem which states that \effCEK{C} is equivalent
-to $D$ when $C$ is a Lazy D Cast ADT.
+to $\ineffCEKD{}$ when $C$ is a Lazy D Cast ADT.
 %
 %The Lazy D Cast ADT refines the Cast ADT. 
 %
