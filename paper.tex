@@ -3121,7 +3121,7 @@ append on casts respectively.
   Part (1) is straightforward because property (1) and (2) are 
   trivially true and because $appS$ effectively repeats property (3) - 
   (11).
-  Part (2) is true because list is known to be a monoid.
+  Part (2) is true because lists are known to be a monoid with respect to append.
   Part (3) follows immediately from the definition of $cast(T,l,T)$
 \end{proof}
 
@@ -3168,11 +3168,12 @@ Applying the identity cast for the
 dynamic type succeeds immediately. Otherwise, we firstly 
 apply the middle, then apply the tail. We denote by $r \; >>= \; f$ to mean 
 that if $r$ is $\rOOsucc{v}$, the result is $f(v)$, otherwise, the result 
-is the failure.
+is the failure. The functions
 $ applyMiddle(v,\ell,m)$ and $applyTail(v,t)$ are straightforward.
 In the definition of $applyMiddle(v,\ell,m)$, we generalize 
 shallow-consistency to compare middles and values ($v \smile m$) in the 
-obvious way.
+obvious way. Likewise, $applyTail(v, t)$ interprets the tail to the appropriate
+cast of $v$.
 
 \begin{figure}
   \fbox{$applyCast(v,c) = r$}
