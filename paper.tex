@@ -218,7 +218,12 @@
 \newcommand{\judgeUDreduceTrans}[2]{#1 \longmapsto_{\mathcal{UD}}^{*} #2}
 \newcommand{\judgeUDeval}[2]{eval_{\mathcal{UD}}(#1) = #2}
 \newcommand{\effCEK}[1]{\ensuremath{\mathcal{S}(#1)}}
-\newcommand{\evalEqv}[2]{\ensuremath{eval_{\text{#1}} = eval_{\text{#2}}}}
+\newcommand{\evalEqv}[2]{
+	\ensuremath{
+		eval_{\text{#1}}(e) = o
+		\;\text{if and only if}\;
+		eval_{\text{#2}}(e) = o}
+}
 \newcommand{\continue}[2]{cont(#2,#1)}
 \newcommand{\highlight}[1]{{\color{red} #1}}
 
@@ -3127,6 +3132,7 @@ append on casts respectively.
 
 \begin{lemma}[$L$ is Correct wrt. \ineffCEKD]
   \label{lem:L-correct}
+  If $\judgetype{\emptyset}{e}{T}$ and $o : T$, then
   \[
   \text{\evalEqv{\effCEK{L}}{\ineffCEKD}}
   \]
@@ -3144,14 +3150,19 @@ append on casts respectively.
   Suppose $C$ is a \lazyD{} Cast ADT.  If
   $\judgetype{\emptyset}{e}{T}$ and $o : T$, then
   \[
-  \text{\evalEqv{\effCEK{C}}{\ineffCEKD}}
+  \evalEqv{\effCEK{C}}{\ineffCEKD}
+%  \judgeSeval{C}{e}{o}
+%  \;\text{if and only if}\;
+%  \judgeDeval{e}{o}
   \]
 \end{theorem}
 \begin{proof}
 	Immediately from 
-	\evalEqv{\effCEK{C}}{\effCEK{L}} (Lemma~\ref{thm:surely-lazyD-eqv})
+	Equivalence of \lazyD{} Cast ADTs (Lemma~\ref{thm:surely-lazyD-eqv})
+%	\evalEqv{\effCEK{C}}{\effCEK{L}} (Lemma~\ref{thm:surely-lazyD-eqv})
 	and
-	\evalEqv{\effCEK{L}}{\ineffCEKD} (Lemma~\ref{lem:L-correct})
+	$L$ is Correct wrt. \ineffCEKD{} (Lemma~\ref{lem:L-correct})
+%	\evalEqv{\effCEK{L}}{\ineffCEKD} (Lemma~\ref{lem:L-correct})
 \end{proof}
 
 
