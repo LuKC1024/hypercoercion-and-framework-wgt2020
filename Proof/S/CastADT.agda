@@ -1,16 +1,16 @@
-module CEKcc.CastRep
+module S.CastADT
   (Label : Set)
   where
 
 open import Types
 open import Variables
 open import Terms Label
-open import CEKcc.Values Label
+open import S.Values Label
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; cong)
 open import Relation.Nullary using (Dec; yes; no; ¬_)
 
-record CastRep : Set₁ where
+record CastADT : Set₁ where
   field
     Cast : Type → Type → Set
 
@@ -24,14 +24,14 @@ record CastRep : Set₁ where
     apply-cast : ∀ {T1 T2} → Cast T1 T2 → Val Cast T1 → CastResult Cast T2
 
 -- only required for the bisim between D and S(C)
-record CastIdIsId (CR : CastRep) : Set where
-  open CastRep CR
+record CastIdIsId (CR : CastADT) : Set where
+  open CastADT CR
   field
     lem-cast-id-is-id : ∀ l T →
       mk-cast l T T ≡ mk-id T
 
-record Monoid (CR : CastRep) : Set where
-  open CastRep CR
+record Monoid (CR : CastADT) : Set where
+  open CastADT CR
   field
     lem-id-l : ∀ {T1 T2}
       → (c : Cast T1 T2)
@@ -48,8 +48,8 @@ record Monoid (CR : CastRep) : Set where
       ---
       → mk-seq (mk-seq c1 c2) c3 ≡ mk-seq c1 (mk-seq c2 c3)
 
-record SurelyLazyD (CR : CastRep) : Set where
-  open CastRep CR
+record LazyD (CR : CastADT) : Set where
+  open CastADT CR
   field
     lem-id : ∀ T
       → (v : Val Cast T)  

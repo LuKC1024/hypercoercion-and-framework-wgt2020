@@ -1,9 +1,9 @@
-module CEKcc.LCast
+module S.LCast
   (Label : Set)
   where
 
 open import Types
-open import CEKcc.CastRep Label
+open import S.CastADT Label
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; cong)
 open import Relation.Nullary using (Dec; yes; no; ¬_)
@@ -66,7 +66,7 @@ mk-cast-id-is-id l T | yes refl = refl
 mk-cast-id-is-id l T | no ¬p = ⊥-elim (¬p refl)
 
 open import Terms Label
-open import CEKcc.Values Label Cast
+open import S.Values Label Cast
 open import Variables
 
 do-cast : Label → (T1 T2 : Type) → ¬ T1 ≡ T2 → Val T1 → CastResult T2
@@ -204,8 +204,10 @@ lem-cast-⊕-r T T11 T12 .T11 .T12 l v c | yes refl with T11 ≡? T11
 ...   | no ¬p = ⊥-elim (¬p refl)
 lem-cast-⊕-r T T11 T12 T21 T22 l v c | no ¬p = refl
 
-cast-rep : CastRep
-cast-rep
+-- Proposition 4.11 (L Properties)
+
+cast-adt : CastADT
+cast-adt
   = record
     { Cast = Cast
     ; mk-cast = mk-cast
@@ -213,8 +215,8 @@ cast-rep
     ; mk-id = mk-id
     ; apply-cast = apply-cast
     }
-cast-rep-surely-lazyD : SurelyLazyD cast-rep
-cast-rep-surely-lazyD
+cast-adt-LazyD : LazyD cast-adt
+cast-adt-LazyD
   = record
     { lem-id = lem-id
     ; lem-seq = lem-seq
@@ -232,14 +234,14 @@ cast-rep-surely-lazyD
 
 -- additional lemmas for bisimulation between CEKcc and CEKc
  
-cast-rep-monoid : Monoid cast-rep
-cast-rep-monoid
+cast-adt-monoid : Monoid cast-adt
+cast-adt-monoid
   = record
     { lem-id-l = mk-seq-mk-id-l
     ; lem-id-r = mk-seq-mk-id-r
     ; lem-assoc = mk-seq-assoc
     }
 
-cast-rep-cast-id-is-id : CastIdIsId cast-rep
-cast-rep-cast-id-is-id
+cast-adt-cast-id-is-id : CastIdIsId cast-adt
+cast-adt-cast-id-is-id
   = record { lem-cast-id-is-id = mk-cast-id-is-id }

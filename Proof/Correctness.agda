@@ -1,9 +1,9 @@
-open import CEKcc.CastRep
+open import S.CastADT
 
 module Correctness
   (Label : Set)
-  (CR : CastRep Label)
-  (CS : SurelyLazyD Label CR)
+  (CR : CastADT Label)
+  (CS : LazyD Label CR)
   where
 
 open import Variables
@@ -11,42 +11,53 @@ open import Types
 open import Terms Label
 open import Observe Label
 
-open import CEKcc.LCast Label
+open import S.LCast Label
   using ()
-  renaming (cast-rep to HCR; cast-rep-surely-lazyD to HCS; cast-rep-monoid to HCM; cast-rep-cast-id-is-id to HCI)
+  renaming (cast-adt to HCR; cast-adt-LazyD to HCS; cast-adt-monoid to HCM; cast-adt-cast-id-is-id to HCI)
 
-open import Simulation Label HCR HCM HCS HCI
+open import Bisimulation Label HCR HCM HCS HCI
   using ()
-  renaming(thm-evalo-l to cekcc->cekc; thm-evalo-r to cekc->cekcc)
+  renaming(correctness-l to SL-D; correctness-r to D-SL)
   
-open import CEKcc.BiSimulation Label
+open import S.Bisimulation Label CR CS HCR HCS
   using ()
-  renaming (thm-evalo to cekcc->cekcc)
+  renaming (equiv-l to SC-SL; equiv-r to SL-SC)
 
-import CEKc.Machine
-import CEKc.TCast
-module LC = CEKc.TCast Label
-module LM = CEKc.Machine Label
-module LP = LM.Progress LC.apply-cast
+import D.Machine
+import D.TCast
+
+module L where
+  module LC = D.TCast Label
+  module LM = D.Machine Label
+  module LP = LM.Progress LC.apply-cast
                         LC.cast-dom LC.cast-cod
                         LC.cast-car LC.cast-cdr
                         LC.cast-inl LC.cast-inr
+  -- open LC public
+  -- open LM public
+  open LP public
 
-import CEKcc.Machine
-module RM = CEKcc.Machine Label CR
+import S.Machine
+module RM = S.Machine Label CR
 
-thm-evalo-l : ∀ {T}
+-- Lemma 4.12 (L is Correct wrt. D)
+
+-- Left-to-right is SL-D; right-to-left is D-SL
+
+-- Theorem 4.13 (S(C) is Correct wrt. D)
+
+framework-l : ∀ {T}
   → {e : ∅ ⊢ T}
   → {o : Observe T}
-  → LP.Evalo e o
+  → L.Evalo e o
   ---
   → RM.Evalo e o
-thm-evalo-l ev = cekcc->cekcc HCR HCS CR CS (cekc->cekcc ev)
+framework-l ev = SL-SC (D-SL ev)
 
-thm-evalo-r : ∀ {T}
+framework-r : ∀ {T}
   → {e : ∅ ⊢ T}
   → {o : Observe T}
   → RM.Evalo e o
   ---
-  → LP.Evalo e o
-thm-evalo-r ev = cekcc->cekc (cekcc->cekcc CR CS HCR HCS ev)
+  → L.Evalo e o
+framework-r ev = SL-D (SC-SL ev)

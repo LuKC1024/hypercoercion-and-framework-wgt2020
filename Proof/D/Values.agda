@@ -1,6 +1,6 @@
 open import Types
 
-module CEKcc.Values
+module D.Values
   (Label : Set)
   (Cast : Type → Type → Set)
   where
@@ -13,37 +13,36 @@ open import Variables
 mutual
   
   data Val : Type → Set where
-    inj : ∀ P → Val (` P) → Val ⋆
+    cast : ∀ {P1 T1}
+      → (v : Val (` P1))
+      → (p : (` P1) ⌣ T1)
+      → (c : Cast (` P1) T1)
+      → Val T1
+    
     fun : ∀ {Γ}
-      → {T1 T2 T3 T4 : Type}
+      → {T1 T2 : Type}
       → (env : Env Γ)
-      → (c₁ : Cast T3 T1)
       → (b : (Γ , T1) ⊢ T2)
-      → (c₂ : Cast T2 T4)
       -------------
-      → Val (` T3 ⇒ T4)
+      → Val (` T1 ⇒ T2)
 
     sole :
       --------
         Val (` U)
 
-    cons : ∀ {T1 T2 T3 T4}
+    cons : ∀ {T1 T2}
       → Val T1
-      → (c₁ : Cast T1 T3)
       → Val T2
-      → (c₂ : Cast T2 T4)
       ---------
-      → Val (` T3 ⊗ T4)
+      → Val (` T1 ⊗ T2)
 
-    inl : ∀ {T T1 T2}
-      → Val T
-      → (c : Cast T T1)
+    inl : ∀ {T1 T2}
+      → Val T1
       --------
       → Val (` T1 ⊕ T2)
       
-    inr : ∀ {T T1 T2}
-      → Val T
-      → (c : Cast T T2)
+    inr : ∀ {T1 T2}
+      → Val T2
       --------
       → Val (` T1 ⊕ T2)
 
