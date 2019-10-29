@@ -1,4 +1,4 @@
-module CEKc.TCast
+module D.TCast
   (Label : Set)
   where
 
@@ -8,7 +8,7 @@ data Cast : Type → Type → Set where
   cast : (l : Label)(T1 T2 : Type) → Cast T1 T2
 
 open import Terms Label
-open import CEKc.Values Label Cast
+open import D.Values Label Cast
 
 open import Relation.Nullary using (Dec; yes; no)
 

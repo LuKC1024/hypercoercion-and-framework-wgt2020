@@ -1,8 +1,8 @@
-module CEKcc.HCast (Label : Set) where
+module S.HCast (Label : Set) where
 open import Types
 open import Variables
 open import Terms Label
-open import CEKcc.CastRep Label
+open import S.CastADT Label
 
 open import Relation.Nullary using (Dec; yes; no; ¬_)
 open import Data.Sum using (_⊎_; inj₁; inj₂)
@@ -296,7 +296,7 @@ mutual
   seq-assoc (↷ h (rest {Q = _} b (last t))) ℓ1 (↷ h₁ (rest {_} {P3} b₁ (last t₁))) ℓ2 (↷ h₂ (rest {_} b₂ t₂)) | no ¬p | no ¬p₁ | inj₂ y | no ¬p₂ | inj₁ refl = ⊥-elim (¬p₂ (⌣refl (` _)))
   seq-assoc (↷ h (rest {Q = P1} b (last t))) ℓ1 (↷ h₁ (rest {_} {P3} b₁ (last t₁))) ℓ2 (↷ h₂ (rest {_} b₂ t₂)) | no ¬p | no ¬p₁ | inj₂ y | no ¬p₂ | inj₂ y₁ = refl 
 
-open import CEKcc.Values Label Cast
+open import S.Values Label Cast
   
 module AlternativeApplyCast where
  
@@ -573,8 +573,8 @@ lem-cast-⊕-r : ∀ T T11 T12 T21 T22
     succ (inr v (mk-seq c (mk-cast l T12 T22)))
 lem-cast-⊕-r T T11 T12 T21 T22 l v c = refl
 
-cast-rep : CastRep
-cast-rep
+cast-adt : CastADT
+cast-adt
   = record
     { Cast = Cast
     ; mk-cast = mk-cast
@@ -582,8 +582,8 @@ cast-rep
     ; mk-id = mk-id
     ; apply-cast = apply-cast
     }
-cast-rep-surely-lazyD : SurelyLazyD cast-rep
-cast-rep-surely-lazyD
+cast-adt-LazyD : LazyD cast-adt
+cast-adt-LazyD
   = record
     { lem-id = lem-id
     ; lem-seq = lem-seq
@@ -597,8 +597,8 @@ cast-rep-surely-lazyD
     ; lem-cast-⊕-l = lem-cast-⊕-l
     ; lem-cast-⊕-r = lem-cast-⊕-r
     }
-cast-rep-monoid : Monoid cast-rep
-cast-rep-monoid
+cast-adt-monoid : Monoid cast-adt
+cast-adt-monoid
   = record
     { lem-id-l = seq-id-l
     ; lem-id-r = seq-id-r
@@ -616,6 +616,6 @@ lem-cast-id-is-id l (` (T₁ ⊗ T₂))
 lem-cast-id-is-id l (` (T₁ ⊕ T₂))
   rewrite lem-cast-id-is-id l T₁ | lem-cast-id-is-id l T₂ = refl
 
-cast-rep-cast-id-is-id : CastIdIsId cast-rep
-cast-rep-cast-id-is-id
+cast-adt-cast-id-is-id : CastIdIsId cast-adt
+cast-adt-cast-id-is-id
   = record { lem-cast-id-is-id = lem-cast-id-is-id }

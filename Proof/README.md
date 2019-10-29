@@ -1,12 +1,20 @@
-# Hyper-coercion for LazyD
+# Inventory
 
-## Inventory
+## Where to find the definitions?
 
-* [CEKc](./CEKc): stuffs related to CEK machine with Cast.
-  + [CEKc/Machine](./CEKc/Machine.agda): CEKc machine.
-  + [CEKc/TCast](./CEKc/TCast.agda): Represent casts with types.
-* [CEKcc](./CEKc): stuffs related to CEK machine with Cast and cast Composition
-  + [CEKcc/Machine](./CEKc/Machine.agda): CEKcc machine.
-  + [CEKcc/TCast](./CEKc/TCast.agda): Represent casts with Types and labels.
-  + [CEKcc/LCast](./CEKc/LCast.agda): Represent casts with Lists of tuples of types and label.
-  + [CEKcc/HCast](./CEKc/HCast.agda): Represent casts with Hyper-coercions.
+* [The D abstract machine](./D)
+* [The S(C) abstract machine](./S)
+* [Cast ADT](./S/CastADT.agda)
+* [Lazy D hypercoercions](./S/HCast.agda)
+* [List-based Cast ADT](./S/LCast.agda)
+
+## Where to find the theorems?
+
+* [Lemma 4.6 (applyCast Preserves Bisimulation)](./Bisimulation.agda)
+* [Lemma 4.7 (Weak Bisimulation between S(C) and D)](./Bisimulation.agda)
+* [Corollary 4.8 (Correctness of S(C))](./Bisimulation.agda)
+* [Lemma 4.9 (Strong Bisimulation Among S(·))](./S/Bisimulation.agda)
+* [Proposition 4.10 (Equivalence of Two Lazy D Cast ADTs)](./S/Bisimulation.agda)
+* [Proposition 4.11 (L Properties)](./S/LCast.agda)
+* [Lemma 4.12 (L is Correct wrt. D)](./Correctness.agda)
+* [Theorem 4.13 (S(C) is Correct wrt. D)](./Correctness.agda)
