@@ -2,8 +2,8 @@
 
 ## Where to find the definitions?
 
-* [The D abstract machine](./D)
-* [The S(C) abstract machine](./S)
+* [The D abstract machine](./D/Machine.agda)
+* [The S(C) abstract machine](./S/Machine.agda)
 * [Cast ADT](./S/CastADT.agda)
 * [Lazy D hypercoercions](./S/HCast.agda)
 * [List-based Cast ADT](./S/LCast.agda)

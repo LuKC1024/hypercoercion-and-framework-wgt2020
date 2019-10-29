@@ -253,14 +253,14 @@ do-cast l T1 T2 v | no ¬p
 
 -- Lemma 4.6 (applyCast Preserves Bisimulation)
 apply-cast : ∀ {T1 T2}
-  → {lc : L.Cast T1 T2}
-  → {rc : RC.Cast T1 T2}
-  → CastRelate lc rc
   → {lv : LV.Val T1}
   → {rv : RV.Val T1}
   → ValRelate lv rv
+  → {lc : L.Cast T1 T2}
+  → {rc : RC.Cast T1 T2}
+  → CastRelate lc rc
   → CastResultRelate (L.apply-cast lc lv) (RC.apply-cast rc rv)
-apply-cast (cast l T1 T2) v
+apply-cast v (cast l T1 T2)
   with L.apply-cast (L.mk-cast l T1 T2) (lval v) | RC.do-cast l T1 T2 (rval v) | do-cast l T1 T2 v
 ... | LV.succ _ | RV.succ _ | succ u = succ u
 ... | LV.fail _ | RV.fail _ | fail l₁ = fail l₁
@@ -537,7 +537,7 @@ do-app (fun E b) rand k
   = StateRelate*-done (` inspect b (rand ∷ E) (ext-cont-id k))
 do-app (cast-fun l T3 T4 T5 T6 E c1 b c2 {g = g} rator) rand k
   rewrite lem-do-app E (L.mk-seq (L.mk-cast l T5 T3) c1) b c2 (L.mk-cast l T4 T6) (lval rand) (lcont k)
-  = StateRelate*-step (helper (apply-cast (cast l T5 T3) rand))
+  = StateRelate*-step (helper (apply-cast rand (cast l T5 T3)))
   where
     helper : CastResultRelate (L.apply-cast (L.mk-cast l T5 T3) (lval rand)) (RC.apply-cast (RC.mk-cast l T5 T3) (rval rand))
       → StateRelate* (LM.do-app (LV.fun E (L.mk-seq (L.mk-cast l T5 T3) c1) b c2)
