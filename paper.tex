@@ -606,7 +606,7 @@ observations ($observe(v) = o$) is defined in the obvious way.
 Let $v$ range over values. A value is either the unit, a function, a pair, a 
 left injection, a right injection, or a casted value. Value typing rules 
 restrict the casts in casted values. If the cast is between pre-types, source 
-and target types must have the same type constructor at the top ($P_1 \approx 
+and target types must have the same type constructor at the top ($P_1 \smile 
 P_2$). If the cast is from a pre-type to the dynamic type, the pre-type must be 
 injectable. The definition of injectable types depends on blame
 strategies: for the \lazyD\ strategy, every pre-type is injectable;
@@ -1888,7 +1888,7 @@ for \lazyD{} (supercoercions, coercions in normal form, threesomes)
 are instances of the Lazy D Cast ADT.  We are working on a similar
 theorem for \lazyUD{} cast representations.
 
-We then apply this framework to \lazyD{} hypercoercions
+We then apply this framework to \lazyD{} hypercoercions $H$
 (Section~\ref{sec:hypercoercion-correctness}), where we show that $H$
 is an instance of the Lazy D Cast ADT, and therefore
 \[
@@ -2051,7 +2051,7 @@ A continuation is now a pre-continuation prefixed with a cast.
 
 
 \begin{definition}[Continuations for the \effCEK{C} machine] 
-\label{def:values-effCEK}
+\label{def:conts-effCEK}
   \[
   \begin{array}{lrcl}
   \stxrule{\kappa}{Continuation}{

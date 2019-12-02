@@ -81,21 +81,21 @@ Section 3.3 mentions that the bit-level representation of hypercoercions is comp
 
 ☐ the intro should (briefly) recall what D and UD are
 
-☐ page 3: P1 \approx P2 : should this be \smile instead?
+✔ page 3: P1 \approx P2 : should this be \smile instead?
 
-☐ line 229-230: where does T come from?
+✔ line 229-230: where does T come from?
 
-☐ line 234: unfinished line
+✔ line 234: unfinished line
 
 ☐ figure 5: non-failure cases should be of the form `succ v`
 
 ☐ definition 4.3: use a proper symbol for bind, as `>>=` is not nicely displayed
 
-☐ line 580-583: what is H?
+✔ line 580-583: what is H?
 
-☐ line 646: should be "Definition 4.1" not 4.4
+✔ line 646: should be "Definition 4.1" not 4.4
 
-☐ line 890: "are equivalence"
+✔ line 890: "are equivalence"
 
 
 
