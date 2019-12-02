@@ -31,19 +31,21 @@ Space-efficient coercions are a hot topic and a theoretical framework to compare
 minor comments:
 
 
-☐ l.229-230:  It appears that T comes from nowhere.  Maybe case expressions should be annotated with their types?  v2' and v3' should be v_2' and v_3'.
+✔ l.229-230:  It appears that T comes from nowhere.  Maybe case expressions should be annotated with their types?  v2' and v3' should be v_2' and v_3'.
 
-☐ l.234:  A closing parenthesis is missing after "observe(v".
+✔ l.234:  A closing parenthesis is missing after "observe(v".
 
 ☐ At some point, it should be noted that polarity of blame labels is not treated.
 
-☐ In Figure 9, metavariable p should be h?
+✔ In Figure 9, metavariable p should be h?
 
-☐ l.489: "we introduction [introduce]"
+_and metavariable i should be t_
 
-☐ l.890: "... are equivalence [equivalent]"
+✔ l.489: "we introduction [introduce]"
 
-☐ l.984: "Lemma 4.8" -> "Corollary 4.8"
+✔ l.890: "... are equivalence [equivalent]"
+
+✔ l.984: "Lemma 4.8" -> "Corollary 4.8"
 
 
 
