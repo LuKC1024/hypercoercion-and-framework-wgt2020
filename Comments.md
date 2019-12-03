@@ -158,11 +158,11 @@ Detailed comments:
 .. literature': Is there no reason for your interest that is based on
 UD's actual properties?
 
-☐ p3, typo: 'the same [as] that of'
+✔ p3, typo: 'the same [as] that of'
 
-☐ Fig.1, Terms, typo: Second occurrence of `inl` should be `inr`.
+✔ Fig.1, Terms, typo: Second occurrence of `inl` should be `inr`.
 
-☐ Fig.3, typos: `fst \kappa` should probably be `[fst \square]\kappa`,
+✔ Fig.3, typos: `fst \kappa` should probably be `[fst \square]\kappa`,
 and similarly for `snd \kappa`, in the product type cast
 rules. Missing end-paren in <v, stop> rule.
 
@@ -172,7 +172,7 @@ know whether it's `inl v` or `inr v` (anything else would presumably
 be a soundness violation), we proceed to fully evaluate both `e2` and
 `e3`, and only then do we reduce the case to `v2 v` or `v3 v`.
 
-☐ Fig.3: in the case-cast rule (the only one with 'where .. and'), `T`
+✔ Fig.3: in the case-cast rule (the only one with 'where .. and'), `T`
 is free (undefined). I think `T3`, `T1` and `T4`, `T2` have been
 swapped by accident (`v2'` should be concerned with the former, not
 the latter). Of course, `v2` would have been statically typed as
@@ -180,28 +180,30 @@ the latter). Of course, `v2` would have been statically typed as
 `T` should have been passed along in the configuration (maybe as an
 annotation on `case`?).
 
-☐ p3, typo: $P_1 \approx{} P_2$ is $P_1 \smile{} P_2$ in the figure.
+✔ p3, typo: $P_1 \approx{} P_2$ is $P_1 \smile{} P_2$ in the figure.
 
 ☐ Fig.5, typos: Shouldn't all right hand sides have `succ` if not
 `fail`?
 
-☐ Fig.8, 'and $\forall l . t \not= \bot^l$': $t$ should be $t_1$ or
+✔ Fig.8, 'and $\forall l . t \not= \bot^l$': $t$ should be $t_1$ or
 $t_2$ in the first two cases, and $t_1$ in the last two cases.
 
-☐ Line 632-633, typo: I think `b` should be `e`.
+✔ Line 632-633, typo: I think `b` should be `e`.
 
-☐ Fig.11 typos: `inl` --> `inr` line 701-2, `fst e)`; `cont(v', k)`
-should probably be `cont(\kappa, v')`, or all the `cont` rules should
+✔ Fig.11 typos: `inl` --> `inr` line 701-2, `fst e)`; 
+
+✔ `cont(v', k)` should probably be `cont(\kappa, v')`, or all the `cont` rules should
 be modified, and `\kappa` in all the `cont` rules should be $k$, and
 presumably a cast should be added in front in most cases, such that we
 have a `\kappa` again as the third component of the configuration.
 `cont([fst ..]..)` and `snd` actually do have a $k$ on the rhs, but
 that's a free variable. ;-)
 
-☐ Line 804-805, `= \Gamma`: That doesn't seem to make sense, `\Gamma`
+✘ Line 804-805, `= \Gamma`: That doesn't seem to make sense, `\Gamma`
 should be an environment that maps variable names to types, and I
 can't see any definition of `T1 \approx T2` nor of
 `{\cal E}_1 \approx {\cal E}_2`.
+_KC: I don't know how to state that the value environments and the type environment agree. Besides, the bisimulation relation of value enviroments remain undefined._
 
 
 
