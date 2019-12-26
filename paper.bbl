@@ -58,24 +58,19 @@
 \newblock
 
 
-\bibitem[\protect\citeauthoryear{Flanagan}{Flanagan}{2006}]%
-        {flanagan2006hybrid}
-\bibfield{author}{\bibinfo{person}{Cormac Flanagan}.}
-  \bibinfo{year}{2006}\natexlab{}.
-\newblock \showarticletitle{Hybrid type checking}. In \bibinfo{booktitle}{{\em
-  ACM Sigplan Notices}}, Vol.~\bibinfo{volume}{41}. ACM,
-  \bibinfo{pages}{245--256}.
-\newblock
-
-
 \bibitem[\protect\citeauthoryear{Garcia}{Garcia}{2013}]%
-        {garcia2013calculating}
+        {Garcia:2013:CTB:2500365.2500603}
 \bibfield{author}{\bibinfo{person}{Ronald Garcia}.}
   \bibinfo{year}{2013}\natexlab{}.
-\newblock \showarticletitle{Calculating threesomes, with blame}. In
-  \bibinfo{booktitle}{{\em ACM SIGPLAN Notices}}, Vol.~\bibinfo{volume}{48}.
-  ACM, \bibinfo{pages}{417--428}.
+\newblock \showarticletitle{Calculating Threesomes, with Blame}. In
+  \bibinfo{booktitle}{{\em Proceedings of the 18th ACM SIGPLAN International
+  Conference on Functional Programming}} {\em (\bibinfo{series}{ICFP '13})}.
+  \bibinfo{publisher}{ACM}, \bibinfo{address}{New York, NY, USA},
+  \bibinfo{pages}{417--428}.
 \newblock
+\showISBNx{978-1-4503-2326-0}
+\showDOI{%
+\url{https://doi.org/10.1145/2500365.2500603}}
 
 
 \bibitem[\protect\citeauthoryear{Garc\'{\i}a-P{\'e}rez, Nogueira, and
@@ -125,6 +120,18 @@
 \newblock \bibinfo{journal}{{\em Higher-Order and Symbolic Computation\/}}
   \bibinfo{volume}{23}, \bibinfo{number}{2} (\bibinfo{year}{2010}),
   \bibinfo{pages}{167}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Knowles and Flanagan}{Knowles and
+  Flanagan}{2010}]%
+        {knowles2010hybrid}
+\bibfield{author}{\bibinfo{person}{Kenneth Knowles} {and}
+  \bibinfo{person}{Cormac Flanagan}.} \bibinfo{year}{2010}\natexlab{}.
+\newblock \showarticletitle{Hybrid type checking}.
+\newblock \bibinfo{journal}{{\em ACM Transactions on Programming Languages and
+  Systems (TOPLAS)\/}} \bibinfo{volume}{32}, \bibinfo{number}{2}
+  (\bibinfo{year}{2010}), \bibinfo{pages}{6}.
 \newblock
 
 
@@ -178,14 +185,19 @@
 
 \bibitem[\protect\citeauthoryear{Siek, Thiemann, and Wadler}{Siek
   et~al\mbox{.}}{2015}]%
-        {siek2015blame}
+        {Siek:2015:BCT:2737924.2737968}
 \bibfield{author}{\bibinfo{person}{Jeremy Siek}, \bibinfo{person}{Peter
   Thiemann}, {and} \bibinfo{person}{Philip Wadler}.}
   \bibinfo{year}{2015}\natexlab{}.
-\newblock \showarticletitle{Blame and coercion: together again for the first
-  time}. In \bibinfo{booktitle}{{\em ACM SIGPLAN Notices}},
-  Vol.~\bibinfo{volume}{50}. ACM, \bibinfo{pages}{425--435}.
+\newblock \showarticletitle{Blame and Coercion: Together Again for the First
+  Time}. In \bibinfo{booktitle}{{\em Proceedings of the 36th ACM SIGPLAN
+  Conference on Programming Language Design and Implementation}} {\em
+  (\bibinfo{series}{PLDI '15})}. \bibinfo{publisher}{ACM},
+  \bibinfo{address}{New York, NY, USA}, \bibinfo{pages}{425--435}.
 \newblock
+\showISBNx{978-1-4503-3468-6}
+\showDOI{%
+\url{https://doi.org/10.1145/2737924.2737968}}
 
 
 \bibitem[\protect\citeauthoryear{Siek and Garcia}{Siek and Garcia}{2012}]%
@@ -210,13 +222,18 @@
 
 
 \bibitem[\protect\citeauthoryear{Siek and Wadler}{Siek and Wadler}{2010}]%
-        {siek2010threesomes}
-\bibfield{author}{\bibinfo{person}{Jeremy~G Siek} {and} \bibinfo{person}{Philip
-  Wadler}.} \bibinfo{year}{2010}\natexlab{}.
-\newblock \showarticletitle{Threesomes, with and without blame}. In
-  \bibinfo{booktitle}{{\em ACM Sigplan Notices}}, Vol.~\bibinfo{volume}{45}.
-  ACM, \bibinfo{pages}{365--376}.
+        {Siek:2010:TWB:1706299.1706342}
+\bibfield{author}{\bibinfo{person}{Jeremy~G. Siek} {and}
+  \bibinfo{person}{Philip Wadler}.} \bibinfo{year}{2010}\natexlab{}.
+\newblock \showarticletitle{Threesomes, with and Without Blame}. In
+  \bibinfo{booktitle}{{\em Proceedings of the 37th Annual ACM SIGPLAN-SIGACT
+  Symposium on Principles of Programming Languages}} {\em
+  (\bibinfo{series}{POPL '10})}. \bibinfo{publisher}{ACM},
+  \bibinfo{address}{New York, NY, USA}, \bibinfo{pages}{365--376}.
 \newblock
+\showISBNx{978-1-60558-479-9}
+\showDOI{%
+\url{https://doi.org/10.1145/1706299.1706342}}
 
 
 \bibitem[\protect\citeauthoryear{Tobin-Hochstadt and Felleisen}{Tobin-Hochstadt

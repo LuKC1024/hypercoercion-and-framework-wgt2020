@@ -22,9 +22,13 @@ correctness of space-efficient semantics with respect to the original.
 
 Comments for author
 -------------------
-Hypercoercions can be viewed as space-efficient coercions (Siek, Thiemann, and Wadler 2015), defined via a different BNF (modulo minor differences), but have a merit that the meta-operation to collapse two coercions can be defined by structural recursion.  I like the idea pretty much because, as the authors point out, the new definition is easier to formalize on top of proof assistants.  On the other hand, frankly speaking, I'm not sure only such reformulation deserves a new name of hypercoercions because conceptually it's the same.  (In particular, I don't see what is "hyper" about them...)
+Hypercoercions can be viewed as space-efficient coercions (Siek, Thiemann, and Wadler 2015), defined via a different BNF (modulo minor differences), but have a merit that the meta-operation to collapse two coercions can be defined by structural recursion.  I like the idea pretty much because, as the authors point out, the new definition is easier to formalize on top of proof assistants.  
 
-The proposed generic proof scheme is intriguing.  As far as I understand, the bisimulation proof is similar to Siek-Thiemann-Wadler 2015 but the definition of bisimulation seems subtly different.  It might be interesting to give a detailed comparison.
+☐ On the other hand, frankly speaking, I'm not sure only such reformulation deserves a new name of hypercoercions because conceptually it's the same.  (In particular, I don't see what is "hyper" about them...)
+> KC: we have explained the source of this name -- inspired by supercoercions.
+
+☐ The proposed generic proof scheme is intriguing.  As far as I understand, the bisimulation proof is similar to Siek-Thiemann-Wadler 2015 but the definition of bisimulation seems subtly different.  It might be interesting to give a detailed comparison.
+> KC: Working on this. Part of the comparision between our bisimulation and the one in Blame&Coercion paper.
 
 Space-efficient coercions are a hot topic and a theoretical framework to compare different kinds of coercions is important.  I'd like to see this work at the workshop.
 
@@ -35,11 +39,9 @@ minor comments:
 
 ✔ l.234:  A closing parenthesis is missing after "observe(v".
 
-☐ At some point, it should be noted that polarity of blame labels is not treated.
+✔ At some point, it should be noted that polarity of blame labels is not treated.
 
 ✔ In Figure 9, metavariable p should be h?
-
-_and metavariable i should be t_
 
 ✔ l.489: "we introduction [introduce]"
 
@@ -69,17 +71,23 @@ Comments for author
 -------------------
 This is very interesting work towards an adequate low-level representation of casts that is both compact and convenient to reason about. The paper is clearly written, and the technique presented here should be of interest to the workshop audience.
 
-I'm curious about the name. The paper alludes to Garcia's supercoercions as an inspiration, but I don't know why supercoercions are called this way, so even less sure why hypercoercions are thus called.
+☐ I'm curious about the name. The paper alludes to Garcia's supercoercions as an inspiration, but I don't know why supercoercions are called this way, so even less sure why hypercoercions are thus called.
+> KC: It is just a name... I think we can leave this question open.
 
-The paper claims (page 2) that hypercoercions have a "more compact representation": it would be good to be explicit, more compact than what?
+☐ The paper claims (page 2) that hypercoercions have a "more compact representation": it would be good to be explicit, more compact than what?
+> KC: Can Jeremy fix this?
 
-Having dyn as an observation deserves discussion. I imagine that any two values of dynamic type are seen as such an observation. Other work where "observations" are used (eg. gradual security) relate the values underneath.
+☐ Having dyn as an observation deserves discussion. I imagine that any two values of dynamic type are seen as such an observation. Other work where "observations" are used (eg. gradual security) relate the values underneath.
+> KC: I intend to cite the interpreter paper to support this decision.
 
-The discussion of hypercoercions should relate more explicitly/extensively to the other representations of casts/coercions, in order to highlight the key differences. (in particular wrt λS)
+☐ The discussion of hypercoercions should relate more explicitly/extensively to the other representations of casts/coercions, in order to highlight the key differences. (in particular wrt λS)
+> KC: Working on this. Part of the comparision between our bisimulation and the one in Blame&Coercion paper.
 
-Section 3.3 mentions that the bit-level representation of hypercoercions is compact "for the most common-case coercions". I wonder on what (empirical?) evidence this "common-case" argument is justified. It would be good to explain.
+☐ Section 3.3 mentions that the bit-level representation of hypercoercions is compact "for the most common-case coercions". I wonder on what (empirical?) evidence this "common-case" argument is justified. It would be good to explain.
+> KC: Can Jeremy fix this?
 
 ☐ the intro should (briefly) recall what D and UD are
+> KC: I intend to borrow the definitions of UD and D from the interpreter paper.
 
 ✔ page 3: P1 \approx P2 : should this be \smile instead?
 
@@ -89,7 +97,9 @@ Section 3.3 mentions that the bit-level representation of hypercoercions is comp
 
 ☐ figure 5: non-failure cases should be of the form `succ v`
 
-☐ definition 4.3: use a proper symbol for bind, as `>>=` is not nicely displayed
+> KC: Can Jeremy fix this?
+
+✔ definition 4.3: use a proper symbol for bind, as `>>=` is not nicely displayed
 
 ✔ line 580-583: what is H?
 
@@ -154,9 +164,11 @@ should not be a problem that the maturity of the work can be improved.
 
 Detailed comments:
 
-☐ page 2, 'interested in UD because it plays a prominent role in
+✔ page 2, 'interested in UD because it plays a prominent role in
 .. literature': Is there no reason for your interest that is based on
 UD's actual properties?
+
+> KC: No. UD doesn't make sense to me.
 
 ✔ p3, typo: 'the same [as] that of'
 
@@ -166,11 +178,13 @@ UD's actual properties?
 and similarly for `snd \kappa`, in the product type cast
 rules. Missing end-paren in <v, stop> rule.
 
-☐ Fig.3, semantics: I'm surprised that `case e1 e2 e3` is so eager:
+✔ Fig.3, semantics: I'm surprised that `case e1 e2 e3` is so eager:
 The guard `e1` is evaluated first, but even though we then already
 know whether it's `inl v` or `inr v` (anything else would presumably
 be a soundness violation), we proceed to fully evaluate both `e2` and
 `e3`, and only then do we reduce the case to `v2 v` or `v3 v`.
+
+> KC: The reason why we don't evaluate `e2` and `e3` in `case e1 [inl x => e2] [inr x => e3]` is that `e2` and `e3` are open terms. But in our case syntax `case e1 e2 e3`, `e2` and `e3` are closed terms hence should be evaluated first.
 
 ✔ Fig.3: in the case-cast rule (the only one with 'where .. and'), `T`
 is free (undefined). I think `T3`, `T1` and `T4`, `T2` have been
@@ -184,6 +198,8 @@ annotation on `case`?).
 
 ☐ Fig.5, typos: Shouldn't all right hand sides have `succ` if not
 `fail`?
+
+> KC: Can Jeremy fix this?
 
 ✔ Fig.8, 'and $\forall l . t \not= \bot^l$': $t$ should be $t_1$ or
 $t_2$ in the first two cases, and $t_1$ in the last two cases.
@@ -199,12 +215,10 @@ have a `\kappa` again as the third component of the configuration.
 `cont([fst ..]..)` and `snd` actually do have a $k$ on the rhs, but
 that's a free variable. ;-)
 
-✘ Line 804-805, `= \Gamma`: That doesn't seem to make sense, `\Gamma`
+✔ Line 804-805, `= \Gamma`: That doesn't seem to make sense, `\Gamma`
 should be an environment that maps variable names to types, and I
 can't see any definition of `T1 \approx T2` nor of
-`{\cal E}_1 \approx {\cal E}_2`.
-_KC: I don't know how to state that the value environments and the type environment agree. Besides, the bisimulation relation of value enviroments remain undefined._
-
+`{\cal E}_1 \approx {\cal E}_2`.  
 
 
 Review #9D
@@ -235,16 +249,17 @@ abstract-machine approach to metatheory offers a different structure
 that is worth considering.
 
 
-☐ Introduction: "was chosen in /the/ Grift compiler ..."
+✔ Introduction: "was chosen in /the/ Grift compiler ..."
 
 ☐ Section 4.1:  The Cast ADT is an interesting approach to metatheory,
 but it appears to depend on a quite strict notion of term equality
 rather than contextual equivalence.  This may limit the applicability
 of the framework.
+> KC: Working on this. Part of the comparision between our bisimulation and the one in Blame&Coercion paper.
 
-☐ Section 4.2: "We define /continuations/ below,"
+✔ Section 4.2: "We define /continuations/ below,"
 
-☐ References:
+✔ References:
 A number of the citations refer to "SIGPLAN Notices" rather than the
 primary venue of publication.  It would be better to use citations
 that reference the venue.

@@ -70,6 +70,8 @@
 %\newtheorem{proposition}{Proposition}[]
 %\newtheorem{definition}{Definition}
 
+\newcommand{\mbind}{\ensuremath{\underline{\gg}}}
+
 \newcommand{\GTLC}{\texttt{GTLC+}}
 \newcommand{\figref}[1]{Fig.~\ref{#1}}
 \newcommand{\secref}[1]{Section~\ref{#1}}
@@ -351,7 +353,7 @@ languages</concept_desc>
 
 Around 2006, several groups of researchers proposed ways to integrate
 dynamic typing and static typing, notably gradual typing
-\citep{siek2006gradual}, hybrid typing \citep{flanagan2006hybrid},
+\citep{siek2006gradual}, hybrid typing \citep{knowles2010hybrid},
 migratory typing \citep{Tobin-Hochstadt:2006fk}, and multi-language
 interoperability \citep{Gray:2005ij,Matthews:2007zr}. Researchers
 usually define the semantics of gradually typed languages by
@@ -363,14 +365,15 @@ etc.) impose significant runtime overheads that can change the
 asymptotic space complexity of a program
 \citep{herman2010space}. There are several known space-efficient cast
 representations, with various strengths and weaknesses
-\citep{siek2015blame,siek2010threesomes,garcia2013calculating,kuhlenschmidt2018efficient,siek2012interpretations,garcia2014deriving}.
+\citep{Siek:2015:BCT:2737924.2737968,Siek:2010:TWB:1706299.1706342,Garcia:2013:CTB:2500365.2500603,kuhlenschmidt2018efficient,siek2012interpretations,garcia2014deriving}.
 The current state of the art includes
 
 \begin{itemize}
-\item threesomes \citep{siek2010threesomes,garcia2013calculating},
-\item supercoercions \citep{garcia2013calculating}, and
+\item threesomes 
+\citep{Siek:2010:TWB:1706299.1706342,Garcia:2013:CTB:2500365.2500603},
+\item supercoercions \citep{Garcia:2013:CTB:2500365.2500603}, and
 \item coercions in normal form
-  \citep{siek2012interpretations,siek2015blame}.
+  \citep{siek2012interpretations,Siek:2015:BCT:2737924.2737968}.
 \end{itemize}
 %Recall that in these systems, casts are compressed using a composition
 %operator.
@@ -398,11 +401,11 @@ tracking strategies from the literature: D and
 UD~\citep{siek2009exploring}. We are interested in the D blame
 tracking strategy because it comes with a more straightforward notion of
 safe cast compared to UD~\citep{siek2009exploring}, which is why D was
-chosen in Grift compiler~\citep{kuhlenschmidt2018efficient}. We are also 
+chosen in the Grift compiler~\citep{kuhlenschmidt2018efficient}. We are also 
 interested in UD because it plays a
 prominent role in the gradual typing literature
 \citep{wadler2009well}.  The UD hypercoercions were inspired by the
-supercoercions of \citet{garcia2013calculating} (hence the name) and
+supercoercions of \citet{Garcia:2013:CTB:2500365.2500603} (hence the name) and
 the D hypercoercions were inspired by the normal forms of
 \citet{siek2012interpretations}.
 %
@@ -546,7 +549,8 @@ The syntax and static semantics are the same for the \lazyD{} and
 \lazyUD{} cast calculi. They are reviewed in \figref{fig:blame-static}.
 As usual, the important features are the cast expressions,
 $\eOOcast{e}{T_1}{l}{T_2}$, which are responsible for runtime type
-checking, and blame expressions, $\eOOblame{l}$, that raise errors.
+checking, and blame expressions, $\eOOblame{l}$, that raise errors. Polarities 
+of blame labels is not treated but are straightforward to incorporate. 
 The syntax and static semantics is the same as that of
 \citet{siek2009exploring} except for a few minor exceptions:
 \begin{itemize}
@@ -948,7 +952,7 @@ evaluation ($eval_\mathcal{x}(e)$) are standard~\citep{felleisen03:_pllc}.
 
 \redrule{
 \sOOreturn{v_3}{
-  \kOOcaseIII{\vOOinl{v}}{v_2}{\kappa}
+  \kOOcaseIII{(\vOOinl{v})}{v_2}{\kappa}
 }
 }{
 \sOOreturn{v}{\kOOappII{v_2}{\kappa}}
@@ -956,7 +960,7 @@ evaluation ($eval_\mathcal{x}(e)$) are standard~\citep{felleisen03:_pllc}.
 
 \redrule{
   \sOOreturn{v_3}{
-    \kOOcaseIII{\vOOinr{v}}{v_2}{\kappa}
+    \kOOcaseIII{(\vOOinr{v})}{v_2}{\kappa}
   }
 }{
 \sOOreturn{v}{\kOOappII{v_3}{\kappa}}
@@ -974,7 +978,8 @@ evaluation ($eval_\mathcal{x}(e)$) are standard~\citep{felleisen03:_pllc}.
   }}
 }{\\&&
 \highlight{\text{where}\;
-\kappa\;\text{is waiting for a value of type}\;T
+	\kappa:T
+%\kappa\;\text{is waiting for a value of type}\;T
 }
 \\&&
 \highlight{\text{and}\;
@@ -1130,7 +1135,7 @@ omit sum types and product types in this section because
 \citet{siek2012interpretations} did not discuss them. We assume a basic
 familiarity with coercions, and suggest that readers unfamiliar with coercions
 to familiarize themselves with \citet{siek2012interpretations} and
-\citet{siek2015blame}.
+\citet{Siek:2015:BCT:2737924.2737968}.
 
 \begin{figure}
   \[
@@ -1986,12 +1991,12 @@ $cast(T_1,l,T_2)$ acts like the Lazy D $applyCast$ for \ineffCEK\
     $ \judgeTypeFT{c_1}{T_1}{T_2}$ and
     $ \judgeTypeFT{c_2}{T_2}{T_3}$\\
     then $applyCast(v,seq(c_1,c_2)) = 
-    applyCast(v,c_1) >>= \lambda v'.applyCast(v',c_2)$\\
+    applyCast(v,c_1) \mbind{} \lambda v'.applyCast(v',c_2)$\\
     where 
     \[
     \begin{array}{rcl}
-      \rOOsucc{v} >>= f & = & f(v) \\
-      \rOOfail{l} >>= f & = & \rOOfail{l}
+      \rOOsucc{v} \mbind{} f & = & f(v) \\
+      \rOOfail{l} \mbind{} f & = & \rOOfail{l}
     \end{array}
     \]
   \item If $v : T_1$ and $T_1 \not\smile T_2$,
@@ -2497,10 +2502,10 @@ on the two machines.
   }
   \\[1ex]
   \inference{
-    \mathcal{E}_1 \approx \mathcal{E}_2
-    %& dom(\mathcal{E}_1) = dom(\mathcal{E}_2) = dom(\Gamma)
-    \\
-    \Gamma , x : T_1 \vdash e : T_2
+  	\Gamma , x : T_1 \vdash e : T_2
+  	\\
+  	\forall{} x \in dom(\Gamma).\;
+  		\mathcal{E}_1(x) \approx \mathcal{E}_2(x) : \Gamma(x)
   }{
     \hcvOOfun{id(T_1)}{\mathcal{E}_1}{x}{e}{id(T_2)}
     \approx
@@ -3083,7 +3088,7 @@ c_2' = seq(c_2,cast(T_2,l,T_4))
 \funrule{
   applyCast(v,\lcOOcons{s}{c})
 }{
-  applyStep(v,s) >>= \lambda v. applyCast(v,c)
+  applyStep(v,s) \mbind{} \lambda v. applyCast(v,c)
 }{}
 \end{array}
 \]
@@ -3165,7 +3170,8 @@ value is injected and the cast is not the identity cast, then $applyCast$
 projects the value and relies on $applyMiddle$ to ensure that value is shallow
 consistent with target type of the head. Regardless of whether or not the value
 is projected, $applyCast$ applies the middle, then apply the tail if the middle
-succeeds. We denote by $r \; >>= \; f$ to mean that if $r$ is $\rOOsucc{v}$, the
+succeeds. We denote by $r \; \mbind{} \; f$ to mean that if $r$ is 
+$\rOOsucc{v}$, the
 result is $f(v)$, otherwise, the result is the failure. In the definition of
 $applyMiddle(v,\ell,m)$, we generalize shallow-consistency to compare middles
 and values ($v \smile m$) in the obvious way. When a value is shallowly
@@ -3181,10 +3187,10 @@ tail, $t$, to the appropriate cast of the value $v$.
   \begin{array}{rclr}
   \funrule{applyCast(v,\hyperCoercionI,)}{\rOOsucc{v}}{}
   \funrule{applyCast(\hcvOOinj{P}{v},\hyperCoercionC{?^l}{m}{t})}{
-    applyMiddle(v,l,m) \; >>= \; \lambda v. applyTail(t,v)
+    applyMiddle(v,l,m) \; \mbind{} \; \lambda v. applyTail(t,v)
   }{}
   \funrule{applyCast(v,\hyperCoercionC{\epsilon}{m}{t})}{
-    applyMiddle(v,\epsilon,m) \; >>= \; \lambda v. applyTail(t,v)
+    applyMiddle(v,\epsilon,m) \; \mbind{} \; \lambda v. applyTail(t,v)
   }{}
   \end{array}
   \]
