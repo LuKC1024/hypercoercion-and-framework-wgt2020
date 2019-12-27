@@ -10,6 +10,10 @@ open import Terms Label
 open import Observe Label
 open import D.Values Label Cast
 
+open import Data.Nat using (ℕ; zero; suc)
+open import Data.Product using (Σ; _×_ ; Σ-syntax; ∃-syntax)
+  renaming (_,_ to ⟨_,_⟩)
+
 data Cont : Type → Type → Set where
                                                                  
   mt : ∀ {Z}
@@ -213,25 +217,58 @@ module Progress
   progress (return v (case₂ E v1 e3 κ)) = ` inspect e3 E (case₃ v1 v κ)
   progress (return v (case₃ v1 v2 κ)) = do-case v1 v2 v κ
   progress (return v (cast c κ)) = do-cast c v κ
-  
-  data _−→_ : ∀ {T} → State T → State T → Set where
-    it : ∀ {T}
-      → (s : Nonhalting T)
+
+  data _−→_ {T : Type} : State T → State T → Set where
+    it : {s : Nonhalting T}
       → (` s) −→ progress s
-  
-  data _−→*_ : ∀ {T} → State T → State T → Set where
-    refl : ∀ {T}
-      → (s : State T)
-      ---
-      → s −→* s
-  
-    step : ∀ {T}
-      → {r s t : State T}
-      → (x : r −→ s)
-      → (xs : s −→* t)
-      ---
-      → r −→* t
-  
+
+  data _−→[_]_ {T : Type} : State T → ℕ → State T → Set where
+    [] : {s : State T}
+      → s −→[ zero ] s
+
+    _∷_ : ∀ {n}
+      → {s1 s2 s3 : State T}
+      → (fst : s1 −→ s2)
+      → (rst : s2 −→[ n ] s3)
+      → s1 −→[ suc n ] s3
+
+  _−→+_ : {T : Type} → State T → State T → Set
+  s1 −→+ s2 = ∃[ n ] (s1 −→[ suc n ] s2)
+
+  _−→*_ : {T : Type} → State T → State T → Set
+  s1 −→* s2 = ∃[ n ] (s1 −→[ n ] s2)
+      
   data Evalo {T : Type} (e : ∅ ⊢ T) (o : Observe T) : Set where
     it : (load e) −→* halt o → Evalo e o
+  
+  module Newway where
+    open import Bisim using (System)
+    open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+    open import Data.Empty using (⊥; ⊥-elim)
+  
+    Final : ∀ {T}
+      → State T → Set
+    Final = λ s → ∃[ o ](s ≡ halt o)
+  
+    final-nontransitional : ∀ {T}
+      → {s t : State T}
+      → Final s
+      → (s −→ t)
+      → ⊥
+    final-nontransitional ⟨ o , refl ⟩ ()
+                          
+    deterministic : ∀ {T}
+      → {s t1 t2 : State T}
+      → s −→ t1
+      → s −→ t2
+      → t1 ≡ t2
+    deterministic it it = refl
+  
+    system : ∀ {T} → System (State T)
+    system = record
+      { _−→_ = _−→_
+      ; Final = Final
+      ; final-nontransitional = final-nontransitional
+      ; deterministic = deterministic
+      }
   

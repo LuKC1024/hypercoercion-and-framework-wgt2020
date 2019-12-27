@@ -605,8 +605,8 @@ bisim-3 : ∀ {T}
   → s1 LM.−→ s3 
   ---
   → ∃[ s4 ]((s2 RM.−→ s4) × (StateRelate s3 s4))
-bisim-3 (` s) (LM.it ls) with progress s
-... | s' = ⟨ rstate s' , ⟨ (RM.it _) , s' ⟩ ⟩
+bisim-3 (` s) LM.it with progress s
+... | s' = ⟨ rstate s' , ⟨ RM.it , s' ⟩ ⟩
 
 bisim-4 : ∀ {T}
   → {s1 : LM.State T}
@@ -616,9 +616,8 @@ bisim-4 : ∀ {T}
   → s2 RM.−→ s4
   ---
   → ∃[ s3 ]((s1 LM.−→ s3) × (StateRelate s3 s4))
-bisim-4 (` s) (RM.it rs) with progress s
-... | s' = ⟨ lstate s' , ⟨ (LM.it _) , s' ⟩ ⟩
-
+bisim-4 (` s) RM.it with progress s
+... | s' = ⟨ lstate s' , ⟨ LM.it , s' ⟩ ⟩
 
 equiv-lem-1 : ∀ {T}
   → {s1 : LM.State T}
@@ -628,9 +627,9 @@ equiv-lem-1 : ∀ {T}
   → StateRelate s1 s2
   ---
   → s2 RM.−→* RM.halt o
-equiv-lem-1 (LM.refl (LM.halt o)) (halt o) = RM.refl _
-equiv-lem-1 (LM.step (LM.it ls) xs) (` s) with bisim-3 (` s) (LM.it ls)
-... | ⟨ rs' , ⟨ y , rel ⟩ ⟩ = RM.step y (equiv-lem-1 xs rel)
+equiv-lem-1 LM.[] (halt o) = RM.[]
+equiv-lem-1 (LM.it LM.∷ xs) (` s) with bisim-3 (` s) LM.it
+... | ⟨ rs' , ⟨ y , rel ⟩ ⟩ = y RM.∷ (equiv-lem-1 xs rel)
 
 equiv-lem-2 : ∀ {T}
   → {s1 : LM.State T}
@@ -640,10 +639,9 @@ equiv-lem-2 : ∀ {T}
   → StateRelate s1 s2
   ---
   → s1 LM.−→* LM.halt o
-equiv-lem-2 (RM.refl (RM.halt o)) (halt o) = LM.refl _
-equiv-lem-2 (RM.step (RM.it rs) ys) (` s) with bisim-4 (` s) (RM.it rs)
-... | ⟨ ls' , ⟨ x , rel ⟩ ⟩ = LM.step x (equiv-lem-2 ys rel)
-
+equiv-lem-2 RM.[] (halt o) = LM.[]
+equiv-lem-2 (RM.it RM.∷ ys) (` s) with bisim-4 (` s) RM.it
+... | ⟨ ls' , ⟨ x , rel ⟩ ⟩ = x LM.∷ (equiv-lem-2 ys rel)
 
 -- Proposition 4.10 (Equivalence of Two Lazy D Cast ADTs)
 

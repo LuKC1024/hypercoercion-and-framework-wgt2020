@@ -13,7 +13,11 @@ open import Terms Label
 open import Observe Label
 open import S.Values Label Cast
 
-
+open import Data.Nat using (ℕ; zero; suc; _+_)
+open import Data.Product using (Σ; _×_ ; Σ-syntax; ∃-syntax)
+  renaming (_,_ to ⟨_,_⟩)
+open import Relation.Nullary using (¬_)
+  
 mutual
       
   data Cont (T1 T3 : Type) : Set where
@@ -213,24 +217,50 @@ progress (return v (cont fst snd)) | succ u = progress-return u snd
 progress (return v (cont fst snd)) | fail l = halt (blame l)
 -- progress (halt obs) = halt obs
 
-data _−→_ : ∀ {T} → State T → State T → Set where
-  it : ∀ {T}
-    → (s : Nonhalting T)
-    → (` s) −→ progress s
+data _−→_ {T : Type} : State T → State T → Set where
+  it : {s : Nonhalting T}
+     → (` s) −→ progress s
 
-data _−→*_ : ∀ {T} → State T → State T → Set where
-  refl : ∀ {T}
-    → (s : State T)
-    ---
-    → s −→* s
+open import Bisim using (System)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Data.Empty using (⊥; ⊥-elim)
 
-  step : ∀ {T}
-    → {r s t : State T}
-    → (x : r −→ s)
-    → (xs : s −→* t)
-    ---
-    → r −→* t
+Final : ∀ {T}
+  → State T → Set
+Final = λ s → ∃[ o ](s ≡ halt o)
 
-data Evalo {T : Type} (e : ∅ ⊢ T) (o : Observe T) : Set where
-  it : (load e) −→* halt o → Evalo e o
+final-nontransitional : ∀ {T}
+  → {s t : State T}
+  → Final s
+  → (s −→ t)
+  → ⊥
+final-nontransitional ⟨ o , refl ⟩ ()
+  
+deterministic : ∀ {T}
+  → {s t1 t2 : State T}
+  → s −→ t1
+  → s −→ t2
+  → t1 ≡ t2
+deterministic it it = refl
+                      
+system : ∀ {T} → System (State T)
+system = record
+  { _−→_ = _−→_
+  ; Final = Final
+  ; final-nontransitional = final-nontransitional
+  ; deterministic = deterministic
+  }
 
+module Foo {T : Type} where
+  
+  open System (system {T}) using (_−→*_; []; _∷_; _−→+_; _++_) public
+
+  halt-nonprog : ∀ {o}
+    → {s : State T}
+    → ¬ (halt o −→ s)
+  halt-nonprog ()
+                           
+  data Evalo (e : ∅ ⊢ T) (o : Observe T) : Set where
+    it : (load e) −→* halt o → Evalo e o
+    
+open Foo public
