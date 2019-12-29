@@ -24,8 +24,7 @@ Comments for author
 -------------------
 Hypercoercions can be viewed as space-efficient coercions (Siek, Thiemann, and Wadler 2015), defined via a different BNF (modulo minor differences), but have a merit that the meta-operation to collapse two coercions can be defined by structural recursion.  I like the idea pretty much because, as the authors point out, the new definition is easier to formalize on top of proof assistants.  
 
-☐ On the other hand, frankly speaking, I'm not sure only such reformulation deserves a new name of hypercoercions because conceptually it's the same.  (In particular, I don't see what is "hyper" about them...)
-> KC: we have explained the source of this name -- inspired by supercoercions.
+✔ On the other hand, frankly speaking, I'm not sure only such reformulation deserves a new name of hypercoercions because conceptually it's the same.  (In particular, I don't see what is "hyper" about them...)
 
 ☐ The proposed generic proof scheme is intriguing.  As far as I understand, the bisimulation proof is similar to Siek-Thiemann-Wadler 2015 but the definition of bisimulation seems subtly different.  It might be interesting to give a detailed comparison.
 > KC: Working on this. Part of the comparision between our bisimulation and the one in Blame&Coercion paper.

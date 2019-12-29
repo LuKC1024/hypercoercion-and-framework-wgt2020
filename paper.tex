@@ -70,7 +70,7 @@
 %\newtheorem{proposition}{Proposition}[]
 %\newtheorem{definition}{Definition}
 
-\newcommand{\mbind}{\ensuremath{\underline{\gg}}}
+\newcommand{\mbind}{\ensuremath{\;\underline{\gg}\;}}
 
 \newcommand{\GTLC}{\texttt{GTLC+}}
 \newcommand{\figref}[1]{Fig.~\ref{#1}}
@@ -600,12 +600,9 @@ current continuation and possibly perform a computation.
 Corresponding to (1) and (2), the machine state is either in an evaluating
 $\sOOinspect{e}{\mathcal{E}}{\kappa}$ or continuing $\sOOreturn{v}{\kappa}$ configuration, 
 respectively. Additionally, there is the $\sOOhalt{o}$ configuration, where the 
-machine halts with an observation ($o$). Observations include all value 
+machine halts with an observable ($o$). Observables include all value 
 constructors and blame. The function converting values to 
-observations ($observe(v) = o$) is defined in the obvious way.
-%Let $s$ range over machine states. A state is either looking at an 
-%expression to decide what to do next, returning a value to a continuation, or 
-%halting with an observation.
+observables ($observe(v) = o$) is defined in the obvious way.
 
 Let $v$ range over values. A value is either the unit, a function, a pair, a 
 left injection, a right injection, or a casted value. Value typing rules 
@@ -683,7 +680,7 @@ evaluation ($eval_\mathcal{x}(e)$) are standard~\citep{felleisen03:_pllc}.
     \star \times \star \mid
     \star + \star
   }
-  \stxrule{o}{Observations}{
+  \stxrule{o}{Observables}{
     \oOOinj \mid
     \oOOsole \mid
     \oOOfun \mid
@@ -1209,7 +1206,7 @@ $\hat{c}$!
 %% \end{array}
 %% \]
 
-%% Three observations on this definition leads to hypercoercion: 
+%% Three observables on this definition leads to hypercoercion: 
 %% \begin{enumerate}
 %%  \item The length of normal coercion is at most three.
 %%  \item Projections are always at the beginning when present.
@@ -1311,7 +1308,7 @@ $\hat{c}$!
 
 This section presents our first contribution, the definition of
 hypercoercions.  The design of hypercoercions is motivated by the
-observation that a normal coercion has at most three
+observable that a normal coercion has at most three
 parts. Hypercoercions make this structure explicit: a hypercoercion $c$ is
 either $\hyperCoercionI$, the identity cast for $\TOOdyn$, or it contains
 three parts: a head, middle, and tail, as defined in
@@ -2911,24 +2908,28 @@ that also includes the rules below.
 
 \begin{proposition}[Equivalence of Two \lazyD{} Cast ADTs]
   \label{thm:surely-lazyD-eqv}
-  Assume $C_1$ and $C_2$ implements Lazy D Cast ADT,
+  Assume $C_1$ and $C_2$ implements Lazy D Cast ADT. If 
+  $\judgetype{\emptyset}{e}{T}$ and $o : T$ then
   \[
-  eval_{\mathcal{S}(C_1)} = eval_{\mathcal{S}(C_2)}.
+  \evalEqv{\effCEK{C_1}}{\effCEK{C_2}}
   \]
+%  \[
+%  eval_{\mathcal{S}(C_1)} = eval_{\mathcal{S}(C_2)}.
+%  \]
 \end{proposition}
 \begin{proof}
-  Without loss of generality, assume $\judgeSreduce{C_1}{e}{o}$ and prove 
-  $\judgeSreduce{C_2}{e}{o}$.\\
+  Without loss of generality, assume $\judgeSeval{C_1}{e}{o}$ and prove 
+  $\judgeSeval{C_2}{e}{o}$.\\
   By the definition of $eval_{\mathcal{S}(C)}$, we know 
 \[
-\judgeSreduceTrans{C_2}{\sOOinspect{e}{\emptyset}{wrap(\kOOmt)}}{\sOOhalt{o}}
+\judgeSreduceTrans{C_1}{\sOOinspect{e}{\emptyset}{wrap(\kOOmt)}}{\sOOhalt{o}}
 \]
   By induction on this reduction sequence and Lemma~\ref{thm:CEKS-bisim}, we 
   have 
 \[
 \judgeSreduceTrans{C_2}{\sOOinspect{e}{\emptyset}{wrap(\kOOmt)}}{\sOOhalt{o}}
 \]
-  that is, $\judgeSreduce{C_2}{e}{o}$
+  that is, $\judgeSeval{C_2}{e}{o}$
 \end{proof}
 
 \subsubsection{The $L$ instance of the Lazy D Cast ADT}
@@ -3138,12 +3139,9 @@ and $seq$ appends two lists of steps.
 \begin{theorem}[\effCEK{C} is Correct wrt. \ineffCEKD{}]
   \label{thm:surely-lazyD-correct}
   Suppose $C$ is a \lazyD{} Cast ADT.  If
-  $\judgetype{\emptyset}{e}{T}$ and $o : T$, then
+  $\judgetype{\emptyset}{e}{T}$ and $o : T$ then
   \[
   \evalEqv{\effCEK{C}}{\ineffCEKD}
-%  \judgeSeval{C}{e}{o}
-%  \;\text{if and only if}\;
-%  \judgeDeval{e}{o}
   \]
 \end{theorem}
 \begin{proof}
