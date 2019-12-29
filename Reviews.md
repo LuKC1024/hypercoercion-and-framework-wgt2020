@@ -39,6 +39,7 @@ minor comments:
 ✔ l.234:  A closing parenthesis is missing after "observe(v".
 
 ✔ At some point, it should be noted that polarity of blame labels is not treated.
+> KC: I have noted at line 84.
 
 ✔ In Figure 9, metavariable p should be h?
 
@@ -73,8 +74,8 @@ This is very interesting work towards an adequate low-level representation of ca
 ☐ I'm curious about the name. The paper alludes to Garcia's supercoercions as an inspiration, but I don't know why supercoercions are called this way, so even less sure why hypercoercions are thus called.
 > KC: It is just a name... I think we can leave this question open.
 
-☐ The paper claims (page 2) that hypercoercions have a "more compact representation": it would be good to be explicit, more compact than what?
-> KC: Can Jeremy fix this?
+✔ The paper claims (page 2) that hypercoercions have a "more compact representation": it would be good to be explicit, more compact than what?
+> KC: "a memory representation more compact than space-efficient coercions"
 
 ✔ Having dyn as an observation deserves discussion. I imagine that any two values of dynamic type are seen as such an observation. Other work where "observations" are used (eg. gradual security) relate the values underneath.
 > KC: I have cited the interpreter paper to support this decision.
@@ -85,7 +86,7 @@ This is very interesting work towards an adequate low-level representation of ca
 ☐ Section 3.3 mentions that the bit-level representation of hypercoercions is compact "for the most common-case coercions". I wonder on what (empirical?) evidence this "common-case" argument is justified. It would be good to explain.
 > KC: Can Jeremy fix this?
 
-☐ the intro should (briefly) recall what D and UD are
+✔ the intro should (briefly) recall what D and UD are
 > KC: add a 2-sentence description at line 45.
 
 ✔ page 3: P1 \approx P2 : should this be \smile instead?
@@ -95,7 +96,6 @@ This is very interesting work towards an adequate low-level representation of ca
 ✔ line 234: unfinished line
 
 ☐ figure 5: non-failure cases should be of the form `succ v`
-
 > KC: Can Jeremy fix this?
 
 ✔ definition 4.3: use a proper symbol for bind, as `>>=` is not nicely displayed
@@ -197,7 +197,6 @@ annotation on `case`?).
 
 ☐ Fig.5, typos: Shouldn't all right hand sides have `succ` if not
 `fail`?
-
 > KC: Can Jeremy fix this?
 
 ✔ Fig.8, 'and $\forall l . t \not= \bot^l$': $t$ should be $t_1$ or
