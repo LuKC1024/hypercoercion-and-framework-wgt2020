@@ -117,7 +117,7 @@
 \newcommand{\eOOcast}[4]{#1 \langle \cOOcast{#2}{#3}{#4} \rangle}
 \newcommand{\eOOblame}[1]{\mathtt{blame} \; #1}
 \newcommand{\cOOcast}[3]{#1 \Rightarrow^{#2} #3}
-\newcommand{\oOOinj}{\mathtt{dyn}}
+\newcommand{\oOOdyn}{\mathtt{dyn}}
 \newcommand{\oOOsole}{\mathtt{unit}}
 \newcommand{\oOOfun}{\mathtt{fun}}
 \newcommand{\oOOcons}{\mathtt{cons}}
@@ -398,7 +398,10 @@ fits all first-order casts into 64 bits.
 %
 We present two flavors of hypercoercions to support the two blame
 tracking strategies from the literature: D and
-UD~\citep{siek2009exploring}. We are interested in the D blame
+UD~\citep{siek2009exploring}. With the D strategy, only \textbf{d}own casts 
+(casts from $\TOOdyn$ to some other types) are subject to blame. With the UD 
+strategy, however, some \textbf{u}p casts are also blamable.
+We are interested in the D blame
 tracking strategy because it comes with a more straightforward notion of
 safe cast compared to UD~\citep{siek2009exploring}, which is why D was
 chosen in the Grift compiler~\citep{kuhlenschmidt2018efficient}. We are also 
@@ -601,8 +604,9 @@ Corresponding to (1) and (2), the machine state is either in an evaluating
 $\sOOinspect{e}{\mathcal{E}}{\kappa}$ or continuing $\sOOreturn{v}{\kappa}$ configuration, 
 respectively. Additionally, there is the $\sOOhalt{o}$ configuration, where the 
 machine halts with an observable ($o$). Observables include all value 
-constructors and blame. The function converting values to 
-observables ($observe(v) = o$) is defined in the obvious way.
+constructors, blame, and $\oOOdyn$, as in \citet{siek2012interpretations}. 
+The function converting values to observables ($observe(v) = o$) is defined in 
+the obvious way. 
 
 Let $v$ range over values. A value is either the unit, a function, a pair, a 
 left injection, a right injection, or a casted value. Value typing rules 
@@ -681,7 +685,7 @@ evaluation ($eval_\mathcal{x}(e)$) are standard~\citep{felleisen03:_pllc}.
     \star + \star
   }
   \stxrule{o}{Observables}{
-    \oOOinj \mid
+    \oOOdyn \mid
     \oOOsole \mid
     \oOOfun \mid
     \oOOcons \mid
@@ -1308,7 +1312,7 @@ $\hat{c}$!
 
 This section presents our first contribution, the definition of
 hypercoercions.  The design of hypercoercions is motivated by the
-observable that a normal coercion has at most three
+observation that a normal coercion has at most three
 parts. Hypercoercions make this structure explicit: a hypercoercion $c$ is
 either $\hyperCoercionI$, the identity cast for $\TOOdyn$, or it contains
 three parts: a head, middle, and tail, as defined in

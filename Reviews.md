@@ -76,8 +76,8 @@ This is very interesting work towards an adequate low-level representation of ca
 ☐ The paper claims (page 2) that hypercoercions have a "more compact representation": it would be good to be explicit, more compact than what?
 > KC: Can Jeremy fix this?
 
-☐ Having dyn as an observation deserves discussion. I imagine that any two values of dynamic type are seen as such an observation. Other work where "observations" are used (eg. gradual security) relate the values underneath.
-> KC: I intend to cite the interpreter paper to support this decision.
+✔ Having dyn as an observation deserves discussion. I imagine that any two values of dynamic type are seen as such an observation. Other work where "observations" are used (eg. gradual security) relate the values underneath.
+> KC: I have cited the interpreter paper to support this decision.
 
 ☐ The discussion of hypercoercions should relate more explicitly/extensively to the other representations of casts/coercions, in order to highlight the key differences. (in particular wrt λS)
 > KC: Working on this. Part of the comparision between our bisimulation and the one in Blame&Coercion paper.
@@ -86,7 +86,7 @@ This is very interesting work towards an adequate low-level representation of ca
 > KC: Can Jeremy fix this?
 
 ☐ the intro should (briefly) recall what D and UD are
-> KC: I intend to borrow the definitions of UD and D from the interpreter paper.
+> KC: add a 2-sentence description at line 45.
 
 ✔ page 3: P1 \approx P2 : should this be \smile instead?
 
@@ -167,7 +167,7 @@ Detailed comments:
 .. literature': Is there no reason for your interest that is based on
 UD's actual properties?
 
-> KC: No. UD doesn't make sense to me.
+> KC: I personally have no interest in UD.
 
 ✔ p3, typo: 'the same [as] that of'
 
@@ -183,7 +183,7 @@ know whether it's `inl v` or `inr v` (anything else would presumably
 be a soundness violation), we proceed to fully evaluate both `e2` and
 `e3`, and only then do we reduce the case to `v2 v` or `v3 v`.
 
-> KC: The reason why we don't evaluate `e2` and `e3` in `case e1 [inl x => e2] [inr x => e3]` is that `e2` and `e3` are open terms. But in our case syntax `case e1 e2 e3`, `e2` and `e3` are closed terms hence should be evaluated first.
+> KC: The reason why we don't evaluate `e2` and `e3` in `case e1 [inl x => e2] [inr x => e3]` is that `e2` and `e3` are open terms. But in our case syntax `case e1 e2 e3`, the expressions `e2` and `e3` are closed terms hence should be evaluated first.
 
 ✔ Fig.3: in the case-cast rule (the only one with 'where .. and'), `T`
 is free (undefined). I think `T3`, `T1` and `T4`, `T2` have been
