@@ -1,7 +1,6 @@
 module S.HCast (Label : Set) where
 open import Types
-open import Variables
-open import Terms Label
+open import Statics Label
 open import S.CastADT Label
 
 open import Relation.Nullary using (Dec; yes; no; ¬_)

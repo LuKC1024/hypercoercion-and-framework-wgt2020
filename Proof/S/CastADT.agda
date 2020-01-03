@@ -3,8 +3,7 @@ module S.CastADT
   where
 
 open import Types
-open import Variables
-open import Terms Label
+open import Statics Label
 open import S.Values Label
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; cong)

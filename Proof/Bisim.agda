@@ -8,6 +8,23 @@ open import Data.Product using (Σ; _×_ ; Σ-syntax; ∃-syntax; _,_; proj₁; 
 open import Data.Nat using (ℕ; zero; suc)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym; subst)
 
+-- This is a parameterized bisimulation proof between any two systems.
+
+-- A *system* is a deterministic transition system, which includes
+--   - a set of states
+--   - a transition relation
+--   - a theorem saying that final state cannot transition
+--   - a theorem saying that the transition relation is deterministic
+
+-- The parameterized bisimulation proof claims that
+-- given a bisimulation relation _≈_
+-- If s₁ ≈ s₂ implies that either
+--   - s₁ final and s₂ final, or
+--   - there exist s₃ and s₄ such that s₁ −→+ s₃ and s₂ −→+ s₄ and s₃ ≈ s₄
+-- then for all s₁ ≈ s₂
+--   - s₁ −→* s₃ and s₃ final implies s₂ −→* s₄ and s₄ final and s₃ ≈ s₄ for some s₄
+--   - s₂ −→* s₄ and s₄ final implies s₁ −→* s₃ and s₃ final and s₃ ≈ s₄ for some s₃
+
 record System (State : Set) : Set₁ where
   field
     _−→_ : State → State → Set
@@ -50,7 +67,7 @@ record System (State : Set) : Set₁ where
   [] ++ ys = ys
   (x ∷ xs) ++ ys = x ∷ (xs ++ ys)
 
-module Bisimulation
+module Lemmas
   {lState rState : Set}
   (lSystem : System lState)
   (rSystem : System rState)
@@ -159,7 +176,7 @@ module Theorems
       R.Final rs' ×
       ls' ~ rs'
     )
-  thm-final-LR = Bisimulation.lem-final lSystem rSystem _~_ preserve
+  thm-final-LR = Lemmas.lem-final lSystem rSystem _~_ preserve
 
   preserve' : {rs : rState}{ls : lState}
     → ls ~ rs
@@ -186,6 +203,6 @@ module Theorems
       ls' ~ rs'
     )
   thm-final-RL
-    = Bisimulation.lem-final rSystem lSystem (λ r l → l ~ r) preserve'
+    = Lemmas.lem-final rSystem lSystem (λ r l → l ~ r) preserve'
 
 open Theorems public

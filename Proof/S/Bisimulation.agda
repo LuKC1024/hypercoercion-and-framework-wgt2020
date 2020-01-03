@@ -8,10 +8,9 @@ module S.Bisimulation
   (RCS : LazyD Label RCR)
   where
 
-open import Variables
 open import Types
-open import Terms Label
-open import Observe Label
+open import Statics Label
+open import Observables Label
 import S.Machine
 import S.Values
 
@@ -329,7 +328,7 @@ data StateRelate : {T : Type} → LM.State T → RM.State T → Set where
     → StateRelate (LM.` ls) (RM.` rs)
 
   halt : ∀ {T}
-    → (o : Observe T)
+    → (o : Observable T)
     → StateRelate (LM.halt o) (RM.halt o)
 
 lstate : ∀ {T}
@@ -573,15 +572,13 @@ progress (return {lv1 = lv1} {rv1 = rv1} v {(LM.cont lfst lsnd)} {(RM.cont rfst 
 load : ∀ {T} → (e : ∅ ⊢ T) → StateRelate (LM.load e) (RM.load e)
 load e = ` inspect e [] (cont id mt)
 
-
-
 -- Lemma 4.9 (Strong Bisimulation Among S(·))
 
 bisim-1 : ∀ {T}
   → {s1 : LM.State T}
   → {s2 : RM.State T}
   → StateRelate s1 s2
-  → {o : Observe T}
+  → {o : Observable T}
   → s1 ≡ LM.halt o
   ---
   → s2 ≡ RM.halt o
@@ -591,7 +588,7 @@ bisim-2 : ∀ {T}
   → {s1 : LM.State T}
   → {s2 : RM.State T}
   → StateRelate s1 s2
-  → {o : Observe T}
+  → {o : Observable T}
   → s2 ≡ RM.halt o
   ---
   → s1 ≡ LM.halt o
@@ -622,19 +619,19 @@ bisim-4 (` s) RM.it with progress s
 equiv-lem-1 : ∀ {T}
   → {s1 : LM.State T}
   → {s2 : RM.State T}
-  → {o : Observe T}
+  → {o : Observable T}
   → s1 LM.−→* LM.halt o
   → StateRelate s1 s2
   ---
   → s2 RM.−→* RM.halt o
 equiv-lem-1 LM.[] (halt o) = RM.[]
-equiv-lem-1 (LM.it LM.∷ xs) (` s) with bisim-3 (` s) LM.it
-... | ⟨ rs' , ⟨ y , rel ⟩ ⟩ = y RM.∷ (equiv-lem-1 xs rel)
+equiv-lem-1 (LM.it LM.∷ x*) (` s) with bisim-3 (` s) LM.it
+... | ⟨ rs' , ⟨ y , rel ⟩ ⟩ = y RM.∷ (equiv-lem-1 x* rel)
 
 equiv-lem-2 : ∀ {T}
   → {s1 : LM.State T}
   → {s2 : RM.State T}
-  → {o : Observe T}
+  → {o : Observable T}
   → s2 RM.−→* RM.halt o
   → StateRelate s1 s2
   ---
@@ -647,16 +644,16 @@ equiv-lem-2 (RM.it RM.∷ ys) (` s) with bisim-4 (` s) RM.it
 
 equiv-l : ∀ {T}
   → {e : ∅ ⊢ T}
-  → {o : Observe T}
+  → {o : Observable T}
   → LM.Evalo e o
   ---
   → RM.Evalo e o
-equiv-l (LM.it xs) = RM.it (equiv-lem-1 xs (load _))
+equiv-l ⟨ o , xs ⟩ = ⟨ o , equiv-lem-1 xs (load _) ⟩
 
 equiv-r : ∀ {T}
   → {e : ∅ ⊢ T}
-  → {o : Observe T}
+  → {o : Observable T}
   → RM.Evalo e o
   ---
   → LM.Evalo e o
-equiv-r (RM.it ys) = LM.it (equiv-lem-2 ys (load _))
+equiv-r ⟨ o , ys ⟩ = ⟨ o , equiv-lem-2 ys (load _) ⟩

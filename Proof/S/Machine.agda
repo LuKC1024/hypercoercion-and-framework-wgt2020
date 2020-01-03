@@ -1,4 +1,3 @@
-open import Types
 open import S.CastADT
 
 module S.Machine
@@ -8,9 +7,9 @@ module S.Machine
 
 open CastADT cast-adt using (Cast; mk-cast; mk-id; mk-seq; apply-cast)
 
-open import Variables
-open import Terms Label
-open import Observe Label
+open import Types
+open import Statics Label
+open import Observables Label
 open import S.Values Label Cast
 
 open import Data.Nat using (ℕ; zero; suc; _+_)
@@ -131,7 +130,7 @@ data State : Type → Set where
     → State T
 
   halt : ∀ {T}
-    → Observe T
+    → Observable T
     → State T
 
 load : ∀ {T} → ∅ ⊢ T → State T
@@ -255,12 +254,12 @@ module Foo {T : Type} where
   
   open System (system {T}) using (_−→*_; []; _∷_; _−→+_; _++_) public
 
-  halt-nonprog : ∀ {o}
-    → {s : State T}
-    → ¬ (halt o −→ s)
-  halt-nonprog ()
-                           
-  data Evalo (e : ∅ ⊢ T) (o : Observe T) : Set where
-    it : (load e) −→* halt o → Evalo e o
+  -- halt-nonprog : ∀ {o}
+  --   → {s : State T}
+  --   → ¬ (halt o −→ s)
+  -- halt-nonprog ()
+
+  Evalo : (e : ∅ ⊢ T) (o : Observable T) → Set
+  Evalo e o = ∃[ o ] (load e −→* halt o)
     
 open Foo public

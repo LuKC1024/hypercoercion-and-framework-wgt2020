@@ -70,7 +70,9 @@
 %\newtheorem{proposition}{Proposition}[]
 %\newtheorem{definition}{Definition}
 
-\newcommand{\mbind}{\ensuremath{\underline{\gg}}}
+\newcommand{\longdownmapsto}{\rotatebox[origin=c]{-90}{$\scriptstyle\longmapsto$}\mkern2mu}
+
+\newcommand{\mbind}{\ensuremath{\;\underline{\gg}\;}}
 
 \newcommand{\GTLC}{\texttt{GTLC+}}
 \newcommand{\figref}[1]{Fig.~\ref{#1}}
@@ -184,6 +186,7 @@
 % blame calculus on space-efficient CEK
 \newcommand{\judgeSreduce}[3]{#2 \longmapsto_{\mathcal{S}(#1)} #3}
 \newcommand{\judgeSreduceTrans}[3]{#2 \longmapsto_{\mathcal{S}(#1)}^{*} #3}
+\newcommand{\judgeSreducePlus}[3]{#2 \longmapsto_{\mathcal{S}(#1)}^{+} #3}
 \newcommand{\judgeSeval}[3]{eval_{\mathcal{S}(#1)}(#2) = #3}
 \newcommand{\redruleS}[3]{#1 & \longmapsto_{\mathcal{S}(C)} & #2 & #3\\}
 \newcommand{\hiredruleS}[3]{\highlight{#1} & 
@@ -598,7 +601,8 @@ that dive further into an expression (looking for a redex) and push an
 entry onto the continuation, and (2) those that return a value to the
 current continuation and possibly perform a computation.
 Corresponding to (1) and (2), the machine state is either in an evaluating
-$\sOOinspect{e}{\mathcal{E}}{\kappa}$ or continuing $\sOOreturn{v}{\kappa}$ configuration, 
+$\sOOinspect{e}{\mathcal{E}}{\kappa}$ or continuing $\sOOreturn{v}{\kappa}$ 
+configuration, 
 respectively. Additionally, there is the $\sOOhalt{o}$ configuration, where the 
 machine halts with an observation ($o$). Observations include all value 
 constructors and blame. The function converting values to 
@@ -998,7 +1002,7 @@ v3' = \vOOcast{v_3}{\cOOcast{\POOfun{T_4}{T}}{l}{\POOfun{T_2}{T}}}}
 \begin{cases}
   \sOOreturn{v'}{\kappa} & \sidecond{applyCast(v,c) = \rOOsucc{v'}}
   \\
-  \sOOhalt{\oOOblame{l}} & \sidecond{applyCast(v,c) = \rOOfail{l}}
+  \sOOhalt{(\oOOblame{l})} & \sidecond{applyCast(v,c) = \rOOfail{l}}
 \end{cases}}
   }{}
 \redrule{
@@ -1081,6 +1085,10 @@ v3' = \vOOcast{v_3}{\cOOcast{\POOfun{T_4}{T}}{l}{\POOfun{T_2}{T}}}}
 We conjecture that \ineffCEKD{} agrees with the \lazyD{} cast calculus
 of \citet{siek2009exploring}.
 
+\begin{proposition}[\ineffCEKD{} is deterministic]
+	If $\judgeDreduce{s_1}{s_2}$ and $\judgeDreduce{s_1}{s_3}$ then $s_2 = s_3$.
+\end{proposition}
+
 Next, we define the CEK Machine for \lazyUD{}. The only difference with
 respect to \lazyD{} is in the definition of the $\mathit{applyCast}$
 function, in which a cast whose source or target is the dynamic type
@@ -1124,6 +1132,11 @@ type, such as $\star \to \star$.
 
 We conjecture that \ineffCEKUD{} agrees with the \lazyUD{} cast
 calculus of \citet{siek2009exploring}.
+
+\begin{proposition}[\ineffCEKUD{} is deterministic]
+	If $\judgeDreduce{s_1}{s_2}$ and $\judgeUDreduce{s_1}{s_3}$ then $s_2 = 
+	s_3$.
+\end{proposition}
 
 \subsection{Coercions and Normal Forms} 
 \label{sec:coercion-calculus}
@@ -1983,7 +1996,7 @@ $cast(T_1,l,T_2)$ acts like the Lazy D $applyCast$ for \ineffCEK\
 (Fig.~\ref{fig:applyCast-D-C}).
 
 \begin{definition}[Lazy D Cast ADT]
-  \label{def:surely-lazyd}
+  \label{def:Lazy-D-Cast-ADT}
   A  Cast is a Lazy D Cast if:
   \begin{enumerate}
   \item If $v : T$ then $applyCast(v,id(T)) = \mathtt{succ} \; v $
@@ -2099,7 +2112,7 @@ $seq(c,c)$.
   \[
   \begin{array}{rclc}
   \funrule{wrap(k)}{\kOOcast{id(T_1)}{k}}{
-    \sidecond{k : T_1 \Longrightarrow T_2}}
+  	\text{where } k : T_1 \Longrightarrow T_2}
   \end{array}
   \]
   
@@ -2180,7 +2193,7 @@ $seq(c,c)$.
   \begin{cases}
   \continue{k}{v'} & \sidecond{applyCast(v,c) = \rOOsucc{v'}} 
   \\
-  \sOOhalt{\oOOblame{l}} & \sidecond{applyCast(v,c) = \rOOfail{l}}
+  \sOOhalt{(\oOOblame{l})} & \sidecond{applyCast(v,c) = \rOOfail{l}}
   \end{cases}
   }{}
   \end{array}
@@ -2345,6 +2358,12 @@ The case for right injections is similar.
 Reflexive transitive closure of reduction ($\judgeSreduceTrans{C}{s}{s}$) and
 evaluation ($\judgeSeval{C}{e}{o}$) are the same as for \ineffCEK.
 
+\begin{proposition}[\effCEK{C} is deterministic]
+	\label{prp:SC-deterministic}
+	If $\judgeSreduce{C}{s_1}{s_2}$ and $\judgeSreduce{C}{s_1}{s_3}$ 
+	then $s_2 = s_3$.
+\end{proposition}
+
 \subsection{\effCEK{C} Is Equivalent to \ineffCEKD{}, Provided $C$ Is an Instance of the Lazy D ADT}
 \label{secc:framework:monoid-correct}
 
@@ -2377,6 +2396,7 @@ a weak bisimulation between \effCEK{C} and \ineffCEKD{}.
 We define monoid as follows.
 
 \begin{definition}[Monoid]
+	\label{def:monoid}
   A Cast ADT is a monoid if 
   for all
   $c_1 : T_1 \Longrightarrow T_2$,
@@ -2447,20 +2467,40 @@ on the two machines.
 \begin{figure}
 %  $\text{\effCEK{C}} \approx \text{\ineffCEKD}$
 % \[\dots\]
+
+\fbox{$\Gamma \vdash \mathcal{E} \approx \mathcal{E}$}
+\begin{gather*}
+\inference{
+}{
+	\emptyset \vdash \emptyset \approx \emptyset
+}
+\quad
+\inference{
+	\Gamma \vdash \mathcal{E}_1 \approx \mathcal{E}_2 \\
+	v_1 \approx v_2 : T
+}{
+	\Gamma , x : T \vdash 
+		\mathcal{E}_1 [ x := v_1 ] \approx \mathcal{E}_2 [ x := v_2 ]
+}
+\end{gather*}
+
   \fbox{$s \approx s$}
   % Because the grammar for states of the two machines are not identical,
   % I think it is worthwhile to write out these rules explicitly. -Jeremy
   \begin{gather*}
-    \inference{dom(\mathcal{E}_1) = dom(\mathcal{E}_2) \\
-               \forall x {:} T \in dom(\mathcal{E}_1),\,
-                   \mathcal{E}_1(x) \approx \mathcal{E}_2(x) : T\\
-               \kappa_1 \approx \kappa_2 : T}
-              {\langle e, \mathcal{E}_1, \kappa_1 \rangle \approx
-              \langle e, \mathcal{E}_2, \kappa_2 \rangle}
-    %% \quad
-    %% \inference{v_1 \approx v_2 : T \quad \kappa_1 \approx \kappa_2 : T}
-    %%           {\langle v_1, \kappa_1 \rangle  \approx
-    %%           \langle v_2, \kappa_2 \rangle}
+    \inference{
+    	\judgetype{\Gamma}{e}{T} \\
+    	\Gamma \vdash \mathcal{E}_1 \approx \mathcal{E}_2 \\
+   		\kappa_1 \approx \kappa_2 : T
+   	}{
+   		\langle e, \mathcal{E}_1, \kappa_1 \rangle 
+   		\approx
+		\langle e, \mathcal{E}_2, \kappa_2 \rangle
+	}
+%    \quad
+%    \inference{v_1 \approx v_2 : T \quad \kappa_1 \approx \kappa_2 : T}
+%               {\langle v_1, \kappa_1 \rangle  \approx
+%               \langle v_2, \kappa_2 \rangle}
     \quad
     \inference{}
               {\sOOhalt{o} \approx \sOOhalt{o}} \\
@@ -2504,8 +2544,7 @@ on the two machines.
   \inference{
   	\Gamma , x : T_1 \vdash e : T_2
   	\\
-  	\forall{} x \in dom(\Gamma).\;
-  		\mathcal{E}_1(x) \approx \mathcal{E}_2(x) : \Gamma(x)
+  	\Gamma \vdash \mathcal{E}_1 \approx \mathcal{E}_2
   }{
     \hcvOOfun{id(T_1)}{\mathcal{E}_1}{x}{e}{id(T_2)}
     \approx
@@ -2586,7 +2625,8 @@ c_2' = seq(c_2,cast(T_2,l,T_4))
 \end{figure}
 
 The bisimulation relation for values is designed to make
-Lemma~\ref{thm:lem-apply-cast-SD} true, that is, if $v_1 \approx v_2$,
+Lemma~\ref{lem:lem-apply-cast-preserve-bisim} true, that is, if $v_1 \approx 
+v_2$,
 then
   \[
   applyCast_{\text{\effCEK{C}}}(v_1,cast(T_1,l,T_2)) 
@@ -2607,11 +2647,12 @@ equivalent casts on both sides to obtain related values.
 %
 The rules for products and sums are similar.
 %
-Lemma~\ref{thm:lem-apply-cast-SD} is used in our bisimulation proof to
+Lemma~\ref{lem:lem-apply-cast-preserve-bisim} is used in our bisimulation proof 
+to
 handle the transitions that apply casts to values.
 
 \begin{lemma}[$applyCast$ Preserves Bisimulation]
-  \label{thm:lem-apply-cast-SD}
+  \label{lem:lem-apply-cast-preserve-bisim}
   Assume $C$ implements Lazy D Cast ADT,
   $v_1$ is a value in \effCEK{C},
   $v_2$ is a value in \ineffCEKD,
@@ -2632,143 +2673,366 @@ We now come to the main lemma, the weak bisimulation between
 \effCEK{C} and \ineffCEKD{}.
 
 \begin{lemma}[Weak Bisimulation between \effCEK{C} and \ineffCEKD{}]
-  \label{thm:SD-bisim}
-  Assume $C$ implements Lazy D Cast ADT
-  and $C$ is a monoid
-  and $cast(T,l,T)=id(T)$,
-  $s_{1} \in \text{\effCEK{C}}$,
-  $s_{2} \in \text{\ineffCEKD}$,
-  $s_{1} \approx s_{2}$,
+	\label{lem:weak-bisim-SC-D}
+	If $C$ implements Lazy D Cast ADT
+	and $C$ is a monoid
+	and $cast(T,l,T)=id(T)$
+	and $s_{1} \approx s_{2}$
+	then either
 \begin{enumerate}
-	\item If $\judgeSreduce{C}{s_1}{s_3}$ then
-	$\judgeDreduceTrans{s_2}{s_4}$ and $s_3 \approx s_4$ for some $s_4$.
-	\item If $\judgeDreduce{s_2}{s_4}$ then
-	$\judgeSreduceTrans{C}{s_1}{s_3}$,
-	$\judgeDreduceTrans{s_4}{s_5}$, and
-	$s_3 \approx s_5$ for some $s_3$ and $s_5$.
-	\item $s_1 = \sOOhalt{o}$ if and only if  $s_2 = \sOOhalt{o}$
+	\item $s_1 = \sOOhalt{o}$ and $s_2 = \sOOhalt{o}$ for some $o$, or
+	\item $\judgeSreducePlus{C}{s_1}{s_3}$ 
+		and $\judgeDreducePlus{s_2}{s_4}$
+		and $s_3 \approx s_4$ for some $s_3$ and $s_4$
 \end{enumerate}
-%\begin{enumerate}
-%  \item $s_1 = \sOOhalt{o}$ if and only if  $s_2 = \sOOhalt{o}$
-%%  \item If $s_2 = \sOOhalt{o}$ then $s_1 = \sOOhalt{o}$
-%  \item If $\judgeSreduce{C}{s_1}{s_3}$ 
-%    then $\judgeDreduce{s_2}{s_4}$ 
-%    and  $s_3 \approx^{*} s_4$
-%    for some $s_4$
-%  \item If $\judgeDreduce{s_2}{s_4}$
-%    then $\judgeSreduce{C}{s_1}{s_3}$ 
-%    and  $s_3 \approx^{*} s_4$
-%    for some $s_3$
-%\end{enumerate}
-%{\color{red}
-%  Jeremy's attempt to reformulate in a more standard way that
-%  remains equivalent:
-%\begin{enumerate}
-%\item If $\judgeSreduce{C}{s_1}{s_3}$ then
-%  $\judgeDreducePlus{s_2}{s_4}$ and $s_3 \approx s_4$ for some $s_4$.
-%\item If $\judgeDreduce{s_2}{s_4}$ then
-%  $\judgeSreduce{C}{s_1}{s_3}$,
-%  $\judgeDreduceTrans{s_4}{s_5}$, and
-%   $s_3 \approx s_5$ for some $s_3$ and $s_5$.
-%\item $s_1 = \sOOhalt{o}$ if and only if  $s_2 = \sOOhalt{o}$
-%\end{enumerate}
-%}
-%Or diagrammatically, 
-%  \[\begin{array}{clclc}
-%  s_{1} & \longrightarrow_{\text{\effCEK{C}}} & s_1'\\
-%  \rotatebox[origin=c]{90}{$\approx$} 
-%  & & & \;\;\;\rotatebox[origin=c]{-20}{$\approx$} \\
-%  s_{2} & 
-%  \longrightarrow_{\text{\ineffCEKD}} & s_2' &
-%  \longrightarrow^{*}_{\text{\ineffCEKD}} & s_2'' \\
-%  \end{array}\]
 \end{lemma}
 \begin{proof}
-  Part (3) follows from the definition of $s \approx s$.
-  Part (1) and (2) are more interesting. 
-  By the definition of $s \approx s$, it is straightforward to prove 
-  $\judgeSreduce{C}{s_1}{s_3}$ if and only if $\judgeDreduce{s_2}{s_4}$.
-  So we can prove two parts together by showing that if $s_{1} \approx s_{2}$
-  and $\judgeDreduce{s_2}{s_4}$ then
-  \[
-%  \text{if}\; 
-%  \;\text{and}\;\judgeSreduce{C}{s_1}{s_3}
-%  \;\text{and}\;\judgeDreduce{s_2}{s_4}
-  \;\text{there exists}\; s'
-  \;\text{such that}\; \judgeDreduceTrans{s_4}{s'}
-  \;\text{and}\; s_3 \approx s'.
-  \]
-  To put it another way, our goal is to prove that 
-  one reduction step in \effCEK{C} corresponds to
-  one or more steps in \ineffCEKD.  
-  Although there are many cases, the general idea is the same.
-  Consider
-  \[
-  \sOOreturn{\hcvOOcons{v_{11}}{c_{11}}{v_{12}}{c_{12}}}{
-    wrap(\kOOcar{\kappa})
-  }
-  \approx
-  \sOOreturn{v_2}{\kOOcar{\kappa}}
-  \]
+	We proceed by case analysis on $s_1 \approx s_2$. 
+	\begin{description}
+		\item[Case $\inference{}{\sOOhalt{o} \approx \sOOhalt{o}}$]
+		This is case (1).\\ \\
+		\item[Case $\inference{
+			\judgetype{\Gamma}{e}{T} \\
+			\Gamma \vdash \mathcal{E} \approx \mathcal{E}' \\
+			\kappa \approx \kappa' : T
+		}{
+			\langle e, \mathcal{E}, \kappa \rangle 
+			\approx
+			\langle e, \mathcal{E}', \kappa' \rangle
+		}$]
+		This is case (2). By case analysis on $e$.\\ \\
+		\item[Case $\inference{v \approx v' : T\\ \kappa \approx 
+		\kappa' : T}{\sOOreturn{v}{\kappa} \approx 
+		\sOOreturn{v'}{\kappa'}}$] This is case (2). In this case we have the 
+		following reduction in \effCEK{C}.
+\[\begin{array}{rll}
+\sOOreturn{v}{\kappa} &=& \sOOreturn{v}{\kOOcast{c}{k}}\\
+& \longmapsto_{\effCEK{C}} & \begin{cases}
+\continue{k}{v_1} & \sidecond{applyCast(v,c) = \rOOsucc{v_1}} 
+\\
+\sOOhalt{(\oOOblame{l})} & \sidecond{applyCast(v,c) = 			
+	\rOOfail{l}}
+\end{cases}
+\end{array}\]
 
-  By looking at the definition of $v \approx v$, we know
-  \begin{align*}
-   c_{11} &= seq(seq(id(T_1),cast(T_1,l,T_3)) \dots) \\
-   c_{12} &= seq(seq(id(T_2),cast(T_2,l,T_4)) \dots) \\
-   v_2 &= \vOOcast{(\vOOcons{v_{21}}{v_{22}})}{
-    \cOOcast{\POOprod{T_1}{T_2}}{l_1}{\POOprod{T_3}{T_4}}} \dots
-  \end{align*}
-  Thus we have the following reduction in \effCEK{C}. Then we employ
-  equational reasoning that relies on the premise that $C$ is a
-  monoid.
-  \[
-  \begin{array}{ll}
-&
-\sOOreturn{\hcvOOcons{v_{11}}{c_{11}}{v_{12}}{c_{12}}}{wrap(\kOOcar{\kappa})}
-\\
-\longmapsto_\text{\effCEK{C}} &
-\sOOreturn{v_{11}}{ext(c_{11},\kappa)}
-\\
-= &
-\sOOreturn{v_{11}}{ext(seq(seq(id(T_1),cast(T_1,l,T_3))\dots),\kappa)}
-\\
-= &
-\sOOreturn{v_{11}}{
-	ext(id(T_1),ext(cast(T_1,l,T_3),ext(\dots,\kappa)))
-}
-\\
-= &
-\sOOreturn{v_{11}}{ext(cast(T_1,l,T_3),ext(\dots,\kappa)}
-  \end{array}
-  \]
-
-We have the following corresponding reduction in \ineffCEKD, where the
-last state is related to the above \effCEK{C} state.
+	We proceed by induction on 
+		$\kOOcast{c}{k} \approx \kappa' : T$. \\
+		\begin{description}
+		\item[Subcase $\inference{
+			k \approx \kappa' : T
+		}{
+			\kOOcast{id(T)}{k} \approx \kappa'
+		}$] 
+		In this case, from the property (1) of Lazy D Cast ADT 
+		(Definition~\ref{def:Lazy-D-Cast-ADT})
+		\[applyCast(v,c) = applyCast(v,id(T)) = \rOOsucc{v}\]
+		Thus,
+		\[
+		\sOOreturn{v}{\kappa} = \sOOreturn{v}{\kOOcast{id(T)}{k}}
+		\longmapsto_{\effCEK{C}} \continue{k}{v}
+		\]
+		We will show shortly that if $v \approx v' : T$ and 
+		$k \approx \kappa' : T$ then there exists an $s'$ such that
+		$\continue{k}{v} \approx s'$ and
+		$\sOOreturn{v'}{\kappa'} \longmapsto_{\ineffCEKD} s'$.
+		\\
+		\item[Subcase $\inference{
+			\kOOcast{c_1}{k_1} \approx \kappa_1' : T_2
+		}{
+			\kOOcast{seq(cast(T_1,l,T_2),c_1)}{k_1} \approx 
+			\kOOcast{\cOOcast{T_1}{l}{T_2}}{\kappa_1'}
+		}$]
+In this case, from the property~(2) of Lazy D Cast ADT 
+(Definition~\ref{def:Lazy-D-Cast-ADT})
 \[
-\begin{array}{ll}
-& \sOOreturn{
-  \vOOcast{(\vOOcons{v_{21}}{v_{22}})}{   
-  \cOOcast{\POOprod{T_1}{T_2}}{l_1}{\POOprod{T_3}{T_4}}} \dots
-}{\kOOcar{\kappa}}
-\\
-\longmapsto_{\mathcal{D}}^{*} &
-\sOOreturn{(\vOOcons{v_{21}}{v_{22}})}{
-  \kOOcar{
-  \kOOcast{\cOOcast{T_1}{l}{T_3}}{\dots\kappa}
-}}
-\\
-\longmapsto_{\mathcal{D}} &
-\sOOreturn{v_{21}}{
-  \kOOcast{\cOOcast{T_1}{l}{T_3}}{\dots\kappa}
+\begin{array}{rcl}
+applyCast(v,c) 
+	&=& applyCast(v,seq(cast(T_1,l,T_2),c_1)) \\
+	&=& applyCast(v,cast(T_1,l,T_2)) \mbind{} \lambda v. applyCast(v,c_1)
+\end{array}
+\]
+In the \ineffCEKD{} machine, we have the following reduction,
+\[
+\sOOreturn{v'}{k'} 
+=
+\sOOreturn{v'}{\kOOcast{\cOOcast{T_1}{l}{T_2}}{\kappa_1'}} 
+\longmapsto_{\ineffCEKD} 
+\begin{cases}
+	\sOOreturn{v_1'}{\kappa_1'} 
+		& \sidecond{applyCast(v',\cOOcast{T_1}{l}{T_2}) = \rOOsucc{v_1'}}
+	\\
+	\sOOhalt{(\oOOblame{l})} 
+		& \sidecond{applyCast(v',\cOOcast{T_1}{l}{T_2}) = \rOOfail{l}}
+\end{cases}
+\]
+
+By Lemma~\ref{lem:lem-apply-cast-preserve-bisim}, 
+$applyCast(v,cast(T_1,l,T_2)) \approx applyCast(v',\cOOcast{T_1}{l}{T_2})$.
+When both cast applications fail, both machines transition to halting states 
+with the same blame label.
+When both cast applications succeed, we apply the induction hypothesis.
+\end{description}
+\end{description}
+	
+Now we prove the missing part: if $v \approx v' : T$ and 
+$k \approx \kappa' : T$ then there exists an $s'$ such that
+$\continue{k}{v} \approx s'$ and $\sOOreturn{v'}{\kappa'} 
+\longmapsto_{\ineffCEKD} s'$. We proceed by case analysis on $k \approx \kappa' 
+: T$.
+
+Many cases are trivial. The interesting cases are eliminations 
+(e.g. function applications, pair projections). Due to space limitation, 
+we only illustrate the general idea with function applications:
+\[\inference{
+	v_1 \approx v_1' : \POOfun{T_1}{T_2} \\
+	\kappa_1 \approx \kappa_1' : T_2
+}{
+	\kOOappII{v_1}{\kappa_1} \approx \kOOappII{v_1'}{\kappa_1'}
+}\]
+
+We proceed by induction on the $v_1 \approx v_1' : \POOfun{T_1}{T_2}$.
+
+\begin{description}
+	\item[Case $\inference{
+		\Gamma , x : T_1 \vdash e : T_2
+		\\
+		\Gamma \vdash \mathcal{E} \approx \mathcal{E}'
+	}{
+		\hcvOOfun{id(T_1)}{\mathcal{E}}{x}{e}{id(T_2)}
+		\approx
+		\vOOfun{\mathcal{E}'}{x}{e}
+		: \POOfun{T_1}{T_2}
+	}$]
+\[
+\begin{array}{rcl}
+\continue{k}{v}
+	&=
+	&\continue{\kOOappII{\hcvOOfun{id(T_1)}{\mathcal{E}}{x}{e}{id(T_2)}}{\kappa_1}}{v}
+	\\
+	&=
+	&\sOOinspect{e}{\mathcal{E}[x:=v]}{ext(id(T_2),\kappa_1)}
+	\\
+	&=
+	&\sOOinspect{e}{\mathcal{E}[x:=v]}{\kappa_1}
+\end{array}
+\]
+The first step is substitution of variables. The second step is by the property 
+(1) of Definition~\ref{def:Lazy-D-Cast-ADT}. And the third and final step is by 
+the property (1) of Definition~\ref{def:monoid}.
+\[
+\begin{array}{rll}
+\sOOreturn{v'}{\kappa'} 
+	&=
+	&\sOOreturn{v'}{\kOOappII{\vOOfun{\mathcal{E}'}{x}{e}}{\kappa_1'}}\\
+	&\longmapsto_{\ineffCEKD}
+	&\sOOinspect{e}{\mathcal{E}'[x:=v']}{\kappa_1'}
+\end{array}
+\]
+\item[Case 
+$\inference{
+	\hcvOOfun{c_3}{\mathcal{E}}{x}{e}{c_4} \approx v_2' : \POOfun{T_1}{T_2}
+}{
+	\hcvOOfun{c_1}{\mathcal{E}}{x}{e}{c_2}
+		\approx
+	\vOOcast{v_2'}{\cOOcast{\POOfun{T_1}{T_2}}{l}{\POOfun{T_3}{T_4}}}
+		: \POOfun{T_3}{T_4}
 }
+\begin{array}{l}
+	c_1 = seq(cast(T_3,l,T_1),c_3) \\
+	c_2 = seq(c_4,cast(T_2,l,T_4))
+\end{array}$] 
+\[
+\begin{array}{rcl}
+\continue{k}{v}
+&=
+&\continue{\kOOappII{\hcvOOfun{c_1}{\mathcal{E}}{x}{e}{c_2}}{\kappa_1}}{v}
+\\
+&=
+&\begin{cases}
+\sOOinspect{e}{\mathcal{E}[x:=v_1]}{ext(c_2,\kappa)}  &
+\sidecond{applyCast(v,c_1) = \rOOsucc{v_1}}
+\\
+\sOOhalt{l} &
+\sidecond{applyCast(v,c_1) = \rOOfail{l}}
+\end{cases}
 \end{array}
 \]
 
-Other cases are similar. Of course, we need the lemma about
-$applyCast$ (Lemma~\ref{thm:lem-apply-cast-SD}) when cast applications
-happen in both machines.  And in case splitting, we employ
-$cast(T,l,T)=id(T)$ to relate the continuation functions.
+By property (3) of Monoid (Definition~\ref{def:monoid}), we have
+\[
+ext(c_2,\kappa) = ext(c_4,ext(cast(T_2,l,T_4),\kappa))
+\]
+By property (2) of Lazy D Cast ADT (Definition~\ref{def:Lazy-D-Cast-ADT}), 
+we have
+\[
+applyCast(v,c_1) = applyCast(cast(T_3,l,T_1), v) \mbind{} \lambda v. 
+applyCast(c_3,v)
+\]
+In the \ineffCEKD{} side, we have the following reduction
+\[
+\begin{array}{rll}
+\sOOreturn{v'}{\kappa'} 
+&=
+&\sOOreturn{v'}{\kOOappII{\vOOcast{v_2'}{\cOOcast{\POOfun{T_1}{T_2}}{l}{\POOfun{T_3}{T_4}}}}{\kappa_1'}}\\
+&\longmapsto_{\ineffCEKD}
+&\sOOreturn{v'}{\kOOcast{\cOOcast{T_3}{l}{T_1}}{\kOOappII{v_2'}{\kOOcast{\cOOcast{T_2}{l}{T_4}}{\kappa_1'}}}}\\
+&\longmapsto_{\ineffCEKD}
+&\begin{cases}
+	\sOOreturn{v_3'}{{\kOOappII{v_2'}{\kOOcast{\cOOcast{T_2}{l}{T_4}}{\kappa_1'}}}}
+		& \sidecond{applyCast(v',\cOOcast{T_3}{l}{T_1}) = \rOOsucc{v_3'}}\\
+	\sOOhalt{(\oOOblame{l})} 
+		& \sidecond{applyCast(v',\cOOcast{T_3}{l}{T_1}) = \rOOfail{l}}
+\end{cases}
+\end{array}
+\]
+By Lemma~\ref{lem:lem-apply-cast-preserve-bisim}, 
+$applyCast(v,cast(T_3,l,T_1)) \approx applyCast(v',\cOOcast{T_3}{l}{T_1})$.  
+When both cast applications fail, both machines transition to halting states 
+with the same blame label.
+When both cast applications succeed, we apply the induction hypothesis.
+\end{description}
+
 \end{proof}
+%
+%\begin{lemma}[Weak Bisimulation between \effCEK{C} and \ineffCEKD{}]
+%  \label{thm:SD-bisim}
+%  Assume $C$ implements Lazy D Cast ADT
+%  and $C$ is a monoid
+%  and $cast(T,l,T)=id(T)$,
+%  $s_{1} \in \text{\effCEK{C}}$,
+%  $s_{2} \in \text{\ineffCEKD}$,
+%  $s_{1} \approx s_{2}$,
+%\begin{enumerate}
+%	\item If $\judgeSreduce{C}{s_1}{s_3}$ then
+%	$\judgeDreduceTrans{s_2}{s_4}$ and $s_3 \approx s_4$ for some $s_4$.
+%	\item If $\judgeDreduce{s_2}{s_4}$ then
+%	$\judgeSreduceTrans{C}{s_1}{s_3}$,
+%	$\judgeDreduceTrans{s_4}{s_5}$, and
+%	$s_3 \approx s_5$ for some $s_3$ and $s_5$.
+%	\item $s_1 = \sOOhalt{o}$ if and only if  $s_2 = \sOOhalt{o}$
+%\end{enumerate}
+%%\begin{enumerate}
+%%  \item $s_1 = \sOOhalt{o}$ if and only if  $s_2 = \sOOhalt{o}$
+%%%  \item If $s_2 = \sOOhalt{o}$ then $s_1 = \sOOhalt{o}$
+%%  \item If $\judgeSreduce{C}{s_1}{s_3}$ 
+%%    then $\judgeDreduce{s_2}{s_4}$ 
+%%    and  $s_3 \approx^{*} s_4$
+%%    for some $s_4$
+%%  \item If $\judgeDreduce{s_2}{s_4}$
+%%    then $\judgeSreduce{C}{s_1}{s_3}$ 
+%%    and  $s_3 \approx^{*} s_4$
+%%    for some $s_3$
+%%\end{enumerate}
+%%{\color{red}
+%%  Jeremy's attempt to reformulate in a more standard way that
+%%  remains equivalent:
+%%\begin{enumerate}
+%%\item If $\judgeSreduce{C}{s_1}{s_3}$ then
+%%  $\judgeDreducePlus{s_2}{s_4}$ and $s_3 \approx s_4$ for some $s_4$.
+%%\item If $\judgeDreduce{s_2}{s_4}$ then
+%%  $\judgeSreduce{C}{s_1}{s_3}$,
+%%  $\judgeDreduceTrans{s_4}{s_5}$, and
+%%   $s_3 \approx s_5$ for some $s_3$ and $s_5$.
+%%\item $s_1 = \sOOhalt{o}$ if and only if  $s_2 = \sOOhalt{o}$
+%%\end{enumerate}
+%%}
+%%Or diagrammatically, 
+%%  \[\begin{array}{clclc}
+%%  s_{1} & \longrightarrow_{\text{\effCEK{C}}} & s_1'\\
+%%  \rotatebox[origin=c]{90}{$\approx$} 
+%%  & & & \;\;\;\rotatebox[origin=c]{-20}{$\approx$} \\
+%%  s_{2} & 
+%%  \longrightarrow_{\text{\ineffCEKD}} & s_2' &
+%%  \longrightarrow^{*}_{\text{\ineffCEKD}} & s_2'' \\
+%%  \end{array}\]
+%\end{lemma}
+%\begin{proof}
+%  Part (3) follows from the definition of $s \approx s$.
+%  Part (1) and (2) are more interesting. 
+%  By the definition of $s \approx s$, it is straightforward to prove 
+%  $\judgeSreduce{C}{s_1}{s_3}$ if and only if $\judgeDreduce{s_2}{s_4}$.
+%  So we can prove two parts together by showing that if $s_{1} \approx s_{2}$
+%  and $\judgeDreduce{s_2}{s_4}$ then
+%  \[
+%%  \text{if}\; 
+%%  \;\text{and}\;\judgeSreduce{C}{s_1}{s_3}
+%%  \;\text{and}\;\judgeDreduce{s_2}{s_4}
+%  \;\text{there exists}\; s'
+%  \;\text{such that}\; \judgeDreduceTrans{s_4}{s'}
+%  \;\text{and}\; s_3 \approx s'.
+%  \]
+%  To put it another way, our goal is to prove that 
+%  one reduction step in \effCEK{C} corresponds to
+%  one or more steps in \ineffCEKD.  
+%  Although there are many cases, the general idea is the same.
+%  Consider
+%  \[
+%  \sOOreturn{\hcvOOcons{v_{11}}{c_{11}}{v_{12}}{c_{12}}}{
+%    wrap(\kOOcar{\kappa})
+%  }
+%  \approx
+%  \sOOreturn{v_2}{\kOOcar{\kappa}}
+%  \]
+%
+%  By looking at the definition of $v \approx v$, we know
+%  \begin{align*}
+%   c_{11} &= seq(seq(id(T_1),cast(T_1,l,T_3)) \dots) \\
+%   c_{12} &= seq(seq(id(T_2),cast(T_2,l,T_4)) \dots) \\
+%   v_2 &= \vOOcast{(\vOOcons{v_{21}}{v_{22}})}{
+%    \cOOcast{\POOprod{T_1}{T_2}}{l_1}{\POOprod{T_3}{T_4}}} \dots
+%  \end{align*}
+%  Thus we have the following reduction in \effCEK{C}. Then we employ
+%  equational reasoning that relies on the premise that $C$ is a
+%  monoid.
+%  \[
+%  \begin{array}{ll}
+%&
+%\sOOreturn{\hcvOOcons{v_{11}}{c_{11}}{v_{12}}{c_{12}}}{wrap(\kOOcar{\kappa})}
+%\\
+%\longmapsto_\text{\effCEK{C}} &
+%\sOOreturn{v_{11}}{ext(c_{11},\kappa)}
+%\\
+%= &
+%\sOOreturn{v_{11}}{ext(seq(seq(id(T_1),cast(T_1,l,T_3))\dots),\kappa)}
+%\\
+%= &
+%\sOOreturn{v_{11}}{
+%	ext(id(T_1),ext(cast(T_1,l,T_3),ext(\dots,\kappa)))
+%}
+%\\
+%= &
+%\sOOreturn{v_{11}}{ext(cast(T_1,l,T_3),ext(\dots,\kappa)}
+%  \end{array}
+%  \]
+% 
+%We have the following corresponding reduction in \ineffCEKD, where the
+%last state is related to the above \effCEK{C} state.
+%\[
+%\begin{array}{ll}
+%& \sOOreturn{
+%  \vOOcast{(\vOOcons{v_{21}}{v_{22}})}{   
+%  \cOOcast{\POOprod{T_1}{T_2}}{l_1}{\POOprod{T_3}{T_4}}} \dots
+%}{\kOOcar{\kappa}}
+%\\
+%\longmapsto_{\mathcal{D}}^{*} &
+%\sOOreturn{(\vOOcons{v_{21}}{v_{22}})}{
+%  \kOOcar{
+%  \kOOcast{\cOOcast{T_1}{l}{T_3}}{\dots\kappa}
+%}}
+%\\
+%\longmapsto_{\mathcal{D}} &
+%\sOOreturn{v_{21}}{
+%  \kOOcast{\cOOcast{T_1}{l}{T_3}}{\dots\kappa}
+%}
+%\end{array}
+%\]
+%
+%Other cases are similar. Of course, we need the lemma about
+%$applyCast$ (Lemma~\ref{lem:lem-apply-cast-preserve-bisim}) when cast 
+%applications
+%happen in both machines.  And in case splitting, we employ
+%$cast(T,l,T)=id(T)$ to relate the continuation functions.
+%\end{proof}
 
 \begin{corollary}[Correctness of \effCEK{C}]
   \label{thm:SD-equiv}
@@ -2787,7 +3051,7 @@ $cast(T,l,T)=id(T)$ to relate the continuation functions.
 		\sOOhalt{o}
 	}
 	\;\text{if and only if}\;
-	\judgeSreduceTrans{C}{\sOOinspect{e}{\emptyset}{\kOOmt}}{
+	\judgeDreduceTrans{\sOOinspect{e}{\emptyset}{\kOOmt}}{
 		\sOOhalt{o}
 	}
 	\]
@@ -2797,48 +3061,33 @@ $cast(T,l,T)=id(T)$ to relate the continuation functions.
 	\approx
 	\sOOinspect{e}{\emptyset}{\kOOmt}
 	\]
-	So we can generalize our goal, and prove that if $s_1 \approx s_2$
+	So we can generalize our goal, and prove that if $s_1 \approx s_1'$
 	\[
 	\judgeSreduceTrans{C}{s_1}{\sOOhalt{o}}
 	\;\text{if and only if}\;
-	\judgeSreduceTrans{C}{s_2}{\sOOhalt{o}}
+	\judgeDreduceTrans{s_1'}{\sOOhalt{o}}
 	\]
 	
-	Let us prove left to right first by induction on 
+	Let us prove left to right first. We proceed by induction on 
 	$\judgeSreduceTrans{C}{s_1}{\sOOhalt{o}}$.
 	
 	\begin{itemize}
 		\item 
-		If $s_1$ takes zero step to the halting state, it must be halting.
-		By Lemma~\ref{thm:SD-bisim}, $s_2$ is halting as well, so we are done.
+		$s_1 = \sOOhalt{o}$ implies $s_1' = \sOOhalt{o}$ by 
+		Lemma~\ref{lem:weak-bisim-SC-D}.
 		\item 
-		If $\judgeSreduce{C}{s_1}{s_3}$ and 
-		$\judgeSreduceTrans{C}{s_3}{\sOOhalt{o}}$,
-		by Lemma~\ref{thm:SD-bisim}, there exists a $s_4$ such that 
-		$\judgeDreduceTrans{s_2}{s_4}$ and $s_3 \approx s_4$. So we can apply 
-		our induction hypothesis.
+		If $\judgeSreduce{C}{s_1}{s}$ and 
+		$\judgeSreduceTrans{C}{s}{\sOOhalt{o}}$ for some $s$,
+		by Lemma~\ref{lem:weak-bisim-SC-D}, there exists $s_2$ and $s_2'$ such 
+		that $\judgeSreducePlus{C}{s_1}{s_2}$ and 
+		$\judgeDreducePlus{s_1'}{s_2'}$ 
+		and $s_2 \approx s_2'$. The transition $\judgeSreducePlus{C}{s_1}{s_2}$ 
+		must be a prefix of $\judgeSreducePlus{C}{s_1}{\sOOhalt{o}}$ because 
+		\effCEK{C} is deterministic (Proposition~\ref{prp:SC-deterministic}) 
+		and halting states are stuck. 
+		So we can apply our induction hypothesis on $s_2 \approx s_2'$
 	\end{itemize}
-	
-	Now let us prove right to left by induction on 
-	$\judgeDreduceTrans{s_2}{\sOOhalt{o}}$.
-	\begin{itemize}
-		\item If $s_2$ takes zero step to the halting state, it must be halting.
-		By Lemma~\ref{thm:SD-bisim}, $s_2$ is halting as well, so we are done.
-		\item If $\judgeDreduce{s_2}{s_4}$ and 
-		$\judgeDreduceTrans{s_4}{\sOOhalt{o}}$,
-		by Lemma~\ref{thm:SD-bisim}, there exist $s_3,s_5$ such that
-		\[
-			\judgeSreduceTrans{C}{s_1}{s_3}
-			\;\text{and}\;
-			\judgeDreduceTrans{s_4}{s_5}
-			\;\text{and}\;
-			s_3 \approx s_5
-		\]
-		From $\judgeDreduceTrans{s_4}{\sOOhalt{o}}$ and 
-		$\judgeDreduceTrans{s_4}{s_5}$ we know 
-		$\judgeDreduceTrans{s_5}{\sOOhalt{o}}$ because our machine is 
-		deterministic. Now we can apply our induction hypothesis.
-	\end{itemize}
+	The other direction is similar.
 %  Proving that the left-hand side implies the right-hand side is
 %  trivial.  To prove $\judgeDeval{e}{o}$ implies
 %  $\judgeSeval{C}{e}{o}$, we first take one step in \effCEK{C}, and

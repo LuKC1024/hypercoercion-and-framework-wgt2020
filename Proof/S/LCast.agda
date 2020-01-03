@@ -3,6 +3,7 @@ module S.LCast
   where
 
 open import Types
+open import Statics Label
 open import S.CastADT Label
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; cong)
@@ -65,9 +66,7 @@ mk-cast-id-is-id l T with T ≡? T
 mk-cast-id-is-id l T | yes refl = refl
 mk-cast-id-is-id l T | no ¬p = ⊥-elim (¬p refl)
 
-open import Terms Label
 open import S.Values Label Cast
-open import Variables
 
 do-cast : Label → (T1 T2 : Type) → ¬ T1 ≡ T2 → Val T1 → CastResult T2
 do-cast l T1 T2 ¬p v with T1 ⌣? T2
