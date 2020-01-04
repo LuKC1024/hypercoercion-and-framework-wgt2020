@@ -3034,6 +3034,29 @@ When both cast applications succeed, we apply the induction hypothesis.
 %$cast(T,l,T)=id(T)$ to relate the continuation functions.
 %\end{proof}
 
+\begin{corollary}[Weak Bisimulation between \effCEK{C} and \ineffCEKD{}, 
+reformulated]
+  Assume $C$ implements Lazy D Cast ADT
+  and $C$ is a monoid
+  and $cast(T,l,T)=id(T)$,
+  $s_1 \approx s_1'$,
+\begin{enumerate}
+	\item If $\judgeSreduce{C}{s_1}{s}$ for some $s$, then
+	$\judgeSreduceTrans{C}{s}{s_2}$, and
+	$\judgeDreducePlus{s_1'}{s_2'}$,
+	$s_2 \approx s_2'$ for some $s_2$ and $s_2'$.
+	\item If $\judgeDreduce{s_1'}{s'}$ for some $s'$, then
+	$\judgeDreduceTrans{s'}{s_2'}$, and
+	$\judgeSreducePlus{C}{s_1}{s_2}$,
+	$s_2 \approx s_2'$ for some $s_2$ and $s_2'$.
+	\item $s_1 = \sOOhalt{o}$ if and only if  $s_1' = \sOOhalt{o}$
+\end{enumerate}
+\end{corollary}
+\begin{proof}
+	By applying Lemma~\ref{lem:weak-bisim-SC-D} on $s_1 \approx s_1'$ and case 
+	analysis.
+\end{proof}
+
 \begin{corollary}[Correctness of \effCEK{C}]
   \label{thm:SD-equiv}
   Suppose $C$ is an instance of the Cast ADT
