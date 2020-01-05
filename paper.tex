@@ -1103,19 +1103,20 @@ type, such as $\star \to \star$.
   \fbox{$\mathit{applyCast}(v,c) = r$}
   \[
   \begin{array}{rclr}
-    \mathit{applyCast}(v, \cOOcast{\star}{l}{\star} ) &=& v \\
+    \mathit{applyCast}(v, \cOOcast{\star}{l}{\star} ) &=& \rOOsucc{v} \\
     \mathit{applyCast}(v, \cOOcast{P}{l}{\star}) &=&
-        v \langle \cOOcast{P}{l}{I} \rangle
-          \langle \cOOcast{I}{l}{\star} \rangle
+        \rOOsucc{v \langle \cOOcast{P}{l}{I} \rangle
+                   \langle \cOOcast{I}{l}{\star} \rangle}
         & \text{if } I \sim P, I \neq P \\  
     \mathit{applyCast}(v, \cOOcast{\star}{l}{P}) &=&          
-        v \langle \cOOcast{\star}{l}{I} \rangle
-          \langle \cOOcast{I}{l}{P} \rangle
+        \rOOsucc{v \langle \cOOcast{\star}{l}{I} \rangle
+                   \langle \cOOcast{I}{l}{P} \rangle}
         & \text{if } I \sim P, I \neq P \\  
-  \mathit{applyCast}(v \langle \cOOcast{I}{l}{\star} \rangle , \cOOcast{\star}{l}{I}) &=& v \\
+  \mathit{applyCast}(v \langle \cOOcast{I}{l}{\star} \rangle , \cOOcast{\star}{l}{I}) &=& \rOOsucc{v} \\
   \mathit{applyCast}(v \langle \cOOcast{I_1}{l}{\star} \rangle , \cOOcast{\star}{l}{I_2}) &=& \rOOfail{l} & \text{if } I_1 \neq I_2 \\
   \mathit{applyCast}(v, \cOOcast{P_1}{l}{P_2}) &=&
-     v \langle \cOOcast{P_1}{l}{P_2} \rangle & \text{if } P_1 \smile P_2
+           \rOOsucc{v \langle \cOOcast{P_1}{l}{P_2} \rangle}
+          & \text{if } P_1 \smile P_2
   \end{array}
   \]
 
