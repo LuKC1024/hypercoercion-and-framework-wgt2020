@@ -83,8 +83,9 @@ This is very interesting work towards an adequate low-level representation of ca
 ☐ The discussion of hypercoercions should relate more explicitly/extensively to the other representations of casts/coercions, in order to highlight the key differences. (in particular wrt λS)
 > KC: Working on this. Part of the comparision between our bisimulation and the one in Blame&Coercion paper.
 
-☐ Section 3.3 mentions that the bit-level representation of hypercoercions is compact "for the most common-case coercions". I wonder on what (empirical?) evidence this "common-case" argument is justified. It would be good to explain.
+✔ Section 3.3 mentions that the bit-level representation of hypercoercions is compact "for the most common-case coercions". I wonder on what (empirical?) evidence this "common-case" argument is justified. It would be good to explain.
 > KC: Can Jeremy fix this?
+> JS: Fixed.
 
 ✔ the intro should (briefly) recall what D and UD are
 > KC: add a 2-sentence description at line 45.
@@ -95,8 +96,9 @@ This is very interesting work towards an adequate low-level representation of ca
 
 ✔ line 234: unfinished line
 
-☐ figure 5: non-failure cases should be of the form `succ v`
+✔ figure 5: non-failure cases should be of the form `succ v`
 > KC: Can Jeremy fix this?
+> JS: Fixed.
 
 ✔ definition 4.3: use a proper symbol for bind, as `>>=` is not nicely displayed
 

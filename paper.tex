@@ -1814,20 +1814,25 @@ Agda.
 \subsection{Compact Representation of Hypercoercions}
 
 Hypercoercions enable a bit-level representation that is particularly
-compact for the most common-case coercions. The most frequent
-coercions are injections and projections to base types (here
-$\POOunit$ is the only base type, but in a real language the base
-types would include integers, Booleans, etc.) and identity coercions.
-Values of base types are often stored in CPU registers, so it would be
-nice for coercions on base types to also fit in registers, that is, in
-64 bits, so that applying a coercion to a value would not require
-access to main memory, which is an order of magnitude slower than
-accessing registers on a modern CPU.
+compact for identity coercions and coercions that project from base
+types or inject to base types.  (Here $\POOunit$ is the only base
+type, but in a real language the base types would include integers,
+Booleans, etc.)  We conjecture that such coercions occur more
+frequently than the more complex coercions (e.g. between function
+types), especially because such coercions appear in the leaves of
+complex coercions.
+
+Futhermore, values of base types are often stored in CPU registers, so
+it would be nice for coercions on base types to also fit in registers,
+that is, in 64 bits, so that applying a coercion to a value of base
+type would not require access to main memory, which is an order of
+magnitude slower than accessing registers on a modern CPU.
 %
-Coercions involving non-base types, such as function types,
-may be arbitrarily large, so in those cases, the hypercoercion
-representation can be a pointer to a heap-allocated structure.  Here
-is a sketch for the bit-level representation for hypercoercions.
+Coercions involving non-base types, such as function types, may be
+arbitrarily deep, so in those cases, the hypercoercion representation
+has to be a pointer to a heap-allocated structure.
+
+Here is a sketch for the bit-level representation for hypercoercions.
 
 \begin{itemize}
 \item 1 bit to differentiate between $\hyperCoercionI$
