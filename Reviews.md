@@ -200,6 +200,7 @@ annotation on `case`?).
 ☐ Fig.5, typos: Shouldn't all right hand sides have `succ` if not
 `fail`?
 > KC: Can Jeremy fix this?
+> JS: Fixed.
 
 ✔ Fig.8, 'and $\forall l . t \not= \bot^l$': $t$ should be $t_1$ or
 $t_2$ in the first two cases, and $t_1$ in the last two cases.
