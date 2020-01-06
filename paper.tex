@@ -71,7 +71,6 @@
 %\newtheorem{definition}{Definition}
 
 \newcommand{\longdownmapsto}{\rotatebox[origin=c]{-90}{$\scriptstyle\longmapsto$}\mkern2mu}
-
 \newcommand{\mbind}{\ensuremath{\;\underline{\gg}\;}}
 
 \newcommand{\GTLC}{\texttt{GTLC+}}
@@ -119,7 +118,7 @@
 \newcommand{\eOOcast}[4]{#1 \langle \cOOcast{#2}{#3}{#4} \rangle}
 \newcommand{\eOOblame}[1]{\mathtt{blame} \; #1}
 \newcommand{\cOOcast}[3]{#1 \Rightarrow^{#2} #3}
-\newcommand{\oOOinj}{\mathtt{dyn}}
+\newcommand{\oOOdyn}{\mathtt{dyn}}
 \newcommand{\oOOsole}{\mathtt{unit}}
 \newcommand{\oOOfun}{\mathtt{fun}}
 \newcommand{\oOOcons}{\mathtt{cons}}
@@ -401,7 +400,10 @@ fits all first-order casts into 64 bits.
 %
 We present two flavors of hypercoercions to support the two blame
 tracking strategies from the literature: D and
-UD~\citep{siek2009exploring}. We are interested in the D blame
+UD~\citep{siek2009exploring}. With the D strategy, only \textbf{d}own casts 
+(casts from $\TOOdyn$ to some other types) are subject to blame. With the UD 
+strategy, however, some \textbf{u}p casts are also blamable.
+We are interested in the D blame
 tracking strategy because it comes with a more straightforward notion of
 safe cast compared to UD~\citep{siek2009exploring}, which is why D was
 chosen in the Grift compiler~\citep{kuhlenschmidt2018efficient}. We are also 
@@ -430,8 +432,8 @@ normal form, threesomes, and supercoercions.
 To summarize, the primary contributions of this paper are:
 \begin{itemize}
 \item hypercoercions, a new cast representation, which
-  has a structurally recursive composition and a more compact memory
-  representation.
+  has a structurally recursive composition and a memory
+  representation more compact than space-efficient coercions.
 \item a framework in Agda for proving the correctness of \lazyD{} cast
   representations.
 \item a formal proof that \lazyD\ hypercoercions respect the semantics
@@ -604,12 +606,10 @@ Corresponding to (1) and (2), the machine state is either in an evaluating
 $\sOOinspect{e}{\mathcal{E}}{\kappa}$ or continuing $\sOOreturn{v}{\kappa}$ 
 configuration, 
 respectively. Additionally, there is the $\sOOhalt{o}$ configuration, where the 
-machine halts with an observation ($o$). Observations include all value 
-constructors and blame. The function converting values to 
-observations ($observe(v) = o$) is defined in the obvious way.
-%Let $s$ range over machine states. A state is either looking at an 
-%expression to decide what to do next, returning a value to a continuation, or 
-%halting with an observation.
+machine halts with an observable ($o$). Observables include all value 
+constructors, blame, and $\oOOdyn$, as in \citet{siek2012interpretations}. 
+The function converting values to observables ($observe(v) = o$) is defined in 
+the obvious way. 
 
 Let $v$ range over values. A value is either the unit, a function, a pair, a 
 left injection, a right injection, or a casted value. Value typing rules 
@@ -687,8 +687,8 @@ evaluation ($eval_\mathcal{x}(e)$) are standard~\citep{felleisen03:_pllc}.
     \star \times \star \mid
     \star + \star
   }
-  \stxrule{o}{Observations}{
-    \oOOinj \mid
+  \stxrule{o}{Observables}{
+    \oOOdyn \mid
     \oOOsole \mid
     \oOOfun \mid
     \oOOcons \mid
@@ -1110,19 +1110,20 @@ type, such as $\star \to \star$.
   \fbox{$\mathit{applyCast}(v,c) = r$}
   \[
   \begin{array}{rclr}
-    \mathit{applyCast}(v, \cOOcast{\star}{l}{\star} ) &=& v \\
+    \mathit{applyCast}(v, \cOOcast{\star}{l}{\star} ) &=& \rOOsucc{v} \\
     \mathit{applyCast}(v, \cOOcast{P}{l}{\star}) &=&
-        v \langle \cOOcast{P}{l}{I} \rangle
-          \langle \cOOcast{I}{l}{\star} \rangle
+        \rOOsucc{v \langle \cOOcast{P}{l}{I} \rangle
+                   \langle \cOOcast{I}{l}{\star} \rangle}
         & \text{if } I \sim P, I \neq P \\  
     \mathit{applyCast}(v, \cOOcast{\star}{l}{P}) &=&          
-        v \langle \cOOcast{\star}{l}{I} \rangle
-          \langle \cOOcast{I}{l}{P} \rangle
+        \rOOsucc{v \langle \cOOcast{\star}{l}{I} \rangle
+                   \langle \cOOcast{I}{l}{P} \rangle}
         & \text{if } I \sim P, I \neq P \\  
-  \mathit{applyCast}(v \langle \cOOcast{I}{l}{\star} \rangle , \cOOcast{\star}{l}{I}) &=& v \\
+  \mathit{applyCast}(v \langle \cOOcast{I}{l}{\star} \rangle , \cOOcast{\star}{l}{I}) &=& \rOOsucc{v} \\
   \mathit{applyCast}(v \langle \cOOcast{I_1}{l}{\star} \rangle , \cOOcast{\star}{l}{I_2}) &=& \rOOfail{l} & \text{if } I_1 \neq I_2 \\
   \mathit{applyCast}(v, \cOOcast{P_1}{l}{P_2}) &=&
-     v \langle \cOOcast{P_1}{l}{P_2} \rangle & \text{if } P_1 \smile P_2
+           \rOOsucc{v \langle \cOOcast{P_1}{l}{P_2} \rangle}
+          & \text{if } P_1 \smile P_2
   \end{array}
   \]
 
@@ -1222,7 +1223,7 @@ $\hat{c}$!
 %% \end{array}
 %% \]
 
-%% Three observations on this definition leads to hypercoercion: 
+%% Three observables on this definition leads to hypercoercion: 
 %% \begin{enumerate}
 %%  \item The length of normal coercion is at most three.
 %%  \item Projections are always at the beginning when present.
@@ -1825,20 +1826,25 @@ Agda.
 \subsection{Compact Representation of Hypercoercions}
 
 Hypercoercions enable a bit-level representation that is particularly
-compact for the most common-case coercions. The most frequent
-coercions are injections and projections to base types (here
-$\POOunit$ is the only base type, but in a real language the base
-types would include integers, Booleans, etc.) and identity coercions.
-Values of base types are often stored in CPU registers, so it would be
-nice for coercions on base types to also fit in registers, that is, in
-64 bits, so that applying a coercion to a value would not require
-access to main memory, which is an order of magnitude slower than
-accessing registers on a modern CPU.
+compact for identity coercions and coercions that project from base
+types or inject to base types.  (Here $\POOunit$ is the only base
+type, but in a real language the base types would include integers,
+Booleans, etc.)  We conjecture that such coercions occur more
+frequently than the more complex coercions (e.g. between function
+types), especially because such coercions appear in the leaves of
+complex coercions.
+
+Futhermore, values of base types are often stored in CPU registers, so
+it would be nice for coercions on base types to also fit in registers,
+that is, in 64 bits, so that applying a coercion to a value of base
+type would not require access to main memory, which is an order of
+magnitude slower than accessing registers on a modern CPU.
 %
-Coercions involving non-base types, such as function types,
-may be arbitrarily large, so in those cases, the hypercoercion
-representation can be a pointer to a heap-allocated structure.  Here
-is a sketch for the bit-level representation for hypercoercions.
+Coercions involving non-base types, such as function types, may be
+arbitrarily deep, so in those cases, the hypercoercion representation
+has to be a pointer to a heap-allocated structure.
+
+Here is a sketch for the bit-level representation for hypercoercions.
 
 \begin{itemize}
 \item 1 bit to differentiate between $\hyperCoercionI$
@@ -3183,24 +3189,28 @@ that also includes the rules below.
 
 \begin{proposition}[Equivalence of Two \lazyD{} Cast ADTs]
   \label{thm:surely-lazyD-eqv}
-  Assume $C_1$ and $C_2$ implements Lazy D Cast ADT,
+  Assume $C_1$ and $C_2$ implements Lazy D Cast ADT. If 
+  $\judgetype{\emptyset}{e}{T}$ and $o : T$ then
   \[
-  eval_{\mathcal{S}(C_1)} = eval_{\mathcal{S}(C_2)}.
+  \evalEqv{\effCEK{C_1}}{\effCEK{C_2}}
   \]
+%  \[
+%  eval_{\mathcal{S}(C_1)} = eval_{\mathcal{S}(C_2)}.
+%  \]
 \end{proposition}
 \begin{proof}
-  Without loss of generality, assume $\judgeSreduce{C_1}{e}{o}$ and prove 
-  $\judgeSreduce{C_2}{e}{o}$.\\
+  Without loss of generality, assume $\judgeSeval{C_1}{e}{o}$ and prove 
+  $\judgeSeval{C_2}{e}{o}$.\\
   By the definition of $eval_{\mathcal{S}(C)}$, we know 
 \[
-\judgeSreduceTrans{C_2}{\sOOinspect{e}{\emptyset}{wrap(\kOOmt)}}{\sOOhalt{o}}
+\judgeSreduceTrans{C_1}{\sOOinspect{e}{\emptyset}{wrap(\kOOmt)}}{\sOOhalt{o}}
 \]
   By induction on this reduction sequence and Lemma~\ref{thm:CEKS-bisim}, we 
   have 
 \[
 \judgeSreduceTrans{C_2}{\sOOinspect{e}{\emptyset}{wrap(\kOOmt)}}{\sOOhalt{o}}
 \]
-  that is, $\judgeSreduce{C_2}{e}{o}$
+  that is, $\judgeSeval{C_2}{e}{o}$
 \end{proof}
 
 \subsubsection{The $L$ instance of the Lazy D Cast ADT}
@@ -3410,12 +3420,9 @@ and $seq$ appends two lists of steps.
 \begin{theorem}[\effCEK{C} is Correct wrt. \ineffCEKD{}]
   \label{thm:surely-lazyD-correct}
   Suppose $C$ is a \lazyD{} Cast ADT.  If
-  $\judgetype{\emptyset}{e}{T}$ and $o : T$, then
+  $\judgetype{\emptyset}{e}{T}$ and $o : T$ then
   \[
   \evalEqv{\effCEK{C}}{\ineffCEKD}
-%  \judgeSeval{C}{e}{o}
-%  \;\text{if and only if}\;
-%  \judgeDeval{e}{o}
   \]
 \end{theorem}
 \begin{proof}
