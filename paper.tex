@@ -3522,7 +3522,7 @@ tail, $t$, to the appropriate cast of the value $v$.
 \end{proof}
 
 \begin{theorem}[\lazyD{} Hypercoercion Respect \ineffCEKD]
-  If $\judgetype{\emptyset}{e}{T}$ and $o : T$
+  If $\judgetype{\emptyset}{e}{T}$ and $o : T$, then
   \[
   \text{\evalEqv{\effCEK{H}}{\ineffCEKD}}
   \]
@@ -3536,6 +3536,32 @@ tail, $t$, to the appropriate cast of the value $v$.
   Lemma~\ref{thm:hc-surely-lazyD}, Proposition~\ref{thm:LazyD-HC-monoid}, and 
   Proposition~\ref{thm:LazyD-HC-identity-casts}
 \end{proof}
+
+\section{Related Work} \label{sec:related-work}
+
+\newcommand{\lambdaX}[1]{\ensuremath{\lambda\mathtt{#1}}}
+\newcommand{\lambdaB}{\lambdaX{B}}
+\newcommand{\lambdaS}{\lambdaX{S}}
+
+This section provides a comparison to the work of 
+\citet{Siek:2015:BCT:2737924.2737968}. Their blame calculus 
+(\lambdaB) is 
+similar to our cast calculus (Fig.~\ref{fig:blame-static}). Their \lambdaB\
+has base types and primitive operators, while ours has unit, sum, and product.
+
+They define a translation from \lambdaB\ space-efficient coercion calculus 
+\lambdaS, which has a space-efficient dynamic semantics, and show a 
+bisimulation between \lambdaB\ and \lambdaS. Our work executes the 
+source language with a space-efficient abstract machine, thus has no 
+\lambdaS-like intermediate language.
+ 
+A strength of their separation of compilation/translation and execution is that 
+they prove the translation is fully abstract and exploit this theorem to prove 
+other interesting theorems (Section 5 of \citet{Siek:2015:BCT:2737924.2737968}).
+
+An advantage of our work is that \effCEK{C} and its related theorems are 
+parameterized over Lazy D Cast ADT. Their work, on the contrary, is specific to 
+their space-efficient coercions. 
 
 \section{Conclusion} \label{sec:conclude}
 
