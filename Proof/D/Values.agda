@@ -7,8 +7,7 @@ module D.Values
   
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-open import Terms Label
-open import Variables
+open import Statics Label
 
 mutual
   

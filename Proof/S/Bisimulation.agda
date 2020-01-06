@@ -8,10 +8,9 @@ module S.Bisimulation
   (RCS : LazyD Label RCR)
   where
 
-open import Variables
 open import Types
-open import Terms Label
-open import Observe Label
+open import Statics Label
+open import Observables Label
 import S.Machine
 import S.Values
 
@@ -329,7 +328,7 @@ data StateRelate : {T : Type} → LM.State T → RM.State T → Set where
     → StateRelate (LM.` ls) (RM.` rs)
 
   halt : ∀ {T}
-    → (o : Observe T)
+    → (o : Observable T)
     → StateRelate (LM.halt o) (RM.halt o)
 
 lstate : ∀ {T}
@@ -573,15 +572,13 @@ progress (return {lv1 = lv1} {rv1 = rv1} v {(LM.cont lfst lsnd)} {(RM.cont rfst 
 load : ∀ {T} → (e : ∅ ⊢ T) → StateRelate (LM.load e) (RM.load e)
 load e = ` inspect e [] (cont id mt)
 
-
-
 -- Lemma 4.9 (Strong Bisimulation Among S(·))
 
 bisim-1 : ∀ {T}
   → {s1 : LM.State T}
   → {s2 : RM.State T}
   → StateRelate s1 s2
-  → {o : Observe T}
+  → {o : Observable T}
   → s1 ≡ LM.halt o
   ---
   → s2 ≡ RM.halt o
@@ -591,7 +588,7 @@ bisim-2 : ∀ {T}
   → {s1 : LM.State T}
   → {s2 : RM.State T}
   → StateRelate s1 s2
-  → {o : Observe T}
+  → {o : Observable T}
   → s2 ≡ RM.halt o
   ---
   → s1 ≡ LM.halt o
@@ -605,8 +602,8 @@ bisim-3 : ∀ {T}
   → s1 LM.−→ s3 
   ---
   → ∃[ s4 ]((s2 RM.−→ s4) × (StateRelate s3 s4))
-bisim-3 (` s) (LM.it ls) with progress s
-... | s' = ⟨ rstate s' , ⟨ (RM.it _) , s' ⟩ ⟩
+bisim-3 (` s) LM.it with progress s
+... | s' = ⟨ rstate s' , ⟨ RM.it , s' ⟩ ⟩
 
 bisim-4 : ∀ {T}
   → {s1 : LM.State T}
@@ -616,49 +613,47 @@ bisim-4 : ∀ {T}
   → s2 RM.−→ s4
   ---
   → ∃[ s3 ]((s1 LM.−→ s3) × (StateRelate s3 s4))
-bisim-4 (` s) (RM.it rs) with progress s
-... | s' = ⟨ lstate s' , ⟨ (LM.it _) , s' ⟩ ⟩
-
+bisim-4 (` s) RM.it with progress s
+... | s' = ⟨ lstate s' , ⟨ LM.it , s' ⟩ ⟩
 
 equiv-lem-1 : ∀ {T}
   → {s1 : LM.State T}
   → {s2 : RM.State T}
-  → {o : Observe T}
+  → {o : Observable T}
   → s1 LM.−→* LM.halt o
   → StateRelate s1 s2
   ---
   → s2 RM.−→* RM.halt o
-equiv-lem-1 (LM.refl (LM.halt o)) (halt o) = RM.refl _
-equiv-lem-1 (LM.step (LM.it ls) xs) (` s) with bisim-3 (` s) (LM.it ls)
-... | ⟨ rs' , ⟨ y , rel ⟩ ⟩ = RM.step y (equiv-lem-1 xs rel)
+equiv-lem-1 LM.[] (halt o) = RM.[]
+equiv-lem-1 (LM.it LM.∷ x*) (` s) with bisim-3 (` s) LM.it
+... | ⟨ rs' , ⟨ y , rel ⟩ ⟩ = y RM.∷ (equiv-lem-1 x* rel)
 
 equiv-lem-2 : ∀ {T}
   → {s1 : LM.State T}
   → {s2 : RM.State T}
-  → {o : Observe T}
+  → {o : Observable T}
   → s2 RM.−→* RM.halt o
   → StateRelate s1 s2
   ---
   → s1 LM.−→* LM.halt o
-equiv-lem-2 (RM.refl (RM.halt o)) (halt o) = LM.refl _
-equiv-lem-2 (RM.step (RM.it rs) ys) (` s) with bisim-4 (` s) (RM.it rs)
-... | ⟨ ls' , ⟨ x , rel ⟩ ⟩ = LM.step x (equiv-lem-2 ys rel)
-
+equiv-lem-2 RM.[] (halt o) = LM.[]
+equiv-lem-2 (RM.it RM.∷ ys) (` s) with bisim-4 (` s) RM.it
+... | ⟨ ls' , ⟨ x , rel ⟩ ⟩ = x LM.∷ (equiv-lem-2 ys rel)
 
 -- Proposition 4.10 (Equivalence of Two Lazy D Cast ADTs)
 
 equiv-l : ∀ {T}
   → {e : ∅ ⊢ T}
-  → {o : Observe T}
+  → {o : Observable T}
   → LM.Evalo e o
   ---
   → RM.Evalo e o
-equiv-l (LM.it xs) = RM.it (equiv-lem-1 xs (load _))
+equiv-l ⟨ o , xs ⟩ = ⟨ o , equiv-lem-1 xs (load _) ⟩
 
 equiv-r : ∀ {T}
   → {e : ∅ ⊢ T}
-  → {o : Observe T}
+  → {o : Observable T}
   → RM.Evalo e o
   ---
   → LM.Evalo e o
-equiv-r (RM.it ys) = LM.it (equiv-lem-2 ys (load _))
+equiv-r ⟨ o , ys ⟩ = ⟨ o , equiv-lem-2 ys (load _) ⟩

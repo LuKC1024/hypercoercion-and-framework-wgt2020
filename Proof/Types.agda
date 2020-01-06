@@ -1,4 +1,5 @@
 module Types where
+
 open import Relation.Nullary using (Dec; yes; no)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; cong)
 
@@ -16,7 +17,6 @@ mutual
     _⇒_ : (T₁ T₂ : Type) → PreType
     _⊗_ : (T₁ T₂ : Type) → PreType
     _⊕_ : (T₁ T₂ : Type) → PreType
-
 
 mutual
   -- _≡?_ : (P1 P2 : PreType) → Dec (P1 ≡ P2)
@@ -102,61 +102,4 @@ _⌣?_ : ∀ T1 T2 → Dec (T1 ⌣ T2)
 ⌣unique ⌣⇒ ⌣⇒ = refl
 ⌣unique ⌣⊗ ⌣⊗ = refl
 ⌣unique ⌣⊕ ⌣⊕ = refl
-
--- subtype
-
-data _≤_ : Type → Type → Set where
-
-  ⋆≤⋆ : ⋆ ≤ ⋆
-  
-  P≤⋆ : ∀ P → (` P) ≤ ⋆
-  
-  ≤U : (` U) ≤ (` U)
-  
-  ≤⇒ : ∀ {T1 T2 T3 T4}
-    → T3 ≤ T1
-    → T2 ≤ T4
-    ---
-    → (` T1 ⇒ T2) ≤ (` T3 ⇒ T4)
-    
-  ≤⊗ : ∀ {T1 T2 T3 T4}
-    → T1 ≤ T3
-    → T2 ≤ T4
-    ---
-    → (` T1 ⊗ T2) ≤ (` T3 ⊗ T4)
-    
-  ≤⊕ : ∀ {T1 T2 T3 T4}
-    → T1 ≤ T3
-    → T2 ≤ T4
-    ---
-    → (` T1 ⊕ T2) ≤ (` T3 ⊕ T4)
-
--- imprecise
-
-data _⊑_ : Type → Type → Set where
-
-  ⋆⊑⋆ : ⋆ ⊑ ⋆
-  
-  P⊑⋆ : ∀ P → (` P) ⊑ ⋆
-  
-  ⊑U : (` U) ⊑ (` U)
-  
-  ⊑⇒ : ∀ {T1 T2 T3 T4}
-    → T1 ⊑ T3
-    → T2 ⊑ T4
-    ---
-    → (` T1 ⇒ T2) ⊑ (` T3 ⇒ T4)
-    
-  ⊑⊗ : ∀ {T1 T2 T3 T4}
-    → T1 ⊑ T3
-    → T2 ⊑ T4
-    ---
-    → (` T1 ⊗ T2) ⊑ (` T3 ⊗ T4)
-    
-  ⊑⊕ : ∀ {T1 T2 T3 T4}
-    → T1 ⊑ T3
-    → T2 ⊑ T4
-    ---
-    → (` T1 ⊕ T2) ⊑ (` T3 ⊕ T4)
-
   
