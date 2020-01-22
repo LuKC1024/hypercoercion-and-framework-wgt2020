@@ -1,5 +1,5 @@
-#LyX 2.2 created this file. For more info see http://www.lyx.org/
-\lyxformat 508
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
 \begin_document
 \begin_header
 \save_transient_properties true
@@ -28,6 +28,8 @@
 \font_osf false
 \font_sf_scale 100 100
 \font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -57,6 +59,7 @@
 \suppress_date false
 \justification true
 \use_refstyle 0
+\use_minted 0
 \index Index
 \shortcut idx
 \color #008000
@@ -65,7 +68,10 @@
 \tocdepth 2
 \paragraph_separation indent
 \paragraph_indentation default
-\quotes_language english
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
@@ -214,7 +220,7 @@ Indiana University Bloomington
 \end_layout
 
 \begin_layout Date
-Conference on Fabulous Presentations, 2003
+Workshop on Gradual Typing, 2020
 \begin_inset Note Note
 status collapsed
 
@@ -232,12 +238,12 @@ Not really informative to the audience, more for people (including yourself)
 
 
 \begin_inset Argument 1
-status open
+status collapsed
 
 \begin_layout Plain Layout
-CFP 2003
+WGT 2003
 \begin_inset Note Note
-status collapsed
+status open
 
 \begin_layout Plain Layout
 optional, should be abbreviation of conference name
@@ -276,7 +282,7 @@ status open
 
 
 \backslash
-pgfdeclareimage[height=0.5cm]{institution-logo}{institution-logo}
+pgfdeclareimage[height=0.5cm]{institution-logo}{institution-logo.jpg}
 \end_layout
 
 \begin_layout Plain Layout
@@ -314,40 +320,40 @@ status open
 
 \begin_layout Plain Layout
 
-
+%
 \backslash
 AtBeginSubsection[]{%
 \end_layout
 
 \begin_layout Plain Layout
 
-  
+%  
 \backslash
 frame<beamer>{ 
 \end_layout
 
 \begin_layout Plain Layout
 
-    
+%    
 \backslash
 frametitle{Outline}   
 \end_layout
 
 \begin_layout Plain Layout
 
-    
+%    
 \backslash
 tableofcontents[currentsection,currentsubsection] 
 \end_layout
 
 \begin_layout Plain Layout
 
-  }
+%  }
 \end_layout
 
 \begin_layout Plain Layout
 
-}
+%}
 \end_layout
 
 \end_inset
@@ -459,21 +465,11 @@ If you omit details that are vital to the proof/implementation, just say
 
 \end_deeper
 \begin_layout Section
-Motivation
+Hypercoercions
 \end_layout
 
 \begin_layout Subsection
-The Basic Problem That We Studied
-\begin_inset Argument 2
-status open
-
-\begin_layout Plain Layout
-Basic Problem
-\end_layout
-
-\end_inset
-
-
+The Space-Efficiency Problem
 \end_layout
 
 \begin_layout Frame
@@ -481,8 +477,7 @@ Basic Problem
 status open
 
 \begin_layout Plain Layout
-Make Titles Informative.
- Use Uppercase Letters.
+An Example Program
 \end_layout
 
 \end_inset
@@ -492,8 +487,6 @@ Make Titles Informative.
 
 \begin_deeper
 \begin_layout FrameSubtitle
-Frame subtitles are optional.
- Use upper- or lowercase letters.
 \begin_inset Note Note
 status open
 
@@ -508,31 +501,17 @@ A title should summarize the slide in an understandable fashion for anyone
 
 \end_layout
 
-\begin_layout Itemize
-Use Itemize a lot.
-\end_layout
-
-\begin_deeper
-\begin_layout Pause
-
-\end_layout
-
 \end_deeper
-\begin_layout Itemize
-Use very short sentences or short phrases.
+\begin_layout Frame
+\begin_inset Graphics
+	filename resources/even-odd.png
+	scale 30
+
+\end_inset
+
+
 \end_layout
 
-\begin_deeper
-\begin_layout Pause
-
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-These overlays are created using the Pause style.
-\end_layout
-
-\end_deeper
 \begin_layout Standard
 \begin_inset Separator plain
 \end_inset
@@ -545,8 +524,7 @@ These overlays are created using the Pause style.
 status open
 
 \begin_layout Plain Layout
-Make Titles Informative.
- 
+The Space-Efficiency Problem
 \end_layout
 
 \end_inset
@@ -556,42 +534,11 @@ Make Titles Informative.
 
 \begin_deeper
 \begin_layout Itemize
-\begin_inset Argument item:2
-status open
-
-\begin_layout Plain Layout
-1-
-\end_layout
-
-\end_inset
-
-You can also use overlay specifications to create overlays.
+Casts might accumulate on continuations (call stacks)
 \end_layout
 
 \begin_layout Itemize
-\begin_inset Argument item:2
-status open
-
-\begin_layout Plain Layout
-3-
-\end_layout
-
-\end_inset
-
-This allows you to present things in any order.
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Argument item:2
-status open
-
-\begin_layout Plain Layout
-2-
-\end_layout
-
-\end_inset
-
-This is shown second.
+Casts might accumulate in values as proxies
 \end_layout
 
 \end_deeper
@@ -602,85 +549,12 @@ This is shown second.
 
 \end_layout
 
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Make Titles Informative.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Block
-\begin_inset Argument 1
-status open
-
-\begin_layout Plain Layout
-1-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Untitled block.
-\end_layout
-
-\begin_layout Itemize
-Shown on all slides.
-\end_layout
-
-\end_deeper
-\begin_layout ExampleBlock
-\begin_inset Argument 1
-status open
-
-\begin_layout Plain Layout
-2-
-\end_layout
-
-\end_inset
-
-
-\begin_inset Argument 2
-status open
-
-\begin_layout Plain Layout
-Some Example Block Title
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-\begin_inset Formula $e^{i\pi}=-1$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Formula $e^{i\pi/2}=i$
-\end_inset
-
-.
-\end_layout
-
-\end_deeper
-\end_deeper
 \begin_layout Subsection
-Previous Work
+Existing Solutions
+\end_layout
+
+\begin_layout Frame
+
 \end_layout
 
 \begin_layout Frame
@@ -688,8 +562,7 @@ Previous Work
 status open
 
 \begin_layout Plain Layout
-Make Titles Informative.
- 
+Solutions: Space-Efficient Cast Representations
 \end_layout
 
 \end_inset
@@ -698,18 +571,149 @@ Make Titles Informative.
 \end_layout
 
 \begin_deeper
-\begin_layout Example
-\begin_inset Argument 1
+\begin_layout Itemize
+Coercions in normal forms 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "herman2010space,siek2012interpretations,Siek:2015:BCT:2737924.2737968"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Threesomes 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Siek:2010:TWB:1706299.1706342,Garcia:2013:CTB:2500365.2500603"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Supercoercions 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Garcia:2013:CTB:2500365.2500603"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
 status open
 
 \begin_layout Plain Layout
-1-
+Criteria for 
+\begin_inset Quotes eld
+\end_inset
+
+Good
+\begin_inset Quotes erd
+\end_inset
+
+ Cast Representations 
 \end_layout
 
 \end_inset
 
-On first slide.
- 
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45text%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename resources/thinking-face.png
+	scale 25
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45text%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename resources/all-proof-assistants.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -719,26 +723,207 @@ On first slide.
 
 \end_layout
 
-\begin_layout Example
-\begin_inset Argument 1
+\begin_layout Frame
+\begin_inset Argument 4
 status open
 
 \begin_layout Plain Layout
-2-
+Threesomes are Difficult to Understand
 \end_layout
 
 \end_inset
 
-On second slide.
+
 \end_layout
 
-\end_deeper
+\begin_layout Frame
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "c"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\begin_inset Wrap figure
+lines 0
+placement I
+overhang 0in
+width "50col%"
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename resources/Philip_Wadler.jpg
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\shape italic
+
+\begin_inset Quotes eld
+\end_inset
+
+\SpecialChar ldots
+ while preparing a lecture on threesomes a few years after the paper was
+ published, he required several hours to puzzle out the meaning of his own
+ notation, 
+\begin_inset Formula $\bot^{mGp}$
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Siek:2015:BCT:2737924.2737968"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Coercions in Normal Form are Difficult to Mechanize
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename resources/composition-of-coercions-in-normal-form.png
+	scale 30
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Plain Layout
+v.s.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+~100 Lines of Agda Code
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Our Solution: Hypercoercions
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Our Solution: Hypercoercions
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename resources/hypercoercions-syntax.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+Composition of hypercoercions is morally a structural recursion!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
-Our Results/Contribution
+Equivalence of Cast Calculi
 \end_layout
 
 \begin_layout Subsection
-Main Results
+Cast Representations Should be Proved Correct
 \end_layout
 
 \begin_layout Frame
@@ -746,8 +931,53 @@ Main Results
 status open
 
 \begin_layout Plain Layout
-Make Titles Informative.
- 
+What do We Mean by a Cast Representation is Correct?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Formula 
+\[
+\text{eval}_{X}(e)=o\text{ if and only if }\text{eval}_{\text{D}}(e)=o
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Formula 
+\[
+\text{eval}_{X}(e)=o\text{ if and only if }\text{eval}_{\text{UD}}(e)=o
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Our Solution: CastADT + Parameterized Dynamics
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Our Solution: Every Lazy D CastADT is Correct
 \end_layout
 
 \end_inset
@@ -757,15 +987,28 @@ Make Titles Informative.
 
 \begin_deeper
 \begin_layout Theorem
-On first slide.
-\end_layout
+Suppose that 
+\begin_inset Formula $C$
+\end_inset
 
-\begin_layout Pause
+ is a Lazy D Cast ADT.
+ If 
+\begin_inset Formula $e:T$
+\end_inset
 
-\end_layout
+ and 
+\begin_inset Formula $o:T$
+\end_inset
 
-\begin_layout Corollary
-On second slide.
+ then
+\begin_inset Formula 
+\[
+\text{eval}_{S(C)}(e)=o\text{ if and only if }\text{eval}_{\text{D}}(e)=o
+\]
+
+\end_inset
+
+
 \end_layout
 
 \end_deeper
@@ -781,8 +1024,11 @@ On second slide.
 status open
 
 \begin_layout Plain Layout
-Make Titles Informative.
- 
+How does 
+\begin_inset Formula $S(C)$
+\end_inset
+
+ work?
 \end_layout
 
 \end_inset
@@ -791,55 +1037,194 @@ Make Titles Informative.
 \end_layout
 
 \begin_deeper
-\begin_layout ColumnsTopAligned
+\begin_layout Itemize
+Every continuation has exactly one cast frame at the top.
+\end_layout
+
+\begin_layout Itemize
+Every non-constant value has exactly one proxy.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+What is a Cast ADT?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="2">
+<features tabularvalignment="middle">
+<column alignment="right" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell alignment="right" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\text{id}(T)=c$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+identity cast
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="right" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\text{seq(c,c)}=c$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+cast composition
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="right" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\text{cast}(T,l,T)=c$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+translate casts in source language
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="right" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\text{applyCast}(v,c)=r$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+cast application
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+What is a Lazy D Cast ADT?
+\end_layout
+
+\end_inset
+
 
 \end_layout
 
 \begin_deeper
-\begin_layout Column
-5cm
-\end_layout
-
-\begin_layout Theorem
-\begin_inset Argument 1
-status open
-
-\begin_layout Plain Layout
-1-
-\end_layout
-
+\begin_layout Itemize
+\begin_inset Formula $\text{applyCast}(\text{id}(T),v)=\text{succ}(v)$
 \end_inset
 
-In left column.
+
 \end_layout
 
-\begin_layout Column
-5cm
-\end_layout
-
-\begin_layout Corollary
-\begin_inset Argument 1
-status open
-
-\begin_layout Plain Layout
-2-
-\end_layout
-
+\begin_layout Itemize
+\begin_inset Formula $\text{applyCast}(\text{seq}(c,d),v)=\text{applyCast}(c,v)\underline{\gg}\lambda u.\text{applyCast}(d,u)$
 \end_inset
 
-In right column.
-\begin_inset Newline newline
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\text{applyCast}(\text{cast}(S,l,T),v)$
 \end_inset
 
-New line
+ respects the Lazy D blame strategy.
 \end_layout
 
 \end_deeper
-\end_deeper
-\begin_layout Subsection
-Basic Ideas for Proofs/Implementations
-\end_layout
-
 \begin_layout Section*
 Summary
 \end_layout
@@ -859,63 +1244,31 @@ Summary
 
 \begin_deeper
 \begin_layout Itemize
-The
-\color none
- 
-\color inherit
-
+We presented Lazy D and Lazy UD 
 \begin_inset Flex Alert
 status open
 
 \begin_layout Plain Layout
-first main message
+hypercoercions
 \end_layout
 
 \end_inset
 
-
-\color none
- of your talk in one or two lines.
+.
 \end_layout
 
 \begin_layout Itemize
-The
-\color none
- 
-\color inherit
-
+We proved that every 
 \begin_inset Flex Alert
 status open
 
 \begin_layout Plain Layout
-second main message
+Lazy D Cast ADT
 \end_layout
 
 \end_inset
 
-
-\color none
- of your talk in one or two lines.
-\end_layout
-
-\begin_layout Itemize
-Perhaps a
-\color none
- 
-\color inherit
-
-\begin_inset Flex Alert
-status open
-
-\begin_layout Plain Layout
-third message
-\end_layout
-
-\end_inset
-
-
-\color none
-, but not more than that.
+ is correct.
 \end_layout
 
 \begin_layout Standard
@@ -941,49 +1294,28 @@ Outlook
 
 \begin_deeper
 \begin_layout Itemize
-What we have not done yet.
+Define a Lazy UD Cast ADT and prove a similar theorem.
 \end_layout
 
 \begin_layout Itemize
-Even more stuff.
+Proof existing cast representations are Lazy D/UD Cast ADT
 \end_layout
 
 \end_deeper
 \end_deeper
-\begin_layout Section*
-\start_of_appendix
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-All of the following is optional and typically not needed.
-\end_layout
-
+\begin_layout Standard
+\begin_inset Separator plain
 \end_inset
 
-Appendix
-\end_layout
 
-\begin_layout Subsection*
-For Further Reading
 \end_layout
 
 \begin_layout Frame
-\begin_inset Argument 3
-status collapsed
-
-\begin_layout Plain Layout
-allowframebreaks
-\end_layout
-
-\end_inset
-
-
 \begin_inset Argument 4
 status open
 
 \begin_layout Plain Layout
-For Further Reading
+References
 \end_layout
 
 \end_inset
@@ -991,147 +1323,17 @@ For Further Reading
 
 \end_layout
 
-\begin_deeper
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-beamertemplatebookbibitems
-\end_layout
-
-\end_inset
-
-
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Start with overview books.
-\end_layout
+\begin_layout Frame
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "/home/lukc/hypercoercion-and-framework-wgt2020/bibfile"
+options "plain"
 
 \end_inset
 
 
 \end_layout
 
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-key "Author1990"
-
-\end_inset
-
-A.
- Author.
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-newblock
-\end_layout
-
-\end_inset
-
-
-\emph on
-Handbook of Everything
-\emph default
-.
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-newblock
-\end_layout
-
-\end_inset
-
- Some Press, 1990.
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-beamertemplatearticlebibitems
-\end_layout
-
-\end_inset
-
-
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Followed by interesting articles.
- Keep the list short.
- 
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-key "Someone2002"
-
-\end_inset
-
-S.
- Someone.
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-newblock
-\end_layout
-
-\end_inset
-
- On this and that
-\emph on
-.
-
-\emph default
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-newblock
-\end_layout
-
-\end_inset
-
-
-\emph on
-Journal on This and That
-\emph default
-.
- 2(1):50–100, 2000.
-\end_layout
-
-\end_deeper
 \end_body
 \end_document
