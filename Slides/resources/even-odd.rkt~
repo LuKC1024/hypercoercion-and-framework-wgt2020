@@ -6,13 +6,10 @@
 
 (define even-odd-pict
   (vl-append
-   (pict-height (code '()))
    (code (define (even [n : Dyn]) : Dyn
-           (if (= n 0) #t (odd (- n 1)))))
-   (code (define (odd [n : Int]) : Bool
+           (if (= n 0) #t (odd (- n 1))))
+         (define (odd [n : Int]) : Bool
            (if (= n 0) #f (even (- n 1)))))))
-
-even-odd-pict
 
 (write-bytes
  (convert even-odd-pict 'png-bytes)

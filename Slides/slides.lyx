@@ -320,40 +320,40 @@ status open
 
 \begin_layout Plain Layout
 
-%
+
 \backslash
 AtBeginSubsection[]{%
 \end_layout
 
 \begin_layout Plain Layout
 
-%  
+  
 \backslash
 frame<beamer>{ 
 \end_layout
 
 \begin_layout Plain Layout
 
-%    
+    
 \backslash
 frametitle{Outline}   
 \end_layout
 
 \begin_layout Plain Layout
 
-%    
+    
 \backslash
 tableofcontents[currentsection,currentsubsection] 
 \end_layout
 
 \begin_layout Plain Layout
 
-%  }
+  }
 \end_layout
 
 \begin_layout Plain Layout
 
-%}
+}
 \end_layout
 
 \end_inset
@@ -505,7 +505,7 @@ A title should summarize the slide in an understandable fashion for anyone
 \begin_layout Frame
 \begin_inset Graphics
 	filename resources/even-odd.png
-	scale 30
+	scale 40
 
 \end_inset
 
@@ -538,7 +538,8 @@ Casts might accumulate on continuations (call stacks)
 \end_layout
 
 \begin_layout Itemize
-Casts might accumulate in values as proxies
+Casts might accumulate in higher-order values (e.g.
+ functions)
 \end_layout
 
 \end_deeper
@@ -550,7 +551,7 @@ Casts might accumulate in values as proxies
 \end_layout
 
 \begin_layout Subsection
-Existing Solutions
+Prior Solutions
 \end_layout
 
 \begin_layout Frame
@@ -562,7 +563,7 @@ Existing Solutions
 status open
 
 \begin_layout Plain Layout
-Solutions: Space-Efficient Cast Representations
+Prior Solutions: Space-Efficient Cast Representations
 \end_layout
 
 \end_inset
@@ -737,34 +738,9 @@ Threesomes are Difficult to Understand
 \end_layout
 
 \begin_layout Frame
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\begin_inset Box Frameless
-position "t"
-hor_pos "c"
-has_inner_box 1
-inner_pos "c"
-use_parbox 0
-use_makebox 0
-width "100col%"
-special "none"
-height "1in"
-height_special "totalheight"
-thickness "0.4pt"
-separation "3pt"
-shadowsize "4pt"
-framecolor "black"
-backgroundcolor "none"
-status open
-
-\begin_layout Plain Layout
 \begin_inset Wrap figure
 lines 0
-placement I
+placement l
 overhang 0in
 width "50col%"
 status open
@@ -782,18 +758,20 @@ status open
 \end_inset
 
 
-\shape italic
-
 \begin_inset Quotes eld
 \end_inset
 
 \SpecialChar ldots
- while preparing a lecture on threesomes a few years after the paper was
+ 
+\emph on
+while preparing a lecture on threesomes a few years after the paper was
  published, he required several hours to puzzle out the meaning of his own
  notation, 
 \begin_inset Formula $\bot^{mGp}$
 \end_inset
 
+
+\emph default
 
 \begin_inset Quotes erd
 \end_inset
@@ -803,16 +781,6 @@ status open
 LatexCommand cite
 key "Siek:2015:BCT:2737924.2737968"
 literal "false"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
 
 \end_inset
 
@@ -861,7 +829,7 @@ v.s.
 \end_layout
 
 \begin_layout Plain Layout
-~100 Lines of Agda Code
+~300 Lines of Agda Code
 \end_layout
 
 \end_inset
@@ -902,7 +870,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Graphics
 	filename resources/hypercoercions-syntax.png
-	scale 40
+	scale 30
 
 \end_inset
 
@@ -911,6 +879,55 @@ status open
 
 \begin_layout Plain Layout
 Composition of hypercoercions is morally a structural recursion!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Composition of Lazy UD Hypercoercions
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename resources/composition-of-hypercoercions.png
+	scale 25
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+v.s.
+\end_layout
+
+\begin_layout Plain Layout
+~35 Lines of Agda Code
 \end_layout
 
 \end_inset
@@ -931,7 +948,7 @@ Cast Representations Should be Proved Correct
 status open
 
 \begin_layout Plain Layout
-What do We Mean by a Cast Representation is Correct?
+We Want to Prove ...
 \end_layout
 
 \end_inset
@@ -940,9 +957,37 @@ What do We Mean by a Cast Representation is Correct?
 \end_layout
 
 \begin_layout Frame
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Theorem
+For all 
+\begin_inset Formula $e:T$
+\end_inset
+
+ and 
+\begin_inset Formula $o:T$
+\end_inset
+
+,
 \begin_inset Formula 
 \[
-\text{eval}_{X}(e)=o\text{ if and only if }\text{eval}_{\text{D}}(e)=o
+\text{eval}_{S(H_{\text{D}})}(e)=o\text{ if and only if }\text{eval}_{\text{D}}(e)=o
 \]
 
 \end_inset
@@ -950,19 +995,68 @@ What do We Mean by a Cast Representation is Correct?
 
 \end_layout
 
-\begin_layout Frame
-\begin_inset Formula 
-\[
-\text{eval}_{X}(e)=o\text{ if and only if }\text{eval}_{\text{UD}}(e)=o
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Theorem
+For all 
+\begin_inset Formula $e:T$
+\end_inset
+
+ and 
+\begin_inset Formula $o:T$
+\end_inset
+
+,
+\begin_inset Formula 
+\[
+\text{eval}_{S(H_{\text{UD}})}(e)=o\text{ if and only if }\text{eval}_{\text{UD}}(e)=o
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+See 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "siek2009exploring"
+literal "false"
+
+\end_inset
+
+ for Lazy D/Lazy UD.
+\end_layout
+
+\begin_layout Plain Layout
+Lazy UD is a.k.a.
+\begin_inset Formula $\lambda B$
+\end_inset
+
+ in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Siek:2015:BCT:2737924.2737968"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
 \end_inset
 
 
@@ -1011,6 +1105,17 @@ Suppose that
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Theorem
+Lazy D hypercoercion is a Lazy D Cast ADT.
+\end_layout
+
 \end_deeper
 \begin_layout Standard
 \begin_inset Separator plain
@@ -1042,7 +1147,7 @@ Every continuation has exactly one cast frame at the top.
 \end_layout
 
 \begin_layout Itemize
-Every non-constant value has exactly one proxy.
+Every higher-order value has exactly one proxy.
 \end_layout
 
 \end_deeper
@@ -1079,11 +1184,11 @@ status open
 <column alignment="right" valignment="top">
 <column alignment="left" valignment="top">
 <row>
-<cell alignment="right" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\text{id}(T)=c$
+\begin_inset Formula $\text{id}(T)$
 \end_inset
 
 
@@ -1102,11 +1207,11 @@ identity cast
 </cell>
 </row>
 <row>
-<cell alignment="right" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\text{seq(c,c)}=c$
+\begin_inset Formula $\text{seq}(c,c)$
 \end_inset
 
 
@@ -1125,11 +1230,11 @@ cast composition
 </cell>
 </row>
 <row>
-<cell alignment="right" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\text{cast}(T,l,T)=c$
+\begin_inset Formula $\text{cast}(T,l,T)$
 \end_inset
 
 
@@ -1148,11 +1253,11 @@ translate casts in source language
 </cell>
 </row>
 <row>
-<cell alignment="right" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\text{applyCast}(v,c)=r$
+\begin_inset Formula $\text{applyCast}(v,c)$
 \end_inset
 
 
@@ -1204,21 +1309,21 @@ What is a Lazy D Cast ADT?
 
 \begin_deeper
 \begin_layout Itemize
-\begin_inset Formula $\text{applyCast}(\text{id}(T),v)=\text{succ}(v)$
+\begin_inset Formula $\text{applyCast}(v,\text{id}(T))=v$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Itemize
-\begin_inset Formula $\text{applyCast}(\text{seq}(c,d),v)=\text{applyCast}(c,v)\underline{\gg}\lambda u.\text{applyCast}(d,u)$
+\begin_inset Formula $\text{applyCast}(v,\text{seq}(c,d))=\text{applyCast}(v,c)\underline{\gg}\lambda u.\text{applyCast}(u,d)$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Itemize
-\begin_inset Formula $\text{applyCast}(\text{cast}(S,l,T),v)$
+\begin_inset Formula $\text{applyCast}(v,\text{cast}(S,l,T))$
 \end_inset
 
  respects the Lazy D blame strategy.
@@ -1328,7 +1433,7 @@ References
 LatexCommand bibtex
 btprint "btPrintCited"
 bibfiles "/home/lukc/hypercoercion-and-framework-wgt2020/bibfile"
-options "plain"
+options "authordate1"
 
 \end_inset
 
