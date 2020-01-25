@@ -6,7 +6,7 @@
 \origin unavailable
 \textclass beamer
 \begin_preamble
-\usetheme{Warsaw}
+\usetheme{Singapore}
 % or ...
 
 \setbeamercovered{transparent}
@@ -39,7 +39,7 @@
 \spacing single
 \use_hyperref false
 \papersize default
-\use_geometry false
+\use_geometry true
 \use_package amsmath 2
 \use_package amssymb 2
 \use_package cancel 1
@@ -506,6 +506,21 @@ A title should summarize the slide in an understandable fashion for anyone
 \begin_inset Graphics
 	filename resources/even-odd.png
 	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset CommandInset citation
+LatexCommand cite
+key "herman2010space"
+literal "false"
 
 \end_inset
 
@@ -1403,7 +1418,11 @@ Define a Lazy UD Cast ADT and prove a similar theorem.
 \end_layout
 
 \begin_layout Itemize
-Prove existing cast representations are Lazy D/UD Cast ADT
+Prove existing cast representations are Lazy D/UD Cast ADT.
+\end_layout
+
+\begin_layout Itemize
+Include label polarity
 \end_layout
 
 \end_deeper

@@ -6,7 +6,7 @@
 \origin unavailable
 \textclass beamer
 \begin_preamble
-\usetheme{Warsaw}
+\usetheme{Boadilla}
 % or ...
 
 \setbeamercovered{transparent}
@@ -39,7 +39,7 @@
 \spacing single
 \use_hyperref false
 \papersize default
-\use_geometry false
+\use_geometry true
 \use_package amsmath 2
 \use_package amssymb 2
 \use_package cancel 1
@@ -506,6 +506,21 @@ A title should summarize the slide in an understandable fashion for anyone
 \begin_inset Graphics
 	filename resources/even-odd.png
 	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset CommandInset citation
+LatexCommand cite
+key "herman2010space"
+literal "false"
 
 \end_inset
 
@@ -1147,7 +1162,7 @@ Every continuation has exactly one cast frame at the top.
 \end_layout
 
 \begin_layout Itemize
-Every non-constant value has exactly one proxy.
+Every higher-order value has exactly one proxy.
 \end_layout
 
 \end_deeper

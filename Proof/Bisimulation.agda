@@ -112,7 +112,7 @@ mutual
       → ValRelate (L.cons v1 c1 v2 c2) u
       ------------------
       → ValRelate (L.cons v1 (L.mk-seq c1 (L.mk-cast l T3 T5))
-                           v2 (L.mk-seq c2 (L.mk-cast l T4 T6)))
+                          v2 (L.mk-seq c2 (L.mk-cast l T4 T6)))
                   (R.cast u ⌣⊗ (R.mk-cast l (` T3 ⊗ T4) (` T5 ⊗ T6)))
       
     inl : ∀ {T1 T2}
